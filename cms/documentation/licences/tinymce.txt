@@ -1,4 +1,6 @@
-Tiny MCE used as the content editor
+Tiny MCE used as the content editor current version is 3.0.6.2
+I have also included the PHP compressor for tiny MCE and the spellchecker
+Please check all the licences for your use.
 
 		  GNU LESSER GENERAL PUBLIC LICENSE
 		       Version 2.1, February 1999

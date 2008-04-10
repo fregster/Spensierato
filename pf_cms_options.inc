@@ -7,6 +7,10 @@
 //true / false
 Settings::Singleton()->new_setting('protect_db_settings', true);
 
+//Setting Intro text
+//String
+Settings::Singleton()->new_setting('intoduction_text', 'Welcome To ');
+
 //Setting site_name_long
 //String
 Settings::Singleton()->new_setting('site_name_long', 'Default CMS');
@@ -66,7 +70,7 @@ Settings::Singleton()->new_setting('site_option_showpagetime', true);
 //Setting tidy
 //Askes the render method to call tidy on the html output, the default skin should not need this but its here anyway.
 //true / false
-Settings::Singleton()->new_setting('tidy', false);
+Settings::Singleton()->new_setting('tidy', true);
 
 //Site file options
 Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'));

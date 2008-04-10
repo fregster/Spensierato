@@ -7,8 +7,8 @@
 	<link href="css/pasteword.css" rel="stylesheet" type="text/css" />
 	<base target="_self" />
 </head>
-<body onResize="resizeInputs();" style="display:none; overflow:hidden;">
-	<form name="source" onSubmit="saveContent();" action="#">
+<body onresize="resizeInputs();" style="display:none; overflow:hidden;">
+	<form name="source" onsubmit="saveContent();" action="#">
 		<div class="title">{#paste.paste_word_desc}</div>
 
 		<div>{#paste_dlg.word_title}</div>
@@ -17,11 +17,11 @@
 
 		<div class="mceActionPanel">
 			<div style="float: left">
-				<input type="button" id="insert" name="insert" value="{#insert}" onClick="saveContent();" />
+				<input type="button" id="insert" name="insert" value="{#insert}" onclick="saveContent();" />
 			</div>
 
 			<div style="float: right">
-				<input type="button" id="cancel" name="cancel" value="{#cancel}" onClick="tinyMCEPopup.close();" />
+				<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
 			</div>
 		</div>
 	</form>

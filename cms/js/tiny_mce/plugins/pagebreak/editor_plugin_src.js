@@ -8,7 +8,7 @@
 (function() {
 	tinymce.create('tinymce.plugins.PageBreakPlugin', {
 		init : function(ed, url) {
-			var pb = '<img src="../../../../publicfiles/tiny_mce/plugins/pagebreak/' + url + '/img/trans.gif" class="mcePageBreak mceItemNoResize" />', cls = 'mcePageBreak', sep = ed.getParam('pagebreak_separator', '<!-- pagebreak -->'), pbRE;
+			var pb = '<img src="' + url + '/img/trans.gif" class="mcePageBreak mceItemNoResize" />', cls = 'mcePageBreak', sep = ed.getParam('pagebreak_separator', '<!-- pagebreak -->'), pbRE;
 
 			pbRE = new RegExp(sep.replace(/[\?\.\*\[\]\(\)\{\}\+\^\$\:]/g, function(a) {return '\\' + a;}), 'g');
 
@@ -21,7 +21,8 @@
 			ed.addButton('pagebreak', {title : 'pagebreak.desc', cmd : cls});
 
 			ed.onInit.add(function() {
-				ed.dom.loadCSS(url + "/css/content.css");
+				if (ed.settings.content_css !== false)
+					ed.dom.loadCSS(url + "/css/content.css");
 
 				if (ed.theme.onResolveName) {
 					ed.theme.onResolveName.add(function(th, o) {

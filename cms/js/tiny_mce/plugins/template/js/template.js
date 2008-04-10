@@ -49,7 +49,7 @@ var TemplateDialog = {
 		var ed = tinyMCEPopup.editor;
 
 		tinymce.each(ed.getParam("content_css", '').split(','), function(u) {
-			d.write('<link href="../../../../../publicfiles/tiny_mce/plugins/template/js/' + ed.documentBaseURI.toAbsolute(u) + '" rel="stylesheet" type="text/css" />');
+			d.write('<link href="' + ed.documentBaseURI.toAbsolute(u) + '" rel="stylesheet" type="text/css" />');
 		});
 	},
 

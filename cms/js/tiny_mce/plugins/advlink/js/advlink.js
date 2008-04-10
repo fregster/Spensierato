@@ -10,12 +10,13 @@ function preinit() {
 	var url;
 
 	if (url = tinyMCEPopup.getParam("external_link_list_url"))
-		document.write('<script language="javascript" type="text/javascript" src="../../../../../publicfiles/tiny_mce/plugins/advlink/js/' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></script>');
+		document.write('<script language="javascript" type="text/javascript" src="' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></script>');
 }
 
 function changeClass() {
-	var formObj = document.forms[0];
-	formObj.classes.value = getSelectValue(formObj, 'classlist');
+	var f = document.forms[0];
+
+	f.classes.value = getSelectValue(f, 'classlist');
 }
 
 function init() {
@@ -201,7 +202,7 @@ function setPopupControlsDisabled(state) {
 }
 
 function parseLink(link) {
-	link = link.replace(new RegExp(''', 'g'), "'");
+	link = link.replace(new RegExp('&#39;', 'g'), "'");
 
 	var fnName = link.replace(new RegExp("\\s*([A-Za-z0-9\.]*)\\s*\\(.*", "gi"), "$1");
 
@@ -234,7 +235,7 @@ function parseLink(link) {
 		regExp += "\\);?";
 
 		// Build variable array
-		var variables = new Array();
+		var variables = [];
 		variables["_function"] = fnName;
 		var variableValues = link.replace(new RegExp(regExp, "gi"), replaceStr).split('<delim>');
 		for (var i=0; i<variableNames.length; i++)
@@ -248,7 +249,7 @@ function parseLink(link) {
 
 function parseOptions(opts) {
 	if (opts == null || opts == "")
-		return new Array();
+		return [];
 
 	// Cleanup the options
 	opts = opts.toLowerCase();
@@ -256,7 +257,7 @@ function parseOptions(opts) {
 	opts = opts.replace(/[^0-9a-z=,]/g, "");
 
 	var optionChunks = opts.split(',');
-	var options = new Array();
+	var options = [];
 
 	for (var i=0; i<optionChunks.length; i++) {
 		var parts = optionChunks[i].split('=');

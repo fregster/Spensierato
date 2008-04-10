@@ -2,7 +2,7 @@
  * $Id: editor_plugin_src.js 537 2008-01-14 16:38:33Z spocke $
  *
  * @author Moxiecode
- * @copyright Copyright  2004-2008, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
 (function() {
@@ -63,7 +63,7 @@
 				html += '<html xmlns="http://www.w3.org/1999/xhtml">';
 				html += '<head>';
 				html += '<title>' + ed.getLang('preview.preview_desc') + '</title>';
-				html += '<base href="../../../../publicfiles/tiny_mce/plugins/preview/' + ed.documentBaseURI.getURI() + '" />';
+				html += '<base href="' + ed.documentBaseURI.getURI() + '" />';
 				html += '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 
 				for (i=0; i<css.length; i++)

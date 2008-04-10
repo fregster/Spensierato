@@ -74,11 +74,11 @@
 			rep(/<br>/gi,"\n");
 			rep(/<p>/gi,"");
 			rep(/<\/p>/gi,"\n");
-			rep(/ /gi," ");
-			rep(/"/gi,"\"");
-			rep(/</gi,"<");
-			rep(/>/gi,">");
-			rep(/&/gi,"&");
+			rep(/&nbsp;/gi," ");
+			rep(/&quot;/gi,"\"");
+			rep(/&lt;/gi,"<");
+			rep(/&gt;/gi,">");
+			rep(/&amp;/gi,"&");
 
 			return s; 
 		},
@@ -99,12 +99,12 @@
 			rep(/\[\/i\]/gi,"</em>");
 			rep(/\[u\]/gi,"<u>");
 			rep(/\[\/u\]/gi,"</u>");
-			rep(/\[url=([^\]]+)\](.*?)\[\/url\]/gi,"<a href=../../../../publicfiles/tiny_mce/plugins/bbcode//"$1/">$2</a>");
-			rep(/\[url\](.*?)\[\/url\]/gi,"<a href=../../../../publicfiles/tiny_mce/plugins/bbcode//"$1/">$1</a>");
-			rep(/\[img\](.*?)\[\/img\]/gi,"<img src=../../../../publicfiles/tiny_mce/plugins/bbcode//"$1/" />");
+			rep(/\[url=([^\]]+)\](.*?)\[\/url\]/gi,"<a href=\"$1\">$2</a>");
+			rep(/\[url\](.*?)\[\/url\]/gi,"<a href=\"$1\">$1</a>");
+			rep(/\[img\](.*?)\[\/img\]/gi,"<img src=\"$1\" />");
 			rep(/\[color=(.*?)\](.*?)\[\/color\]/gi,"<font color=\"$1\">$2</font>");
-			rep(/\[code\](.*?)\[\/code\]/gi,"<span class=\"codeStyle\">$1</span> ");
-			rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<span class=\"quoteStyle\">$1</span> ");
+			rep(/\[code\](.*?)\[\/code\]/gi,"<span class=\"codeStyle\">$1</span>&nbsp;");
+			rep(/\[quote.*?\](.*?)\[\/quote\]/gi,"<span class=\"quoteStyle\">$1</span>&nbsp;");
 
 			return s; 
 		}

@@ -5,7 +5,7 @@ var ImageDialog = {
 		tinyMCEPopup.requireLangPack();
 
 		if (url = tinyMCEPopup.getParam("external_image_list_url"))
-			document.write('<script language="javascript" type="text/javascript" src="../../../../../publicfiles/tiny_mce/plugins/advimage/js/' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></script>');
+			document.write('<script language="javascript" type="text/javascript" src="' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></script>');
 	},
 
 	init : function(ed) {
@@ -16,6 +16,7 @@ var ImageDialog = {
 		this.fillFileList('src_list', 'tinyMCEImageList');
 		this.fillFileList('over_list', 'tinyMCEImageList');
 		this.fillFileList('out_list', 'tinyMCEImageList');
+		TinyMCE_EditableSelects.init();
 
 		if (n.nodeName == 'IMG') {
 			nl.src.value = dom.getAttrib(n, 'src');
@@ -27,7 +28,7 @@ var ImageDialog = {
 			nl.hspace.value = this.getAttrib(n, 'hspace');
 			nl.border.value = this.getAttrib(n, 'border');
 			selectByValue(f, 'align', this.getAttrib(n, 'align'));
-			selectByValue(f, 'class_list', dom.getAttrib(n, 'class'));
+			selectByValue(f, 'class_list', dom.getAttrib(n, 'class'), true, true);
 			nl.style.value = dom.getAttrib(n, 'style');
 			nl.id.value = dom.getAttrib(n, 'id');
 			nl.dir.value = dom.getAttrib(n, 'dir');
@@ -430,9 +431,9 @@ var ImageDialog = {
 		u = tinyMCEPopup.editor.documentBaseURI.toAbsolute(u);
 
 		if (!st)
-			tinyMCEPopup.dom.setHTML('prev', '<img id="previewImg" src="../../../../../publicfiles/tiny_mce/plugins/advimage/js/' + u + '" border="0" onload="ImageDialog.updateImageData(this);" onerror="ImageDialog.resetImageData();" />');
+			tinyMCEPopup.dom.setHTML('prev', '<img id="previewImg" src="' + u + '" border="0" onload="ImageDialog.updateImageData(this);" onerror="ImageDialog.resetImageData();" />');
 		else
-			tinyMCEPopup.dom.setHTML('prev', '<img id="previewImg" src="../../../../../publicfiles/tiny_mce/plugins/advimage/js/' + u + '" border="0" onload="ImageDialog.updateImageData(this, 1);" />');
+			tinyMCEPopup.dom.setHTML('prev', '<img id="previewImg" src="' + u + '" border="0" onload="ImageDialog.updateImageData(this, 1);" />');
 	}
 };
 

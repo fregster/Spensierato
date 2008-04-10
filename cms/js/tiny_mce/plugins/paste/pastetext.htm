@@ -6,8 +6,8 @@
 	<script type="text/javascript" src="js/pastetext.js"></script>
 	<base target="_self" />
 </head>
-<body onResize="resizeInputs();" style="display:none; overflow:hidden;">
-<form name="source" onSubmit="saveContent();return false;" action="#">
+<body onresize="resizeInputs();" style="display:none; overflow:hidden;">
+<form name="source" onsubmit="saveContent();return false;" action="#">
 	<div style="float: left" class="title">{#paste.paste_text_desc}</div>
 
 	<div style="float: right">
@@ -26,7 +26,7 @@
 		</div>
 
 		<div style="float: right">
-			<input type="button" name="cancel" value="{#cancel}" onClick="tinyMCEPopup.close();" id="cancel" />
+			<input type="button" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" id="cancel" />
 		</div>
 	</div>
 </form>

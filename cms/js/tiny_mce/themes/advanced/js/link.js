@@ -5,7 +5,7 @@ var LinkDialog = {
 		var url;
 
 		if (url = tinyMCEPopup.getParam("external_link_list_url"))
-			document.write('<script language="javascript" type="text/javascript" src="../../../../../publicfiles/tiny_mce/themes/advanced/js/' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></script>');
+			document.write('<script language="javascript" type="text/javascript" src="' + tinyMCEPopup.editor.documentBaseURI.toAbsolute(url) + '"></script>');
 	},
 
 	init : function() {
@@ -116,7 +116,7 @@ var LinkDialog = {
 		if (v = tinyMCEPopup.getParam('theme_advanced_link_targets')) {
 			tinymce.each(v.split(','), function(v) {
 				v = v.split('=');
-				html += '<option value="' + v[1] + '">' + v[0] + '</option>';
+				lst.options[lst.options.length] = new Option(v[0], v[1]);
 			});
 		}
 	}

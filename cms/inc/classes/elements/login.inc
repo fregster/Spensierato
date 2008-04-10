@@ -1,0 +1,48 @@
+<?
+class elementLogin extends elementDefault
+{
+	function __construct()
+	{
+		$this->type = __CLASS__;
+		$this->name = 'Login Box Element';
+		$this->image = 'login.png';
+	}
+	
+	protected function get_data()
+	{
+		if(Settings::Singleton()->get_setting('login_capthca'))
+		{
+			if((Settings::Singleton()->get_setting('login_capthca_remember')) and (cookie::Singleton()->get_cookie_value('username') != NULL) )
+			{
+				$template = 'templates/login.html';
+			}
+			else
+			{
+				$template = 'templates/login_with_capthca.html';
+			}
+		}
+		else
+		{
+			$template = 'templates/login.html';
+		}
+		
+		if(cookie::Singleton()->get_cookie_value('username') != NULL)
+		{
+			$checked = "checked=\"checked\"";
+		}
+		else
+		{
+			$checked = NULL;	
+		}
+
+		$html = '<div id="login_background">'.str_replace('**CMS**username', cookie::Singleton()->get_cookie_value('username'), Template::Singleton()->get_file_content($template)).'</div>';
+
+		$html = str_replace('**CMS**remembered', $checked, $html);
+		
+		$this->data = '<data>'. htmlentities($html, ENT_QUOTES, Settings::Singleton()->get_setting('char_set')) .'</data>';
+		$this->search = NULL;
+	}
+}
+
+
+?>

@@ -1,0 +1,52 @@
+
+		<xsl:template name="admin_bar">
+			<xsl:if test="/page/user/id != 0">
+				<div id="page_section_admin_bar">
+					<xsl:if test="/page/security/can_edit = 1">
+						<!-- can edit this page -->
+						<xsl:if test="/page/options/admin_mode = 1">
+							<!--  Show toggle admin and edit options -->
+							<a href="toggle/admin_mode">Swith off Admin Mode</a> | Edit page details			
+						</xsl:if>
+						<xsl:if test="/page/options/admin_mode != 1">
+							<!--  Show toggle admin -->
+							<a href="toggle/admin_mode">Swith on Admin Mode</a>
+						</xsl:if>
+						
+					</xsl:if>
+
+					<xsl:if test="/page/security/can_edit != 1">
+						<!-- can't edit -->
+						<xsl:if test="/page/security/admin_mode = 1">
+							 <!-- Show toggle admin out and text you can not edit -->
+							 <a href="toggle/admin_mode">Swith off Admin Mode</a>
+						</xsl:if>
+						You can not edit this page
+					</xsl:if>
+</div>
+			</xsl:if>
+		</xsl:template>
+	
+		<xsl:template name="element_admin_header">
+		<!-- If in admin show admin header -->
+		<xsl:if test="/page/options/admin_mode = 1">
+			<xsl:element name="div">
+				<xsl:attribute name="id">eid_admin_<xsl:value-of select="./@id" /></xsl:attribute>
+				<xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute>
+				<xsl:attribute name="class">element_header</xsl:attribute>
+				<div class="sprite sprite-accept" />
+				<xsl:value-of select="./@type" />
+			</xsl:element>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template name="element_admin_footer">
+		<!-- If in admin show admin header -->
+		<xsl:if test="/page/options/admin_mode = 1">
+			<xsl:element name="div">
+				<xsl:attribute name="class">element_footer</xsl:attribute>
+				Admin Element Footer
+			</xsl:element>
+			<br />
+		</xsl:if>		
+	</xsl:template>

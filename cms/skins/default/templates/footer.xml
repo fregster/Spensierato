@@ -1,0 +1,6 @@
+
+	<xsl:template name="footer">
+		<div id="footer_text">
+			***FOOTER_TEXT***
+		</div>
+	</xsl:template>

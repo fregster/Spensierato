@@ -1,0 +1,29 @@
+
+<xsl:template match="/">
+        <html>
+			<xsl:call-template name="header"/>
+
+			<xsl:element name="body">
+			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>
+			<div id="site_frame">
+				<div id="page_main">
+					<xsl:call-template name="banner"/>
+					<div id="page_section_middle">
+						<div id="page_section_left_col">
+							<xsl:call-template name="menu"/>
+							<div id="page_section_left_utilities">
+								<xsl:call-template name="sitelinks"/>
+								<xsl:call-template name="search"/>
+							</div>
+						</div>
+						<div id="page_section_main">
+						<a name="contents" />
+							<xsl:call-template name="body"/>
+						</div>
+					</div>
+				</div>
+				***FOOTER_TEXT***
+			</div>
+			</xsl:element>
+        </html>
+</xsl:template>

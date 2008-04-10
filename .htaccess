@@ -1,0 +1,13 @@
+<Files test>
+ForceType application/x-httpd-php
+</Files>
+
+Deny All
+
+RewriteEngine on
+RewriteCond %{REQUEST_URI}  !^/test/nuneaton/index.php/.*$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)$ index.php/$1
+
+
+DirectoryIndex index.php

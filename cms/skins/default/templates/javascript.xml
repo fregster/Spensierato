@@ -1,0 +1,25 @@
+
+		<xsl:template name="javascript">
+			<xsl:choose>
+				<xsl:when test="/page/user/id = 0">
+					<xsl:element name="script">
+						<xsl:attribute name="type">text/javascript</xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/js/public.js</xsl:attribute>
+					</xsl:element>
+				</xsl:when>
+				
+				<xsl:when test="/page/user/id != 0">
+					<xsl:element name="script">
+						<xsl:attribute name="type">text/javascript</xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/js/logged_in.js</xsl:attribute>
+					</xsl:element>
+				</xsl:when>
+				
+				<xsl:when test="/@render_mode = 'ADMIN'">
+					<xsl:element name="script">
+						<xsl:attribute name="type">text/javascript</xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/js/admin.js</xsl:attribute>
+					</xsl:element>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:template>

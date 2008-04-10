@@ -1,0 +1,17 @@
+
+	<xsl:template name="search">
+		<xsl:if test="page/settings/search = '1'">
+			<div id="search">
+				<form action="" onsubmit="javascript:searchFunction(); return false;" id="searchform">
+					<input type="text" id="searchtext" name="searchtext" />
+					<input type="button" id="searchbutton" name="searchbutton" value="Find" onclick="javascript:searchFunction();" />
+				</form>
+			</div>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template name="sitelinks">
+		<div id="links">
+		Site Links
+		</div>
+	</xsl:template>

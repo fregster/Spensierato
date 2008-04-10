@@ -1,0 +1,12 @@
+This CMS currnetly requires
+
+//PHP related
+PHP 5.2 ish
+
+	PECL / PEAR
+	MDB2
+	GD and FreeType libraries
+	Hash //Optional
+
+//Database related
+MySQL (or SQL server that supports the LIMIT call)

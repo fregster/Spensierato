@@ -1,0 +1,8 @@
+
+	<xsl:template name="banner">
+		<div id="page_section_banner">	
+		<xsl:call-template name="admin_bar"/>
+			<div id="banner_text">Welcome to the <xsl:value-of select="page/settings/site_name_long" /> </div>
+			<div id="banner_submenu"><xsl:call-template name="banner_submenu"/></div>
+		</div>
+	</xsl:template>

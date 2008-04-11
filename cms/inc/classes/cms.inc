@@ -482,7 +482,7 @@ class CMS
 	
 	private function send_js_file($file)
 		{
-			//Cache::headers_allow_cache($file);
+			Cache::headers_allow_cache($file);
 
 			// javascript header
 			header('Content-type: text/javascript');

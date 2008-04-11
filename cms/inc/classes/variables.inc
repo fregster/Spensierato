@@ -4,7 +4,7 @@
  */
 abstract class variables
 {
-	public function check($input, $type = NULL)
+	public function variable($input, $type = NULL)
 	{
 		if($type == NULL)
 		{
@@ -28,6 +28,16 @@ abstract class variables
 	protected function numeric($input)
 	{
 		if(is_numeric($input))
+		{
+			return $input;
+		}
+		
+		return false;
+	}
+	
+	protected function int($input)
+	{
+		if(is_int($input))
 		{
 			return $input;
 		}

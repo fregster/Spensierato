@@ -5,7 +5,7 @@
 
 class post extends variables
 {
-	public function check($input, $type = NULL)
+	public function variable($input, $type = NULL)
 	{
 		return parent::check($_POST[$input], $type);
 	}

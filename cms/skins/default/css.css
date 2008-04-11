@@ -38,6 +38,8 @@ h3
 	width:1000px;
 	min-height:620px;
 	left: 10px;
+	border-width: 1px;
+	background-color:#CCCCCC;
 }
 
 #page_section_banner

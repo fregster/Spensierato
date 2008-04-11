@@ -7,9 +7,9 @@
 
 $GLOBALS['database_host'] = 'localhost';
 $GLOBALS['database_driver'] = 'mysqli';
-$GLOBALS['database_name'] = 'nuneaton';
-$GLOBALS['database_user_read'] = 'nuneaton_read';
-$GLOBALS['database_user_readwrite'] = 'nuneaton_write';
+$GLOBALS['database_name'] = 'spensierato';
+$GLOBALS['database_user_read'] = 'spensierato_read';
+$GLOBALS['database_user_readwrite'] = 'spensierato_write';
 $GLOBALS['database_password'] = 'SBu8vPYdAm3F,c2e';
 
 ?>

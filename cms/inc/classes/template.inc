@@ -118,9 +118,7 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 //			print_r(Common::get_random_from_array(Settings::Singleton()->get_setting('template_header_graphic')));
 //			echo('<br />');
 			
-			
-			
-			echo Settings::Singleton()->overwrite_setting('template_header_graphic', Common::get_random_from_array(Settings::Singleton()->get_setting('template_header_graphic')));
+			Settings::Singleton()->overwrite_setting('template_header_graphic', Common::get_random_from_array(Settings::Singleton()->get_setting('template_header_graphic')));
 			
 			echo('<br />');
 			print_r(Settings::Singleton()->get_setting('template_header_graphic'));

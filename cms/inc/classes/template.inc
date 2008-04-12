@@ -26,6 +26,7 @@ class Template
 		$this->defailt_path = Settings::Singleton()->get_setting('cms_root').'/skins/'.'/default';
 		
 		$templateinc = $this->template_path.'template.inc';
+		die($templateinc);
 		if(file_exists($templateinc))
 		{
 			include($templateinc);

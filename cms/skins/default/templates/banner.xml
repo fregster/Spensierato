@@ -4,8 +4,7 @@
 			<xsl:attribute name="id">page_section_banner</xsl:attribute>
 			<xsl:attribute name="style">
 				background-image:url(
-				<xsl:value-of select="page/settings/document_root"></xsl:value-of>/
-				<xsl:value-of select="page/settings/template_header_graphic" />)</xsl:attribute>
+				<xsl:value-of select="page/settings/document_root"></xsl:value-of>/skin/<xsl:value-of select="page/settings/template_header_graphic" />)</xsl:attribute>
 				<xsl:call-template name="admin_bar"/>
 				<div id="banner_text">Welcome to the <xsl:value-of select="page/settings/site_name_long" /> </div>
 				<div id="banner_submenu"><xsl:call-template name="banner_submenu"/></div>

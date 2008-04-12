@@ -83,10 +83,10 @@ class Settings
 	public function overwrite_setting($name, $value, $protected = false)
 	{
 		//Check the old setting is not protected
-		if($this->settings[$setting['setting']][0]['protected'] != true)
+		if($this->settings[$name][0]['protected'] != true)
 		{
 			//Remove old settings
-			unset($this->settings[$setting['setting']]);
+			unset($this->settings[$name]);
 			
 			//Push the new setting
 			$this->new_setting($name, $value, $protected);

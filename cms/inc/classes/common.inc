@@ -150,7 +150,7 @@ abstract class Common
 		return $php_array;
 	}
 	
-	public static function  array_to_xml($array, $serializer_options = NULL)
+	public static function array_to_xml($array, $serializer_options = NULL)
 	{
 		// include class file 
 		require_once('XML/Serializer.php'); 
@@ -178,6 +178,22 @@ abstract class Common
 		{ 
 			return $serializer->getSerializedData(); 
 		} 
+	}
+
+	public static function random_number($start = 0, $count = 10)
+	{
+		return rand($start, ($start+$count));
+	}
+	
+	public static function get_random_from_array($input)
+	{
+			//If it is an array then randomly choose one
+			if(isset($input[0]))
+			{
+				return 	$input[Common::random_number(0, count($input))];			
+			}
+
+			return $input;	
 	}
 }
 ?>

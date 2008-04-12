@@ -44,6 +44,8 @@ class Template
 	
 	public function load()
 	{
+		$this->load_template_options();
+		
 		$xslt = '<?xml version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'"?>
 <xsl:stylesheet version="1.0" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -96,6 +98,15 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 		   $xslt = $xslt . file_get_contents($filename);
 		}
 		return $xslt;
+	}
+	
+	private function load_template_options()
+	{
+		//Does this template have a header graphic option?
+		if(isset(Settings::Singleton()->get_setting('template_header_graphic')))
+		{
+			Settings::Singleton()->overwrite_setting('template_header_graphic', Common::get_random_from_array(Settings::Singleton()->get_setting('template_header_graphic')));
+		}
 	}
 }
 ?>

@@ -114,6 +114,7 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 		{
 			Settings::Singleton()->overwrite_setting('template_header_graphic', Common::get_random_from_array(Settings::Singleton()->get_setting('template_header_graphic')));
 		}
+		die('template options loaded');
 	}
 }
 ?>

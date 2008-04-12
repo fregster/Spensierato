@@ -190,7 +190,7 @@ abstract class Common
 			//If it is an array then randomly choose one
 			if(isset($input[0]))
 			{
-				return 	$input[Common::random_number(0, count($input))];			
+				return 	$input[Common::random_number(0, count($input)-1)];			
 			}
 
 			return $input;	

@@ -51,7 +51,12 @@ class Settings
 	
 	public function get_setting($name)
 	{
-		return $this->settings[$name][0]['value'];
+		if(isset($this->settings[$name]))
+		{
+			return $this->settings[$name][0]['value'];
+		}
+		
+		return NULL;
 	}
 	
 	public function settings_as_xml()

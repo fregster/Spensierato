@@ -67,6 +67,9 @@ class Content
 	
 	public function build()
 	{
+		//Call the template class as it loads the template which might make changes to the settings
+		$template = Template::Singleton();
+		
 		$this->attach_menu(Menu::Singleton()->build());	
 		$this->load_elements();
 		$this->attach_settings();

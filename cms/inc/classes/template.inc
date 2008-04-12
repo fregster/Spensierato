@@ -25,8 +25,8 @@ class Template
 		$this->template_path = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin');
 		$this->defailt_path = Settings::Singleton()->get_setting('cms_root').'/skins/'.'/default';
 		
-		$templateinc = $this->template_path.'template.inc';
-		die($templateinc);
+		$templateinc = $this->template_path.'/template.inc';
+		
 		if(file_exists($templateinc))
 		{
 			include($templateinc);

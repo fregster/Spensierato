@@ -48,17 +48,18 @@ class Render
 	
 	public function render_html($xml)
 	{
-		if($_GET['xml'])
-		{
-			echo('<pre>'.htmlentities($xml).'</pre>');
-			die();
-		}
-		
 		$xslt = new xsltProcessor;
 		$xslt->registerPHPFunctions();
 		
 		// Load the documents and process using $xslt	
 		$xslt->importStyleSheet(DomDocument::loadXML(Template::Singleton()->load()));
+		
+		//This is done after the template is loaded as it might make changes to the XML
+		if($_GET['xml'])
+		{
+			echo('<pre>'.htmlentities($xml).'</pre>');
+			die();
+		}
 		
 		/* transform the xml document */
 		$this->html = $xslt->transformToXML(DomDocument::loadXML($xml));

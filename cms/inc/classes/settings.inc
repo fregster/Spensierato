@@ -89,14 +89,13 @@ class Settings
 			unset($this->settings[$name]);
 			
 			//Push the new setting
+			die($name);
 			$this->new_setting($name, $value, $protected);
 			
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+
+		return false;
 	}
 }
 ?>

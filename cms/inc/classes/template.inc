@@ -108,9 +108,7 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 	}
 	
 	private function load_template_options()
-	{
-		print_r(Settings::Singleton()->get_setting('template_header_graphic'));
-		
+	{		
 		//Does this template have a header graphic option?
 		if(Settings::Singleton()->get_setting('template_header_graphic') != NULL)
 		{

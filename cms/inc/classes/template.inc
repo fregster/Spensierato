@@ -30,6 +30,7 @@ class Template
 		if(file_exists($templateinc))
 		{
 			include($templateinc);
+			$this->load_template_options();
 		}
 	}
 	
@@ -51,7 +52,6 @@ class Template
 	
 	public function load()
 	{
-		$this->load_template_options();
 		
 		$xslt = '<?xml version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'"?>
 <xsl:stylesheet version="1.0" 

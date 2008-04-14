@@ -182,9 +182,9 @@ h3
 
 #login_box
 {
-	position:relative;
-	left:180px;
+	left:50%;
 	top: 40px;
+	left-margin:-25%;
 	border:solid 1px #555;
 	border-collapse:collapse;
 	padding:10px;

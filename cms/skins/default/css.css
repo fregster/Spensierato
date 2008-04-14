@@ -93,7 +93,7 @@ h3
 #page_section_main
 {
 	position:absolute;
-	left: 205px;
+	margin-left: 205px;
 	/* width: 595px; */
 	width: 100%;
 }

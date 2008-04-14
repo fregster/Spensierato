@@ -97,10 +97,7 @@ h3
 
 #page_section_body
 {
-	position:absolute;
-	top:0px;
-	/* height:100%; */
-	width:100%;
+	width: 100%;
 }
 
 #page_section_footer

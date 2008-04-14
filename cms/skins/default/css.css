@@ -24,7 +24,7 @@ h3
 #site_frame
 {
 	position:absolute;
-	max-width:1000px;
+	width:1000px;
 	height:100%;
 	top:0px;
 	background-color:#FFFFFF;
@@ -35,7 +35,7 @@ h3
 #page_main
 {
 	position:absolute;
-	max-width:900px;
+	width:900px;
 	min-height:620px;
 	left: 10px;
 	border-width: 1px;

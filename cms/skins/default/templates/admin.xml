@@ -26,6 +26,12 @@
 </div>
 			</xsl:if>
 		</xsl:template>
+		
+		<xsl:template name="toolbar">
+			<xsl:if test="/page/security/can_edit = 1">
+				Page Toolbar
+			</xsl:if>
+		</xsl:template>
 	
 		<xsl:template name="element_admin_header">
 		<!-- If in admin show admin header -->

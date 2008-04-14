@@ -17,6 +17,7 @@
 							</div>
 						</div>
 						<div id="page_section_main">
+							<xsl:call-template name="toolbar"/>
 						<a name="contents" />
 							<xsl:call-template name="body"/>
 						</div>

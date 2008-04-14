@@ -96,6 +96,22 @@ h3
 	left: 205px;
 }
 
+#page_section_body
+{
+	position:absolute;
+	top:0px;
+	/* height:100%; */
+	width:100%;
+}
+
+#page_section_footer
+{
+	position:absolute;
+	bottom:0px;
+	width:100%;
+	text-align:center;
+}
+
 #page_section_admin_bar
 {
 	background-color:#FFFFFF;
@@ -137,22 +153,7 @@ h3
 
 #debug_text
 {
-}
-
-#page_section_body
-{
-	position:absolute;
-	top:0px;
-	/* height:100%; */
-	width:100%;
-}
-
-#page_section_footer
-{
-	position:absolute;
-	bottom:0px;
-	width:100%;
-	text-align:center;
+	
 }
 
 .footer_text

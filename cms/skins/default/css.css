@@ -95,6 +95,7 @@ h3
 	position:absolute;
 	left: 205px;
 	/* width: 595px; */
+	width: 100%;
 }
 
 #page_section_admin_bar

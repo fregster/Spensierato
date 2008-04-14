@@ -28,8 +28,8 @@
 		</xsl:template>
 		
 		<xsl:template name="toolbar">
-			<xsl:if test="/page/security/edit = 1">
-				<div id="page_toolbar">Page Toolbar</div>
+			<xsl:if test="/page/security/can_edit = 1">
+				
 			</xsl:if>
 		</xsl:template>
 	

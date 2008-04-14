@@ -15,7 +15,7 @@
 						
 					</xsl:if>
 
-					<xsl:if test="/page/security/can_edit = 1">
+					<xsl:if test="/page/security/can_edit != 1">
 						<!-- can't edit -->
 						<xsl:if test="/page/security/admin_mode = 1">
 							 <!-- Show toggle admin out and text you can not edit -->
@@ -26,8 +26,6 @@
 </div>
 			</xsl:if>
 		</xsl:template>
-		
-
 	
 		<xsl:template name="element_admin_header">
 		<!-- If in admin show admin header -->

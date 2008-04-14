@@ -150,9 +150,8 @@ h3
 
 #page_section_footer
 {
-	/* position:absolute;
-	bottom:0px; */
-	display: block;
+	position:absolute;
+	bottom:0px;
 	width:100%;
 	text-align:center;
 }

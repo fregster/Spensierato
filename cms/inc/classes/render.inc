@@ -50,6 +50,7 @@ class Render
 	{
 		if($_GET['xml'])
 		{
+			//Just send the XML
 			$search = '<?xml version="1.0"?>';
 			$replace = '<?xml-stylesheet href="'. Settings::singleton()->get_setting('document_root').'/xslt" type="text/xsl" ?>';
 			echo(str_replace($search, $replace, $xml));

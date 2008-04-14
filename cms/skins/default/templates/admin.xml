@@ -28,9 +28,7 @@
 		</xsl:template>
 		
 		<xsl:template name="toolbar">
-			<xsl:if test="/page/security/can_edit = 1">
-				
-			</xsl:if>
+
 		</xsl:template>
 	
 		<xsl:template name="element_admin_header">

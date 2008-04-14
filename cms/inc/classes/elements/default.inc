@@ -39,7 +39,8 @@ class elementDefault
 		//Create element and set required attributes
 		$element = $dom->createElement($this->type);
 		$element->setAttribute('id', $this->id);
-		$element->setAttribute('type', $this->name);
+		$element->setAttribute('type', $this->type);
+		$element->setAttribute('etype', $this->name);
 		
 		//Transform the data field
 		$this->transform_data();

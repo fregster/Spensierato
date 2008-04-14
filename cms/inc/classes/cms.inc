@@ -246,6 +246,11 @@ class CMS
 				//Database file, call content singleton
 				$this->get_html();
 			    break;
+			    
+			case 'STYLESHEET':
+				//Just send the XSLT
+				$this->get_stylesheet();
+				break;
 				
 			case 'JS':
 				//Get JS useing minify
@@ -460,6 +465,12 @@ class CMS
 		// Load the site XML pass directly into Render
 		Render::Singleton()->render_html(Content::Singleton()->build());
 		//cookie::Singleton()->debug();
+	}
+	
+	private function get_stylesheet()
+	{
+		echo(Template::Singleton()->load());
+		exit;
 	}
 	
 	private function get_js($path)

@@ -124,6 +124,11 @@ class currentPage
 						return array('type' => 'JS',
 									'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
 						break;
+						
+					case 'xslt':
+						return array('type' => 'STYLESHEET',
+									'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
+						break;
 					
 					//Site images NO security check
 					case 'image':

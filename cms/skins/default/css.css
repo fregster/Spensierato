@@ -24,12 +24,12 @@ h3
 #site_frame
 {
 	position:absolute;
-	width:1000px;
+	width:996px;
 	height:100%;
 	top:0px;
 	background-color:#FFFFFF;
 	left: 50%;
-	margin-left: -500px; /* half the width of the div */
+	margin-left: -498px; /* half the width of the div */
 }
 
 #page_main

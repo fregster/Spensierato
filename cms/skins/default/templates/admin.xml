@@ -27,7 +27,7 @@
 			</xsl:if>
 		</xsl:template>
 		
-		<xsl:template name="toolbar"></xsl:template>
+
 	
 		<xsl:template name="element_admin_header">
 		<!-- If in admin show admin header -->

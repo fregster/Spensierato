@@ -24,7 +24,7 @@ h3
 #site_frame
 {
 	position:absolute;
-	max-width:996px;
+	width:996px;
 	height:100%;
 	top:0px;
 	background-color:#FFFFFF;

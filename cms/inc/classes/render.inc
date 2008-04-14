@@ -50,8 +50,10 @@ class Render
 	{
 		if($_GET['xml'])
 		{
-			echo('<pre>'.htmlentities($xml).'</pre>');
-			die();
+			$search = '<?xml version="1.0"?>';
+			$replace = '<?xml-stylesheet href="'. CMS::document_root.'/xslt" type="text/xsl" ?>';
+			echo(str_replace($search, $replace, $xml));
+			exit;
 		}
 		
 		$xslt = new xsltProcessor;

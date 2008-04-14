@@ -29,9 +29,9 @@
 		
 		<xsl:template name="toolbar">
 			<xsl:if test="/page/security/can_edit = 1">
-			<xsl:if test="/page/options/admin_mode = 1">
+				
 				Page Toolbar
-			</xsl:if>
+				
 			</xsl:if>
 		</xsl:template>
 	

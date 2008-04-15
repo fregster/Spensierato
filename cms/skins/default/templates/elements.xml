@@ -1,6 +1,7 @@
 
 	<xsl:template match="elementText">
 		<xsl:call-template name="element_admin_header"/>
+		Edit Content
 		<xsl:element name="div">
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
 			<xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute>

@@ -11,7 +11,7 @@
 				<xsl:when test="/page/user/id != 0">
 					<xsl:element name="script">
 						<xsl:attribute name="type">text/javascript</xsl:attribute>
-						<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/tools/js_loggedin</xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/tools/js_loggedin </xsl:attribute>
 					</xsl:element>
 				</xsl:when>
 				

@@ -38,7 +38,6 @@
 				<xsl:value-of select="./@type" />
 			</xsl:element>
 		</xsl:if>
-		<xsl:element name="div">Edit Content</xsl:element>
 	</xsl:template>
 	
 	<xsl:template name="element_admin_footer">

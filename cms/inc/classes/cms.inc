@@ -469,6 +469,7 @@ class CMS
 	
 	private function get_stylesheet()
 	{
+		header('content-type: text/xml');
 		echo(Template::Singleton()->load());
 		exit;
 	}

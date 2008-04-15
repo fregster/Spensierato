@@ -1,16 +1,18 @@
 
 		<xsl:template name="javascript">
-			<xsl:choose>
-				<xsl:when test="/page/user/id = 0">
+				<xsl:if test="/page/user/id = 0">
+				<!-- User Not logged in -->
 					<xsl:element name="script">
 						<xsl:attribute name="type">text/javascript</xsl:attribute>
 						<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/tools/js_public</xsl:attribute>
 					</xsl:element>
-				</xsl:when>
+				</xsl:if>
 				
-				<xsl:when test="/page/user/id != 0">
+				<xsl:if test="/page/user/id != 0">
+				<!-- User logged in -->
 				
 					<xsl:if test="/page/options/admin_mode = 1">
+					<!-- User logged in and in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
 							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/tools/js_admin</xsl:attribute>
@@ -18,12 +20,11 @@
 					</xsl:if>
 				
 					<xsl:if test="/page/options/admin_mode != 1">
+					<!-- User logged in and NOT in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
 							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/tools/js_loggedin </xsl:attribute>
 						</xsl:element>
 					</xsl:if>
-				</xsl:when>
-
-			</xsl:choose>
+				</xsl:if>
 		</xsl:template>

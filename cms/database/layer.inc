@@ -26,6 +26,15 @@ class Database
 	   return self::$instance;
 	}
 	
+	/**
+	 * Database construct
+	 * If the database class has been called directly throught the singleton then connect to the default database
+	 * 
+	 * A connection to a seperate DB can be started with $new_db = Database::Singleton($dsn);
+	 * The call $result = $new_bd()->sql_select_first(......);
+	 * 
+	 * @param unknown_type $dsn
+	 */
 	public function __construct($dsn = NULL)
 	{
 		if($dsn == NULL)

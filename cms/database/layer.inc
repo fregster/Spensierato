@@ -4,6 +4,7 @@ class Database
 {
 
 	private static $instance;
+	private $mdb2;
 	
 	private $sql_cache = array();
 	private $sql_cache_max_results = 20;
@@ -63,10 +64,10 @@ class Database
 	
 	private function connect($dsn)
 	{	
-		$mdb2 =& MDB2::singleton($dsn, $options);
+		$this->mdb2 =& MDB2::singleton($dsn, $options);
 		if (PEAR::isError($mdb2)) 
 		{
-		    die($mdb2->getMessage());
+		    die($this->mdb2->getMessage());
 		}
 	}
 	
@@ -300,10 +301,9 @@ class Database
 	//$Values is for when I get around to implimenting MDB2 properly!
 	private function sql_exe($sql, $values)
 	{
-		global $mdb2;
 		$sql_start_time = Common::micro_time();
 		
-		$resultset = $mdb2->query($sql);
+		$resultset = $this->query($sql);
 		
 		if(PEAR::isError($resultset)) 
 		{

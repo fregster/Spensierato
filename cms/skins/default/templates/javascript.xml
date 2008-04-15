@@ -11,7 +11,7 @@
 				<xsl:if test="/page/user/id != 0">
 				<!-- User logged in -->
 				
-					<xsl:if test="/page/options/admin_mode != 1">
+					<xsl:if test="/page/options/admin_mode = 1">
 					<!-- User logged in and in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
@@ -19,7 +19,7 @@
 						</xsl:element>
 					</xsl:if>
 				
-					<xsl:if test="/page/options/admin_mode = 1">
+					<xsl:if test="/page/options/admin_mode != 1">
 					<!-- User logged in and NOT in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>

@@ -49,7 +49,7 @@ class Database
 			);
 		}
 		
-		$this->connect();
+		$this->connect($dsn);
 	}
 	
 	private function connect($dsn)

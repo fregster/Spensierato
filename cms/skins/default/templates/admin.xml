@@ -36,8 +36,6 @@
 				<xsl:attribute name="class">element_header</xsl:attribute>
 				<div class="sprite sprite-accept" />
 				<xsl:value-of select="./@type" />
-				
-				
 			</xsl:element>
 		</xsl:if>
 	</xsl:template>

@@ -54,6 +54,7 @@ class Render
 			header('content-type: text/xml');
 			$search = '<?xml version="1.0"?>';
 			$replace = '<?xml-stylesheet href="'. Settings::singleton()->get_setting('document_root').'/xslt" type="text/xsl" ?>';
+			$replace = '<?xml-stylesheet href="http://www.fryer.org.uk/current/cms/xslt" type="text/xsl" ?>';
 			echo(str_replace($search, $replace, $xml));
 			exit;
 		}

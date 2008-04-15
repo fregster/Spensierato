@@ -73,6 +73,7 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 	{
 		// initialize ob_gzhandler function to send and compress data
 		ob_start ("ob_gzhandler");
+		ob_start ("compress");
 		//ob_start();
 		session_start();
 		

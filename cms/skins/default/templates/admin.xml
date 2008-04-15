@@ -29,6 +29,7 @@
 	
 		<xsl:template name="element_admin_header">
 		<!-- If in admin show admin header -->
+		Header
 		<xsl:if test="/page/options/admin_mode = 1">
 			<xsl:element name="div">
 				<xsl:attribute name="id">eid_admin_<xsl:value-of select="./@id" /></xsl:attribute>

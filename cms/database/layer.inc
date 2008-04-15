@@ -26,12 +26,7 @@ class Database
 	   return self::$instance;
 	}
 	
-	public function __construct()
-	{
-		$this->connect();
-	}
-	
-	public function connect($dsn = NULL)
+	public function __construct($dsn = NULL)
 	{
 		if($dsn == NULL)
 		{
@@ -54,6 +49,11 @@ class Database
 			);
 		}
 		
+		$this->connect();
+	}
+	
+	private function connect($dsn)
+	{	
 		$mdb2 =& MDB2::singleton($dsn, $options);
 		if (PEAR::isError($mdb2)) 
 		{

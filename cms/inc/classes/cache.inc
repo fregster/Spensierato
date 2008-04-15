@@ -32,7 +32,7 @@ abstract class Cache
 		header('Cache-Control: '.$cache_control, false);
 		header('Cache-Control: max-age='.$maxage, false);
 		header('Pragma: '.$cache_control);
-		header('Content-Description: File from Spensierato ');
+		header('Content-Description: File serverd from a Spensierato site ');
 
 	}
 	

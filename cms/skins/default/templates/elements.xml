@@ -2,6 +2,8 @@
 	<xsl:template match="elementText">
 		<xsl:call-template name="element_admin_header"/>
 		<xsl:element name="a">
+			<xsl:attribute name="href">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:attribute name="onclick">javascript:editContent(eid_1); return false;</xsl:attribute>
 			Edit Content
 		</xsl:element>
 		

@@ -7,7 +7,6 @@
 			<xsl:attribute name="class"><xsl:value-of select="./@type" /></xsl:attribute>
 			<xsl:value-of select="./data" />
 		</xsl:element>
-		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
 	
 	<xsl:template match="elementImage">
@@ -18,7 +17,6 @@
 			<xsl:attribute name="class"><xsl:value-of select="./@type" /></xsl:attribute>
 			<xsl:value-of select="./data" />
 		</xsl:element>
-		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
 	
 	<xsl:template match="elementAccount">

@@ -40,6 +40,7 @@
 				<xsl:element name="a">
 				<xsl:attribute name="href">/edit</xsl:attribute>
 				<xsl:attribute name="onclick">javascript:editContent(); return false;</xsl:attribute>
+				Edit Content
 				</xsl:element>
 			</xsl:element>
 		</xsl:if>

@@ -26,7 +26,7 @@ class Database
 	   return self::$instance;
 	}
 	
-	public function __construct()
+	function __construct()
 	{
 		if($_SESSION['site_login'])
 		{

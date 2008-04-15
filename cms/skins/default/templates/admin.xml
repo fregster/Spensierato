@@ -37,11 +37,7 @@
 				<div class="sprite sprite-accept" />
 				<xsl:value-of select="./@type" />
 				
-				<xsl:element name="a">
-				<xsl:attribute name="href">/edit</xsl:attribute>
-				<xsl:attribute name="onclick">javascript:editContent(); return false;</xsl:attribute>
-				Edit Content
-				</xsl:element>
+				<xsl:element name="a">Edit Content</xsl:element>
 			</xsl:element>
 		</xsl:if>
 	</xsl:template>

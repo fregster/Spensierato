@@ -26,7 +26,7 @@ class Database
 	   return self::$instance;
 	}
 	
-	function __construct($dsn = NULL)
+	public function __construct($dsn = NULL)
 	{
 		if($dsn == NULL)
 		{

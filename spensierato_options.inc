@@ -48,6 +48,12 @@ Settings::Singleton()->new_setting('show_copyright', true);
 //Folder name from cms/skins/
 Settings::Singleton()->new_setting('skin', 'default');
 
+//Setting send_as_xml
+//Set this to send the page as un-rendered XML (sends link to the stylesheet with XML)
+//Defaults to false and uses PHP XSLT parser to generate the HTML
+//false / true
+Settings::Singleton()->new_setting('send_as_xml', false);
+
 //Setting search
 //Allow site searching
 //true / false

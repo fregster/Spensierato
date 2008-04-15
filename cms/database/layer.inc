@@ -303,7 +303,7 @@ class Database
 	{
 		$sql_start_time = Common::micro_time();
 		
-		$resultset = $this->query($sql);
+		$resultset = $this->mdb2->query($sql);
 		
 		if(PEAR::isError($resultset)) 
 		{

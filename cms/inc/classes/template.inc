@@ -83,7 +83,7 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 		{
 			// send the requisite header information and character set
 			header ('content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
-			Cache::headers_allow_cache($path);
+			Cache::headers_allow_cache($path, true, 36000, 36000);
 		
 			//include CSS file
 			include($path);

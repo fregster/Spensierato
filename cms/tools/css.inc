@@ -1,7 +1,7 @@
 <?
 	// initialize ob_gzhandler function to send and compress data
-  ob_start ("ob_gzhandler");
-  //ob_start();
+  //ob_start ("ob_gzhandler");
+  ob_start();
   session_start();
   
   $path = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/css.css';

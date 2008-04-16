@@ -4,7 +4,7 @@
 				<!-- User Not logged in -->
 					<xsl:element name="script">
 						<xsl:attribute name="type">text/javascript</xsl:attribute>
-						<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/tools/js_public </xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />js_public.js</xsl:attribute>
 					</xsl:element>
 				</xsl:if>
 				
@@ -15,7 +15,15 @@
 					<!-- User logged in and in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/tools/js_admin </xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />js_public.js</xsl:attribute>
+						</xsl:element>
+						<xsl:element name="script">
+							<xsl:attribute name="type">text/javascript</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />js_loggedin.js</xsl:attribute>
+						</xsl:element>
+						<xsl:element name="script">
+							<xsl:attribute name="type">text/javascript</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />js_admin.js </xsl:attribute>
 						</xsl:element>
 					</xsl:if>
 				
@@ -23,7 +31,11 @@
 					<!-- User logged in and NOT in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/tools/js_loggedin </xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />js_public.js</xsl:attribute>
+						</xsl:element>
+						<xsl:element name="script">
+							<xsl:attribute name="type">text/javascript</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />js_loggedin.js</xsl:attribute>
 						</xsl:element>
 					</xsl:if>
 					

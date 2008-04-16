@@ -487,7 +487,7 @@ class CMS
 	
 	private function get_js($path)
 	{
-		$try = Settings::Singleton()->get_setting('site_folder_js').Common::clean_path($path);
+		$try = Settings::Singleton()->get_setting('cms_root').'/js/'.Common::clean_path($path);
 		if(is_file($try))
 		{
 			$this->send_js_file($try);

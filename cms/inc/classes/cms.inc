@@ -494,6 +494,8 @@ class CMS
 			exit;
 		}
 		
+		die($try);
+		
 		$try = Settings::Singleton()->get_setting('cms_root') . '/publicfiles/'.Common::clean_path($path);
 		if(is_file($try))
 		{

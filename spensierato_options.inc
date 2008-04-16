@@ -59,7 +59,7 @@ Settings::Singleton()->new_setting('send_as_xml', false);
 //0 no cleaning
 //1 use internal cleaner
 //2 use JSMin
-Settings::Singleton()->new_setting('js_minify', 1);
+Settings::Singleton()->new_setting('js_minify', 0);
 
 //Setting search
 //Allow site searching

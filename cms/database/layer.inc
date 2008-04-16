@@ -71,7 +71,7 @@ class Database
 		    die($this->mdb2->getMessage());
 		}
 		
-		$this->prefix = spensierato_setup.inc;
+		$this->prefix = $GLOBALS['table_prefix'];
 	}
 	
 	public function __clone()

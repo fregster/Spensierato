@@ -5,7 +5,7 @@ class Database
 
 	private static $instance;
 	private $read;
-	private $write;
+	private $write = NULL;
 	private $prefix;
 	
 	private $sql_cache = array();
@@ -75,7 +75,6 @@ class Database
 			//A DSN has been set so create the connection with the specified options
 			//Create the read user
 			$this->read = $this->connect($dsn);
-			$this->write = $this->connect($dsn);
 		}
 
 	}
@@ -324,13 +323,13 @@ class Database
 		$sql_start_time = Common::micro_time();
 		
 		//Query the database Object
-		if($writeuser == false)
+		if(	($writeuser == true) and ($this->write != NULL))
 		{
-			$resultset = $this->read->query($sql);
+			$resultset = $this->write->query($sql);
 		}
 		else
 		{
-			$resultset = $this->write->query($sql);
+			$resultset = $this->read->query($sql);
 		}
 		
 		if(PEAR::isError($resultset)) 
@@ -346,7 +345,7 @@ class Database
 	
 	private function sql_update_exe($sql, $values = NULL)
 	{
-		return $this->sql_exe($sql, $values);
+		return $this->sql_exe($sql, $values, true);
 	}
 	
 	private function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)

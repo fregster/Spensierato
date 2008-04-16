@@ -195,5 +195,12 @@ abstract class Common
 
 			return $input;	
 	}
+
+	public static function remove_extra_lines($input)
+	{
+		// remove comments with /* and */
+	    // remove tabs, spaces, newlines, etc.
+	    return str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', (preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $input)));
+	}
 }
 ?>

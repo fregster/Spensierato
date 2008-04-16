@@ -510,8 +510,22 @@ class CMS
 			// javascript header
 			header('Content-type: text/javascript');
 			
-			//echo JSMin::minify(file_get_contents($file));
-			echo file_get_contents($file);
+			switch (Settings::Singleton()->get_setting('js_minify')) 
+			{
+				case '1':
+					//Use internal code minification
+					echo(Common::remove_extra_lines(file_get_contents($path)));
+				    break;
+				
+				case '2':
+					//Use JSMini
+					echo JSMin::minify(file_get_contents($file));
+				    break;
+				
+				default:
+				    echo file_get_contents($file);
+			}
+		
 			exit;
 		}
 }

@@ -54,6 +54,13 @@ Settings::Singleton()->new_setting('skin', 'default');
 //false / true
 Settings::Singleton()->new_setting('send_as_xml', false);
 
+//Setting js_minify
+//clean the javascript to reduce the file size defaults to internal (1) just removes comments and break lines
+//0 no cleaning
+//1 use internal cleaner
+//2 use JSMin
+Settings::Singleton()->new_setting('js_minify', 1);
+
 //Setting search
 //Allow site searching
 //true / false

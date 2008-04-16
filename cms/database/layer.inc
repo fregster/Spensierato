@@ -6,7 +6,9 @@ class Database
 	private static $instance;
 	private $read;
 	private $write = NULL;
+	
 	private $prefix;
+	private $sql_db_type;
 	
 	private $sql_cache = array();
 	private $sql_cache_max_results = 20;
@@ -44,7 +46,7 @@ class Database
 
 		//If no DSN is set setup default db connection
 		if($dsn == NULL)
-		{
+		{	
 			$dsn = array(
 			    'phptype'  => $GLOBALS['database_driver'],
 			    'username' => $GLOBALS['database_user_read'],
@@ -76,7 +78,7 @@ class Database
 			//Create the read user
 			$this->read = $this->connect($dsn);
 		}
-
+		$this->sql_db_type = $dsn['database_driver'];
 	}
 	
 	private function connect($dsn)
@@ -255,7 +257,17 @@ class Database
 		
 		if( ($limit != NULL) and (is_numeric($limit)) )
 		{
-			$sql = $sql	. ' LIMIT ' . $limit;
+			//For databases that suport the LIMIT command
+			if($this->sql_db_type == 'mysqli')
+			{
+				$sql = $sql	. ' LIMIT ' . $limit;
+			}
+			
+			//For MS SQL Server
+			if($this->sql_db_type == 'mssql')
+			{
+					$sql = str_replace('SELECT ', 'SELECT TOP '.$limit.' ', $sql);
+			}
 		}
 		
 		//Logging info

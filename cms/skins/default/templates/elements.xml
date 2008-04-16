@@ -38,8 +38,8 @@
 			</div>
 			
 			<div id="account_change_password_link">
-			<xsl:element name="a"><xsl:attribute name="class">link</xsl:attribute><xsl:attribute name="href">
-			<xsl:value-of select="/page/settings/document_root" />/changepassword/<xsl:value-of select="page/@id" /></xsl:attribute>Change Password</xsl:element>
+			<xsl:element name="a"><xsl:attribute name="class">link tooltop</xsl:attribute><xsl:attribute name="href">
+			<xsl:value-of select="/page/settings/document_root" />/changepassword/<xsl:value-of select="page/@id" /></xsl:attribute>Change Password<xsl:attribute name="span">Change Password</xsl:attribute></xsl:element>
 			</div>
 		</div>
 	</xsl:template>

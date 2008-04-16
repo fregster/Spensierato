@@ -93,6 +93,7 @@ h3
 {
 	float:left;
 	margin-left: 5px;
+	width:100%;
 }
 
 #page_section_body
@@ -249,6 +250,15 @@ h3
 {
 	background-color:#666666;
 	display:inline;
+}
+.element_admin_header
+{
+	width:100%;	
+}
+
+.element_admin_footer
+{
+	width:100%;
 }
 
 .element_header

@@ -121,9 +121,8 @@ a.tooltip:hover span
 {
 	position:absolute;
 	top:0px;
-	left:0px;
-	width:100% - 200px;
-	margin-left: 205px;
+	left:205px;
+	right:5px;
 }
 
 #page_section_body

@@ -25,6 +25,16 @@
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
 							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />admin.js</xsl:attribute>
 						</xsl:element>
+						<xsl:element name="script">
+							<xsl:attribute name="type">text/javascript</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />tiny_mce/tinymce.js</xsl:attribute>
+						</xsl:element>
+						<script type="text/javascript">
+						tinyMCE.init({
+							mode : "textareas",
+							theme : "advanced"
+						});
+						</script>
 					</xsl:if>
 				
 					<xsl:if test="/page/options/admin_mode != 1">

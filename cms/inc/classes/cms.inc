@@ -500,7 +500,7 @@ class CMS
 			$this->send_js_file($try);
 			exit;
 		}
-		die('404');
+		die('404 '.$path);
 	}
 	
 	private function send_js_file($file)

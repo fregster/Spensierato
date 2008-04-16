@@ -259,7 +259,7 @@ class CMS
 			
 			case 'TINYMCE':
 				//Get TinyMCE file
-				$value = Settings::Singleton()->get_setting('site_folder_js').'/tiny_mce/'.$value;
+				$value = Settings::Singleton()->get_setting('site_folder_js').'tiny_mce/'.$value;
 				FileTransfer::singleton()->get_file($value);
 				die();
 				break;

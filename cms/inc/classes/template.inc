@@ -85,7 +85,7 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 			Cache::headers_allow_cache($path, true, 36000, 36000);
 			header ('Content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
 
-		    echo(Common::remove_extra_lines(file_get_contents($path)));
+		    echo(Common::remove_extra_lines(Common::remove_css_comments(file_get_contents($path))));
 		}
 		else
 		{

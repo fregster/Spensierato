@@ -256,6 +256,13 @@ class CMS
 				//Get JS useing minify
 				$this->get_js($value);
 				break;
+			
+			case 'TINYMCE':
+				//Get TinyMCE file
+				$value = Settings::Singleton()->get_setting('site_folder_js').'/tiny_mce/'.$value;
+				FileTransfer::singleton()->get_file($value);
+				die();
+				break;
 				
 			case 'HELP':
 				$element = Element::type('elementHelp');

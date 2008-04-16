@@ -95,6 +95,12 @@ class currentPage
 										'value' => CMS::Singleton()->path_vars[1]);
 						break;
 					
+					//TinyMCE file
+					case 'tinymce':
+							return array('type' => 'TINYMCE',
+										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
+						break;
+					
 					//CMS Included Files page specific security checks
 					case 'cms':
 						return array('type' => 'CMS',

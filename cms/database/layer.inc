@@ -319,12 +319,19 @@ class Database
 	}
 
 	//$Values is for when I get around to implimenting MDB2 properly!
-	private function sql_exe($sql, $values)
+	private function sql_exe($sql, $values, $writeuser = false)
 	{
 		$sql_start_time = Common::micro_time();
 		
 		//Query the database Object
-		$resultset = $this->read->query($sql);
+		if($writeuser == false)
+		{
+			$resultset = $this->read->query($sql);
+		}
+		else
+		{
+			$resultset = $this->write->query($sql);
+		}
 		
 		if(PEAR::isError($resultset)) 
 		{

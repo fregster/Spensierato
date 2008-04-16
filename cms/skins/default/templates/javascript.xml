@@ -40,9 +40,9 @@
 						});
 						</script>
 						<!-- Needs to be seperate script tags! -->
-						<script type="text/javascript">
+						<script language="javascript" type="text/javascript">
 						tinyMCE.init({
-							.. your normal init ..
+							mode : "textareas"
 						});
 						</script>
 					</xsl:if>

@@ -1,5 +1,1 @@
 // JavaScript Document
-logged.int()
-{
-	
-}

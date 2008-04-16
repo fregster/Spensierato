@@ -522,7 +522,7 @@ class CMS
 			{
 				case '1':
 					//Use internal code minification
-					echo(Common::remove_extra_lines(file_get_contents($path)));
+					echo(Common::remove_extra_lines(file_get_contents($file)));
 				    break;
 				
 				case '2':

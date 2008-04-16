@@ -23,7 +23,7 @@
 						</xsl:element>
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />js_admin.js </xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />js_admin.js</xsl:attribute>
 						</xsl:element>
 					</xsl:if>
 				

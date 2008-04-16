@@ -516,6 +516,7 @@ class CMS
 				//TinyMCE Compressor so just let it run
 				include($file);
 			}
+			die($file);
 			
 			switch (Settings::Singleton()->get_setting('js_minify')) 
 			{

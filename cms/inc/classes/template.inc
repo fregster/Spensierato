@@ -84,15 +84,8 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 			// send the requisite header information and character set
 			Cache::headers_allow_cache($path, true, 36000, 36000);
 			header ('Content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
-		
-			//Load the CSS file as a string
-			$css = file_get_contents($path);
-			
-		    // remove comments
-		    $css = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $css);
-		    // remove tabs, spaces, newlines, etc.
-		    $css = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $css);
-		    echo($css);
+
+		    echo(Common::remove_extra_lines(file_get_contents($path)));
 		}
 		else
 		{

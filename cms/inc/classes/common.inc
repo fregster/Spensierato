@@ -200,7 +200,13 @@ abstract class Common
 	{
 		// remove comments with /* and */
 	    // remove tabs, spaces, newlines, etc.
-	    return str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', (preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $input)));
+	    return str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $input);
+	}
+	
+	public static function remove_css_comments($input)
+	{
+		$input = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $input);
+		return Common::remove_extra_lines($input);
 	}
 }
 ?>

@@ -511,6 +511,11 @@ class CMS
 
 			// javascript header
 			header('Content-type: text/javascript');
+			if($file == 'tiny_mce/tiny_mce_gzip.php')
+			{
+				//TinyMCE Compressor so just let it run
+				include($file);
+			}
 			
 			switch (Settings::Singleton()->get_setting('js_minify')) 
 			{

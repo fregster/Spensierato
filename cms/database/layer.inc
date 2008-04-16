@@ -5,6 +5,7 @@ class Database
 
 	private static $instance;
 	private $mdb2;
+	private $prefix;
 	
 	private $sql_cache = array();
 	private $sql_cache_max_results = 20;
@@ -69,6 +70,8 @@ class Database
 		{
 		    die($this->mdb2->getMessage());
 		}
+		
+		$this->prefix = spensierato_setup.inc;
 	}
 	
 	public function __clone()
@@ -157,7 +160,7 @@ class Database
 		}
 		
 		
-		$sql = "SELECT $sql_temp_select FROM $table";
+		$sql = "SELECT $sql_temp_select FROM ".$this->prefix.$this->sql_clean_input($table);
 		
 		
 		//Include Where clause into sql if set
@@ -256,7 +259,7 @@ class Database
 	{
 		$sql_start_time = Common::micro_time();
 		
-		$sql = 'UPDATE '. $this->sql_clean_input($table) . ' SET update_ts = \'' . time() . '\' WHERE id = \'' . $this->sql_clean_input($id) . '\'';
+		$sql = 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = \'' . time() . '\' WHERE id = \'' . $this->sql_clean_input($id) . '\'';
 		
 		//Logging info
 		$this->site_sql_count ++;

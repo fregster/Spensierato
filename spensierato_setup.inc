@@ -9,7 +9,8 @@ $GLOBALS['database_host'] = 'localhost';
 $GLOBALS['database_driver'] = 'mysqli';
 $GLOBALS['database_name'] = 'spensierato';
 $GLOBALS['database_user_read'] = 'spensierato_read';
-$GLOBALS['database_user_readwrite'] = 'spensierato_write';
+$GLOBALS['database_user_readwrite'] = 'spensierato_writ';
 $GLOBALS['database_password'] = 'SBu8vPYdAm3F,c2e';
+$GLOBALS['table_prefix'] = 'cms_'
 
 ?>

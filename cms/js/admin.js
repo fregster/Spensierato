@@ -30,5 +30,6 @@ function editContent(id) {
 }
 
 function closeEditor(id) {
+	//This needs to be updated to do an ajax call to always get the latest saved content when closed
 	document.getElementById(id).innerHTML = document.forms['edit_'+id].elements["content"].value;
 }

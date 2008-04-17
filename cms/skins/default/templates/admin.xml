@@ -43,10 +43,7 @@
 					Edit Content
 				</xsl:element>
 				this is just a lot of junk text to mess about the styling to see what happens as the div grows and grows and grows etc, this should evently wrap to the next line but push the div to the max width of the container div.
-			</xsl:element>
-			
-			<form action="" id="mcetest"><div><textarea cols="20" rows="10">Test</textarea></div></form>
-			
+			</xsl:element>			
 		</xsl:if>
 	</xsl:template>
 	

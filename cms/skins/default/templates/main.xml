@@ -19,9 +19,6 @@
 						<div id="page_section_main">
 						<a name="contents" />
 							<xsl:call-template name="body"/>
-							<form action="">
-							<div><textarea cols="80" rows="20" name="tinymcetest" /></div>
-							</form>
 						</div>
 					</div>
 				</div>

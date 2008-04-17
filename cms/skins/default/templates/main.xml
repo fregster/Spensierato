@@ -4,6 +4,11 @@
 			<xsl:call-template name="header"/>
 
 			<xsl:element name="body">
+			<xsl:if test="/page/options/admin_mode = 1">
+				<div id="editwindow">
+				<div style="width:600px; margin:auto"><object classid="clsid:25336920-03F9-11CF-8FD0-00AA00686F13" type="text/html" data="some.html"></object></div>
+				</div>
+			</xsl:if>
 			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>
 			<div id="site_frame">
 				<div id="page_main">

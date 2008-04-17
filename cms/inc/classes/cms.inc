@@ -267,13 +267,13 @@ class CMS
 					include($value);
 				}
 				
-				Cache::headers_allow_cache($file, true, 36000, 36000);
-				header('Content-type: ' . mime_content_type($file));
-				header('Content-Length: ' . filesize($file));
+				Cache::headers_allow_cache($value, true, 36000, 36000);
+				header('Content-type: ' . mime_content_type($value));
+				header('Content-Length: ' . filesize($value));
 //				header('Content-Transfer-Encoding: binary');
 				
 				session_write_close();
-				readfile($file);
+				readfile($value);
 
 				die();
 				break;

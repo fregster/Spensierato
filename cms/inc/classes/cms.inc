@@ -278,8 +278,11 @@ class CMS
 					session_write_close();
 					readfile($value);
 				}
-
-				die();
+				else
+				{
+					die($value);
+				}
+				
 				break;
 				
 			case 'HELP':

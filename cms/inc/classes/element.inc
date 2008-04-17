@@ -3,13 +3,21 @@ abstract class Element
 {
 	public static function type($type)
 	{
-		if(class_exists($type))
+		if(is_int($type))
 		{
-			$c = $type;
+			$type = Database::Singleton()->sql_select_first(array('	type'), 'tbl_page_elements', array('id'), array($type));
 		}
-		else
+		
+		if(is_string($type))
 		{
-			$c = elementDefault;
+			if(class_exists($type))
+			{
+				$c = $type;
+			}
+			else
+			{
+				$c = elementDefault;
+			}
 		}
 		
 		return new $c;

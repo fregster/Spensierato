@@ -266,7 +266,8 @@ class CMS
 					//TinyMCE Compressor so just let it run
 					include($value);
 				}
-				if(file_exists($file))
+				
+				if(file_exists($value))
 				{
 					//Cache::headers_allow_cache($value, true, 36000, 36000);
 					header('Content-type: ' . mime_content_type($value));

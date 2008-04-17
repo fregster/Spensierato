@@ -269,8 +269,25 @@ class CMS
 				
 				if(file_exists($value))
 				{
+		
+					switch(substr($value, 0, -3))
+					{
+						case 'css':
+							$mime = 'text/css';
+						break;
+						
+						case '.js':
+							$mime = 'text/javascript';
+							
+						break;
+						
+						default:
+							$mime = mime_content_type($value);
+						break;
+					}
+					
 					//Cache::headers_allow_cache($value, true, 36000, 36000);
-					header('Content-type: ' . mime_content_type($value));
+					header('Content-type: ' . $mime);
 					header('Content-Length: ' . filesize($value));
 					header('Content-Description: TinyMCE File ');
 	//				header('Content-Transfer-Encoding: binary');

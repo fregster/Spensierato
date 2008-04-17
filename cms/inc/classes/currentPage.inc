@@ -96,8 +96,8 @@ class currentPage
 						break;
 					
 					//TinyMCE file
-					case 'tinymce':
-							return array('type' => 'TINYMCE',
+					case 'editor':
+							return array('type' => 'CONTENTEDITOR',
 										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
 						break;
 					

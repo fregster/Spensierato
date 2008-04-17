@@ -40,7 +40,7 @@
 						});  -->
 						</script>
 						<!-- Needs to be seperate script tags! -->
-						<script language="javascript" type="text/javascript">
+						<script type="text/javascript">
 						tinyMCE.init({
 							mode : "textareas"
 						});

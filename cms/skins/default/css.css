@@ -55,8 +55,7 @@ a.tooltip:hover span
 	height:100%;
 	top:0px;
 	background-color:#FFFFFF;
-	left: 50%;
-	right: 50%;
+	margin:0px auto;
 }
 
 #page_main
@@ -66,7 +65,7 @@ a.tooltip:hover span
 	min-height:620px; */
 	left: 10px;
 	right: 10px;
-	border-width: 1px;
+	border: 1px solid #ddd;
 	background-color:#CCCCCC;
 }
 

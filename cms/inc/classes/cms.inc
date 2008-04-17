@@ -266,14 +266,16 @@ class CMS
 					//TinyMCE Compressor so just let it run
 					include($value);
 				}
-				
-				Cache::headers_allow_cache($value, true, 36000, 36000);
-				header('Content-type: ' . mime_content_type($value));
-				header('Content-Length: ' . filesize($value));
-//				header('Content-Transfer-Encoding: binary');
-				
-				session_write_close();
-				readfile($value);
+				if(file_exists($file))
+				{
+					Cache::headers_allow_cache($value, true, 36000, 36000);
+					header('Content-type: ' . mime_content_type($value));
+					header('Content-Length: ' . filesize($value));
+	//				header('Content-Transfer-Encoding: binary');
+					
+					session_write_close();
+					readfile($value);
+				}
 
 				die();
 				break;

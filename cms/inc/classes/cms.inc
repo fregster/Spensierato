@@ -269,7 +269,7 @@ class CMS
 				
 				if(file_exists($value))
 				{
-					die(substr($value, 0, -3));
+					die(substr($value, -3, 0));
 					switch(substr($value, 0, -3))
 					{
 						case 'css':

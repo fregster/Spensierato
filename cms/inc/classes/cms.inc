@@ -268,7 +268,7 @@ class CMS
 				}
 				if(file_exists($file))
 				{
-					Cache::headers_allow_cache($value, true, 36000, 36000);
+					//Cache::headers_allow_cache($value, true, 36000, 36000);
 					header('Content-type: ' . mime_content_type($value));
 					header('Content-Length: ' . filesize($value));
 					header('Content-Description: TinyMCE File ');

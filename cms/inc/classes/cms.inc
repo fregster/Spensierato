@@ -267,7 +267,14 @@ class CMS
 					include($value);
 				}
 				
-				FileTransfer::singleton()->get_file($value);
+				Cache::headers_allow_cache($file, true, 36000, 36000);
+				header('Content-type: ' . mime_content_type($file));
+				header('Content-Length: ' . filesize($file));
+//				header('Content-Transfer-Encoding: binary');
+				
+				session_write_close();
+				readfile($file);
+
 				die();
 				break;
 				

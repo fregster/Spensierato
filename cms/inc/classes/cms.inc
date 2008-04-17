@@ -269,14 +269,14 @@ class CMS
 				
 				if(file_exists($value))
 				{
-					die('ext = '.substr($value, -3, 0));
-					switch(substr($value, 0, -3))
+					$ext = pathinfo($value);
+					switch($ext['extension'])
 					{
 						case 'css':
 							$mime = 'text/css';
 						break;
 						
-						case '.js':
+						case 'js':
 							$mime = 'text/javascript';
 						break;
 						

@@ -19,7 +19,7 @@
 						<div id="page_section_main">
 						<a name="contents" />
 							<xsl:call-template name="body"/>
-							<form action="" id="mcetest"><div><textarea cols="20" rows="10">Test</textarea></div></form>
+							<!-- <form action="" id="mcetest"><div><textarea cols="20" rows="10">Test</textarea></div></form>  -->
 						</div>
 					</div>
 				</div>

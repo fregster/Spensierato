@@ -301,6 +301,20 @@ a.tooltip:hover span
 	background-color:#CCCCCC;
 	width:100%;
 }
+
+#editwindow
+{
+	display:none;
+}
+
+.editwindow_open
+{
+	height:100%;
+	width:100%;
+	z-index:1111;
+	opacity: 0.8;
+}
+
 #searchtext
 {
 	padding:0;

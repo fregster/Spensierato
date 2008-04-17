@@ -27,7 +27,7 @@
 						</xsl:element>
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />tiny_mce/tiny_mce.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />tiny_mce/tiny_mce.js</xsl:attribute>
 						</xsl:element>
 						<script type="text/javascript">
 						<!-- tinyMCE_GZ.init({

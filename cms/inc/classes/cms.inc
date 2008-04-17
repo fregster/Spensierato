@@ -259,7 +259,7 @@ class CMS
 			
 			case 'TINYMCE':
 				//Get TinyMCE file
-				$value = Settings::Singleton()->get_setting('site_folder_js').'tiny_mce/'.$value;
+				$value = Settings::Singleton()->get_setting('cms_root').'tiny_mce/'.$value;
 				
 				if($value == Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/tiny_mce_gzip.php')
 				{

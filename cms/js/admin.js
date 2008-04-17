@@ -25,7 +25,7 @@ function ajaxSave() {
 function editContent(id) {
 	//Replace content with textarea which should then get replaced by TinyMCE
 	currentContent = document.getElementById(id).innerHTML;
-	document.getElementById(id).innerHTML = '<form action="" name="edit_'+id+'"><div><textarea name="content">'+currentContent+'</textarea></div></form>';
+	document.getElementById(id).innerHTML = '<form action="" name="edit_'+id+'"><div><textarea cols="50" rows="40" name="content">'+currentContent+'</textarea></div></form>';
 
 }
 

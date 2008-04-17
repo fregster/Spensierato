@@ -56,7 +56,7 @@ a.tooltip:hover span
 	top:0px;
 	background-color:#FFFFFF;
 	left: 50%;
-	margin-left: -50%;
+	right: 50%;
 }
 
 #page_main

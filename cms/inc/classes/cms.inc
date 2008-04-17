@@ -286,7 +286,7 @@ class CMS
 						break;
 					}
 					
-					//Cache::headers_allow_cache($value, true, 36000, 36000);
+					Cache::headers_allow_cache($value, true, 36000, 36000);
 					header('Content-type: ' . $mime);
 					header('Content-Length: ' . filesize($value));
 					header('Content-Description: TinyMCE File ');

@@ -269,7 +269,7 @@ class CMS
 				
 				if(file_exists($value))
 				{
-		
+					die(substr($value, 0, -3));
 					switch(substr($value, 0, -3))
 					{
 						case 'css':
@@ -278,7 +278,6 @@ class CMS
 						
 						case '.js':
 							$mime = 'text/javascript';
-							
 						break;
 						
 						default:

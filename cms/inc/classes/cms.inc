@@ -409,9 +409,10 @@ class CMS
 				{
 					Content::singleton()->render_mode('edit');
 					
-					$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($node['element_id']));
-					$element = Element::type($data['type']);
-					$element->build($node['element_id']);
+					//$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($value));
+					$element = Element::type($value);
+					$element->edit();
+					die();
 				}
 				else
 				{

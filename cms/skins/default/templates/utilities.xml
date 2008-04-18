@@ -19,6 +19,7 @@
 	<xsl:template name="adverts">
 		<xsl:if test="page/settings/google_ads = '1'">
 			<div id="adverts">
+				<br />
 				<script type="text/javascript"><xsl:comment>
 				google_ad_client = "<xsl:value-of select="/page/settings/google_ad_client" />";
 				google_ad_slot = "<xsl:value-of select="/page/settings/google_ad_slot" />";

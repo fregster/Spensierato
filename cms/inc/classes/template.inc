@@ -89,7 +89,7 @@ class Template
 	
 	private function build_xslt_template($xslt)
 	{
-		$xslt = '<?xml version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'"?>
+		return '<?xml version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'"?>
 <xsl:stylesheet version="1.0" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:php="http://www.php.net/xsl"

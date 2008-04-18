@@ -59,7 +59,7 @@ Settings::Singleton()->new_setting('send_as_xml', false);
 //0 no cleaning
 //1 use internal cleaner
 //2 use JSMin
-Settings::Singleton()->new_setting('js_minify', 0);
+Settings::Singleton()->new_setting('js_minify', 1);
 
 //Setting search
 //Allow site searching
@@ -129,7 +129,7 @@ Settings::Singleton()->new_setting('login_capthca_remember', true);
 //			10 Save debug to file
 Settings::Singleton()->new_setting('debug', 1);
 
-//Seyying debug_log_folder
+//Setting debug_log_folder
 //string path to the debug log folder
 //Default = '/var/log/cms'
 Settings::Singleton()->new_setting('debug_log_folder', '/var/log/cms');
@@ -137,5 +137,12 @@ Settings::Singleton()->new_setting('debug_log_folder', '/var/log/cms');
 //Encryption hash type used for passwords standard is md5 or sha1 (min recomended) other types may require PECL hash installing
 //Note changing this once users have entered there passwords will require reseting ALL there accounts.
 Settings::Singleton()->new_setting('site_option_encryption', 'sha256');
+
+//Setting google_ads
+//This requires google_ad_slot and google_ad_client to also be set
+//Use mine if you want to help sponsor me!
+Settings::Singleton()->new_setting('google_ads', true);
+Settings::Singleton()->new_setting('google_ad_slot', '6057605872');
+Settings::Singleton()->new_setting('google_ad_client', 'pub-6675893347627358');
 
 ?>

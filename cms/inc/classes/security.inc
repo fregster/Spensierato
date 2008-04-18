@@ -64,9 +64,10 @@ class Security
 	
 	public function can_edit_element($element_id)
 	{
-		$page = Databases::singleton()->database($GLOBALS['cms_db_name'])->table('tbl_link_page_elements')->get_records_by_equalto_query(array('element_id', 'main'), array(array($element_id), array(1)), array('page_id'));
-
-		return $this->can_do('edit', $page[0]['page_id']);
+		return true;
+//		$page = Database::Singleton()->sql_select_first(array('main'), 'tbl_element', array('id'), array($element_id));
+//
+//		return $this->can_do('edit', $page[0]['page_id']);
 	}
 	
 	protected function can_do($what, $page_ids = NULL, $user_id = NULL)

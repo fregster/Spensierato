@@ -84,5 +84,11 @@ class elementDefault
 			$this->search = NULL;
 		}
 	}
+
+	protected function edit()
+	{
+		$currentContent = 'test content';
+		echo('<form action="" name="edit_'.$id.'"><div><textarea style="width:100%" cols="80" rows="15" name="content_'.$id.'" id="content_'.$id.'">'.$currentContent.'</textarea></div></form>');
+	}
 }
 ?>

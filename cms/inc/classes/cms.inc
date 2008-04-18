@@ -408,7 +408,10 @@ class CMS
 				if(Security::singleton()->can_edit_element($value))
 				{
 					Content::singleton()->render_mode('edit');
-					$this->get_edit($value);
+					
+					$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($node['element_id']));
+					$element = Element::type($data['type']);
+					$element->build($node['element_id']);
 				}
 				else
 				{

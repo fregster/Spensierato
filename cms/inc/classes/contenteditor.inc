@@ -37,7 +37,7 @@ abstract class ContentEditor
 			//header('Content-Transfer-Encoding: binary');
 				
 			session_write_close();
-			readfile($value);
+			echo(remove_extra_lines(file_get_contents($value)));
 		}
 		else
 		{

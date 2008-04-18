@@ -52,21 +52,13 @@ class Template
 	
 	public function load()
 	{
-		
-		$xslt = '<?xml version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'"?>
-<xsl:stylesheet version="1.0" 
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:php="http://www.php.net/xsl"
-	xmlns:exslt="http://exslt.org/common"
-	lang="en" xml:lang="en"
-	xsl:extension-element-prefixes="php exslt">
-<xsl:output method="xml" version="1.0"
-encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
-	'.$this->load_xslt_template().'
-</xsl:stylesheet>
-
-';
-		return $xslt;
+		return $this->build_xslt_template($this->load_xslt_template());
+	}
+	
+	public function edit()
+	{
+		$path = $this->template_path .'/edit.xml';
+		return $this->build_xslt_template(file_get_contents($path));
 	}
 	
 	public function send_css()
@@ -93,6 +85,23 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 			//TODO write 404
 			die($path);
 		}
+	}
+	
+	private function build_xslt_template($xslt)
+	{
+		$xslt = '<?xml version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'"?>
+<xsl:stylesheet version="1.0" 
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:php="http://www.php.net/xsl"
+	xmlns:exslt="http://exslt.org/common"
+	lang="en" xml:lang="en"
+	xsl:extension-element-prefixes="php exslt">
+<xsl:output method="xml" version="1.0"
+encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
+	'.$xslt.'
+</xsl:stylesheet>
+
+';
 	}
 	
 	private function load_xslt_template()

@@ -70,6 +70,30 @@ class Render
 		//Debug::Singleton()->render();
 	}
 	
+	public function render_edit($xml)
+	{	
+		$xslt = new xsltProcessor;
+		$xslt->registerPHPFunctions();
+		
+		// Load the documents and process using $xslt	
+		$xslt->importStyleSheet(DomDocument::loadXML(Template::Singleton()->edit()));
+		
+		/* transform the xml document */
+		$this->html = $xslt->transformToXML(DomDocument::loadXML($xml));
+		
+		/* hack to clean html */
+		$this->clean_html();
+		
+		/* send the headers */
+		Cache::headers_no_cache();
+		
+		/* output the html */
+		echo(html_entity_decode($this->html));
+		
+		/* ouput debug stuff */
+		//Debug::Singleton()->render();
+	}
+	
 	private function clean_html()
 	{
 		$remove = array('xmlns:php="http://www.php.net/xsl"',

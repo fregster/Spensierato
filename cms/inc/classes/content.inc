@@ -70,7 +70,7 @@ class Content
 		//Call the template class as it loads the template which might make changes to the settings
 		$template = Template::Singleton();
 		
-		$this->attach_menu(Menu::Singleton()->build());	
+		$this->attach_menu();	
 		$this->load_elements();
 		$this->attach_settings();
 		$this->attach_user();
@@ -87,9 +87,9 @@ class Content
 		$this->page->setAttribute($name, utf8_encode($value));		
 	}
 	
-	private function attach_menu($xml)
+	private function attach_menu()
 	{
-		$this->menu_data->appendXML($xml);
+		$this->menu_data->appendXML(Menu::Singleton()->build());
 		$this->menu->appendChild($this->menu_data);
 	}
 	

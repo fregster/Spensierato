@@ -1,0 +1,29 @@
+<xsl:template match="/">
+        <html>
+			<xsl:call-template name="header"/>
+
+			<xsl:element name="body">
+				<div id="site_frame">
+					<div id="page_main">
+
+					<xsl:element name="form">
+						<xsl:attribute name="action"></xsl:attribute>
+						<xsl:attribute name="method">POST</xsl:attribute>
+						<xsl:attribute name="name">edit_<xsl:value-of select="./@id" /></xsl:attribute>
+						<div>
+							<xsl:element name="textarea">
+							<xsl:attribute name="style">width:100%</xsl:attribute>
+							<xsl:attribute name="cols">80</xsl:attribute>
+							<xsl:attribute name="rows">15</xsl:attribute>
+							<xsl:attribute name="name">content_<xsl:value-of select="./@id" /></xsl:attribute>
+							<xsl:attribute name="id">content_<xsl:value-of select="./@id" /></xsl:attribute>
+							<xsl:value-of select="./@id" />
+							</xsl:element>
+						</div>
+					</xsl:element>
+		
+					</div>
+				</div>
+			</xsl:element>
+        </html>
+</xsl:template>

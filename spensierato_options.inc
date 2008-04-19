@@ -144,5 +144,6 @@ Settings::Singleton()->new_setting('site_option_encryption', 'sha256');
 Settings::Singleton()->new_setting('google_ads', true);
 Settings::Singleton()->new_setting('google_ad_slot', '6057605872');
 Settings::Singleton()->new_setting('google_ad_client', 'pub-6675893347627358');
-
+Settings::Singleton()->new_setting('google_ad_width', 180);
+Settings::Singleton()->new_setting('google_ad_height', 150);
 ?>

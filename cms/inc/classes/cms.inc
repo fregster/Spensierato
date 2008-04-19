@@ -412,7 +412,7 @@ class CMS
 					//$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($value));
 					$element = Element::type($value);
 					$element->build($value);
-					Render::Singleton()->render_html(Content::Singleton()->build());
+					Render::Singleton()->render_edit(Content::Singleton()->build());
 				}
 				else
 				{

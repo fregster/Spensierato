@@ -426,19 +426,47 @@ class Database
 	 * Special SQL cases
 	 */
 	
+	private function show_tables()
+	{
+		return($this->sql_exe('SHOW TABLES') );
+	}
+	
 	public function create_database($database)
 	{
 		$this->sql_exe('CREATE DATABASE '.$this->sql_clean_input($database), NULL, true);
 	}
 	
-	public function create_table($table, $database = NULL)
+	public function create_table($table, $database = NULL, $cols = array(), $types = array(), $length = array())
 	{
 		if($database == NULL)
 		{
 			$database = $this->dsn['database'];
 		}
 		
-		//$this->sql_exe('CREATE DATABASE '.$this->sql_clean_input($database), NULL, true);
+		if((count($cols) != count($types)) and (count($cols) != count($length)))
+		{
+			return false;
+		}
+		
+		foreach($this->show_tables() as $table_name)
+		{
+			if ($table == $table_name) 
+			{
+				//Table already created
+				return true;
+			}
+		}
+		
+		$sql = 'CREATE TABLE "'.$this->sql_clean_input($table).'" (';
+		
+		$i = 0;
+		foreach($cols as $col)
+		{
+			$sql .= $this->sql_clean_input($col) .' '.$this->sql_clean_input($types[$i]).'('.$this->sql_clean_input($length[$i]).'),';
+			$i++;
+		}
+		$sql = rtrim($sql, ',') .')';
+		$this->sql_exe($sql);
 	}
 	
 	public function direct_sql($sql)

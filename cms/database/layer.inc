@@ -331,18 +331,46 @@ class Database
 	}
 
 	//$Values is for when I get around to implimenting MDB2 properly!
-	private function sql_exe($sql, $values, $writeuser = false)
+	private function sql_exe($sql, $values = NULL, $writeuser = false)
 	{
 		$sql_start_time = Common::micro_time();
 		
 		//Query the database Object
 		if(	($writeuser == true) and ($this->write != NULL))
 		{
-			$resultset = $this->write->query($sql);
+			if($values == NULL)
+			{
+				//Values have not been passed so do simple SQL exec
+				$resultset = $this->write->query($sql);
+			}
+			else
+			{
+				//Do prepeared statment
+				$stmt = $this->write->prepare($sql);
+			}
 		}
 		else
 		{
-			$resultset = $this->read->query($sql);
+			if($values == NULL)
+			{
+				//Values have not been passed so do simple SQL exec
+				$resultset = $this->read->query($sql);
+			}
+			else
+			{
+				//Do prepeared statment
+				$stmt = $this->read->prepare($sql);
+			}
+		}
+		
+		if($prepared == true)
+		{
+			if (PEAR::isError($stmt)) 
+			{
+				$error = 'Failed to prepare statment : ' . $resultset->getMessage().'<br />From :'. $sql;
+				die($error);
+			}
+			$resultset = $stmt->execute($values);
 		}
 		
 		if(PEAR::isError($resultset)) 

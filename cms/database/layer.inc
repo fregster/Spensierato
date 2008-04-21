@@ -9,6 +9,7 @@ class Database
 	
 	private $prefix;
 	private $sql_db_type;
+	private $dsn;
 	
 	private $sql_cache = array();
 	private $sql_cache_max_results = 20;
@@ -78,7 +79,7 @@ class Database
 			//Create the read user
 			$this->read = $this->connect($dsn);
 		}
-		$this->sql_db_type = $dsn['database_driver'];
+		$this->dsn = $dsn;
 	}
 	
 	private function connect($dsn)
@@ -258,13 +259,13 @@ class Database
 		if( ($limit != NULL) and (is_numeric($limit)) )
 		{
 			//For databases that suport the LIMIT command
-			if($this->sql_db_type == 'mysqli')
+			if($this->dsn['phptype'] == 'mysqli')
 			{
 				$sql = $sql	. ' LIMIT ' . $limit;
 			}
 			
 			//For MS SQL Server
-			if($this->sql_db_type == 'mssql')
+			if($this->dsn['phptype'] == 'mssql')
 			{
 					$sql = str_replace('SELECT ', 'SELECT TOP '.$limit.' ', $sql);
 			}
@@ -419,6 +420,30 @@ class Database
 	{
 		$_SESSION['sql_cache'][$sql]['time'] = time();
 		$_SESSION['sql_cache'][$sql]['result'] = $result;
+	}
+
+	/*
+	 * Special SQL cases
+	 */
+	
+	public function create_database($database)
+	{
+		$this->sql_exe('CREATE DATABASE '.$this->sql_clean_input($database), NULL, true);
+	}
+	
+	public function create_table($table, $database = NULL)
+	{
+		if($database == NULL)
+		{
+			$database = $this->dsn['database'];
+		}
+		
+		//$this->sql_exe('CREATE DATABASE '.$this->sql_clean_input($database), NULL, true);
+	}
+	
+	public function direct_sql($sql)
+	{
+		$this->sql_exe($this->sql_clean_input($sql));
 	}
 }
 ?>

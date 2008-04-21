@@ -95,6 +95,44 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$user_db_password = post::variable('db_password', 'sql');
 	
 	/*
+	 * Create the db object
+	 */
+	$db = database::Singleton()->custom_db_object(array('phptype'  => $driver,
+		    											'username' => $username,
+													    'password' => $password,
+													    'hostspec' => $host));
+	
+	/*
+	 * Create the database
+	 */
+	
+	$db->create_database($database);
+	
+	//Replace the db object with a new one in the database
+	$db = database::Singleton()->custom_db_object(array('phptype'  => $driver,
+		    											'username' => $username,
+													    'password' => $password,
+													    'hostspec' => $host,
+														'database' => $database));
+	
+	//Include the file which processes the SQL code
+	//Load aproprate sql file
+
+	if(!is_file($driver))
+	{
+		die('Unable to load install sql file for type '.$driver);
+	}
+	
+	$sql = file_get_contents($driver);
+	
+	//Process sql
+	str_replace('cms_', $prefix, $sql);
+	
+	
+	//Execute sql
+	$db->direct_sql($sql);
+	
+	/*
 	 * Build the settings file string
 	 */
 	$settings_file_string = '

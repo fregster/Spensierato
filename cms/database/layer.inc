@@ -331,7 +331,7 @@ class Database
 	}
 
 	//$Values is for when I get around to implimenting MDB2 properly!
-	private function sql_exe($sql, $values = NULL, $writeuser = false)
+	private function sql_exe($sql, $values, $writeuser = false)
 	{
 		$sql_start_time = Common::micro_time();
 		

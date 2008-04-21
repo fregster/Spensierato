@@ -280,7 +280,7 @@ class CMS
 				break;
 			
 			case 'INSTALL':
-				include($cms_root.'/install/install.inc');
+				include($this->cms_root.'/install/install.inc');
 				die();
 				break;
 				

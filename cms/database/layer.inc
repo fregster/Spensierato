@@ -369,7 +369,7 @@ class Database
 		{
 			if (PEAR::isError($stmt)) 
 			{
-				$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />From :'. $sql;
+				$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />From :'. $sql .'<br />With: ' .$values;
 				die($error);
 			}
 			$resultset = $stmt->execute($values);

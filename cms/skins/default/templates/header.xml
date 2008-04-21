@@ -1,7 +1,7 @@
 
 	<xsl:template name="header">
 			<head>
-				<xsl:element name="title"><xsl:value-of select="page/settings/site_name_short" /> | <xsl:value-of select="/page/@title" /></xsl:element>
+				<xsl:element name="title"><xsl:value-of select="/page/settings/site_name_short" /> | <xsl:value-of select="/page/@title" /></xsl:element>
 				
 				<xsl:element name="meta">
 					<xsl:attribute name="name">keywords</xsl:attribute>
@@ -9,14 +9,14 @@
 				</xsl:element>
 				
 				<xsl:element name="link">
-					<xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/css</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css</xsl:attribute>
 					<xsl:attribute name="type">text/css</xsl:attribute>
 					<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				</xsl:element>
 				
 				<xsl:if test="/page/options/css_mobile = 1">
 				<xsl:element name="link">
-					<xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/css/mobile</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css/mobile</xsl:attribute>
 					<xsl:attribute name="type">text/css</xsl:attribute>
 					<xsl:attribute name="media">handheld</xsl:attribute>
 					<xsl:attribute name="rel">stylesheet</xsl:attribute>
@@ -25,7 +25,7 @@
 				
 				<xsl:if test="/page/options/admin_mode = 1">
 				<xsl:element name="link">
-					<xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/css/submodal</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css/submodal</xsl:attribute>
 					<xsl:attribute name="type">text/css</xsl:attribute>
 					<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				</xsl:element>

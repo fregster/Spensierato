@@ -381,10 +381,6 @@ class Database
 			die($error);
 		}
 		
-		if(isset($stmt))
-		{
-			$stmt->free();
-		}
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit);
 		
 		return $resultset;

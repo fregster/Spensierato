@@ -278,6 +278,11 @@ class CMS
 				$element->build('access');
 				$this->get_html();
 				break;
+			
+			case 'INSTALL':
+				include($cms_root.'/install/install.inc');
+				die();
+				break;
 				
 			case 'LOGIN':
 				//CMS Login

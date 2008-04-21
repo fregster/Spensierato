@@ -236,6 +236,10 @@ class currentPage
 						}
 						return array(	'type' => 'ACCESS',
 										'value' => $value);
+						
+					case 'install':
+						return array( 'type' => 'INSTALL',
+										'value' => null);
 					
 					default:
 						$command = $this->command_lookup($page_var);

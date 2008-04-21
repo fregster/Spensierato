@@ -63,6 +63,7 @@ class Template
 	
 	public function send_css()
 	{
+		echo('css');
 		print_r(CMS::Singleton()->page_details['value']);
 		die();
 		// initialize ob_gzhandler function to send and compress data

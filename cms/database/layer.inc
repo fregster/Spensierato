@@ -201,7 +201,8 @@ class Database
 					$j = 0;
 					while($j <= (count($or_values) - 1))
 					{
-						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
+						//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
+						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
 						
 						if($j < (count($or_values) - 1))
 						{
@@ -214,7 +215,8 @@ class Database
 				}
 				else
 				{
-					$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($where_values[$i]) .'")';
+					//$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($where_values[$i]) .'")';
+					$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = ?';
 				}
 				
 				
@@ -276,7 +278,7 @@ class Database
 		
 		//Check SQL
 		//$resultset = $mdb2->query($sql);
-		$results = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+		$results = $this->sql_select_exe($sql, $where_values, $FORCE_NO_CACHE);
 		
 		return $results;
 	
@@ -346,7 +348,7 @@ class Database
 			else
 			{
 				//Do prepeared statment
-				$stmt = $this->write->prepare($sql);
+				$stmt = $this->write->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
 			}
 		}
 		else
@@ -359,7 +361,7 @@ class Database
 			else
 			{
 				//Do prepeared statment
-				$stmt = $this->read->prepare($sql);
+				$stmt = $this->read->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
 			}
 		}
 		
@@ -379,6 +381,10 @@ class Database
 			die($error);
 		}
 		
+		if(isset($stmt))
+		{
+			$stmt->free();
+		}
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit);
 		
 		return $resultset;

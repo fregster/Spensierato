@@ -110,7 +110,7 @@ class currentPage
 					//CSS download
 					case 'css':
 						return array('type' => 'CSS',
-									'value' => Settings::Singleton()->Setting['css_file']);
+									'value' => CMS::Singleton()->path_vars[1]);
 						break;
 					
 					//Site downloads does a security check

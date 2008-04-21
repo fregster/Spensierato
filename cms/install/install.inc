@@ -27,7 +27,7 @@
 	Write settings file out 
 */
 
-$settings_file = '';
+$settings_file = CMS::site_root.'/spensierato_setup.inc';
 
 if($_SERVER['REQUEST_METHOD'] == 'GET')
 {

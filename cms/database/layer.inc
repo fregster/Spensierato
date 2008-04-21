@@ -403,8 +403,8 @@ class Database
 		if(!$results)
 		{
 			$resultset = $this->sql_exe($sql, $values);
-		print_r($resultset);
-		die();
+//		print_r($resultset);
+//		die();
 			
 			while($row = $resultset->fetchRow(MDB2_FETCHMODE_ASSOC)) 
 			{

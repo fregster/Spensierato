@@ -59,5 +59,12 @@
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
 							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>
 						</xsl:element>
+						<script language="javascript" type="text/javascript">
+						tinyMCE.init({
+								mode : "textareas",
+								theme : "simple"
+							});
+						
+						</script>
 			</head>
 	</xsl:template>

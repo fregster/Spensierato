@@ -23,19 +23,6 @@ class Capthca
 *
 */
  
-   private function generateCode($characters) 
-   {
-      /* list all possible characters, similar looking characters and vowels have been removed */
-      $possible = '23456789bcdfghjkmnpqrstvwxyz';
-      $code = '';
-      $i = 0;
-      while ($i < $characters) { 
-         $code .= substr($possible, mt_rand(0, strlen($possible)-1), 1);
-         $i++;
-      }
-      return $code;
-   }
- 
    static function create_Images($width='120',$height='40') 
    {
    		$characters = Settings::Singleton()->get_setting('login_capthca_length');
@@ -43,7 +30,7 @@ class Capthca
 		{
 			$characters = 8;
 		}
-		$code = Capthca::generateCode($characters);
+		$code = Common::generate_random_string($characters);
 		$_SESSION['capthca_security_code'] = $code;
 		
 		/* font size will be 75% of the image height */

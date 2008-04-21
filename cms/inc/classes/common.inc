@@ -208,5 +208,20 @@ abstract class Common
 		$input = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $input);
 		return Common::remove_extra_lines($input);
 	}
+	
+	public static function generate_random_string($length)
+	{
+		/* list all possible characters, similar looking characters and vowels have been removed */
+		$possible = '23456789bcdfghjkmnpqrstvwxyz';
+		$code = '';
+		$i = 0;
+		while ($i < $length)
+		{ 
+			$code .= substr($possible, mt_rand(0, strlen($possible)-1), 1);
+			$i++;
+		}
+		
+		return $code;
+	}
 }
 ?>

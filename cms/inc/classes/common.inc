@@ -97,9 +97,13 @@ abstract class Common
 	
 	public static function post_sql_safe($var)
 	{
+		return(Common::sql_clean($_POST[$var]));
+	}
+	
+	public static function sql_clean($input)
+	{
 		$sql_replace = array("'", '"');
-		$clean = trim(str_replace($sql_replace, '', (stripslashes($_POST[$var]))));
-		
+		$clean = trim(str_replace($sql_replace, '', (stripslashes($input))));
 		return($clean);
 	}
 	

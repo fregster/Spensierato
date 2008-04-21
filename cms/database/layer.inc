@@ -383,8 +383,6 @@ class Database
 		
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit);
 		
-//		print_r($resultset);
-//		die();
 		return $resultset;
 	}
 	
@@ -405,6 +403,8 @@ class Database
 		if(!$results)
 		{
 			$resultset = $this->sql_exe($sql, $values);
+		print_r($resultset);
+		die();
 			
 			while($row = $resultset->fetchRow(MDB2_FETCHMODE_ASSOC)) 
 			{

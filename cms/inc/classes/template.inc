@@ -72,11 +72,11 @@ class Template
 		switch (CMS::Singleton()->page_details['value']) 
 		{
 			case 'mobile':
-				$path = $this->$this->defailt_path .'/mobile.css';
+				$path = $this->defailt_path .'/mobile.css';
 			break;
 			
 			case 'submodal':
-				$path = $this->$this->defailt_path .'/subModal.css';
+				$path = $this->defailt_path .'/subModal.css';
 			break;
 			
 			default:

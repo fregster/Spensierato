@@ -32,4 +32,5 @@
 				</script>
 			</div>
 		</xsl:if>
+		<xsl:value-of select="page/settings/google_ads" />
 	</xsl:template>

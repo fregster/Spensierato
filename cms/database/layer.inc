@@ -408,7 +408,7 @@ class Database
 			}
 			
 			//Cache the result
-			$this->sql_cache($sql, $results);
+			$this->sql_cache($sql, $values, $results);
 		}
 		
 		return $results;
@@ -421,6 +421,17 @@ class Database
 		
 		if(isset($_SESSION['sql_cache'][$sql]))
 		{
+			if($values != NULL)
+			{
+				//This was a prepared statment return the correct cached result
+				if(	(isset($_SESSION['sql_cache'][$sql][$values])) and ($_SESSION['sql_cache'][$sql][$values]['time'] >= (time() - 30)))
+				{
+					return $_SESSION['sql_cache'][$sql][$values];
+				}
+				//SQL Query has been done before but with diffrent values
+				return false;
+			}
+			
 			if($_SESSION['sql_cache'][$sql]['time'] >= (time() - 30) )
 			{
 				//Result cached and current
@@ -444,10 +455,19 @@ class Database
 		}
 	}
 	
-	private function sql_cache($sql, $result)
+	private function sql_cache($sql, $values, $result)
 	{
-		$_SESSION['sql_cache'][$sql]['time'] = time();
-		$_SESSION['sql_cache'][$sql]['result'] = $result;
+		if($values == NULL)
+		{
+			$_SESSION['sql_cache'][$sql]['time'] = time();
+			$_SESSION['sql_cache'][$sql]['result'] = $result;
+		}
+		else
+		{
+			//This was a prepared statment so its results are cached slightly diffrently
+			$_SESSION['sql_cache'][$sql][$values]['time'] = time();
+			$_SESSION['sql_cache'][$sql][$values] = $result;
+		}
 	}
 
 	/*

@@ -41,45 +41,45 @@ class Database
 	 * 
 	 * @param unknown_type $dsn
 	 */
-	public function __construct($dsn = NULL)
+	public function __construct()
 	{
 		$this->prefix = $GLOBALS['table_prefix'];
 
-		//If no DSN is set setup default db connection
-		if($dsn == NULL)
-		{	
+		$dsn = array(
+		    'phptype'  => $GLOBALS['database_driver'],
+		    'username' => $GLOBALS['database_user_read'],
+		    'password' => $GLOBALS['database_password'],
+		    'hostspec' => $GLOBALS['database_host'],
+		    'database' => $GLOBALS['database_name'],
+		);
+	
+		$this->read = $this->connect($dsn);
+	
+		//If logged in create db write user this should help prevent against SQL injection
+		//As only logged in can use the db writeable user
+		if($_SESSION['site_login'])
+		{
+			//Create write user
 			$dsn = array(
 			    'phptype'  => $GLOBALS['database_driver'],
-			    'username' => $GLOBALS['database_user_read'],
+			    'username' => $GLOBALS['database_user_readwrite'],
 			    'password' => $GLOBALS['database_password'],
 			    'hostspec' => $GLOBALS['database_host'],
 			    'database' => $GLOBALS['database_name'],
 			);
-		
-			$this->read = $this->connect($dsn);
-		
-			//If logged in create db write user this should help prevent against SQL injection
-			//As only logged in can use the db writeable user
-			if($_SESSION['site_login'])
-			{
-				//Create write user
-				$dsn = array(
-				    'phptype'  => $GLOBALS['database_driver'],
-				    'username' => $GLOBALS['database_user_readwrite'],
-				    'password' => $GLOBALS['database_password'],
-				    'hostspec' => $GLOBALS['database_host'],
-				    'database' => $GLOBALS['database_name'],
-				);
-				$this->write = $this->connect($dsn);
-			}
+			$this->write = $this->connect($dsn);
 		}
-		else
-		{	
-			//A DSN has been set so create the connection with the specified options
-			//Create the read user
-			$this->read = $this->connect($dsn);
-		}
+
 		$this->dsn = $dsn;
+	}
+	
+	public function change_dsn($dsn)
+	{
+		$this->dsn = $dsn;
+		
+		//A DSN has been set so create the connection with the specified options
+		//Create the read user
+		$this->read = $this->connect($dsn);
 	}
 	
 	private function connect($dsn)

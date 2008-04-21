@@ -73,13 +73,13 @@ class Database
 		$this->dsn = $dsn;
 	}
 	
-	public function change_dsn($dsn)
+	public function custom_db_object($dsn)
 	{
 		$this->dsn = $dsn;
 		
 		//A DSN has been set so create the connection with the specified options
 		//Create the read user
-		$this->read = $this->connect($dsn);
+		return $this->connect($dsn);
 	}
 	
 	private function connect($dsn)

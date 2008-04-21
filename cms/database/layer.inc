@@ -278,7 +278,7 @@ class Database
 		
 		//Check SQL
 		//$resultset = $mdb2->query($sql);
-		$results = $this->sql_select_exe($sql, $where_values, $FORCE_NO_CACHE);
+		$results = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 		
 		return $results;
 	

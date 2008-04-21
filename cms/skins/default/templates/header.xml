@@ -14,6 +14,13 @@
 					<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				</xsl:element>
 				
+				<xsl:element name="link">
+					<xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/css/mobile</xsl:attribute>
+					<xsl:attribute name="type">text/css</xsl:attribute>
+					<xsl:attribute name="media">handheld</xsl:attribute>
+					<xsl:attribute name="rel">stylesheet</xsl:attribute>
+				</xsl:element>
+				
 				<xsl:call-template name="javascript"/>
 				
 			</head>

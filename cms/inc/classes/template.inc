@@ -69,7 +69,14 @@ class Template
 		//ob_start();
 		session_start();
 		
-		$path = $this->template_path .'/css.css';
+		if(CMS::Singleton()->page_details['value'] == 'mobile')
+		{
+			$path = $this->template_path .'/mobile.css';
+		}
+		else
+		{
+			$path = $this->template_path .'/css.css';
+		}
 		
 		if(is_file($path))
 		{

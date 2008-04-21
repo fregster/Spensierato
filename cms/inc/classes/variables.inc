@@ -25,6 +25,11 @@ abstract class variables
 		return false;
 	}
 	
+	protected function sql($input)
+	{
+		return Common::sql_clean($input);
+	}
+	
 	protected function numeric($input)
 	{
 		if(is_numeric($input))

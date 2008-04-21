@@ -365,7 +365,7 @@ class Database
 			}
 		}
 		
-		if($prepared == true)
+		if(isset($stmt))
 		{
 			if (PEAR::isError($stmt)) 
 			{

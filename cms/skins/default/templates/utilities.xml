@@ -17,7 +17,7 @@
 	</xsl:template>
 	
 	<xsl:template name="adverts">
-		<xsl:if test="page/settings/google_ads = '1'">
+		<xsl:if test="page/settings/google_ads = 1">
 			<div id="adverts">
 				<br />
 				<script type="text/javascript"><xsl:comment>

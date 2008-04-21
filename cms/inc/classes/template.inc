@@ -63,14 +63,14 @@ class Template
 	
 	public function send_css()
 	{
+		print_r(CMS::Singleton()->page_details['value']);
+		die();
 		// initialize ob_gzhandler function to send and compress data
 		ob_start ("ob_gzhandler");
 		ob_start ("compress");
 		//ob_start();
 		session_start();
 		
-		print_r(CMS::Singleton()->page_details['value']);
-		die();
 		if(CMS::Singleton()->page_details['value'] == 'mobile')
 		{
 			$path = $this->template_path .'/mobile.css';

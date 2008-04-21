@@ -392,9 +392,20 @@ class CMS
 				 * Check the related page details
 				 * call file transfer retrieve
 				 */
-				$value = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$value;
-				FileTransfer::singleton()->get_file($value);
-				die();
+				$file = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$value;
+				if(is_file($file))
+				{
+					FileTransfer::singleton()->get_file($file);
+					die();
+				}
+				
+				$file = Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$value;
+				if(is_file($file))
+				{
+					FileTransfer::singleton()->get_file($file);
+					die();
+				}
+				
 				
 				break;
 				

@@ -441,6 +441,11 @@ class CMS
 				}
 				break;
 				
+			case 'AJAX':
+				//Pass directly to the AJAX class for processing
+				ajax::process($value);
+				break;
+				
 			case 'EDITSAVE':
 				if(Security::singleton()->can_edit_element($value))
 				{

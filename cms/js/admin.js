@@ -14,12 +14,13 @@ function ajaxLoad() {
 function ajaxSave() {
 	var ed = tinyMCE.get('editor1');
 
-	// Do you ajax call here, window.setTimeout fakes ajax call
 	ed.setProgressState(1); // Show progress
-	window.setTimeout(function() {
-		ed.setProgressState(0); // Hide progress
-		alert(ed.getContent());
-	}, 3000);
+	
+	ajaxFunction('http://www.fryer.org.uk/current/cms/ajax/', ed.getContent(), 'POST' );
+
+	ed.setProgressState(0); // Hide progress
+	
+	ajaxLoad();
 }
 
 function editContent(id) {

@@ -3,8 +3,7 @@
 			<xsl:call-template name="header"/>
 
 			<xsl:element name="body">
-				<div id="site_frame">
-					<div id="page_main">
+					<div id="page_edit">
 
 					<xsl:element name="form">
 						<xsl:attribute name="action"></xsl:attribute>
@@ -23,7 +22,6 @@
 					</xsl:element>
 		
 					</div>
-				</div>
 			</xsl:element>
         </html>
 </xsl:template>

@@ -71,6 +71,15 @@ a.tooltip:hover span
 	background-color:#CCCCCC;
 }
 
+#page_edit
+{
+	position:absolute;
+	width:100%;
+	left: 10px;
+	right: 10px;
+	border: 1px solid #ddd;
+}
+
 #page_section_banner
 {
 	height:104px;

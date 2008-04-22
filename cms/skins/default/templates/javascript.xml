@@ -15,27 +15,34 @@
 					<!-- User logged in and in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />public.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js</xsl:attribute>
 						</xsl:element>
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />logged_in.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />logged_in.js</xsl:attribute>
 						</xsl:element>
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />admin.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />admin.js</xsl:attribute>
 						</xsl:element>
 						
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />submodal/common.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />submodal/common.js</xsl:attribute>
 						</xsl:element>
 						
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />submodal/subModal.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />submodal/subModal.js</xsl:attribute>
 						</xsl:element>
 						
+						<script language="javascript" type="text/javascript">
+						function pageReload(returnVal) 
+						{
+                        	window.top.document.body.innerHTML = '';
+							window.top.location = '<xsl:value-of select="/page/settings/document_root" />/'+returnVal;
+                        }
+						</script>
 					</xsl:if>
 				
 					<xsl:if test="/page/options/admin_mode != 1">

@@ -64,9 +64,9 @@ a.tooltip:hover span
 {
 	position:absolute;
 	/* width:900px; 
-	min-height:620px; */
+	min-height:620px;
 	left: 10px;
-	right: 10px;
+	right: 10px; */
 	border: 1px solid #ddd;
 	background-color:#CCCCCC;
 }

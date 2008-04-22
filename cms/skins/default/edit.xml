@@ -39,8 +39,8 @@
 
 <xsl:template name="edit_footer">
 	<div id="edit_footer">
-		<input type="button" value="Re-Load" onclick="ajaxLoad();" />
-		<input type="button" value="Save" onclick="ajaxSave();" />
+		<input type="button" value="Re-Load" onclick="ajaxLoad(1);" />
+		<input type="button" value="Save" onclick="ajaxSave(1);" />
 	</div>
 </xsl:template>
 

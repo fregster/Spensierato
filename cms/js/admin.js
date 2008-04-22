@@ -1,6 +1,6 @@
 //Javascript Document
 
-function ajaxLoad() {
+function ajaxLoad(id) {
 	var ed = tinyMCE.get('content');
 
 	// Do you ajax call here, window.setTimeout fakes ajax call
@@ -11,12 +11,12 @@ function ajaxLoad() {
 	}, 3000);
 }
 
-function ajaxSave() {
+function ajaxSave(id) {
 	var ed = tinyMCE.get('content');
 
 	ed.setProgressState(1); // Show progress
 	
-	ajaxFunction('http://www.fryer.org.uk/current/cms/ajax/', ed.getContent(), 'POST' );
+	ajaxFunction('http://www.fryer.org.uk/current/cms/ajax/'+id, ed.getContent(), 'POST' );
 
 	ed.setProgressState(0); // Hide progress
 	

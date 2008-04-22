@@ -6,6 +6,7 @@ class elementAccount extends elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'Account Information Element';
 		$this->image = 'account.png';
+		$this->edit_height = 600;
 	}
 	
 	protected function get_data()

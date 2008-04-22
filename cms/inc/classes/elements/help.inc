@@ -6,6 +6,7 @@ class elementHelp extends elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'Help Information Element';
 		$this->image = 'help.png';
+		$this->edit_height = 600;
 	}
 	
 	protected function get_data()

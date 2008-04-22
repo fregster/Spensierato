@@ -6,6 +6,7 @@ class elementAccess extends elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'Accessability Element';
 		$this->image = 'access.png';
+		$this->edit_height = 600;
 	}
 	
 	protected function get_data()

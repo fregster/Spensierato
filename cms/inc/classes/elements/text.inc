@@ -7,6 +7,7 @@ class elementText extends elementDefault
 		$this->name = 'Text Element';
 		$this->image = 'text.png';
 		$this->allowed_tags(array('html'));
+		$this->edit_height = 600;
 	}
 }
 

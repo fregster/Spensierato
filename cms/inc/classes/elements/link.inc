@@ -8,6 +8,7 @@ class elementLink extends elementDefault
 		$this->name = 'Link Element';
 		$this->image = 'link.png';
 		$this->allowed_tags(array('text', 'href'));
+		$this->edit_height = 600;
 	}
 }
 

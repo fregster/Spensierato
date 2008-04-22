@@ -6,6 +6,7 @@ class elementDefault
 	protected $type;
 	protected $name;
 	protected $image;
+	protected $edit_height;
 	private $tags = array('title');
 	
 	function __construct()
@@ -13,6 +14,7 @@ class elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'Default Element';
 		$this->image = 'default.png';
+		$this->edit_height = 600;
 	}
 	
 	protected function allowed_tags($tags)

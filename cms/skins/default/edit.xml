@@ -8,7 +8,7 @@
 					<xsl:element name="form">
 						<xsl:attribute name="action"></xsl:attribute>
 						<xsl:attribute name="method">POST</xsl:attribute>
-						<xsl:attribute name="name">edit_<xsl:value-of select="./@id" /></xsl:attribute>
+						<xsl:attribute name="id">edit_<xsl:value-of select="./@id" /></xsl:attribute>
 						<div>
 							<xsl:element name="textarea">
 							<xsl:attribute name="style">width:100%</xsl:attribute>
@@ -57,7 +57,7 @@
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
 							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>
 						</xsl:element>
-						<script language="javascript" type="text/javascript">
+						<script type="text/javascript">
 						tinyMCE.init({
 								mode : "textareas",
 								theme : "simple"

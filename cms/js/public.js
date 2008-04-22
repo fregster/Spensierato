@@ -1,26 +1,38 @@
 // JavaScript Document
 <!-- AJAX Code for search -->
 var xmlHttp = false;
-function ajaxFunction(url, parameters)
+function ajaxFunction(url, parameters, how)
 {
-var xmlHttp;
+var http;
+var method;
+
+if (how == null || how == 'GET') 
+{
+	method = 'GET';
+}
+else 
+{
+	method = 'POST';
+}
+
+
 try
   {
   // Firefox, Opera 8.0+, Safari
-  xmlHttp=new XMLHttpRequest();
+  http=new XMLHttpRequest();
   }
 catch (e)
   {
   // Internet Explorer
   try
     {
-    xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+    http=new ActiveXObject("Msxml2.XMLHTTP");
     }
   catch (e)
     {
     try
       {
-      xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+      http=new ActiveXObject("Microsoft.XMLHTTP");
       }
     catch (e)
       {
@@ -30,28 +42,41 @@ catch (e)
     }
   }
    //Test the connection
-   if (!xmlHttp)
+   if (!http)
    {
       alert('Cannot create XMLHTTP instance');
       //return false;
    }
 
-    if (xmlHttp.overrideMimeType)
+    if (http.overrideMimeType)
         {
                 //If we can force the mimetype
-                xmlHttp.overrideMimeType('text/xml');
+                http.overrideMimeType('text/xml');
         }
 
-        xmlHttp.onreadystatechange=function()
+	http.onreadystatechange=function()
     {
-        if(xmlHttp.readyState==4)
+        if(http.readyState==4)
                 {
-                        document.getElementById('page_section_main').innerHTML = xmlHttp.responseText;
+                        document.getElementById('page_section_main').innerHTML = http.responseText;
                 }
     }
 
-        xmlHttp.open('GET', url + parameters, true);
-        xmlHttp.send(null);
+	if(method == 'GET')
+	{
+        http.open('GET', url + parameters, true);
+        http.send(null);
+	}
+	
+	if(method == 'POST')
+	{
+		http.open('POST', url, true);
+		//Send the proper header information along with the request
+		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		http.setRequestHeader("Content-length", params.length);
+		http.setRequestHeader("Connection", "close");
+		http.send(parameters);
+	}
 }
 
 function searchFunction()

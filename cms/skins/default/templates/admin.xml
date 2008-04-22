@@ -40,7 +40,7 @@
 				<xsl:element name="a">
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/eid_<xsl:value-of select="./@id" /></xsl:attribute>
 					<!--<xsl:attribute name="onclick">editContent('eid_<xsl:value-of select="./@id" />'); return false;</xsl:attribute>  -->
-					<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/edit/eid_<xsl:value-of select="./@id" />', 700, <xsl:value-of select="./@eh" />, pageReload); return false;</xsl:attribute>
+					<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/edit/eid_<xsl:value-of select="./@id" />', 780, <xsl:value-of select="./@eh" />, pageReload); return false;</xsl:attribute>
 					Edit Content
 				</xsl:element>
 				this is just a lot of junk text to mess about the styling to see what happens as the div grows and grows and grows etc, this should evently wrap to the next line but push the div to the max width of the container div.

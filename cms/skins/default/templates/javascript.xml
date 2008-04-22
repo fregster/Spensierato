@@ -36,7 +36,7 @@
 							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />submodal/subModal.js</xsl:attribute>
 						</xsl:element>
 						
-						<script language="javascript" type="text/javascript">
+						<script type="text/javascript">
 						function pageReload(returnVal) 
 						{
                         	window.top.document.body.innerHTML = '';

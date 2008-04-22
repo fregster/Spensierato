@@ -5,10 +5,10 @@
 			<xsl:element name="body">
 					<div id="page_edit">
 					<xsl:element name="form">
-						<xsl:call-template name="edit_header"/><br />
 						<xsl:attribute name="action"></xsl:attribute>
 						<xsl:attribute name="method">POST</xsl:attribute>
 						<xsl:attribute name="id">edit_<xsl:value-of select="./@id" /></xsl:attribute>
+						<xsl:call-template name="edit_header"/><br />
 						<div>
 							<xsl:element name="textarea">
 							<xsl:attribute name="style">width:100%</xsl:attribute>

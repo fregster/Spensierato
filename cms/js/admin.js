@@ -1,7 +1,7 @@
 //Javascript Document
 
 function ajaxLoad() {
-	var ed = tinyMCE.get('editor1');
+	var ed = tinyMCE.get('content');
 
 	// Do you ajax call here, window.setTimeout fakes ajax call
 	ed.setProgressState(1); // Show progress
@@ -12,7 +12,7 @@ function ajaxLoad() {
 }
 
 function ajaxSave() {
-	var ed = tinyMCE.get('editor1');
+	var ed = tinyMCE.get('content');
 
 	ed.setProgressState(1); // Show progress
 	

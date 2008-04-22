@@ -56,8 +56,8 @@ a.tooltip:hover span
 	height:100%;
 	top:0px;
 	background-color:#FFFFFF;
-	margin-left:auto;
-	margin-right:auto;
+	/* margin-left:auto;
+	margin-right:auto;*/
 }
 
 #page_main

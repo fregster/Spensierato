@@ -106,6 +106,11 @@ class currentPage
 										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
 							break;
 					
+					case 'ajax':
+							return array('type' => 'AJAX',
+										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
+							break;
+					
 					//CMS Included Files page specific security checks
 					case 'cms':
 						return array('type' => 'CMS',

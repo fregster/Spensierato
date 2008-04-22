@@ -7,7 +7,7 @@
 					<xsl:element name="form">
 						<xsl:attribute name="action"></xsl:attribute>
 						<xsl:attribute name="method">POST</xsl:attribute>
-						<xsl:attribute name="id">edit_<xsl:value-of select="/element@id" /></xsl:attribute>
+						<xsl:attribute name="id">edit_<!-- <xsl:value-of select="/element@id" /> --></xsl:attribute>
 						<xsl:call-template name="edit_header"/><br />
 						<div>
 							<xsl:element name="textarea">

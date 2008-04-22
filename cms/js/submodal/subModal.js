@@ -22,7 +22,7 @@ var gPopupContainer = null;
 var gPopFrame = null;
 var gReturnFunc;
 var gPopupIsShown = false;
-var gDefaultPage = "./js/submodal/loading.html";
+var gDefaultPage = "./loading";
 var gHideSelects = false;
 var gReturnVal = null;
 

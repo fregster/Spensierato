@@ -73,11 +73,13 @@ class cookie
 	
 	public function get_cookie_value($name)
 	{
-		if(isset($this->cookie_array[$name]))
+		if(isset($this->cookie_array))
 		{
-			return $this->cookie_array[$name];
+			if(isset($this->cookie_array[$name]))
+			{
+				return $this->cookie_array[$name];
+			}
 		}
-		
 		return NULL;
 	}
 	

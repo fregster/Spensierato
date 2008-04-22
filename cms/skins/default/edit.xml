@@ -3,6 +3,7 @@
 			<xsl:call-template name="header"/>
 
 			<xsl:element name="body">
+			<xsl:attribute name="onload">ajaxLoad(1);</xsl:attribute>
 					<div id="page_edit">
 					<xsl:element name="form">
 						<xsl:attribute name="action"></xsl:attribute>

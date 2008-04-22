@@ -43,6 +43,7 @@ class elementDefault
 		$element->setAttribute('id', $this->id);
 		$element->setAttribute('type', $this->type);
 		$element->setAttribute('etype', $this->name);
+		$element->setAttribute('eh', $this->edit_height);
 		
 		//Transform the data field
 		$this->transform_data();

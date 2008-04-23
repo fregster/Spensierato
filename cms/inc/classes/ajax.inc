@@ -6,7 +6,7 @@ class ajax
 		switch ($vars[1]) 
 		{
 			case 'edit':
-				$this->edit($vars[2]);
+				ajax::edit($vars[2]);
 			break;
 			
 			default:
@@ -20,12 +20,12 @@ class ajax
 	{
 		if($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
-			$this->edit_post($vars);
+			ajax::edit_post($vars);
 		}
 		
 		if($_SERVER['REQUEST_METHOD'] == 'GET')
 		{
-			$this->edit_load($vars);
+			ajax::edit_load($vars);
 		}
 	}
 	

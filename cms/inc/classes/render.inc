@@ -48,35 +48,33 @@ class Render
 	
 	public function render_html($xml)
 	{	
-		$xslt = new xsltProcessor;
-		$xslt->registerPHPFunctions();
-		
-		// Load the documents and process using $xslt	
-		$xslt->importStyleSheet(DomDocument::loadXML(Template::Singleton()->load()));
-		
-		/* transform the xml document */
-		$this->html = $xslt->transformToXML(DomDocument::loadXML($xml));
-		
-		/* hack to clean html */
-		$this->clean_html();
-		
-		/* send the headers */
-		Cache::headers_no_cache();
-		
-		/* output the html */
-		echo(html_entity_decode($this->html));
-		
-		/* ouput debug stuff */
-		//Debug::Singleton()->render();
+		$this->render(Template::Singleton()->load(), $xml);
 	}
 	
 	public function render_edit($xml)
 	{	
+		$this->render(Template::Singleton()->edit(), $xml);
+	}
+	
+	private function render($template, $xml)
+	{
+		// Load the site XML pass directly into Render
+		if($_GET['xml'] or Settings::singleton()->get_setting('send_as_xml'))
+		{
+			//Just send the XML
+			header('content-type: text/xml');
+			$search = '<?xml version="1.0"?>';
+			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'"?><?xml-stylesheet href="'. Settings::singleton()->get_setting('document_root').'/xslt" type="text/xsl" ?>';
+			
+			echo(str_replace($search, $replace, $xml));
+			exit;
+		}
+		
 		$xslt = new xsltProcessor;
 		$xslt->registerPHPFunctions();
 		
 		// Load the documents and process using $xslt	
-		$xslt->importStyleSheet(DomDocument::loadXML(Template::Singleton()->edit()));
+		$xslt->importStyleSheet(DomDocument::loadXML($template));
 		
 		/* transform the xml document */
 		$this->html = $xslt->transformToXML(DomDocument::loadXML($xml));

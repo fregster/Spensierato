@@ -40,9 +40,17 @@
 </xsl:template>
 
 <xsl:template name="edit_footer">
-	<div id="edit_footer">
-		<input type="button" value="Re-Load" onclick="ajaxLoad(1);" />
-		<input type="button" value="Save" onclick="ajaxSave(1);" />
+	<div id="edit_footer">	
+		<xsl:element name="input">
+			<xsl:attribute name="type">button</xsl:attribute>
+			<xsl:attribute name="value">Re-Load</xsl:attribute>
+			<xsl:attribute name="onclick">ajaxLoad(<xsl:value-of select="/element@id" />);</xsl:attribute>
+		</xsl:element>
+		<xsl:element name="input">
+			<xsl:attribute name="type">button</xsl:attribute>
+			<xsl:attribute name="value">Save</xsl:attribute>
+			<xsl:attribute name="onclick">ajaxSave(<xsl:value-of select="/element@id" />);</xsl:attribute>
+		</xsl:element>
 	</div>
 </xsl:template>
 

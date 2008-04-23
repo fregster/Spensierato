@@ -67,6 +67,13 @@ class elementDefault
 		//Check data
 	}
 	
+	//Return data for editor
+	public function edit()
+	{
+		return htmlentities($this->data);
+	}
+	
+	
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor
 	protected function transform_data()
 	{

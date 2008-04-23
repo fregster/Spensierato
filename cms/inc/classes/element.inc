@@ -3,7 +3,7 @@ abstract class Element
 {
 	public static function type($type)
 	{
-		if(is_int($type))
+		if(is_numeric($type))
 		{
 			$type = Database::Singleton()->sql_select_first(array('	type'), 'tbl_page_elements', array('id'), array($type));
 		}

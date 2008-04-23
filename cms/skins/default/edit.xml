@@ -8,7 +8,7 @@
 					<xsl:element name="form">
 						<xsl:attribute name="action"></xsl:attribute>
 						<xsl:attribute name="method">POST</xsl:attribute>
-						<xsl:attribute name="id"><xsl:value-of select="/element@id" /></xsl:attribute>
+						<xsl:attribute name="id"><xsl:value-of select="/page/element@id" /></xsl:attribute>
 						<xsl:call-template name="edit_header"/><br />
 						<div>
 							<xsl:element name="textarea">
@@ -17,7 +17,7 @@
 							<xsl:attribute name="rows">15</xsl:attribute>
 							<xsl:attribute name="name">content</xsl:attribute>
 							<xsl:attribute name="id">content</xsl:attribute>
-							<xsl:value-of select="/element/data/html" />
+							<xsl:value-of select="/page/element/data/html" />
 							</xsl:element>
 						</div>
 						<br/>
@@ -44,12 +44,12 @@
 		<xsl:element name="input">
 			<xsl:attribute name="type">button</xsl:attribute>
 			<xsl:attribute name="value">Re-Load</xsl:attribute>
-			<xsl:attribute name="onclick">ajaxLoad(<xsl:value-of select="/element@id" />);</xsl:attribute>
+			<xsl:attribute name="onclick">ajaxLoad(<xsl:value-of select="/page/element@id" />);</xsl:attribute>
 		</xsl:element>
 		<xsl:element name="input">
 			<xsl:attribute name="type">button</xsl:attribute>
 			<xsl:attribute name="value">Save</xsl:attribute>
-			<xsl:attribute name="onclick">ajaxSave(<xsl:value-of select="/element@id" />);</xsl:attribute>
+			<xsl:attribute name="onclick">ajaxSave(<xsl:value-of select="/page/element@id" />);</xsl:attribute>
 		</xsl:element>
 	</div>
 </xsl:template>

@@ -4,7 +4,7 @@
 				<!-- User Not logged in -->
 					<xsl:element name="script">
 						<xsl:attribute name="type">text/javascript</xsl:attribute>
-						<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />public.js</xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js</xsl:attribute>
 					</xsl:element>
 				</xsl:if>
 				
@@ -49,13 +49,24 @@
 					<!-- User logged in and NOT in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />public.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js</xsl:attribute>
 						</xsl:element>
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/site_folder_js" />logged_in.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />logged_in.js</xsl:attribute>
 						</xsl:element>
 					</xsl:if>
 					
+				</xsl:if>
+				<xsl:if test="boolean(/page/settings/google_analytics_id)">
+					<script type="text/javascript">
+					var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+					document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+					</script>
+					<script type="text/javascript">
+					var pageTracker = _gat._getTracker("<xsl:value-of select="/page/settings/google_analytics_id" />");
+					pageTracker._initData();
+					pageTracker._trackPageview();
+					</script>
 				</xsl:if>
 		</xsl:template>

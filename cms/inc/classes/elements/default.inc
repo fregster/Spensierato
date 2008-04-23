@@ -95,10 +95,5 @@ class elementDefault
 		}
 	}
 
-	public function edit()
-	{
-		$currentContent = 'test content';
-		echo('<edit id="'.$id.'">'.$currentContent.'</edit>');
-	}
 }
 ?>

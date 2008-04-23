@@ -3,14 +3,20 @@ class ajax
 {
 	public static function process($vars)
 	{
-		if($_SERVER['REQUEST_METHOD'] == 'POST')
+		if(post::variable($vars, 'numeric'))
 		{
-			return $this->post($vars);
-		}
-		
-		if($_SERVER['REQUEST_METHOD'] == 'GET')
-		{
-			return $this->get($vars);
+			if(Security::Singleton()->can_edit_element($vars))
+			{
+				if($_SERVER['REQUEST_METHOD'] == 'POST')
+				{
+					return $this->post($vars);
+				}
+				
+				if($_SERVER['REQUEST_METHOD'] == 'GET')
+				{
+					return $this->get($vars);
+				}
+			}
 		}
 	}
 
@@ -21,7 +27,9 @@ class ajax
 	
 	private function get($vars)
 	{
-		
+		$element = Element::type($vars);
+		$element->build($vars);
+		return $element->render();		
 	}
 }
 ?>

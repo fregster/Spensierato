@@ -11,7 +11,7 @@ abstract class variables
 			return $input;
 		}
 		
-		variables::$type($input);
+		return variables::$type($input);
 	}
 	
 	

@@ -39,7 +39,7 @@ class elementDefault
 		$dom->formatOutput = false;
 		
 		//Create element and set required attributes
-		$element = $dom->createElement($this->type);
+		$element = $dom->createElement('element');
 		$element->setAttribute('id', $this->id);
 		$element->setAttribute('type', $this->type);
 		$element->setAttribute('etype', $this->name);
@@ -91,7 +91,7 @@ class elementDefault
 	public function edit()
 	{
 		$currentContent = 'test content';
-		echo('<form action="" name="edit_'.$id.'"><div><textarea style="width:100%" cols="80" rows="15" name="content_'.$id.'" id="content_'.$id.'">'.$currentContent.'</textarea></div></form>');
+		echo('<edit id="'.$id.'">'.$currentContent.'</edit>');
 	}
 }
 ?>

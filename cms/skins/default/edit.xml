@@ -88,8 +88,7 @@
 				<script type="text/javascript">
 				tinyMCE.init({
 						mode : "textareas",
-						theme : "simple",
-						plugins : "autosave"
+						theme : "simple"
 					});
 				
 				</script>

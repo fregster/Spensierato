@@ -5,8 +5,7 @@ abstract class Element
 	{
 		if(is_numeric($type))
 		{
-			$type = Database::Singleton()->sql_select_first(array('type'), 'tbl_elements', array('id'), array($type));
-			print_r($type);
+			$type = Element::get_element_type($type);
 		}
 		
 		if(class_exists($type))
@@ -19,6 +18,12 @@ abstract class Element
 		}
 		
 		return new $c;
+	}
+	
+	public static function get_element_type($id)
+	{
+		$type = Database::Singleton()->sql_select_first(array('type'), 'tbl_elements', array('id'), array($type));
+		return $type['type'];
 	}
 }
 ?>

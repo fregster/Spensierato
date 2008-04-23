@@ -36,5 +36,5 @@ var t
 function delayedSave(id)
 {
 	clearTimeout(t);
-	t=setTimeout("ajaxSave(id)",30000);
+	t=setTimeout("ajaxSave(id)",1000);
 }

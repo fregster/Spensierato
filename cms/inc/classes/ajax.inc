@@ -3,25 +3,16 @@ class ajax
 {
 	public static function process($vars)
 	{
-		if(post::variable($vars, 'numeric'))
+		switch ($vars) 
 		{
-			if(Security::Singleton()->can_edit_element($vars))
-			{
-				if($_SERVER['REQUEST_METHOD'] == 'POST')
-				{
-					return $this->post($vars);
-				}
-				
-				if($_SERVER['REQUEST_METHOD'] == 'GET')
-				{
-					return $this->get($vars);
-				}
-			}
-		}
-		else
-		{
-			print_r($vars);
-			die();
+			case 'edit':
+				$this->edit($vars);
+			break;
+			
+			default:
+				print_r($vars);
+				die();
+			break;
 		}
 	}
 

@@ -108,7 +108,7 @@ class currentPage
 					
 					case 'ajax':
 							return array('type' => 'AJAX',
-										'value' => CMS::Singleton()->path_vars[1]);
+										'value' => CMS::Singleton()->path_vars);
 							break;
 					
 					//CMS Included Files page specific security checks

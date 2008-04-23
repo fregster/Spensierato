@@ -3,10 +3,10 @@ class ajax
 {
 	public static function process($vars)
 	{
-		switch ($vars) 
+		switch ($vars[0]) 
 		{
 			case 'edit':
-				$this->edit($vars);
+				$this->edit($vars[1]);
 			break;
 			
 			default:

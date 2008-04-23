@@ -9,7 +9,7 @@
 						<xsl:attribute name="action"></xsl:attribute>
 						<xsl:attribute name="method">POST</xsl:attribute>
 						<xsl:attribute name="id"><xsl:value-of select="/page/element/@id" /></xsl:attribute>
-						<xsl:call-template name="edit_header"/><br />
+						<xsl:call-template name="edit_header"/><p>
 						<div>
 							<xsl:element name="textarea">
 							<xsl:attribute name="style">width:100%</xsl:attribute>
@@ -20,7 +20,7 @@
 							<xsl:value-of select="/page/element/data/html" />
 							</xsl:element>
 						</div>
-						<br/>
+						</p>
 						<xsl:call-template name="edit_footer"/>
 					</xsl:element>
 					</div>

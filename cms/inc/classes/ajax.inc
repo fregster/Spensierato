@@ -38,7 +38,7 @@ class ajax
 	{
 		$element = Element::type($id);
 		$element->build($id);
-		echo('<ajax>'.$element->render().'</ajax>');		
+		echo($element->edit());		
 	}
 }
 ?>

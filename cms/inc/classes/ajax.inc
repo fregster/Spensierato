@@ -36,8 +36,8 @@ class ajax
 	
 	private function edit_load($id)
 	{
-		$element = Element::type(id);
-		$element->build(id);
+		$element = Element::type($id);
+		$element->build($id);
 		echo('<ajax>'.$element->render().'</ajax>');		
 	}
 }

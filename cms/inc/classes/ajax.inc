@@ -3,10 +3,10 @@ class ajax
 {
 	public static function process($vars)
 	{
-		switch ($vars[0]) 
+		switch ($vars[1]) 
 		{
 			case 'edit':
-				$this->edit($vars[1]);
+				$this->edit($vars[2]);
 			break;
 			
 			default:
@@ -16,15 +16,28 @@ class ajax
 		}
 	}
 
-	private function post($vars)
+	private function edit($id)
 	{
-		return 'SAVED';
+		if($_SERVER['REQUEST_METHOD'] == 'POST')
+		{
+			$this->edit_post($vars);
+		}
+		
+		if($_SERVER['REQUEST_METHOD'] == 'GET')
+		{
+			$this->edit_load($vars);
+		}
 	}
 	
-	private function get($vars)
+	private function edit_post($id)
 	{
-		$element = Element::type($vars);
-		$element->build($vars);
+		echo 'SAVED';
+	}
+	
+	private function edit_load($id)
+	{
+		$element = Element::type(id);
+		$element->build(id);
 		echo('<ajax>'.$element->render().'</ajax>');		
 	}
 }

@@ -1,5 +1,5 @@
 
-	<xsl:template match="element/@type[elementText]">
+	<xsl:template match="element[@type = 'elementText']">
 		<xsl:call-template name="element_admin_header"/>	
 		<xsl:element name="div">
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
@@ -9,7 +9,7 @@
 		</xsl:element>
 	</xsl:template>
 	
-	<xsl:template match="element/@type[elementImage]">
+	<xsl:template match="element[@type = 'elementImage']">
 		<xsl:call-template name="element_admin_header"/>
 		<xsl:element name="div">
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
@@ -19,7 +19,7 @@
 		</xsl:element>
 	</xsl:template>
 	
-	<xsl:template match="element/@type[elementAccount]">
+	<xsl:template match="element[@type = 'elementAccount']">
 		<div id="account_personal_details">
 			<div id="account_personal_details_title">Personal Details</div>
 			<div>

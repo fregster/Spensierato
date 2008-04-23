@@ -5,7 +5,7 @@ abstract class Element
 	{
 		if(is_numeric($type))
 		{
-			$type = Database::Singleton()->sql_select_first(array('type'), 'tbl_page_elements', array('id'), array($type));
+			$type = Database::Singleton()->sql_select_first(array('type'), 'tbl_elements', array('id'), array($type));
 		}
 		
 		if(class_exists($type))

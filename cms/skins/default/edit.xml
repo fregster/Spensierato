@@ -17,7 +17,7 @@
 							<xsl:attribute name="rows">15</xsl:attribute>
 							<xsl:attribute name="name">content</xsl:attribute>
 							<xsl:attribute name="id">content</xsl:attribute>
-							<xsl:value-of select="/element/data" />
+							<xsl:value-of select="/element/data/html" />
 							</xsl:element>
 						</div>
 						<br/>

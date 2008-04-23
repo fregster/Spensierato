@@ -38,9 +38,13 @@ function ajaxSave(id) {
 	ajaxLoad();
 }
 
-var t
-var c
+function tinyMCE_onkeyup(id)
+{
+	tinyMCE.addEvent(tinyMCE.getInstanceById('content').getDoc(), 'keydown',delayedSave(id));
+	return;
+}
 
+var t
 function delayedSave(id)
 {
 	clearTimeout(t);

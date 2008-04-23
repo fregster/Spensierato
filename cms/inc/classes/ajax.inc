@@ -29,7 +29,7 @@ class ajax
 	{
 		$element = Element::type($vars);
 		$element->build($vars);
-		return $element->render();		
+		echo($element->render());		
 	}
 }
 ?>

@@ -18,6 +18,11 @@ class ajax
 				}
 			}
 		}
+		else
+		{
+			print_r($vars);
+			die();
+		}
 	}
 
 	private function post($vars)

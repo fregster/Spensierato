@@ -17,6 +17,7 @@
 							<xsl:attribute name="rows">15</xsl:attribute>
 							<xsl:attribute name="name">content</xsl:attribute>
 							<xsl:attribute name="id">content</xsl:attribute>
+							<xsl:attribute name="onkeyup">delayedSave(<xsl:value-of select="/page/body/element/@id" />)</xsl:attribute>
 							<xsl:value-of select="/page/body/element/data/html" />
 							</xsl:element>
 						</div>

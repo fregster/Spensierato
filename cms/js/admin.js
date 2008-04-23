@@ -30,3 +30,11 @@ function ajaxSave(id) {
 	
 	ajaxLoad();
 }
+
+var t
+
+function delayedSave(id)
+{
+	clearTimeout(t);
+	t=setTimeout("ajaxSave(id)",30000);
+}

@@ -2,16 +2,16 @@
 
 function ajaxLoad(id) {
 	var ed = tinyMCE.get('content');
-
+	
 	ed.setProgressState(1); // Show progress
 
-	ajaxGet('http://www.fryer.org.uk/current/cms/ajax/'+id, ed.getContent());
+	ajaxGet('http://www.fryer.org.uk/current/cms/ajax/', id);
 	
 	http.onreadystatechange=function()
     	{
         	if(http.readyState==4)
 			{
-				alert(http.responseText);
+				ed.setContent(http.responseText);(
 			}
 		}
 

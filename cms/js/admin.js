@@ -11,7 +11,7 @@ function ajaxLoad(id) {
     	{
         	if(http.readyState==4)
 			{
-				ed.setContent(http.responseText);(
+				ed.setContent(http.responseText);
 			}
 		}
 

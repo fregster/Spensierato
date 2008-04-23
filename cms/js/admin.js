@@ -40,7 +40,7 @@ function ajaxSave(id) {
 
 function tinyMCE_onkeyup(id)
 {
-	tinyMCE.addEvent(tinyMCE.getInstanceById('content').getDoc(), 'keydown',delayedSave(id));
+	tinyMCE.addEventListener(tinyMCE.getInstanceById('content').getDoc(), 'keydown',delayedSave(id));
 	return;
 }
 

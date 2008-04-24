@@ -70,7 +70,35 @@ class elementDefault
 	//Return data for editor
 	public function edit()
 	{
-		return htmlentities($this->data);
+		//Create DOM
+		$dom = new DOMDocument();
+		$dom->formatOutput = false;
+		
+		//Create element and set required attributes
+		$element = $dom->createElement('element');
+		$element->setAttribute('id', $this->id);
+		$element->setAttribute('type', $this->type);
+		$element->setAttribute('etype', $this->name);
+		$element->setAttribute('eh', $this->edit_height);
+		$element->setAttribute('edited', '456');
+		$element->setAttribute('editon', '123');
+		$element->setAttribute('revision', 'draft');
+		
+		//Transform the data field
+		$this->transform_data();
+		
+		//Create XML tag
+		$element_data = $dom->createDocumentFragment();
+		
+		//Attach the data
+		$element_data->appendXML($this->data);
+		$element->appendChild($element_data);
+		
+		//Attach the element to the root dom
+		$dom->appendChild($element);
+		
+		//Return the completed XML of the document
+		return $dom->saveXML();
 	}
 	
 	

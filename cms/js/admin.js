@@ -11,7 +11,7 @@ function ajaxLoad() {
     	{
         	if(http.readyState==4)
 			{
-				//var response = http.responseText;
+				var response = http.responseText;
 				//var node=new Array('element','data');
 				//getNodeFromXML(response, node);
 				ed.setContent(response);

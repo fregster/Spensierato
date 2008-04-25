@@ -110,8 +110,6 @@ class elementDefault
 		{
 	    	echo($result);
 		}
-		
-		//echo($xml->asXML());
 	}
 	
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor

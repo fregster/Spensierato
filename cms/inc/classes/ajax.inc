@@ -18,14 +18,16 @@ class ajax
 
 	private function edit($id)
 	{
+		//remove the e_ from form inputs
+		$id = str_replace('e_', '', $id);
 		if($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
-			ajax::edit_post($vars);
+			ajax::edit_post($id);
 		}
 		
 		if($_SERVER['REQUEST_METHOD'] == 'GET')
 		{
-			ajax::edit_load($vars);
+			ajax::edit_load($id);
 		}
 	}
 	

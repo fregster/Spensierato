@@ -106,7 +106,12 @@ class elementDefault
 		$xml = simplexml_load_string($this->data);
 		$result= $xml->xpath("/data/html");
 
-		echo($xml->asXML());
+		foreach ((array)$result as $result) 
+		{
+	    	echo($result);
+		}
+		
+		//echo($xml->asXML());
 	}
 	
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor

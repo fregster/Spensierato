@@ -106,7 +106,7 @@ class elementDefault
 		$dom = new DOMDocument();
 		$dom->loadXML($this->data);
 		$xp = new domxpath($dom);
-		$result = $xp->query("/data/html");
+		$result = $xp->query("/data");
 		//print_r($result->textContent);
 		return htmlentities($result->textContent);
 	}

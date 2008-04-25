@@ -7,7 +7,7 @@ class elementDefault
 	protected $name;
 	protected $image;
 	protected $edit_height;
-	private $tags = array('title');
+	private $tags = array('title' => 'text');
 	
 	function __construct()
 	{

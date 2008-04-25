@@ -71,16 +71,15 @@ function getNodeFromXML(xml, node)
 
 function tinyMCE_onkeyup(id)
 {
-	if(notfirst != 0) {
+	if ( exist(notFirstMCESave) ){
 		delayedSave(id);
 	} else {
-		notfirst = 1;
+		notFirstMCESave = true;
 	}
 	return true;
 }
 
 var t
-var notfirst = 0;
 function delayedSave(id)
 {
 	if ( exist(id) ){

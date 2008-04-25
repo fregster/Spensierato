@@ -21,7 +21,7 @@
         </html>
 </xsl:template>
 
-<xsl:template match="/page/body/element/data/[@type = 'html']">
+<xsl:template match="element[@type = 'elementText']">
 	<div>
 		<xsl:element name="textarea">
 		<xsl:attribute name="style">width:100%</xsl:attribute>

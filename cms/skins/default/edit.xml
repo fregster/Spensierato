@@ -11,7 +11,7 @@
 						<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
 						<xsl:call-template name="edit_header"/><p>
 						
-						<xsl:apply-templates select="/page/body/element/data/@*"/>
+						<xsl:apply-templates select="/page/body/element/data"/>
 						
 						</p>
 						<xsl:call-template name="edit_footer"/>
@@ -21,7 +21,7 @@
         </html>
 </xsl:template>
 
-<xsl:template match="element[@type = 'elementText']">
+<xsl:template match="*@type = 'html']">
 	<div>
 		<xsl:element name="textarea">
 		<xsl:attribute name="style">width:100%</xsl:attribute>

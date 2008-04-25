@@ -24,6 +24,7 @@
 <xsl:template match="html">
 	<div>
 		<xsl:element name="textarea">
+		<xsl:attribute name="ctype"><xsl:value-of select="@type" /></xsl:attribute>
 		<xsl:attribute name="style">width:100%</xsl:attribute>
 		<xsl:attribute name="cols">80</xsl:attribute>
 		<xsl:attribute name="rows">15</xsl:attribute>
@@ -34,10 +35,10 @@
 	</div>
 </xsl:template>
 
-<!-- 
 <xsl:template match="text">
 	<div>
 		<xsl:element name="input">
+		<xsl:attribute name="ctype"><xsl:value-of select="@type" /></xsl:attribute>
 		<xsl:attribute name="type">text</xsl:attribute>
 		<xsl:attribute name="cols">80</xsl:attribute>
 		<xsl:attribute name="rows">15</xsl:attribute>
@@ -47,7 +48,7 @@
 		</xsl:element>
 	</div>
 </xsl:template>
- -->
+
 <xsl:template name="edit_header">
 	<div id="edit_header">
 		Element Name:

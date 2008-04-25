@@ -103,7 +103,8 @@ class elementDefault
 	
 	public function ajax_edit()
 	{
-		$xp = new domxpath($this->data);
+		$dom_temp->loadXML($this->data);
+		$xp = new domxpath($dom_temp);
 		return htmlentities($xp->query("/data/html"));
 	}
 	

@@ -92,8 +92,8 @@
 						button_tile_map : true
 						//,setup : function(ed) {ed.onKeyUp.add(tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />')); }
 						,setup : function(ed) {
-								ed.onKeyPress.add(function(ed, e) {
-          						alert('Key press event: ' + e.keyCode); })
+								ed.onKeyPress.add(function(ed, e) { alert('Key press event: ' + e.keyCode); })
+									}
 					      });				
 				</script>
 			</head>

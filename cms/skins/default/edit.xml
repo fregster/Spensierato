@@ -88,8 +88,8 @@
 				<script type="text/javascript">
 				tinyMCE.init({
 						mode : "textareas",
-						theme : "simple",
-						setup : function(ed) {ed.onKeyUp.add(tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />')); }
+						theme : "simple"
+						//,setup : function(ed) {ed.onKeyUp.add(tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />')); }
 					      });				
 				</script>
 			</head>

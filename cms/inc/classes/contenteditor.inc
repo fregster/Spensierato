@@ -27,6 +27,7 @@ abstract class ContentEditor
 				
 				default:
 					$mime = mime_content_type($value);
+					$binary = true;
 				break;
 			}
 			
@@ -34,7 +35,7 @@ abstract class ContentEditor
 			header('Content-type: ' . $mime);
 			header('Content-Length: ' . filesize($value));
 			header('Content-Description: TinyMCE File ');
-			//header('Content-Transfer-Encoding: binary');
+			if($binary) { header('Content-Transfer-Encoding: binary'); }
 				
 			session_write_close();
 			echo(Common::remove_extra_lines(file_get_contents($value)));

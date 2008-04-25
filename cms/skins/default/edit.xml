@@ -39,8 +39,6 @@
 	<div>
 		<xsl:value-of select="@type" /> : <xsl:element name="input">
 		<xsl:attribute name="ctype"><xsl:value-of select="@type" /></xsl:attribute>
-		<xsl:attribute name="type">text</xsl:attribute>
-		<xsl:attribute name="cols">80</xsl:attribute>
 		<xsl:attribute name="rows">15</xsl:attribute>
 		<xsl:value-of select="." />
 		</xsl:element>

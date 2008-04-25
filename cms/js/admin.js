@@ -78,8 +78,14 @@ function tinyMCE_onkeyup(id)
 var t
 function delayedSave(id)
 {
-	if (id) {
+	if ( exist(id) ){
 	clearTimeout(t);
 	t=setTimeout("ajaxSave(id)",1000);
 	}
+}
+
+function exist (a) {
+	try { var b=a;}
+	catch(e){return false;}
+	return true;
 }

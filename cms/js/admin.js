@@ -72,7 +72,8 @@ function getNodeFromXML(xml, node)
 function tinyMCE_onkeyup(id)
 {
 	if ( exist(notFirstMCESave) ){
-		delayedSave(id);
+		//delayedSave(id);
+		alert('save');
 	} else {
 		notFirstMCESave = true;
 	}

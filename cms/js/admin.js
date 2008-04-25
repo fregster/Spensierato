@@ -73,7 +73,7 @@ var t
 function delayedSave()
 {
 	clearTimeout(t);
-	t=setTimeout("ajaxSave()",1000);
+	t=setTimeout("ajaxSave()",10000);
 }
 
 function exist (a) {

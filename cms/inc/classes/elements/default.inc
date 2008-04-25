@@ -106,7 +106,7 @@ class elementDefault
 		$xml = simplexml_load_string($this->data);
 		$result= $xml->xpath("/data/html");
 
-		print_r($result);
+		echo($result[0][0]);
 	}
 	
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor

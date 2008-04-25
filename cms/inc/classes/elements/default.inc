@@ -97,11 +97,16 @@ class elementDefault
 		if($this->id != 'blank')
 		{
 			$db = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements_data', array('id'), array($this->id));
-			$xml = '<data>'.$db['data'].'</data>';
+			$dbxml = '<data>'.$db['data'].'</data>';
 			
+			$built_xml = '<data>';
+			foreach($tags as $key => $value)
+			{
+				$built_xml .= '<'.$key.' type="'.$value.'">'.common::node_from_xml($dbxml, '/data/'.$key).'</'.$key.'>';
+			}
+			$built_xml .= '</data>';
 			
-			
-			$this->data = $xml;
+			$this->data = $built_xml;
 			$this->search = $db['search'];
 		}
 		else

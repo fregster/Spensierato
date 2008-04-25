@@ -91,6 +91,7 @@
 						theme : "simple",
 						button_tile_map : true
 						//,setup : function(ed) {ed.onKeyUp.add(tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />')); }
+						,setup : function(ed) {ed.onKeyUp.add(alert('key up')); }
 					      });				
 				</script>
 			</head>

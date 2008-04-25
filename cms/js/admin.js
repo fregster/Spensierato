@@ -75,7 +75,7 @@ function delayedSave(id)
 	clearTimeout(t);
 	var eid = id;
 	//t=setTimeout("ajaxSave(id)",1000);
-	t=setTimeout("alert('save '+eid)",1000);
+	t=setTimeout("alert(eid)",1000);
 }
 
 function exist (a) {

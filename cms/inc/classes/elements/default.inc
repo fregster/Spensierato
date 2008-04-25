@@ -102,7 +102,7 @@ class elementDefault
 			if(options::Singleton()->get_option('admin_mode'))
 			{
 				$built_xml = '<data>';
-				foreach($tags as $key => $value)
+				foreach($this->tags as $key => $value)
 				{
 					$built_xml .= '<'.$key.' type="'.$value.'">'.common::node_from_xml($dbxml, '/data/'.$key).'</'.$key.'>';
 				}

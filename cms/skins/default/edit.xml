@@ -8,6 +8,10 @@
 					<xsl:element name="form">
 						<xsl:attribute name="action"></xsl:attribute>
 						<xsl:attribute name="method">POST</xsl:attribute>
+						
+						<!-- test if we might upload a file and if so add the multipart attribute -->
+						<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+						
 						<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
 						<xsl:call-template name="edit_header"/><p>
 						
@@ -44,6 +48,17 @@
 	</div>
 </xsl:template>
 
+<xsl:template match="file">
+	<div>
+		<xsl:element name="input">
+			<xsl:attribute name="type">hidden</xsl:attribute>
+			<xsl:attribute name="name">MAX_FILE_SIZE</xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="/page/settings/max_file_size" /></xsl:attribute>
+		</xsl:element>
+		Choose a file to upload: <input name="uploadedfile" type="file" /><br />
+	</div>
+</xsl:template>
+
 <xsl:template name="edit_header">
 	<div id="edit_header">
 		Element Name:
@@ -63,9 +78,8 @@
 			<xsl:attribute name="onclick">ajaxLoad();</xsl:attribute>
 		</xsl:element>
 		<xsl:element name="input">
-			<xsl:attribute name="type">button</xsl:attribute>
+			<xsl:attribute name="type">submit</xsl:attribute>
 			<xsl:attribute name="value">Save</xsl:attribute>
-			<xsl:attribute name="onclick">ajaxSave();</xsl:attribute>
 		</xsl:element>
 	</div>
 </xsl:template>

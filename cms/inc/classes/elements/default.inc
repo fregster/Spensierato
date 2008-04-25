@@ -99,14 +99,22 @@ class elementDefault
 			$db = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements_data', array('id'), array($this->id));
 			$dbxml = '<data>'.$db['data'].'</data>';
 			
-			$built_xml = '<data>';
-			foreach($tags as $key => $value)
+			if(options::Singleton()->get_option('admin_mode'))
 			{
-				$built_xml .= '<'.$key.' type="'.$value.'">'.common::node_from_xml($dbxml, '/data/'.$key).'</'.$key.'>';
+				$built_xml = '<data>';
+				foreach($tags as $key => $value)
+				{
+					$built_xml .= '<'.$key.' type="'.$value.'">'.common::node_from_xml($dbxml, '/data/'.$key).'</'.$key.'>';
+				}
+				$built_xml .= '</data>';
+				$this->data = $built_xml;
 			}
-			$built_xml .= '</data>';
+			else
+			{
+				$this->data = $dbxml;
+			}
 			
-			$this->data = $built_xml;
+			
 			$this->search = $db['search'];
 		}
 		else

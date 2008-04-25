@@ -104,7 +104,9 @@ class elementDefault
 				$built_xml = '<data>';
 				foreach($this->tags as $key => $value)
 				{
-					$built_xml .= '<'.$key.' type="'.$value.'">'.common::node_from_xml($dbxml, '/data/'.$key).'</'.$key.'>';
+					$data = common::node_from_xml($dbxml, '/data/'.$key);
+					if($value == 'html') { htmlentities($data); }
+					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 				}
 				$built_xml .= '</data>';
 				$this->data = $built_xml;

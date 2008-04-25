@@ -114,7 +114,7 @@ class elementDefault
 		
 		$xml = simplexml_load_string($this->data);
 
-		$result= $xml->xpath("data");
+		$result= $xml->xpath("/data");
 
 		print_r($result);
 	}

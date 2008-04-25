@@ -107,8 +107,8 @@ class elementDefault
 		$dom->loadXML($this->data);
 		$xp = new domxpath($dom);
 		$result = $xp->query("/data/html");
-		print_r($result->textContent);
-		return htmlentities();
+		//print_r($result->textContent);
+		return htmlentities($result->textContent);
 	}
 	
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor

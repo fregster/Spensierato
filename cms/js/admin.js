@@ -72,12 +72,9 @@ function getNodeFromXML(xml, node)
 var t
 function delayedSave(id)
 {
-	alert('saved '+id);
-	//if ( exist(id) ){
-	//	clearTimeout(t);
-	//	//t=setTimeout("ajaxSave(id)",1000);
-	//	t=setTimeout("alert('save '+id)",1000);
-	//}
+	clearTimeout(t);
+	//t=setTimeout("ajaxSave(id)",1000);
+	t=setTimeout("alert('save '+id)",1000);
 }
 
 function exist (a) {

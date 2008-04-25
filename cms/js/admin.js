@@ -1,11 +1,11 @@
 //Javascript Document
 
-function ajaxLoad(id) {
+function ajaxLoad() {
 	var ed = tinyMCE.get('content');
 	
 	ed.setProgressState(1); // Show progress
 
-	ajaxGet('http://www.fryer.org.uk/current/cms/ajax/edit/', id);
+	ajaxGet('http://www.fryer.org.uk/current/cms/ajax/edit/', element_id);
 	
 	http.onreadystatechange=function()
     	{
@@ -22,12 +22,12 @@ function ajaxLoad(id) {
 	ed.setProgressState(0); // Hide progress
 }
 
-function ajaxSave(id) {
+function ajaxSave() {
 	var ed = tinyMCE.get('content');
 
 	ed.setProgressState(1); // Show progress
 	
-	ajaxPost('http://www.fryer.org.uk/current/cms/ajax/edit/'+id, ed.getContent());
+	ajaxPost('http://www.fryer.org.uk/current/cms/ajax/edit/'+element_id, ed.getContent());
 	
 	http.onreadystatechange=function()
     	{
@@ -73,9 +73,8 @@ var t
 function delayedSave(id)
 {
 	clearTimeout(t);
-	var eid = id;
-	//t=setTimeout("ajaxSave(id)",1000);
-	t=setTimeout("alert(eid)",1000);
+	element_id = id;
+	t=setTimeout("ajaxSave()",1000);
 }
 
 function exist (a) {

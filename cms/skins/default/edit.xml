@@ -37,7 +37,7 @@
 
 <xsl:template match="text">
 	<div>
-		<xsl:element name="input">
+		<xsl:value-of select="@type" /> : <xsl:element name="input">
 		<xsl:attribute name="ctype"><xsl:value-of select="@type" /></xsl:attribute>
 		<xsl:attribute name="type">text</xsl:attribute>
 		<xsl:attribute name="cols">80</xsl:attribute>

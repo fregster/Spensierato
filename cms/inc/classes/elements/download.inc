@@ -3,7 +3,7 @@ class elementDownload extends elementDefault
 {
 	function __construct()
 	{
-		$this->allowed_tags(array('filename' => 'text','data' => 'unknown', 'size' => 'auto', 'mime' => 'auto', 'description' => 'html'));
+		$this->allowed_tags(array('filename' => 'file','data' => 'unknown', 'size' => 'auto', 'mime' => 'auto', 'description' => 'html'));
 		$this->type = __CLASS__;
 		$this->name = 'File Download Element';
 		$this->image = 'download.png';

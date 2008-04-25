@@ -103,7 +103,8 @@ class elementDefault
 	
 	public function ajax_edit()
 	{
-		return htmlentities($this->data);
+		$xp = new domxpath($this->data);
+		return htmlentities($xp->query("/data/html"));
 	}
 	
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor

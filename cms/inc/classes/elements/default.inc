@@ -103,7 +103,7 @@ class elementDefault
 	
 	public function ajax_edit()
 	{
-		return $this->get_data();
+		return $this->data;
 	}
 	
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor

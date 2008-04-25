@@ -5,7 +5,7 @@
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
 			<xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute>
 			<xsl:attribute name="class"><xsl:value-of select="./@type" /></xsl:attribute>
-			<xsl:value-of select="./data" />
+			<xsl:value-of select="./data/html" />
 		</xsl:element>
 	</xsl:template>
 	

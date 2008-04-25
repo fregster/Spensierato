@@ -10,22 +10,41 @@
 						<xsl:attribute name="method">POST</xsl:attribute>
 						<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
 						<xsl:call-template name="edit_header"/><p>
-						<div>
-							<xsl:element name="textarea">
-							<xsl:attribute name="style">width:100%</xsl:attribute>
-							<xsl:attribute name="cols">80</xsl:attribute>
-							<xsl:attribute name="rows">15</xsl:attribute>
-							<xsl:attribute name="name">content</xsl:attribute>
-							<xsl:attribute name="id">content</xsl:attribute>
-							<xsl:value-of select="/page/body/element/data/html" />
-							</xsl:element>
-						</div>
+						
+						<xsl:apply-templates select="/page/body/element/data/@*"/>
+						
 						</p>
 						<xsl:call-template name="edit_footer"/>
 					</xsl:element>
 					</div>
 			</xsl:element>
         </html>
+</xsl:template>
+
+<xsl:template match="@type = 'html'">
+	<div>
+		<xsl:element name="textarea">
+		<xsl:attribute name="style">width:100%</xsl:attribute>
+		<xsl:attribute name="cols">80</xsl:attribute>
+		<xsl:attribute name="rows">15</xsl:attribute>
+		<xsl:attribute name="name">content</xsl:attribute>
+		<xsl:attribute name="id">content</xsl:attribute>
+		<xsl:value-of select="./" />
+		</xsl:element>
+	</div>
+</xsl:template>
+
+<xsl:template match="@type = 'title'">
+	<div>
+		<xsl:element name="input">
+		<xsl:attribute name="type">text</xsl:attribute>
+		<xsl:attribute name="cols">80</xsl:attribute>
+		<xsl:attribute name="rows">15</xsl:attribute>
+		<xsl:attribute name="name">content</xsl:attribute>
+		<xsl:attribute name="id">content</xsl:attribute>
+		<xsl:value-of select="./" />
+		</xsl:element>
+	</div>
 </xsl:template>
 
 <xsl:template name="edit_header">

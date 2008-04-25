@@ -71,13 +71,13 @@ function getNodeFromXML(xml, node)
 
 function tinyMCE_onkeyup(id)
 {
-	if ( exist(notFirstMCESave) ){
-		//delayedSave(id);
-		alert('save');
-	} else {
-		notFirstMCESave = true;
-	}
-	return true;
+	//if ( exist(notFirstMCESave) ){
+	//	delayedSave(id);
+	//} else {
+	//	notFirstMCESave = true;
+	//}
+	//return true;
+	alert('saved '+id);
 }
 
 var t

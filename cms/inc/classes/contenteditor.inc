@@ -26,17 +26,14 @@ abstract class ContentEditor
 				break;
 				
 				default:
-					$mime = mime_content_type($value);
-					$binary = true;
+					filetransfer::singleton()->get_file($value, true);
 				break;
 			}
-			
+						
 			Cache::headers_allow_cache($value, true, 36000, 36000);
 			header('Content-type: ' . $mime);
 			header('Content-Length: ' . filesize($value));
 			header('Content-Description: TinyMCE File ');
-			if($binary) { header('Content-Transfer-Encoding: binary'); }
-				
 			session_write_close();
 			echo(Common::remove_extra_lines(file_get_contents($value)));
 		}

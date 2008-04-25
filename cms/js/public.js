@@ -25,14 +25,6 @@ function ajaxObject()
 
 var http = ajaxObject();
 
-function ajaxReadyStateChange()
-{
-	if(http.readyState==4)
-	{
-	        alert(http.responseText);
-	}
-}
-
 function ajaxGet(url, parameters)
 {
 	http.open('GET', url + parameters, true);

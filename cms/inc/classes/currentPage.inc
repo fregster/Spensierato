@@ -101,6 +101,11 @@ class currentPage
 										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
 						break;
 					
+					//Advert page
+					case 'ad':
+						return array('type' => 'AD', 'value'=> null);
+						break;
+						
 					case 'loading':
 							return array('type' => 'LOADING',
 										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));

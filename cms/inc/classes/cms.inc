@@ -423,6 +423,9 @@ class CMS
 				die();
 				
 				break;
+				
+			case 'AD':
+				$this->
 			
 			case 'EDIT':
 				//Edit render element

@@ -76,6 +76,8 @@ function tinyMCE_onkeyup(id)
 var t
 function delayedSave(id)
 {
+	if (id) {
 	clearTimeout(t);
 	t=setTimeout("ajaxSave(id)",1000);
+	}
 }

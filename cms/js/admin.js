@@ -76,12 +76,17 @@ function tinyMCE_onkeyup(id)
 }
 
 var t
+var notfirst = 0;
 function delayedSave(id)
 {
-	if ( exist(id) ){
-	clearTimeout(t);
-	//t=setTimeout("ajaxSave(id)",1000);
-	t=setTimeout("alert('save')",1000);
+	if(notfirst != 0) {
+		if ( exist(id) ){
+		clearTimeout(t);
+		//t=setTimeout("ajaxSave(id)",1000);
+		t=setTimeout("alert('save')",1000);
+		}
+	} else {
+		notfirst = 1;
 	}
 }
 

@@ -105,7 +105,7 @@ class elementDefault
 				foreach($this->tags as $key => $value)
 				{
 					$data = common::node_from_xml($dbxml, '/data/'.$key);
-					if($value == 'html') { htmlentities($data); }
+					if($value == 'html') { die($data); }
 					strip_tags($data);
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 				}

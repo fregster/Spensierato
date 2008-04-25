@@ -40,7 +40,7 @@ class ajax
 	{
 		$element = Element::type($id);
 		$element->build($id);
-		echo($element->edit());		
+		echo($element->ajax_edit());		
 	}
 }
 ?>

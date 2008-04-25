@@ -44,12 +44,12 @@
 		<xsl:element name="input">
 			<xsl:attribute name="type">button</xsl:attribute>
 			<xsl:attribute name="value">Re-Load</xsl:attribute>
-			<xsl:attribute name="onclick">ajaxLoad(e_<xsl:value-of select="/page/body/element/@id" />);</xsl:attribute>
+			<xsl:attribute name="onclick">ajaxLoad();</xsl:attribute>
 		</xsl:element>
 		<xsl:element name="input">
 			<xsl:attribute name="type">button</xsl:attribute>
 			<xsl:attribute name="value">Save</xsl:attribute>
-			<xsl:attribute name="onclick">ajaxSave(e_<xsl:value-of select="/page/body/element/@id" />);</xsl:attribute>
+			<xsl:attribute name="onclick">ajaxSave();</xsl:attribute>
 		</xsl:element>
 	</div>
 </xsl:template>

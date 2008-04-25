@@ -54,6 +54,12 @@ Settings::Singleton()->new_setting('skin', 'default');
 //false / true
 Settings::Singleton()->new_setting('send_as_xml', false);
 
+
+//Setting max_file_size
+//Sets the maximum file upload size
+//100000
+Settings::Singleton()->new_setting('max_file_size', 100000);
+
 //Setting js_minify
 //clean the javascript to reduce the file size defaults to internal (1) just removes comments and break lines
 //0 no cleaning
@@ -65,6 +71,11 @@ Settings::Singleton()->new_setting('js_minify', 0);
 //Allow site searching
 //true / false
 Settings::Singleton()->new_setting('search', true);
+
+//Setting related_pages
+//Allow site related_pages searching
+//true / false
+Settings::Singleton()->new_setting('related_pages', true);
 
 //Setting search_with_security
 //Allow searching when a user is logged in to include pages with security

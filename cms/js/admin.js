@@ -70,10 +70,9 @@ function getNodeFromXML(xml, node)
 }
 
 var t
-function delayedSave(id)
+function delayedSave()
 {
 	clearTimeout(t);
-	element_id = id;
 	t=setTimeout("ajaxSave()",1000);
 }
 

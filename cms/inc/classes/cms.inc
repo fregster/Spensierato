@@ -425,7 +425,9 @@ class CMS
 				break;
 				
 			case 'AD':
-				$this->
+				ad::google();
+				die();
+				break;
 			
 			case 'EDIT':
 				//Edit render element

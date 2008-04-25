@@ -7,9 +7,10 @@ abstract class Common
 		return (Common::array_compress(Common::getPathVariables($_SERVER[PHP_SELF], __FILE__)));
 	}
 	
-	public static function return_hash($input)
+	public static function return_hash($input, $use_random = true)
 	{
-		return hash(Settings::Singleton()->get_setting('site_option_encryption'), $input.$GLOBALS['random_key']);
+		if($use_random) { $input = $input.$GLOBALS['random_key']; }
+		return hash(Settings::Singleton()->get_setting('site_option_encryption'), $input);
 	}
 	
 	public static function bounce_to_referer()

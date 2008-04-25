@@ -49,6 +49,22 @@ function ajaxPost(url, parameters)
 		http.send(parameters);
 }
 
+function ajaxGetXML()
+{
+	//IE does not return responseXML
+	if(window.ActiveXObject)
+	{
+		var xmldoc = new ActiveXObject("Microsoft.XMLDOM");
+		xmldoc.async="false";
+		xmldoc.loadXML(http.responseText);
+	}
+	else
+	{
+		var xmldoc = http.responseXML;
+	}
+	
+	return xmldoc;
+}
 
 function searchFunction()
 {

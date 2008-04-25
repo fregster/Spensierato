@@ -12,6 +12,8 @@ function ajaxLoad(id) {
         	if(http.readyState==4)
 			{
 				ed.setContent(http.responseText);
+				var node=new Array('element','data');
+				getNodeFromXML(xml, node);
 			}
 		}
 
@@ -36,6 +38,33 @@ function ajaxSave(id) {
 	ed.setProgressState(0); // Hide progress
 	
 	ajaxLoad();
+}
+
+//pass node as an array to do recursive lookups
+function getNodeFromXML(xml, node)
+{
+	//IE does not return responseXML
+	if(window.ActiveXObject)
+	{
+		xmlobject=new ActiveXObject("Microsoft.XMLDOM");
+		xmlobject.async="false";
+		xmlobject.loadXML(xml);
+	}
+	else
+	{
+		parser=new DOMParser();
+		xmlobject=parser.parseFromString(xml,"text/xml");
+	}
+	
+	// get the XML elements item
+	var element;
+	
+	//Runs through node replaceing element with each next value in the array
+	for (var i = 0 ; i < node.length ; i++) {
+		element = xmlobject.getElementsByTagName(node)[0];
+	}
+	
+	alert(element);
 }
 
 function tinyMCE_onkeyup(id)

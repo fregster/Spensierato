@@ -9,7 +9,7 @@ abstract class Common
 	
 	public static function return_hash($input)
 	{
-		return hash(Settings::Singleton()->get_setting('site_option_encryption'), $input);
+		return hash(Settings::Singleton()->get_setting('site_option_encryption'), $input.$GLOBALS['random_key']);
 	}
 	
 	public static function bounce_to_referer()

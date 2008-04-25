@@ -23,6 +23,8 @@
 				
 				<xsl:element name="object">
 					<xsl:attribute name="classid"><xsl:value-of select="/page/settings/document_root" />/ad</xsl:attribute>
+					<xsl:attribute name="data"><xsl:value-of select="/page/settings/document_root" />/ad</xsl:attribute>
+					<xsl:attribute name="type">text/html</xsl:attribute>
 					<xsl:attribute name="id">google_ads</xsl:attribute>
 					<xsl:attribute name="width"><xsl:value-of select="/page/settings/google_ad_width" /></xsl:attribute>
 					<xsl:attribute name="height"><xsl:value-of select="/page/settings/google_ad_height" /></xsl:attribute>

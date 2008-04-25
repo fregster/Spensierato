@@ -39,7 +39,7 @@ function ajaxSave() {
 
 	ed.setProgressState(0); // Hide progress
 	
-	ajaxLoad();
+	//ajaxLoad();
 }
 
 //pass node as an array to do recursive lookups

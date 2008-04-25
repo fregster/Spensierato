@@ -227,5 +227,16 @@ abstract class Common
 		
 		return $code;
 	}
+
+	public static function node_from_xml($xml, $node)
+	{
+		$xml = simplexml_load_string($xml);
+		$result= $xml->xpath($node);
+
+		foreach ((array)$result as $result) 
+		{
+	    	return($result);
+		}
+	}
 }
 ?>

@@ -11,9 +11,11 @@ function ajaxLoad(id) {
     	{
         	if(http.readyState==4)
 			{
-				ed.setContent(http.responseText);
+				var response = http.responseText;
 				var node=new Array('element','data');
-				getNodeFromXML(xml, node);
+				getNodeFromXML(response, node);
+				
+				ed.setContent(response);
 			}
 		}
 

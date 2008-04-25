@@ -8,6 +8,7 @@ class elementDefault
 	protected $image;
 	protected $edit_height;
 	private $tags = array('title' => 'text');
+	private $element;
 	
 	function __construct()
 	{
@@ -39,11 +40,13 @@ class elementDefault
 		$dom->formatOutput = false;
 		
 		//Create element and set required attributes
-		$element = $dom->createElement('element');
-		$element->setAttribute('id', $this->id);
-		$element->setAttribute('type', $this->type);
-		$element->setAttribute('etype', $this->name);
-		$element->setAttribute('eh', $this->edit_height);
+		$this->element = $dom->createElement('element');
+		$this->element->setAttribute('id', $this->id);
+		$this->element->setAttribute('type', $this->type);
+		$this->element->setAttribute('etype', $this->name);
+		$this->element->setAttribute('eh', $this->edit_height);
+		
+		$this->admin();
 		
 		//Transform the data field
 		$this->transform_data();
@@ -53,10 +56,10 @@ class elementDefault
 		
 		//Attach the data
 		$element_data->appendXML($this->data);
-		$element->appendChild($element_data);
+		$this->element->appendChild($element_data);
 		
 		//Attach the element to the root dom
-		$dom->appendChild($element);
+		$dom->appendChild($this->element);
 		
 		//Return the completed XML of the document
 		return $dom->saveXML();
@@ -67,38 +70,15 @@ class elementDefault
 		//Check data
 	}
 	
-	//Return data for editor
-	public function edit()
+	//add extra data when in admin mode
+	public function admin()
 	{
-		//Create DOM
-		$dom = new DOMDocument();
-		$dom->formatOutput = false;
-		
-		//Create element and set required attributes
-		$element = $dom->createElement('element');
-		$element->setAttribute('id', $this->id);
-		$element->setAttribute('type', $this->type);
-		$element->setAttribute('etype', $this->name);
-		$element->setAttribute('eh', $this->edit_height);
-		$element->setAttribute('edited', '456');
-		$element->setAttribute('editon', '123');
-		$element->setAttribute('revision', 'draft');
-		
-		//Transform the data field
-		$this->transform_data();
-		
-		//Create XML tag
-		$element_data = $dom->createDocumentFragment();
-		
-		//Attach the data
-		$element_data->appendXML($this->data);
-		$element->appendChild($element_data);
-		
-		//Attach the element to the root dom
-		$dom->appendChild($element);
-		
-		//Return the completed XML of the document
-		return $dom->saveXML();
+		if(options::Singleton()->get_option('admin_mode'))
+		{
+			$this->element->setAttribute('edited', '456');
+			$this->element->setAttribute('editon', '123');
+			$this->element->setAttribute('revision', 'draft');
+		}
 	}
 	
 	public function ajax_edit()

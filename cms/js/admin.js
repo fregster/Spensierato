@@ -80,7 +80,8 @@ function delayedSave(id)
 {
 	if ( exist(id) ){
 	clearTimeout(t);
-	t=setTimeout("ajaxSave(id)",1000);
+	//t=setTimeout("ajaxSave(id)",1000);
+	t=setTimeout("alert(save)",1000);
 	}
 }
 

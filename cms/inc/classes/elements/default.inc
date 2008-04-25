@@ -83,13 +83,7 @@ class elementDefault
 	
 	public function ajax_edit()
 	{
-		$xml = simplexml_load_string($this->data);
-		$result= $xml->xpath("/data/html");
-
-		foreach ((array)$result as $result) 
-		{
-	    	return($result);
-		}
+		return common::node_from_xml($this->data, '/data/html');
 	}
 	
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor
@@ -103,7 +97,11 @@ class elementDefault
 		if($this->id != 'blank')
 		{
 			$db = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements_data', array('id'), array($this->id));
-			$this->data = '<data>'.$db['data'].'</data>';
+			$xml = '<data>'.$db['data'].'</data>';
+			
+			
+			
+			$this->data = $xml;
 			$this->search = $db['search'];
 		}
 		else

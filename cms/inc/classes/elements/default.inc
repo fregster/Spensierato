@@ -19,9 +19,9 @@ class elementDefault
 	
 	protected function allowed_tags($tags)
 	{
-		foreach($tags as $tag)
+		foreach($tags as $key => $tag)
 		{
-			array_push($this->tags, $tag);
+			$this->tags[$key] = $tag;
 		}
 	}
 

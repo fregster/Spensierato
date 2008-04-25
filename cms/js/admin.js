@@ -33,13 +33,22 @@ function ajaxSave() {
     	{
         	if(http.readyState==4)
 			{
-				alert(http.responseText);
+				if(http.responseText == 'SAVED'){
+					ajaxSaved();
+				} else {
+					alert(http.responseText);
+				}
 			}
 		}
 
 	ed.setProgressState(0); // Hide progress
 	
 	//ajaxLoad();
+}
+
+function ajaxSaved()
+{
+	alert('Ajax saved');
 }
 
 //pass node as an array to do recursive lookups

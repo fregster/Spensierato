@@ -57,6 +57,11 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 		<div>Table Prefix name: <input type="text" name="prefix" value="<? echo(Common::generate_random_string(3)); ?>" /></div>
 	</div>
 	
+	<div id="randomkey">
+		Create a random key. This is used when generating hashes to help preventing people work out the final hash it defaults to a sha1 hash of the server microtime when you install.
+		<div>Random Key: <input type="text" name="random_key" value="<? echo(sha1(microtime())); ?>" /></div>
+	</div>
+	
 	<div id="users">
 		If no usernames are set then one will be created and a random password will be generated (Recomended)<br />
 		If the password set is does not meet the recomended length an random password will also be created

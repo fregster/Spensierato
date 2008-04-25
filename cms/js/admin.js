@@ -27,7 +27,7 @@ function ajaxSave() {
 
 	ed.setProgressState(1); // Show progress
 	
-	ajaxPost('http://www.fryer.org.uk/current/cms/ajax/edit/'+element_id, ed.getContent());
+	ajaxPost('http://www.fryer.org.uk/current/cms/ajax/edit/'+element_id, '<html>'+ed.getContent()+'</html>');
 	
 	http.onreadystatechange=function()
     	{

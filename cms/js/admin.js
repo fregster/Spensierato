@@ -71,8 +71,8 @@ function getNodeFromXML(xml, node)
 
 function tinyMCE_onkeyup(id)
 {
-	tinyMCE.addEventListener(tinyMCE.getInstanceById('content').getDoc(), 'keydown',delayedSave(id));
-	return;
+	delayedSave(id);
+	return true;
 }
 
 var t

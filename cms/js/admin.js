@@ -1,6 +1,7 @@
 //Javascript Document
 
 function ajaxLoad() {
+	clearTimeout(t);
 	var ed = tinyMCE.get('content');
 	
 	ed.setProgressState(1); // Show progress
@@ -22,6 +23,7 @@ function ajaxLoad() {
 }
 
 function ajaxSave() {
+	clearTimeout(t);
 	var ed = tinyMCE.get('content');
 
 	ed.setProgressState(1); // Show progress

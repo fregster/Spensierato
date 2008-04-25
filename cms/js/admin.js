@@ -71,7 +71,11 @@ function getNodeFromXML(xml, node)
 
 function tinyMCE_onkeyup(id)
 {
-	delayedSave(id);
+	if(notfirst != 0) {
+		delayedSave(id);
+	} else {
+		notfirst = 1;
+	}
 	return true;
 }
 
@@ -79,14 +83,10 @@ var t
 var notfirst = 0;
 function delayedSave(id)
 {
-	if(notfirst != 0) {
-		if ( exist(id) ){
+	if ( exist(id) ){
 		clearTimeout(t);
 		//t=setTimeout("ajaxSave(id)",1000);
 		t=setTimeout("alert('save')",1000);
-		}
-	} else {
-		notfirst = 1;
 	}
 }
 

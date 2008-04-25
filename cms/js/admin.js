@@ -5,7 +5,7 @@ function ajaxLoad() {
 	
 	ed.setProgressState(1); // Show progress
 
-	ajaxGet('http://www.fryer.org.uk/current/cms/ajax/edit/', element_id);
+	ajaxGet('http://www.fryer.org.uk/current/cms/ajax/edit/'+element_id);
 	
 	http.onreadystatechange=function()
     	{

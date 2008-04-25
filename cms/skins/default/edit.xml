@@ -95,7 +95,7 @@
 								ed.onKeyUp.add(function(ed, e) { delayedSave(); })
 									}
 					      });
-				element_id = <xsl:value-of select="/page/body/element/@id" />;		
+				element_id = e_<xsl:value-of select="/page/body/element/@id" />;		
 				</script>
 			</head>
 	</xsl:template>

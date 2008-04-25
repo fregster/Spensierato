@@ -69,25 +69,15 @@ function getNodeFromXML(xml, node)
 	alert(element);
 }
 
-function tinyMCE_onkeyup(id)
-{
-	//if ( exist(notFirstMCESave) ){
-	//	delayedSave(id);
-	//} else {
-	//	notFirstMCESave = true;
-	//}
-	//return true;
-	alert('saved '+id);
-}
-
 var t
 function delayedSave(id)
 {
-	if ( exist(id) ){
-		clearTimeout(t);
-		//t=setTimeout("ajaxSave(id)",1000);
-		t=setTimeout("alert('save '+id)",1000);
-	}
+	alert('saved '+id);
+	//if ( exist(id) ){
+	//	clearTimeout(t);
+	//	//t=setTimeout("ajaxSave(id)",1000);
+	//	t=setTimeout("alert('save '+id)",1000);
+	//}
 }
 
 function exist (a) {

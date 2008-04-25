@@ -22,7 +22,7 @@ abstract class Element
 	
 	public static function get_element_type($id)
 	{
-		$type = Database::Singleton()->sql_select_first(array('type'), 'tbl_elements', array('id'), array($type));
+		$type = Database::Singleton()->sql_select_first(array('type'), 'tbl_elements', array('id'), array($id));
 		return $type['type'];
 	}
 }

@@ -103,13 +103,20 @@ class elementDefault
 	
 	public function ajax_edit()
 	{
-		$dom = new DOMDocument();
-		$dom->loadXML($this->data);
-		$xp = new domxpath($dom);
-		$result = $xp->query("/");
-		print_r($result->textContent);
-		die();
-		return htmlentities($result->textContent);
+//		$dom = new DOMDocument();
+//		$dom->loadXML($this->data);
+//		$xp = new domxpath($dom);
+//		$result = $xp->query("/");
+//		print_r($result->textContent);
+//		die();
+//		return htmlentities($result->textContent);
+		
+		
+		$xml = simplexml_load_string($this->data);
+
+		$result= $xml->xpath("data/html");
+
+		print_r($result);
 	}
 	
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor

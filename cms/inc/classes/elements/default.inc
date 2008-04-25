@@ -108,7 +108,7 @@ class elementDefault
 
 		foreach ((array)$result as $result) 
 		{
-	    	echo($result);
+	    	return($result);
 		}
 	}
 	

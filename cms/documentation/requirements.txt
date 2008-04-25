@@ -6,6 +6,7 @@ PHP 5.2 ish
 	PECL / PEAR
 	MDB2
 	GD and FreeType libraries
+	SimpleXML (PHP Core 5.2+)
 	Hash //Optional
 
 //Database related

@@ -65,9 +65,26 @@ class elementDefault
 		return $dom->saveXML();
 	}
 	
-	public function save($data)
+	public function save($draft = true)
 	{
 		//Check data
+		foreach($this->tags as $key => $value)
+		{
+			$data = common::node_from_xml($dbxml, '/data/'.$key);
+			if($value == 'html') { $data = htmlentities($data); }
+			strip_tags($data);
+			$built_xml .= '<'.$value.' type="'.$key.'">'.$data.'</'.$value.'>';
+		}
+		
+		if($draft)
+		{
+			
+		}
+		else
+		{
+			commit($built_xml);
+		}
+				
 	}
 	
 	//add extra data when in admin mode
@@ -107,7 +124,7 @@ class elementDefault
 					$data = common::node_from_xml($dbxml, '/data/'.$key);
 					if($value == 'html') { $data = htmlentities($data); }
 					strip_tags($data);
-					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
+					$built_xml .= '<'.$value.' type="'.$key.'">'.$data.'</'.$value.'>';
 				}
 				$built_xml .= '</data>';
 				$this->data = $built_xml;

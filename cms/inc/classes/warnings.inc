@@ -11,7 +11,7 @@
  */
 class warnings
 {
-	private $warnings = array();
+	private $warnings;
 	private static $instance;
 	
 	public static function Singleton()
@@ -32,6 +32,7 @@ class warnings
 
 	private function __construct()
 	{
+		$this->warnings = array();
 		//Do standard warning checks here for easy of code finding.
 		
 		//Checks only to be done if in admin mode

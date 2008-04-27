@@ -70,10 +70,10 @@ class elementDefault
 		//Check data
 		foreach($this->tags as $key => $value)
 		{
-			$data = common::node_from_xml($dbxml, '/data/'.$key);
-			if($value == 'html') { $data = htmlentities($data); }
-			strip_tags($data);
-			$built_xml .= '<'.$value.' type="'.$key.'">'.$data.'</'.$value.'>';
+//			$data = common::node_from_xml($dbxml, '/data/'.$key);
+//			if($value == 'html') { $data = htmlentities($data); }
+//			strip_tags($data);
+//			$built_xml .= '<'.$value.' type="'.$key.'">'.$data.'</'.$value.'>';
 		}
 		
 		if($draft)

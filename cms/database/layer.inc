@@ -356,14 +356,11 @@ class Database
 			$i++;
 		}
 		
-		$where = ' WHERE ' . $sql_temp_where;
+		$where = ' WHERE (' . $sql_temp_where;
 		
-		$sql .= $where .' begin ';
+		$sql .= $where .') begin ';
 		
-		
-		die($sql);
 		//Simple update query
-		
 		
 		$sql .= 'UPDATE '. $this->sql_clean_input($table) . ' SET ';
 		
@@ -372,6 +369,8 @@ class Database
 		{
 			$sql_temp_fields = $sql_temp_fields . $this->sql_clean_input($where_fields[$i]) .', ';
 		}
+		
+				die($sql);
 		
 		$i = 0;
 		while($i <= (count($where_values) - 1))

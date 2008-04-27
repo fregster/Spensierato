@@ -66,6 +66,10 @@ class warnings
 	
 	public function register($warning_title, $description, $level = 2)
 	{
+		if(!is_array($this->warnings[$level]))
+		{
+			$this->warnings[$level] = array();
+		}
 		array_push($this->warnings[$level], array($warning_title, $description));
 	}
 	

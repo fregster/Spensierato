@@ -457,8 +457,9 @@ class CMS
 			case 'EDITSAVE':
 				if(Security::singleton()->can_edit_element($value))
 				{
-					Content::singleton()->render_mode('edit');
-					$this->save_edit($value);
+					$element = Element::type($value);
+					$element->build($value);
+					$element->save();
 				}
 				else
 				{

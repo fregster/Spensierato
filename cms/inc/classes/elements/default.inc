@@ -78,13 +78,18 @@ class elementDefault
 		
 		if($draft)
 		{
-			
+			database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id', 'data', 'ts'), array(1,1,'html',123456));
 		}
 		else
 		{
-			commit($built_xml);
+			$this->process_save($built_xml);
 		}
 				
+	}
+	
+	protected function process_save($xml)
+	{
+		
 	}
 	
 	//add extra data when in admin mode

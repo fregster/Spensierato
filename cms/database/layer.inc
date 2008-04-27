@@ -318,7 +318,7 @@ class Database
 		}
 		
 		$i = 0;
-		while($i <= (count($fields) - 1))
+		while($i <= (count($values) - 1))
 		{
 			$sql_temp_values = $sql_temp_values . $this->sql_clean_input($values[$i]) .', ';
 		}
@@ -330,6 +330,77 @@ class Database
 		
 		//Run the SQL
 		return $this->sql_update_exe($sql);
+	}
+	
+	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array())
+	{
+		
+		if(	(count($where_fields)) != (count($where_values))	)
+		{
+			return false;
+		}
+		
+		$sql = 'IF (EXISTS (SELECT * FROM '. $this->sql_clean_input($table) . ' AS t1 ';
+		
+		
+		$i = 0;
+		while($i <= (count($where_values) - 1))
+		{
+			$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($where_values[$i]) .'")';
+			
+			if($i < (count($where_values) - 1))
+			{
+				$sql_temp_where = $sql_temp_where . ' AND ';
+			}
+				
+			$i++;
+		}
+		
+		$where = ' WHERE ' . $sql_temp_where;
+		
+		$sql .= $where .' begin ';
+		
+		//Simple update query
+		
+		
+		$sql .= 'UPDATE '. $this->sql_clean_input($table) . ' SET ';
+		
+		$i = 0;
+		while($i <= (count($where_fields) - 1))
+		{
+			$sql_temp_fields = $sql_temp_fields . $this->sql_clean_input($where_fields[$i]) .', ';
+		}
+		
+		$i = 0;
+		while($i <= (count($where_values) - 1))
+		{
+			$sql_temp_values = $sql_temp_values . $this->sql_clean_input($where_values[$i]) .', ';
+		}
+		
+		$sql .= $sql_temp_fields . ' VALUES ' . sql_temp_values;
+				
+		$sql .= ' end else begin ';
+		
+		//Simple insert query
+		
+		$sql .= 'INSERT INTO '. $this->sql_clean_input($table) .' ('.$sql_temp_fields.') VALUES ('.sql_temp_values.') ';
+		
+		$sql .= ' end ';
+		
+		die($sql);
+		//Goal = 
+//		IF (EXISTS (SELECT * FROM AA_TestTable AS t1
+//  WHERE t1.ord_num = 'FFF'))
+//begin
+//  UPDATE AA_TestTable
+//  SET ord_qty = 999
+//  WHERE ord_num = 'FFF'
+//end
+//else
+//begin
+//  INSERT INTO AA_TestTable (ord_num, top_assy, ord_qty)
+//  VALUES('GGG', 'XYZ', 567)
+//end 
 	}
 
 	//$Values is for when I get around to implimenting MDB2 properly!

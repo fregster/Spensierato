@@ -595,7 +595,7 @@ class CMS
 		{
 			if(substr($setting, 1, 1) != '/')
 			{
-				$new_folder = $this->$cms_root.'/'.Settings::singleton()->get_setting($setting);
+				$new_folder = $this->cms_root.'/'.Settings::singleton()->get_setting($setting);
 				Settings::Singleton()->overwrite_setting($setting, $new_folder);
 			}
 		}

@@ -231,8 +231,8 @@ abstract class Common
 
 	public static function node_from_xml($xml, $node)
 	{
-		$xml = simplexml_load_string($xml);
-		$result= $xml->xpath($node);
+		$xml_obj = simplexml_load_string($xml);
+		$result= $xml_obj->xpath($node);
 
 		foreach ((array)$result as $result) 
 		{

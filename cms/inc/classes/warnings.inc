@@ -39,7 +39,7 @@ class warnings
 	
 	public function register($warning_title, $description, $level = 2)
 	{
-		
+		array_push($this->warnings[$level], array($warning_title, $description));
 	}
 	
 	public function get($level = 2)

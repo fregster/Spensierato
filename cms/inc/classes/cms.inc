@@ -275,6 +275,12 @@ class CMS
 				$this->get_html();
 				break;
 				
+			case 'WARNINGS':
+				$element = Element::type('elementWarnings');
+				$element->build('Warnings');
+				$this->get_html();
+				break;
+				
 			case 'ACCOUNT':
 				$element = Element::type('elementAccount');
 				$element->build('account');

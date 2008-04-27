@@ -174,6 +174,12 @@ class currentPage
 						return array('type' => 'ACCOUNT',
 									'value' => CMS::Singleton()->path_vars[1]);
 						break;
+						
+					//CMS Users Account page
+					case 'warnings':
+						return array('type' => 'WARNINGS',
+									'value' => CMS::Singleton()->path_vars[1]);
+						break;
 					
 					//CMS in edit mode
 					case 'edit':

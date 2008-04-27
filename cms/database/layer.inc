@@ -373,6 +373,7 @@ class Database
 		while($i <= (count($fields) - 1))
 		{
 			$sql_temp_fields = $sql_temp_fields . $this->sql_clean_input($fields[$i]) .', ';
+			$i++;
 		}
 		die($sql);
 		
@@ -380,6 +381,7 @@ class Database
 		while($i <= (count($values) - 1))
 		{
 			$sql_temp_values = $sql_temp_values . $this->sql_clean_input($values[$i]) .', ';
+			$i++;
 		}
 		
 		$sql .= $sql_temp_fields . ' VALUES ' . $sql_temp_values;

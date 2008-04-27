@@ -351,7 +351,7 @@ class Database
 		$i = 0;
 		while($i <= (count($where_values) - 1))
 		{
-			$sql_temp_where = $sql_temp_where . '(``' . $this->sql_clean_input($where_fields[$i]) .'` = "'. $this->sql_clean_input($where_values[$i]) .'")';
+			$sql_temp_where = $sql_temp_where . '(`' . $this->sql_clean_input($where_fields[$i]) .'` = "'. $this->sql_clean_input($where_values[$i]) .'")';
 			
 			if($i < (count($where_values) - 1))
 			{

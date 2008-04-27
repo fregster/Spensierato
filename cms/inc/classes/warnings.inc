@@ -39,8 +39,8 @@ class warnings
 		if(Options::Singleton()->get_option('admin_mode'))
 		{
 			//Check paths are writable
-			$paths = array(Settings::singleton()->get_setting('site_folder_uploads'),
-							Settings::singleton()->get_setting('site_folder_downloads')
+			$paths = array(Settings::singleton()->get_setting('cms_folder_uploads'),
+							Settings::singleton()->get_setting('cms_folder_downloads')
 						);
 			
 			foreach($paths as $path)

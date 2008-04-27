@@ -65,7 +65,7 @@ Settings::Singleton()->new_setting('max_file_size', 100000);
 //0 no cleaning
 //1 use internal cleaner
 //2 use JSMin
-Settings::Singleton()->new_setting('js_minify', 0);
+Settings::Singleton()->new_setting('js_minify', 1);
 
 //Setting search
 //Allow site searching
@@ -100,7 +100,9 @@ Settings::Singleton()->new_setting('tidy', true);
 Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'));
 Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['site_root'] . '/graphics/'));
 Settings::Singleton()->new_setting('site_folder_uploads', ($GLOBALS['site_root'] . '/documents/uploads/tmp/'));
-Settings::Singleton()->new_setting('site_folder_downloads', ($GLOBALS['site_root'] . '/documents/downloads/')); 
+Settings::Singleton()->new_setting('cms_folder_uploads', ('documents/uploads/tmp/'));
+Settings::Singleton()->new_setting('site_folder_downloads', ($GLOBALS['site_root'] . '/documents/downloads/'));
+ Settings::Singleton()->new_setting('cms_folder_downloads', ('documents/uploads/tmp/'));
 Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/js/'));
 
 /* Session security */

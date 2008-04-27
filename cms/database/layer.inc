@@ -360,6 +360,8 @@ class Database
 		
 		$sql .= $where .' begin ';
 		
+		
+		die($sql);
 		//Simple update query
 		
 		

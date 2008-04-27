@@ -373,7 +373,7 @@ class Database
 		while($i <= (count($fields) - 1))
 		{
 			$sql .= ' `'.$this->sql_clean_input($fields[$i]) .'` = "'.$this->sql_clean_input($values[$i]) .'" ';
-			if($i = (count($fields) - 1)) { $sql .=', '; }
+			if($i < (count($fields) - 1)) { $sql .=', '; }
 			$i++;
 		}
 		
@@ -382,7 +382,7 @@ class Database
 		while($i <= (count($fields) - 1))
 		{
 			$sql_temp_fields = $sql_temp_fields . '`'.$this->sql_clean_input($fields[$i]) .'` ';
-			if($i = (count($fields) - 1)) { $sql_temp_fields .=', '; }
+			if($i < (count($fields) - 1)) { $sql_temp_fields .=', '; }
 			$i++;
 		}
 		
@@ -390,7 +390,7 @@ class Database
 		while($i <= (count($values) - 1))
 		{
 			$sql_temp_values = $sql_temp_values . '"'.$this->sql_clean_input($values[$i]) .'" ';
-			if($i = (count($fields) - 1)) { $sql_temp_values .=', '; }
+			if($i < (count($values) - 1)) { $sql_temp_values .=', '; }
 			$i++;
 		}
 				

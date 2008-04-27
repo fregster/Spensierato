@@ -375,7 +375,6 @@ class Database
 			$sql_temp_fields = $sql_temp_fields . $this->sql_clean_input($fields[$i]) .', ';
 			$i++;
 		}
-		die($sql);
 		
 		$i = 0;
 		while($i <= (count($values) - 1))

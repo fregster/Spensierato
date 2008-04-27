@@ -18,8 +18,8 @@
 							<xsl:if test="/page/warnings/warning">
 							| <div class="sprite sprite-delete" />
 								<xsl:element name="a">
-									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/warnings</xsl:attribute>
-									<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/tools/warnings', 650, 450, pageReload); return false;</xsl:attribute>
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/warnings</xsl:attribute>
+									<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/warnings', 650, 450, pageReload); return false;</xsl:attribute>
 									The site has configuration problems
 								</xsl:element>
 		

@@ -87,6 +87,9 @@ class CMS
 		//Update the settings with those from the DB
 		Settings::Singleton()->get_database_settings();
 		
+		//Update settings which require moding
+		$this->settings_update();
+		
 		//Setup the user
 		User::Singleton()->start();
 	}
@@ -579,6 +582,23 @@ class CMS
 		</html>');
 		
 		die();
+	}
+
+	private function settings_update()
+	{
+		$settings = array(Settings::singleton()->get_setting('cms_folder_uploads'),
+						Settings::singleton()->get_setting('cms_folder_downloads'),
+						Settings::singleton()->get_setting('cms_folder_orig_images')
+							);
+		
+		foreach($settings as $setting)
+		{
+			if(substr($setting, 1) == '/')
+			{
+				$new_folder = $this->$cms_root.'/'.Settings::singleton()->get_setting($setting);
+				Settings::Singleton()->overwrite_setting($setting, $new_folder);
+			}
+		}
 	}
 }
 ?>

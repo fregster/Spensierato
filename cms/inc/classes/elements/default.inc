@@ -78,7 +78,6 @@ class elementDefault
 		
 		if($draft)
 		{
-			die('Save');
 			database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id', 'data', 'ts'), array(1,1,'html',123456));
 		}
 		else

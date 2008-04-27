@@ -16,11 +16,11 @@
 						<!--  If the user is a site admin show site warnings -->
 						<xsl:if test="/page/user/administrator = 1">
 							<xsl:if test="/page/warnings/warning">
-							
+							| <div class="sprite sprite-delete" />
 								<xsl:element name="a">
 									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/warnings</xsl:attribute>
 									<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/tools/warnings', 650, 450, pageReload); return false;</xsl:attribute>
-									| <div class="sprite sprite-delete" /> The site has configuration problems
+									The site has configuration problems
 								</xsl:element>
 		
 							</xsl:if>

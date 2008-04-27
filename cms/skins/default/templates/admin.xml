@@ -16,7 +16,7 @@
 						<!--  If the user is a site admin show site warnings -->
 						<xsl:if test="/page/user/administrator = 1">
 							<xsl:if test="/page/warnings/warning">
-								<div class="sprite sprite-delete" />			
+								<div class="sprite sprite-delete" /> The site has configuration problems		
 							</xsl:if>
 						</xsl:if>
 					</xsl:if>

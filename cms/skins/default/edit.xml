@@ -58,6 +58,12 @@
 	</div>
 </xsl:template>
 
+<xsl:template match="warning">
+	<div>
+		<xsl:value-of select="./title" /><em><xsl:value-of select="./description" /></em>
+	</div>
+</xsl:template>
+
 <xsl:template match="auto">
 	<div>
 		<xsl:value-of select="@type" />: <xsl:value-of select="." />

@@ -100,10 +100,17 @@ Settings::Singleton()->new_setting('tidy', true);
 Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'));
 Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['site_root'] . '/graphics/'));
 Settings::Singleton()->new_setting('site_folder_uploads', ($GLOBALS['site_root'] . '/documents/uploads/tmp/'));
-Settings::Singleton()->new_setting('cms_folder_uploads', ('documents/uploads/tmp/'));
 Settings::Singleton()->new_setting('site_folder_downloads', ($GLOBALS['site_root'] . '/documents/downloads/'));
- Settings::Singleton()->new_setting('cms_folder_downloads', ('documents/uploads/tmp/'));
 Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/js/'));
+
+//Temporay uploads folder
+Settings::Singleton()->new_setting('cms_folder_uploads', 'documents/uploads/tmp/');
+
+//Permanant uploads folder
+Settings::Singleton()->new_setting('cms_folder_downloads', 'documents/uploads/');
+
+//Unscaled images
+Settings::Singleton()->new_setting('cms_folder_orig_images', 'documents/uploads/original_images/');
 
 /* Session security */
 //Setting session_security_enhanced

@@ -372,7 +372,7 @@ class Database
 		$i = 0;
 		while($i <= (count($fields) - 1))
 		{
-			$sql .= $this->sql_clean_input($fields[$i]) .' = "'.$this->sql_clean_input($values[$i]) .'" ';
+			$sql .= ' `'.$this->sql_clean_input($fields[$i]) .'` = "'.$this->sql_clean_input($values[$i]) .'" ';
 			$i++;
 		}
 		

@@ -364,6 +364,7 @@ class Database
 		
 		$sql .= 'UPDATE '. $this->sql_clean_input($table) . ' SET ';
 		
+				die($sql);
 		$i = 0;
 		while($i <= (count($where_fields) - 1))
 		{

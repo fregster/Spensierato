@@ -23,6 +23,9 @@ class Content
 	private $debug;
 	private $debug_data;
 	
+	private $warnings;
+	private $warnings_data;
+	
 	public static function Singleton()
 	{
 	   if (!isset(self::$instance)) {
@@ -52,6 +55,7 @@ class Content
 		$this->settings_data = $this->dom->createDocumentFragment();
 		$this->user_data = $this->dom->createDocumentFragment();
 		$this->options_data = $this->dom->createDocumentFragment();
+		$this->warnings_data = $this->dom->createDocumentFragment();
 		
 		$this->debug = $this->dom->createElement('debug');
 		$this->debug_data = $this->dom->createDocumentFragment();
@@ -77,6 +81,7 @@ class Content
 		$this->attach_debug();
 		$this->attach_security();
 		$this->attach_options();
+		$this->attach_warnings();
 		$this->build_xml();
 		
 		return $this->dom->saveXML();
@@ -107,6 +112,11 @@ class Content
 	private function attach_settings()
 	{
 		$this->settings_data->appendXML(Settings::Singleton()->settings_as_xml());
+	}
+	
+	private function attach_warnings()
+	{
+		$this->settings_data->appendXML(Warnings::Singleton()->get_as_xml());
 	}
 	
 	private function attach_user()

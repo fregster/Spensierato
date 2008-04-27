@@ -369,14 +369,12 @@ class Database
 		
 		$sql .= 'UPDATE '. $this->sql_clean_input($table) . ' SET ';
 		
-				die($sql);
 		$i = 0;
 		while($i <= (count($fields) - 1))
 		{
 			$sql_temp_fields = $sql_temp_fields . $this->sql_clean_input($fields[$i]) .', ';
 		}
-		
-				die($sql);
+		die($sql);
 		
 		$i = 0;
 		while($i <= (count($values) - 1))

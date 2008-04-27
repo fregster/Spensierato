@@ -371,26 +371,26 @@ class Database
 		
 				die($sql);
 		$i = 0;
-		while($i <= (count($where_fields) - 1))
+		while($i <= (count($fields) - 1))
 		{
-			$sql_temp_fields = $sql_temp_fields . $this->sql_clean_input($where_fields[$i]) .', ';
+			$sql_temp_fields = $sql_temp_fields . $this->sql_clean_input($fields[$i]) .', ';
 		}
 		
 				die($sql);
 		
 		$i = 0;
-		while($i <= (count($where_values) - 1))
+		while($i <= (count($values) - 1))
 		{
-			$sql_temp_values = $sql_temp_values . $this->sql_clean_input($where_values[$i]) .', ';
+			$sql_temp_values = $sql_temp_values . $this->sql_clean_input($values[$i]) .', ';
 		}
 		
-		$sql .= $sql_temp_fields . ' VALUES ' . sql_temp_values;
+		$sql .= $sql_temp_fields . ' VALUES ' . $sql_temp_values;
 				
 		$sql .= ' end else begin ';
 		
 		//Simple insert query
 		
-		$sql .= 'INSERT INTO '. $this->sql_clean_input($table) .' ('.$sql_temp_fields.') VALUES ('.sql_temp_values.') ';
+		$sql .= 'INSERT INTO '. $this->sql_clean_input($table) .' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 		
 		$sql .= ' end ';
 		

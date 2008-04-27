@@ -124,8 +124,13 @@ class user
 				}
 			}
 		}
-				
+		
+		$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
+		
 		$this->user_details['id'] = $this->userid;
+		$this->user_details['username'] = $user_details2['username'];
+		$this->user_details['administrator'] = $user_details2['admin'];
+		
 		$this->lists = Lists::Singleton()->get_lists_for_user($this->userid);
 	}
 
@@ -159,7 +164,7 @@ class user
 		}
 		else
 		{
-			$sql_password = Common::return_hash($password);
+			$sql_password = Common::return_hash($password, false);
 		}
 		$id = Database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('username', 'password'), array($username, $sql_password));
 		if(count($id) == 1)

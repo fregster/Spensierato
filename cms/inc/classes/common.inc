@@ -232,12 +232,14 @@ abstract class Common
 	public static function node_from_xml($xml, $node)
 	{
 		$xml_obj = simplexml_load_string($xml);
-		print_r($xml_obj);
-		$result= $xml_obj->xpath($node);
-
-		foreach ((array)$result as $result) 
+		if($xml_obj)
 		{
-	    	return($result);
+			$result= $xml_obj->xpath($node);
+	
+			foreach ((array)$result as $result) 
+			{
+		    	return($result);
+			}
 		}
 	}
 }

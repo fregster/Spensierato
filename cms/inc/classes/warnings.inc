@@ -83,7 +83,13 @@ class warnings
 	
 	public function get_as_xml($level = 2)
 	{
-		$serializer_options = NULL;
+		$serializer_options = array ( 
+			   'addDecl' => FALSE, 
+			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
+			   'indent' => '  ',
+			   'rootName'  => 'warnings',
+			   'defaultTagName'  => 'warning'
+			);
 		return common::array_to_xml($this->get($level), $serializer_options);
 	}
 }

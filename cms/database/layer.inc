@@ -351,7 +351,7 @@ class Database
 		$i = 0;
 		while($i <= (count($where_values) - 1))
 		{
-			$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($where_values[$i]) .'")';
+			$sql_temp_where = $sql_temp_where . '(``' . $this->sql_clean_input($where_fields[$i]) .'` = "'. $this->sql_clean_input($where_values[$i]) .'")';
 			
 			if($i < (count($where_values) - 1))
 			{
@@ -372,14 +372,14 @@ class Database
 		$i = 0;
 		while($i <= (count($fields) - 1))
 		{
-			$sql_temp_fields = $sql_temp_fields . $this->sql_clean_input($fields[$i]) .', ';
+			$sql_temp_fields = $sql_temp_fields . '`'.$this->sql_clean_input($fields[$i]) .'`, ';
 			$i++;
 		}
 		
 		$i = 0;
 		while($i <= (count($values) - 1))
 		{
-			$sql_temp_values = $sql_temp_values . $this->sql_clean_input($values[$i]) .', ';
+			$sql_temp_values = $sql_temp_values . '"'.$this->sql_clean_input($values[$i]) .'", ';
 			$i++;
 		}
 		

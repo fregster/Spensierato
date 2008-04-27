@@ -125,11 +125,11 @@ class user
 			}
 		}
 		
-//		$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
-//		
-//		$this->user_details['id'] = $this->userid;
-//		$this->user_details['username'] = $user_details2['username'];
-//		$this->user_details['administrator'] = $user_details2['admin'];
+		$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
+		
+		$this->user_details['id'] = $this->userid;
+		$this->user_details['username'] = $user_details2['username'];
+		$this->user_details['administrator'] = $user_details2['admin'];
 		
 		$this->lists = Lists::Singleton()->get_lists_for_user($this->userid);
 	}

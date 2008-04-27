@@ -60,12 +60,12 @@ Settings::Singleton()->new_setting('send_as_xml', false);
 //100000
 Settings::Singleton()->new_setting('max_file_size', 100000);
 
-//Setting js_minify
+//Setting js_minify /* Currently breaks JS */
 //clean the javascript to reduce the file size defaults to internal (1) just removes comments and break lines
 //0 no cleaning
 //1 use internal cleaner
 //2 use JSMin
-Settings::Singleton()->new_setting('js_minify', 1);
+Settings::Singleton()->new_setting('js_minify', 0);
 
 //Setting search
 //Allow site searching

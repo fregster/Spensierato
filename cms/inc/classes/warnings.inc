@@ -78,19 +78,19 @@ class warnings
 	{
 		$warnings = array();
 		
-		while ($level >= 0) 
-		{
-			if(count($this->warnings[$level]) > 0)
-			{
-				array_push($warnings, $this->warnings[$level]);
-			}
-			$level--;
-		}
-		
-		if(count($warnings) > 0)
-		{
-			return $warnings;
-		}
+//		while ($level >= 0) 
+//		{
+//			if(count($this->warnings[$level]) > 0)
+//			{
+//				array_push($warnings, $this->warnings[$level]);
+//			}
+//			$level--;
+//		}
+//		
+//		if(count($warnings) > 0)
+//		{
+//			return $warnings;
+//		}
 		
 		return null;
 	}

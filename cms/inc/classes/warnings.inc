@@ -104,7 +104,7 @@ class warnings
 			   'rootName'  => 'warnings',
 			   'defaultTagName'  => 'warning'
 			);
-		return common::array_to_xml($this->get($level), $serializer_options);
+//		return common::array_to_xml($this->get($level), $serializer_options);
 	}
 }
 ?>

@@ -372,6 +372,14 @@ class Database
 		$i = 0;
 		while($i <= (count($fields) - 1))
 		{
+			$sql .= $this->sql_clean_input($fields[$i]) .' = "'.$this->sql_clean_input($values[$i]) .'" ';
+			$i++;
+		}
+		
+		
+		$i = 0;
+		while($i <= (count($fields) - 1))
+		{
 			$sql_temp_fields = $sql_temp_fields . '`'.$this->sql_clean_input($fields[$i]) .'`, ';
 			$i++;
 		}
@@ -382,8 +390,6 @@ class Database
 			$sql_temp_values = $sql_temp_values . '"'.$this->sql_clean_input($values[$i]) .'", ';
 			$i++;
 		}
-		
-		$sql .= $sql_temp_fields . ' VALUES ' . $sql_temp_values;
 				
 		$sql .= ' end else begin ';
 		

@@ -345,7 +345,7 @@ class Database
 			return false;
 		}
 		
-		$sql = 'IF (EXISTS (SELECT * FROM '. $this->sql_clean_input($table) . ' AS t1 ';
+		$sql = 'IF EXISTS (SELECT * FROM '. $this->sql_clean_input($table) . ' AS t1 ';
 		
 		
 		$i = 0;
@@ -398,7 +398,7 @@ class Database
 		
 		//Simple insert query
 		
-		$sql .= 'INSERT INTO '. $this->sql_clean_input($table) .' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
+		$sql .= 'INSERT INTO '. $this->sql_clean_input($table) . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 		
 		$sql .= ' end ';
 		

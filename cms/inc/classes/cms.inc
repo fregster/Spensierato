@@ -278,7 +278,7 @@ class CMS
 			case 'WARNINGS':
 				$element = Element::type('elementWarnings');
 				$element->build('Warnings');
-				$this->get_html();
+				Render::Singleton()->render_edit(Content::Singleton()->build());
 				break;
 				
 			case 'ACCOUNT':

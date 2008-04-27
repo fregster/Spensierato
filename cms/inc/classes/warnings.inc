@@ -87,7 +87,12 @@ class warnings
 			}
 		}
 		
-		return $warnings;
+		if(count($warnings) > 0)
+		{
+			return $warnings;
+		}
+		
+		return null;
 	}
 	
 	public function get_as_xml($level = 2)

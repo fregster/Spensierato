@@ -586,18 +586,18 @@ class CMS
 
 	private function settings_update()
 	{
-		$settings = array(Settings::singleton()->get_setting('cms_folder_uploads'),
-						Settings::singleton()->get_setting('cms_folder_downloads'),
-						Settings::singleton()->get_setting('cms_folder_orig_images')
+		$settings = array('cms_folder_uploads' => Settings::singleton()->get_setting('cms_folder_uploads'),
+						'cms_folder_downloads' => Settings::singleton()->get_setting('cms_folder_downloads'),
+						'cms_folder_orig_images' => Settings::singleton()->get_setting('cms_folder_orig_images')
 							);
 		
-		foreach($settings as $setting)
+		foreach($settings as $key => $setting)
 		{
 			//die(substr($setting, 0, 1));
 			if(substr($setting, 0, 1) != '/')
 			{
-				$new_folder = $this->cms_root.'/'.Settings::singleton()->get_setting($setting);
-				Settings::Singleton()->overwrite_setting($setting, $new_folder);
+				$new_folder = $this->cms_root.'/'.$setting;
+				Settings::Singleton()->overwrite_setting($key, $new_folder);
 			}
 		}
 	}

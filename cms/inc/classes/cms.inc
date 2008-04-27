@@ -593,7 +593,7 @@ class CMS
 		
 		foreach($settings as $setting)
 		{
-			die(substr($setting, 0, 1));
+			//die(substr($setting, 0, 1));
 			if(substr($setting, 0, 1) != '/')
 			{
 				$new_folder = $this->cms_root.'/'.Settings::singleton()->get_setting($setting);

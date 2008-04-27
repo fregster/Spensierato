@@ -332,10 +332,15 @@ class Database
 		return $this->sql_update_exe($sql);
 	}
 	
-	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array())
+	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array())
 	{
 		
 		if(	(count($where_fields)) != (count($where_values))	)
+		{
+			return false;
+		}
+		
+		if(	(count($fields)) != (count($values))	)
 		{
 			return false;
 		}
@@ -356,9 +361,9 @@ class Database
 			$i++;
 		}
 		
-		$where = ' WHERE (' . $sql_temp_where;
+		$where = ' WHERE (' . $sql_temp_where .') ';
 		
-		$sql .= $where .') begin ';
+		$sql .= $where .' begin ';
 		
 		//Simple update query
 		

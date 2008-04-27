@@ -70,7 +70,7 @@ class warnings
 		{
 			$this->warnings[$level] = array();
 		}
-		array_push($this->warnings[$level], array($warning_title, $description));
+		array_push($this->warnings[$level], array('title' => $warning_title, 'description' => $description));
 	}
 	
 	public function get($level = 2)

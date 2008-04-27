@@ -34,6 +34,32 @@ class warnings
 	{
 		//Do standard warning checks here for easy of code finding.
 		
+		//Checks only to be done if in admin mode
+		if(Options::Singleton()->get_option('admin_mode'))
+		{
+			//Check paths are writable
+			$paths = array(Settings::singleton()->get_setting('site_folder_uploads'),
+							Settings::singleton()->get_setting('site_folder_downloads')
+						);
+			
+			foreach($paths as $path)
+			{
+				if (!is_dir($path)) 
+				{
+    				$this->register('Folder does not exsist', 'Please create the folder '.$path);
+				}
+				
+				if (!is_readable($path)) 
+				{
+    				$this->register('Folder is not readable', 'The folder '.$path.' does not have read permissions');
+				}
+				
+				if (!is_writable($path)) 
+				{
+    				$this->register('Folder is not writable', 'The folder '.$path.' does not have write permissions');
+				}
+			}
+		}
 		
 	}
 	

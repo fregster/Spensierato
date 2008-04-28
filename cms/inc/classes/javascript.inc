@@ -109,7 +109,7 @@ abstract class javascript
 		// First time visit or files were modified
 		if ($cache) 
 		{
-			echo('cache enabled');
+			die('cache enabled');
 			if (file_exists($file)) {
 				echo('cached file found');
 				if ($fp = fopen($file, 'rb')) {

@@ -100,10 +100,12 @@ abstract class javascript
 			if($lastmodified > filemtime($file))
 			{
 				//JS moded create and send new cache
+				die('Modded');
 				$etag = cache::generate_etag($file);
 			}
 			else
 			{
+				die('cached');
 				//JS files not moded since cached
 				Cache::headers_allow_cache($file);
 			}

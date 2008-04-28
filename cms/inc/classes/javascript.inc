@@ -110,7 +110,7 @@ abstract class javascript
 		if ($cache) 
 		{
 			if (file_exists($file)) {
-				echo('cached file found '.$file);
+				die('cached file found '.$file);
 				if ($fp = fopen($file, 'rb')) {
 					
 					Cache::headers_allow_cache($file, true, 360000, 360000, true);
@@ -123,6 +123,10 @@ abstract class javascript
 					//echo(Common::get_file_contents_as_string($file));
 					die('file sent');
 				}
+			}
+			else
+			{
+				die('file not found');
 			}
 		}
 	

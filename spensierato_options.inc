@@ -101,7 +101,7 @@ Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '
 Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['site_root'] . '/graphics/'));
 Settings::Singleton()->new_setting('site_folder_uploads', ($GLOBALS['site_root'] . '/documents/uploads/tmp/'));
 Settings::Singleton()->new_setting('site_folder_downloads', ($GLOBALS['site_root'] . '/documents/downloads/'));
-Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/js/'));
+Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/javascript/'));
 
 //Temporay uploads folder
 Settings::Singleton()->new_setting('cms_folder_uploads', 'documents/uploads/tmp/');

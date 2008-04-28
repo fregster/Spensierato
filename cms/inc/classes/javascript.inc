@@ -109,16 +109,13 @@ abstract class javascript
 		// First time visit or files were modified
 		if ($cache) 
 		{
-			die('cache enabled');
+			die('cache enabled '.$file);
 			if (file_exists($file)) {
 				echo('cached file found');
 				if ($fp = fopen($file, 'rb')) {
-
-					if ($encoding != 'none') {
-						header ("Content-Encoding: " . $encoding);
-					}
 					
 					Cache::headers_allow_cache($file, true, 360000, 360000, true);
+					if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 					header ('Content-type: text/' . $type);
 					header ('Content-Length: ' . filesize($file));
 		

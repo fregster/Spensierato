@@ -119,6 +119,7 @@ abstract class javascript
 						}
 						
 						Cache::headers_allow_cache($file);
+						header ("Etag: \"" . $hash . "\"");
 						header ('Content-type: text/' . $type);
 						header ('Content-Length: ' . filesize($file));
 			
@@ -151,6 +152,7 @@ abstract class javascript
 			if($cached)
 			{
 				Cache::headers_allow_cache($cachedir . '/' . $cachefile);
+				header ("Etag: \"" . $hash . "\"");
 			}
 		
 			// Send Content-Type

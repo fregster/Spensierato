@@ -61,7 +61,7 @@ var Scriptaculous = {
 		var xstart = URL.lastIndexOf("/") + 1
 		var xend = URL.length
 		var path = URL.substring(0,xstart) + '../js/';
-		var path = 'http://www.fryer.org.uk/current/cms/js/'
+		//var path = 'http://www.fryer.org.uk/current/cms/js/'
       var includes = s.src.match(/\?.*load=([a-z,]*)/);
       (includes ? includes[1] : 'builder,effects,dragdrop,controls,slider,sound').split(',').each(
        function(include) { Scriptaculous.require(path+include+'.js') });

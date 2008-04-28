@@ -112,8 +112,9 @@ abstract class javascript
 			if (file_exists($file)) {
 				if ($fp = fopen($file, 'rb')) 
 				{
-					die('file opened');	
+					echo('file opened');	
 					Cache::headers_allow_cache($file, true, 360000, 360000, true);
+					die('Cache called');
 					if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 					header ('Content-type: text/' . $type);
 					header ('Content-Length: ' . filesize($file));

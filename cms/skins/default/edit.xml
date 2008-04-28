@@ -4,11 +4,12 @@
 
 			<xsl:element name="body" onload='new Effect.Opacity("notifications", {duration:1.0, from:1.0, to:0.0});return false;'>
 			<div id="notifications">Content Editor
-			<xsl:element name="a">
-				<xsl:attribute name="href">#</xsl:attribute>
-				<xsl:attribute name="onclick">new Effect.Opacity("notifications", {duration:1.0, from:1.0, to:0.0});return false;</xsl:attribute>Hide the window
+			<xsl:element name="div">
+				<xsl:attribute name="onclick">new Effect.SwitchOff(this)</xsl:attribute>
+				 Click here if you've seen enough.
 			</xsl:element>
-			
+   
+  </div>
 			
 			</div>
 			<!-- <xsl:attribute name="onload">tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />');</xsl:attribute> -->

@@ -118,9 +118,10 @@ abstract class javascript
 //					if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 					header ('Content-type: text/' . $type);
 					header ('Content-Length: ' . filesize($file));
-					die('headers sent');
+					echo('headers sent');
 					fpassthru($fp);
 					fclose($fp);
+					die('file sent');
 					//echo(Common::get_file_contents_as_string($file));
 					die('file sent');
 					

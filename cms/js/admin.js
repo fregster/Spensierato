@@ -35,9 +35,9 @@ function ajaxSave() {
         	if(http.readyState==4)
 			{
 				if(http.responseText == 'SAVED'){
-					ajaxSaved();
+					notification('Draft text saved');
 				} else {
-					alert(http.responseText);
+					notification(http.responseText);
 				}
 			}
 		}
@@ -45,11 +45,6 @@ function ajaxSave() {
 	ed.setProgressState(0); // Hide progress
 	
 	//ajaxLoad();
-}
-
-function ajaxSaved()
-{
-	notification('Draft text saved');
 }
 
 //pass node as an array to do recursive lookups

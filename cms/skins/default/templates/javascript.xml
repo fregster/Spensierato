@@ -19,7 +19,7 @@
 					<!-- User logged in and in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,admin.js,prototype.js,scriptaculous.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,admin.js,prototype.js,scriptaculous.js?load=effects</xsl:attribute>
 						</xsl:element>
 						
 						<xsl:element name="script">

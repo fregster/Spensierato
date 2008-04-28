@@ -3,13 +3,11 @@
 			<xsl:call-template name="header"/>
 
 			<xsl:element name="body" onload='new Effect.Opacity("notifications", {duration:1.0, from:1.0, to:0.0});return false;'>
-			<div id="notifications">Content Editor
+			<div id="notifications">Content Editor</div>
 			<xsl:element name="div">
 				<xsl:attribute name="onclick">new Effect.SwitchOff(this)</xsl:attribute>
 				 Click here if you've seen enough.
 			</xsl:element>
-   
-  </div>
 			
 			</div>
 			<!-- <xsl:attribute name="onload">tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />');</xsl:attribute> -->

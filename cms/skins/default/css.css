@@ -355,6 +355,7 @@ a.tooltip:hover span
 	top: 0px;
 	left: 0px;
 	width: 100%;
+	background-color: red;
 }
 /* Sprite information */
 .sprite {height:16px; width:18px; float:left; background: url(skin/csg-47fc8b141e478.png) no-repeat center center; position:relative; top:2px; left:1px }

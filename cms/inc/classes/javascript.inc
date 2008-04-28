@@ -43,11 +43,11 @@ abstract class javascript
 //		};
 	
 		
-		print_r($files);
-		die();
 		$base = realpath($jsdir);
 		$type = 'javascript';
 		$elements = explode(',', $files);
+		print_r($elements);
+		die();
 		
 		// Determine last modification date of the files
 		$lastmodified = 0;

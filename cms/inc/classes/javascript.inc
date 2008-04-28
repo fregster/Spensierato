@@ -95,19 +95,21 @@ abstract class javascript
 		$cachefile = 'cache-' . $hash . '.' . $type . ($encoding != 'none' ? '.' . $encoding : '');	
 		$file = $cachedir . '/' . $cachefile;
 		
-		if($lastmodified > filemtime($file))
+		if (file_exists($file)) 
 		{
-			//JS moded create and send new cache
-			$etag = cache::generate_etag($file);
-			die('Modded');
+			if($lastmodified > filemtime($file))
+			{
+				//JS moded create and send new cache
+				$etag = cache::generate_etag($file);
+				die('Modded');
+			}
+			else
+			{
+				//JS files not moded since cached
+				Cache::headers_allow_cache($file);
+				die('do 304');
+			}
 		}
-		else
-		{
-			//JS files not moded since cached
-			Cache::headers_allow_cache($file);
-			die('do 304');
-		}
-		
 		// First time visit or files were modified
 		if ($cache) 
 		{

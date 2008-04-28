@@ -100,7 +100,7 @@ abstract class javascript
 			if($lastmodified < filemtime($file))
 			{
 				//JS files not moded since cached
-				Cache::headers_allow_cache($file);
+				Cache::headers_check_304($file);
 			}
 		}
 		

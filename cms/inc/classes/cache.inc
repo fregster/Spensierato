@@ -1,11 +1,13 @@
 <?
 abstract class Cache
 {
-	public static function headers_allow_cache($path = NULL, $public = true, $expires = 3600, $maxage = 3600)
+	public static function headers_allow_cache($path = NULL, $public = true, $expires = 3600, $maxage = 3600, $force_resend = false)
 	{
 		if($path != NULL) 
 		{ 
+			if(!$force_resend) {
 			Cache::headers_check_304($path); 
+			}
 			
 			$mtime = filemtime($path);
 			$gmdate_mod = gmdate('D, d M Y H:i:s', $mtime) . ' GMT';
@@ -36,7 +38,7 @@ abstract class Cache
 
 	}
 	
-	public static function generate_etag($path)
+	private static function generate_etag($path)
 	{
 		// Inode
 		$ETag = dechex(fileinode($path));
@@ -70,7 +72,7 @@ abstract class Cache
 		header('pragma: private'); 
 	}
 	
-	private static function headers_check_304($path)
+	public static function headers_check_304($path)
 	{
 		//File modification time
 		$gmdate_mod = gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT';

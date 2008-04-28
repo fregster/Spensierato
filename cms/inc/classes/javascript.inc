@@ -116,13 +116,14 @@ abstract class javascript
 					Cache::headers_allow_cache($file, true, 360000, 360000, true);
 					echo('Cache called');
 //					if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
-//					header ('Content-type: text/' . $type);
-//					header ('Content-Length: ' . filesize($file));
+					header ('Content-type: text/' . $type);
+					header ('Content-Length: ' . filesize($file));
 					die('headers sent');
 					fpassthru($fp);
 					fclose($fp);
 					//echo(Common::get_file_contents_as_string($file));
 					die('file sent');
+					
 				}
 				else
 				{

@@ -110,21 +110,20 @@
 					<xsl:attribute name="type">text/css</xsl:attribute>
 					<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				</xsl:element>
+				
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
 					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>
 				</xsl:element>
+				
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
-					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,admin.js,prototype.js</xsl:attribute>
 				</xsl:element>
+				
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
-					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />logged_in.js</xsl:attribute>
-				</xsl:element>
-				<xsl:element name="script">
-					<xsl:attribute name="type">text/javascript</xsl:attribute>
-					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />admin.js</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />scriptaculous.js</xsl:attribute>
 				</xsl:element>
 				
 				<script type="text/javascript">

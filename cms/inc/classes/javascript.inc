@@ -113,7 +113,7 @@ abstract class javascript
 						header ("Content-Encoding: " . $encoding);
 					}
 					
-					Cache::headers_allow_cache($file);
+					Cache::headers_allow_cache($file, true, 360000, 360000, true);
 					header ('Content-type: text/' . $type);
 					header ('Content-Length: ' . filesize($file));
 		

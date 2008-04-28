@@ -51,7 +51,7 @@ var Scriptaculous = {
 	var URL = unescape(location.href)	// get current URL in plain ASCII
 	var xstart = URL.lastIndexOf("/") + 1
 	var xend = URL.length
-	var herePath = URL.substring(0,xstart)
+	var herePath = URL.substring(0,xstart) + '../js/'
     
     return herePath
       

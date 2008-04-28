@@ -75,9 +75,10 @@ class cookie
 	{
 		if( (is_array($this->cookie_array)) and ($name != NULL) )
 		{
-			if(isset($this->cookie_array[$name]))
+			$value = $this->cookie_array[$name];
+			if($value != NULL)
 			{
-				return $this->cookie_array[$name];
+				return $value;
 			}
 		}
 		return NULL;

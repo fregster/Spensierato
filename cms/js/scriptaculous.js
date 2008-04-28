@@ -45,7 +45,16 @@ var Scriptaculous = {
         Scriptaculous.REQUIRED_PROTOTYPE);
     
     $A(document.getElementsByTagName("script")).findAll( function(s) {
-      return (s.src && s.src.match(/scriptaculous\.js(\?.*)?$/))
+    //Modification because of JS cacheing
+      //return (s.src && s.src.match(/scriptaculous\.js(\?.*)?$/))
+      
+	var URL = unescape(location.href)	// get current URL in plain ASCII
+	var xstart = URL.lastIndexOf("/") + 1
+	var xend = URL.length
+	var herePath = URL.substring(0,xstart)
+    
+    return herePath
+      
     }).each( function(s) {
       var path = s.src.replace(/scriptaculous\.js(\?.*)?$/,'');
       var includes = s.src.match(/\?.*load=([a-z,]*)/);

@@ -110,8 +110,9 @@ abstract class javascript
 		if ($cache) 
 		{
 			if (file_exists($file)) {
-				if ($fp = fopen($file, 'rb')) {
-					
+				if ($fp = fopen($file, 'rb')) 
+				{
+					die('file opened');	
 					Cache::headers_allow_cache($file, true, 360000, 360000, true);
 					if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 					header ('Content-type: text/' . $type);

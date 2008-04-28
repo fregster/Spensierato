@@ -3,6 +3,7 @@
 			<xsl:call-template name="header"/>
 
 			<xsl:element name="body">
+			<div id="notifications">Notifications</div>
 			<!-- <xsl:attribute name="onload">tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />');</xsl:attribute> -->
 					<div id="page_edit">
 					<xsl:element name="form">

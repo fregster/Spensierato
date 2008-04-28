@@ -4,15 +4,7 @@
 				<!-- User Not logged in -->
 					<xsl:element name="script">
 						<xsl:attribute name="type">text/javascript</xsl:attribute>
-						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js</xsl:attribute>
-					</xsl:element>
-					<xsl:element name="script">
-						<xsl:attribute name="type">text/javascript</xsl:attribute>
-						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />prototype.js</xsl:attribute>
-					</xsl:element>
-					<xsl:element name="script">
-						<xsl:attribute name="type">text/javascript</xsl:attribute>
-						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />scriptaculous.js</xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,prototype.js,scriptaculous.js</xsl:attribute>
 					</xsl:element>
 				</xsl:if>
 				
@@ -23,15 +15,7 @@
 					<!-- User logged in and in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js</xsl:attribute>
-						</xsl:element>
-						<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />logged_in.js</xsl:attribute>
-						</xsl:element>
-						<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />admin.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,admin.js,prototype.js,scriptaculous.js</xsl:attribute>
 						</xsl:element>
 						
 						<xsl:element name="script">
@@ -42,16 +26,6 @@
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
 							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />submodal/subModal.js</xsl:attribute>
-						</xsl:element>
-						
-						<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />prototype.js</xsl:attribute>
-						</xsl:element>
-						
-						<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />scriptaculous.js</xsl:attribute>
 						</xsl:element>
 						
 						<script type="text/javascript">
@@ -67,19 +41,7 @@
 					<!-- User logged in and NOT in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js</xsl:attribute>
-						</xsl:element>
-						<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />logged_in.js</xsl:attribute>
-						</xsl:element>
-							<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />prototype.js</xsl:attribute>
-						</xsl:element>
-						<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />scriptaculous.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,prototype.js,scriptaculous.js</xsl:attribute>
 						</xsl:element>
 					</xsl:if>
 					

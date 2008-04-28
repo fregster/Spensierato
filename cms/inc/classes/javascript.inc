@@ -104,7 +104,7 @@ abstract class javascript
 			}
 		}
 		
-		die('New or not cached');
+//		die('New or not cached');
 		
 		// First time visit or files were modified
 		if ($cache) 
@@ -129,6 +129,7 @@ abstract class javascript
 			}
 		}
 	
+		die('No cache or file not found');
 		// Get contents of the files
 		$contents = '';
 		reset($elements);

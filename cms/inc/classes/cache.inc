@@ -36,7 +36,7 @@ abstract class Cache
 
 	}
 	
-	private static function generate_etag($path)
+	public static function generate_etag($path)
 	{
 		// Inode
 		$ETag = dechex(fileinode($path));

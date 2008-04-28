@@ -29,7 +29,10 @@ abstract class javascript
 	public static function run($files)
 	{
 		$cachedir = Settings::singleton()->get_setting('cms_root') . '/writeable/cache';
-		$jsdir    = Settings::singleton()->get_setting('cms_root') . '/js';	
+		$jsdir    = Settings::singleton()->get_setting('cms_root') . '/js';
+		
+		// Try the cache first to see if the combined files were already generated
+		$hash = sha1($files);
 
 		if(is_writable($cachedir))
 		{
@@ -70,108 +73,102 @@ abstract class javascript
 			$lastmodified = max($lastmodified, filemtime($path));
 		}
 		
-		// Send Etag hash
-		//TODO use CMS Cache
+		// Determine supported compression method
+		$gzip = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip');
+		$deflate = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate');
 
-		$hash = $lastmodified . '-' . md5($files);
-		header ("Etag: \"" . $hash . "\"");
+		// Determine used compression method
+		$encoding = $gzip ? 'gzip' : ($deflate ? 'deflate' : 'none');
+
+		// Check for buggy versions of Internet Explorer
+		if (!strstr($_SERVER['HTTP_USER_AGENT'], 'Opera') && 
+			preg_match('/^Mozilla\/4\.0 \(compatible; MSIE ([0-9]\.[0-9])/i', $_SERVER['HTTP_USER_AGENT'], $matches)) {
+			$version = floatval($matches[1]);
+			
+			if ($version < 6)
+				$encoding = 'none';
+				
+			if ($version == 6 && !strstr($_SERVER['HTTP_USER_AGENT'], 'EV1')) 
+				$encoding = 'none';
+		}
 		
-		if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && 
-			stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) == '"' . $hash . '"') 
+		$cachefile = 'cache-' . $hash . '.' . $type . ($encoding != 'none' ? '.' . $encoding : '');	
+		$file = $cachedir . '/' . $cachefile;
+		
+		// Send Etag hash		
+		
+		if($lastmodified > filemtime($file))
 		{
-			// Return visit and no modifications, so do not send anything
-			header ("HTTP/1.0 304 Not Modified");
-			header ('Content-Length: 0');
+			//JS moded create and send new cache
+			$etag = cache::generate_etag($file);
+		}
+		else
+		{
+			//JS files not moded since cached
+			Cache::headers_allow_cache($file);
+		}
+		
+		// First time visit or files were modified
+		if ($cache) 
+		{
+			if (file_exists($file)) {
+				if ($fp = fopen($file, 'rb')) {
+
+					if ($encoding != 'none') {
+						header ("Content-Encoding: " . $encoding);
+					}
+					
+					Cache::headers_allow_cache($file);
+					header ('Content-type: text/' . $type);
+					header ('Content-Length: ' . filesize($file));
+		
+					fpassthru($fp);
+					fclose($fp);
+					//echo(Common::get_file_contents_as_string($file));
+					exit;
+				}
+			}
+		}
+	
+		// Get contents of the files
+		$contents = '';
+		reset($elements);
+		while (list(,$element) = each($elements)) {
+			$path = realpath($base . '/' . $element);
+			$contents .= "\n\n" . file_get_contents($path);
+		}
+		
+		//Remove comments from the string
+		$contents = Common::remove_js_comments($contents);
+		
+		// Store cache
+		if ($cache) {
+			if ($fp = fopen($cachedir . '/' . $cachefile, 'wb')) {
+				$cached = fwrite($fp, $contents);
+				fclose($fp);
+			}
+		}
+		if($cached)
+		{
+			Cache::headers_allow_cache($cachedir . '/' . $cachefile);
+		}
+	
+		// Send Content-Type
+		header ("Content-Type: text/" . $type);
+		
+		if (isset($encoding) && $encoding != 'none') 
+		{
+			// Send compressed contents
+			$contents = gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE);
+			header ('Content-Encoding: ' . $encoding);
+			header ('Content-Length: ' . strlen($contents));
+			echo $contents;
 		} 
 		else 
 		{
-			// First time visit or files were modified
-			if ($cache) 
-			{
-				// Determine supported compression method
-				$gzip = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip');
-				$deflate = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate');
-		
-				// Determine used compression method
-				$encoding = $gzip ? 'gzip' : ($deflate ? 'deflate' : 'none');
-		
-				// Check for buggy versions of Internet Explorer
-				if (!strstr($_SERVER['HTTP_USER_AGENT'], 'Opera') && 
-					preg_match('/^Mozilla\/4\.0 \(compatible; MSIE ([0-9]\.[0-9])/i', $_SERVER['HTTP_USER_AGENT'], $matches)) {
-					$version = floatval($matches[1]);
-					
-					if ($version < 6)
-						$encoding = 'none';
-						
-					if ($version == 6 && !strstr($_SERVER['HTTP_USER_AGENT'], 'EV1')) 
-						$encoding = 'none';
-				}
-				
-				// Try the cache first to see if the combined files were already generated
-				$cachefile = 'cache-' . $hash . '.' . $type . ($encoding != 'none' ? '.' . $encoding : '');
-				
-				$file = $cachedir . '/' . $cachefile;
-				if (file_exists($file)) {
-					if ($fp = fopen($file, 'rb')) {
-	
-						if ($encoding != 'none') {
-							header ("Content-Encoding: " . $encoding);
-						}
-						
-						Cache::headers_allow_cache($file);
-						header ("Etag: \"" . $hash . "\"");
-						header ('Content-type: text/' . $type);
-						header ('Content-Length: ' . filesize($file));
-			
-//						fpassthru($fp);
-//						fclose($fp);
-						echo(Common::get_file_contents_as_string($file));
-						exit;
-					}
-				}
-			}
-		
-			// Get contents of the files
-			$contents = '';
-			reset($elements);
-			while (list(,$element) = each($elements)) {
-				$path = realpath($base . '/' . $element);
-				$contents .= "\n\n" . file_get_contents($path);
-			}
-			
-			//Remove comments from the string
-			$contents = Common::remove_js_comments($contents);
-			
-			// Store cache
-			if ($cache) {
-				if ($fp = fopen($cachedir . '/' . $cachefile, 'wb')) {
-					$cached = fwrite($fp, $contents);
-					fclose($fp);
-				}
-			}
-			if($cached)
-			{
-				Cache::headers_allow_cache($cachedir . '/' . $cachefile);
-				header ("Etag: \"" . $hash . "\"");
-			}
-		
-			// Send Content-Type
-			header ("Content-Type: text/" . $type);
-			
-			if (isset($encoding) && $encoding != 'none') 
-			{
-				// Send compressed contents
-				$contents = gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE);
-				header ('Content-Encoding: ' . $encoding);
-				header ('Content-Length: ' . strlen($contents));
-				echo $contents;
-			} 
-			else 
-			{
-				// Send regular contents
-				header ('Content-Length: ' . strlen($contents));
-				echo $contents;
-			}
+			// Send regular contents
+			header ('Content-Length: ' . strlen($contents));
+			echo $contents;
 		}
 	}
 }

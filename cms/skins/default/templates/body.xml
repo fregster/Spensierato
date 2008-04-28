@@ -1,6 +1,6 @@
 
 	<xsl:template name="body" onload="notification('hello');">
-		<div id="notifications"/>
+		<div id="notifications">Notifications</div>
 		<div id="page_section_body">
 			<xsl:apply-templates select="/page/body"/>
 		</div>

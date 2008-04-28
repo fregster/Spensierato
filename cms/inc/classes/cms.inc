@@ -247,7 +247,7 @@ class CMS
 		{
 			case 'HTML':
 				//Database file, call content singleton
-				$this->get_html();
+				Render::Singleton()->render_html(Content::Singleton()->build());
 			    break;
 			    
 			case 'STYLESHEET':
@@ -263,6 +263,12 @@ class CMS
 			case 'JS':
 				//Get JS useing minify
 				$this->get_js($value);
+				break;
+			
+			case 'JAVASCRIPT':
+				//Get JS useing minify
+				javascript::run();
+				die();
 				break;
 			
 			case 'CONTENTEDITOR':

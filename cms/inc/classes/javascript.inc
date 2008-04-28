@@ -72,6 +72,10 @@ abstract class javascript
 		
 		// Send Etag hash
 		//TODO use CMS Cache
+//		Cache::headers_allow_cache($file);
+//
+//			// javascript header
+//			header('Content-type: text/javascript');
 		$hash = $lastmodified . '-' . md5($files);
 		header ("Etag: \"" . $hash . "\"");
 		
@@ -109,15 +113,17 @@ abstract class javascript
 				// Try the cache first to see if the combined files were already generated
 				$cachefile = 'cache-' . $hash . '.' . $type . ($encoding != 'none' ? '.' . $encoding : '');
 				
-				if (file_exists($cachedir . '/' . $cachefile)) {
-					if ($fp = fopen($cachedir . '/' . $cachefile, 'rb')) {
+				$file = $cachedir . '/' . $cachefile;
+				if (file_exists($file)) {
+					if ($fp = fopen($file, 'rb')) {
 	
 						if ($encoding != 'none') {
 							header ("Content-Encoding: " . $encoding);
 						}
-					
-						header ("Content-Type: text/" . $type);
-						header ("Content-Length: " . filesize($cachedir . '/' . $cachefile));
+						
+						Cache::headers_allow_cache($file);
+						header ('Content-type: text/' . $type);
+						header ('Content-Length: ' . filesize($file));
 			
 						fpassthru($fp);
 						fclose($fp);
@@ -132,6 +138,18 @@ abstract class javascript
 			while (list(,$element) = each($elements)) {
 				$path = realpath($base . '/' . $element);
 				$contents .= "\n\n" . file_get_contents($path);
+			}
+			
+			// Store cache
+			if ($cache) {
+				if ($fp = fopen($cachedir . '/' . $cachefile, 'wb')) {
+					$cached = fwrite($fp, $contents);
+					fclose($fp);
+				}
+			}
+			if($cached)
+			{
+				Cache::headers_allow_cache($cachedir . '/' . $cachefile);
 			}
 		
 			// Send Content-Type
@@ -150,14 +168,6 @@ abstract class javascript
 				// Send regular contents
 				header ('Content-Length: ' . strlen($contents));
 				echo $contents;
-			}
-	
-			// Store cache
-			if ($cache) {
-				if ($fp = fopen($cachedir . '/' . $cachefile, 'wb')) {
-					fwrite($fp, $contents);
-					fclose($fp);
-				}
 			}
 		}
 	}

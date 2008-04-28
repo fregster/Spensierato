@@ -1,10 +1,10 @@
-
+<!-- Put Scriptolucios first -->
 		<xsl:template name="javascript">
 				<xsl:if test="/page/user/id = 0">
 				<!-- User Not logged in -->
 					<xsl:element name="script">
 						<xsl:attribute name="type">text/javascript</xsl:attribute>
-						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,prototype.js,scriptaculous.js</xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />scriptaculous.js,public.js,prototype.js</xsl:attribute>
 					</xsl:element>
 				</xsl:if>
 				
@@ -15,7 +15,7 @@
 					<!-- User logged in and in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,admin.js,prototype.js,scriptaculous.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />scriptaculous.js,public.js,logged_in.js,admin.js,prototype.js</xsl:attribute>
 						</xsl:element>
 						
 						<xsl:element name="script">
@@ -41,7 +41,7 @@
 					<!-- User logged in and NOT in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,prototype.js,scriptaculous.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />scriptaculous.js,public.js,logged_in.js,prototype.js</xsl:attribute>
 						</xsl:element>
 					</xsl:if>
 					

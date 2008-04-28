@@ -112,19 +112,14 @@ abstract class javascript
 			if (file_exists($file)) {
 				if ($fp = fopen($file, 'rb')) 
 				{
-					echo('file opened');	
 					Cache::headers_allow_cache($file, true, 360000, 360000, true);
-					echo('Cache called');
 //					if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 					header ('Content-type: text/' . $type);
 					header ('Content-Length: ' . filesize($file));
-					echo('headers sent');
+
 					fpassthru($fp);
 					fclose($fp);
-					die('file sent');
-					//echo(Common::get_file_contents_as_string($file));
-					die('file sent');
-					
+					exit;
 				}
 				else
 				{

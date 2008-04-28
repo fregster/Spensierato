@@ -113,6 +113,8 @@ abstract class javascript
 						header ("Content-Encoding: " . $encoding);
 					}
 					
+					
+					echo('cached file found');
 					Cache::headers_allow_cache($file, true, 360000, 360000, true);
 					header ('Content-type: text/' . $type);
 					header ('Content-Length: ' . filesize($file));
@@ -120,7 +122,7 @@ abstract class javascript
 					fpassthru($fp);
 					fclose($fp);
 					//echo(Common::get_file_contents_as_string($file));
-					exit;
+					die('file sent');
 				}
 			}
 		}

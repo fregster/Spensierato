@@ -109,9 +109,8 @@ abstract class javascript
 		// First time visit or files were modified
 		if ($cache) 
 		{
-			die('cache enabled '.$file);
 			if (file_exists($file)) {
-				echo('cached file found');
+				echo('cached file found '.$file);
 				if ($fp = fopen($file, 'rb')) {
 					
 					Cache::headers_allow_cache($file, true, 360000, 360000, true);

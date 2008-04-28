@@ -561,7 +561,7 @@ class CMS
 			{
 				case '1':
 					//Use internal code minification
-					echo(Common::remove_extra_lines(file_get_contents($file)));
+					echo(Common::remove_js_comments(file_get_contents($file)));
 				    break;
 				
 				case '2':

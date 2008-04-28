@@ -348,6 +348,14 @@ a.tooltip:hover span
 	cursor:pointer;
 }
 
+#notifications
+{
+	position: absaloute;
+	z-index: 9999;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+}
 /* Sprite information */
 .sprite {height:16px; width:18px; float:left; background: url(skin/csg-47fc8b141e478.png) no-repeat center center; position:relative; top:2px; left:1px }
 .sprite-accept { background-position: 0 -30px; } 

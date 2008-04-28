@@ -128,7 +128,7 @@ abstract class javascript
 			}
 		}
 	
-		die('No cache or file not found');
+		//die('No cache or file not found');
 		// Get contents of the files
 		$contents = '';
 		reset($elements);

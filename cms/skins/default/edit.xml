@@ -3,7 +3,10 @@
 			<xsl:call-template name="header"/>
 
 			<xsl:element name="body" onload='new Effect.Opacity("notifications", {duration:1.0, from:1.0, to:0.0});return false;'>
-			<div id="notifications">Content Editor</div>
+			<div id="notifications">Content Editor
+			<a href='#' title='lien action' onClick='new Effect.Opacity("notifications", {duration:1.0, from:1.0, to:0.0});return false;'>Hide the source code zone</a>
+			<a href='#' title='lien action' onClick='new Effect.Opacity("notifications", {duration:1.0, from:0.0, to:1.0});return false;'>Show the source code zone</a>
+			</div>
 			<!-- <xsl:attribute name="onload">tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />');</xsl:attribute> -->
 					<div id="page_edit">
 					<xsl:element name="form">

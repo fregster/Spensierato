@@ -72,7 +72,7 @@ abstract class javascript
 		
 		// Send Etag hash
 		//TODO use CMS Cache
-		$hash = $lastmodified . '-' . md5($_GET['files']);
+		$hash = $lastmodified . '-' . md5($files);
 		header ("Etag: \"" . $hash . "\"");
 		
 		if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && 

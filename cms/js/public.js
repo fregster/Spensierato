@@ -71,3 +71,16 @@ function searchFunction()
 			}
 		}
 }
+
+function notification(text)
+{
+	var timer;
+	document.getElementById('notifications').innerHTML = text;
+	
+	new Effect.Opacity("notifications", {duration:1.0, from:0.0, to:1.0});
+	
+	//After 2 seconds fade back out
+	timer=setTimeout("new Effect.Opacity(\"notifications\", {duration:0.5, from:1.0, to:0.0});",2000);
+	
+	return false;
+}

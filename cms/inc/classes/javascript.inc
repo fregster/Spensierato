@@ -103,18 +103,20 @@ abstract class javascript
 				Cache::headers_allow_cache($file);
 			}
 		}
+		
+		die('New or not cached');
+		
 		// First time visit or files were modified
 		if ($cache) 
 		{
 			if (file_exists($file)) {
+				echo('cached file found');
 				if ($fp = fopen($file, 'rb')) {
 
 					if ($encoding != 'none') {
 						header ("Content-Encoding: " . $encoding);
 					}
 					
-					
-					echo('cached file found');
 					Cache::headers_allow_cache($file, true, 360000, 360000, true);
 					header ('Content-type: text/' . $type);
 					header ('Content-Length: ' . filesize($file));

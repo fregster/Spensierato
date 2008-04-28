@@ -49,7 +49,7 @@ function ajaxSave() {
 
 function ajaxSaved()
 {
-	alert('Ajax saved');
+	notification('Draft text saved');
 }
 
 //pass node as an array to do recursive lookups

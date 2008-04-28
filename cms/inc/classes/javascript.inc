@@ -138,7 +138,21 @@ abstract class javascript
 		}
 		
 		//Remove comments from the string
-		$contents = Common::remove_js_comments($contents);
+		switch (Settings::Singleton()->get_setting('js_minify')) 
+		{
+			case '1':
+				//Use internal code minification
+				$contents = Common::remove_js_comments(file_get_contents($contents));
+			    break;
+			
+			case '2':
+				//Use JSMini
+				$contents =  JSMin::minify(file_get_contents($contents));
+			    break;
+			
+			default:
+				$contents = $contents;
+		}
 		
 		// Store cache
 		if ($cache) {

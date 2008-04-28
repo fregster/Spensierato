@@ -122,8 +122,9 @@ abstract class javascript
 						header ('Content-type: text/' . $type);
 						header ('Content-Length: ' . filesize($file));
 			
-						fpassthru($fp);
-						fclose($fp);
+//						fpassthru($fp);
+//						fclose($fp);
+						echo(Common::get_file_contents_as_string($file));
 						exit;
 					}
 				}

@@ -162,7 +162,7 @@ Settings::Singleton()->new_setting('site_option_encryption', 'sha256');
 //Setting google_ads
 //This requires google_ad_slot and google_ad_client to also be set
 //Use mine if you want to help sponsor me!
-Settings::Singleton()->new_setting('google_ads', true);
+Settings::Singleton()->new_setting('google_ads', false);
 Settings::Singleton()->new_setting('google_ad_slot', '6057605872');
 Settings::Singleton()->new_setting('google_ad_client', 'pub-6675893347627358');
 Settings::Singleton()->new_setting('google_ad_width', 180);

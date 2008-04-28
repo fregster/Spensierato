@@ -28,21 +28,25 @@ abstract class javascript
 {
 	public static function run($files)
 	{
-		$cache 	  = false;
-		$cachedir = Settings::singleton()->get_setting('cms_root') . '/cache';
-		$jsdir    = Settings::singleton()->get_setting('cms_root') . '/js';
-	
-		// Determine the directory and type we should use
-//		switch ($_GET['type']) {
-//			case 'javascript':
-//				$base = realpath($jsdir);
-//				break;
-//			default:
-//				header ("HTTP/1.0 503 Not Implemented");
-//				exit;
-//		};
-	
-		
+		$cachedir = Settings::singleton()->get_setting('cms_root') . '/writeable/cache';
+		$jsdir    = Settings::singleton()->get_setting('cms_root') . '/js';	
+
+		if(is_writable($cachedir))
+		{
+			$cache 	  = true;
+		}
+		else
+		{
+			$cachedir = '/tmp/cms/';
+			if(is_writable($cachedir))
+			{
+				$cache 	  = true;
+			}
+			else
+			{
+				$cache 	  = false;
+			}
+		}
 		$base = realpath($jsdir);
 		$type = 'javascript';
 		$elements = explode(',', $files);

@@ -5,7 +5,6 @@
 			<xsl:element name="body" onload='new Effect.Opacity("notifications", {duration:1.0, from:1.0, to:0.0});return false;'>
 			<div id="notifications" onclick="new Effect.SwitchOff(this)">Content Editor</div>
 			
-			</div>
 			<!-- <xsl:attribute name="onload">tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />');</xsl:attribute> -->
 					<div id="page_edit">
 					<xsl:element name="form">

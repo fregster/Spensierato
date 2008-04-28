@@ -171,4 +171,7 @@ Settings::Singleton()->new_setting('google_ad_height', 150);
 //Setting css_mobile
 //Enable the mobile CSS, this overwrites css styles with non positional css
 Settings::Singleton()->new_setting('css_mobile', true);
+
+//Load the random key into the settings singleton
+Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key']);
 ?>

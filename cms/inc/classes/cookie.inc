@@ -75,10 +75,9 @@ class cookie
 	{
 		if( (is_array($this->cookie_array)) and ($name != NULL) )
 		{
-			$value = $this->cookie_array[$name];
-			if($value != NULL)
+			if(isset($this->cookie_array[$name]));
 			{
-				return $value;
+				return $this->cookie_array[$name];
 			}
 		}
 		return NULL;
@@ -95,7 +94,7 @@ class cookie
 	{
 		if(!isset($this->salt))
 		{
-			$this->salt = md5($_SESSION['user_id'].microtime().'kjhiuhikjhkhjiuhiuhkijhkhui');
+			$this->salt = md5($_SESSION['user_id'].microtime().Settings::Singleton()->get_setting('random_key'));
 		}
 		return $this->salt;
 	}

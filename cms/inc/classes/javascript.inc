@@ -40,7 +40,7 @@ abstract class javascript
 		}
 		else
 		{
-			$cachedir = '/tmp/cms/';
+			$cachedir = '/tmp/cms';
 			if(is_writable($cachedir))
 			{
 				$cache 	  = true;

@@ -124,7 +124,7 @@
 				
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
-					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />scriptaculous.js</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />scriptaculous.js?load=effects</xsl:attribute>
 				</xsl:element>
 				
 				<script type="text/javascript">

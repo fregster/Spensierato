@@ -72,10 +72,7 @@ abstract class javascript
 		
 		// Send Etag hash
 		//TODO use CMS Cache
-//		Cache::headers_allow_cache($file);
-//
-//			// javascript header
-//			header('Content-type: text/javascript');
+
 		$hash = $lastmodified . '-' . md5($files);
 		header ("Etag: \"" . $hash . "\"");
 		
@@ -140,6 +137,9 @@ abstract class javascript
 				$contents .= "\n\n" . file_get_contents($path);
 			}
 			
+			//Remove comments from the string
+			$contents = Common::remove_js_comments($contents);
+			
 			// Store cache
 			if ($cache) {
 				if ($fp = fopen($cachedir . '/' . $cachefile, 'wb')) {
@@ -159,7 +159,7 @@ abstract class javascript
 			{
 				// Send compressed contents
 				$contents = gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE);
-				header ("Content-Encoding: " . $encoding);
+				header ('Content-Encoding: ' . $encoding);
 				header ('Content-Length: ' . strlen($contents));
 				echo $contents;
 			} 

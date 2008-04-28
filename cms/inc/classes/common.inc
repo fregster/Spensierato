@@ -214,6 +214,60 @@ abstract class Common
 		return Common::remove_extra_lines($input);
 	}
 	
+	public function remove_js_comments($code) 
+	{  
+     $mq = $sq = $mc = $sc = false;  
+     $output = "";  
+     for($i = 0; $i < strlen($code); $i++)  
+     {  
+         $l = $code{$i};  
+         $n = $i+1;  
+         $ll = $code{$i}.$code{$n};  
+   
+         switch($l)  
+         {  
+             case "\n":  
+                 $sc = false;  
+             break;  
+             case "/":  
+                 if($code{$n} == "/")  
+                 {  
+                     if(!$sc && !$mc && !$sq && !$mq)  
+                         $sc = true;  
+                     $i++;  
+                 }  
+                 else if($code{$n} == "*")  
+                 {  
+                     if(!$sc && !$mc && !$sq && !$mq)  
+                         $mc = true;  
+                     $i++;  
+                 }  
+                 continue 2;  
+             break;  
+             case "'":  
+                 if(!$sc && !$mc && !$mq)  
+                     $sq = !$sq;  
+             break;  
+             case "\"":  
+                 if(!$sc && !$mc && !$sq)  
+                     $mq = !$mq;  
+             break;  
+             case "*":  
+                 if($code{$n} == "/")  
+                 {  
+                     if(!$sc && !$sq && !$mq)  
+                         $mc = false;  
+                     $i++;  
+                 }  
+                 continue 2;  
+             break;  
+         }  
+         if(!$sc && !$mc)  
+             $output .= $l;  
+	}  
+	return $output;  
+}  
+	
 	public static function generate_random_string($length)
 	{
 		/* list all possible characters, similar looking characters and vowels have been removed */

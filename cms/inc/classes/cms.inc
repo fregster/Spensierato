@@ -267,7 +267,7 @@ class CMS
 			
 			case 'JAVASCRIPT':
 				//Get JS useing minify
-				javascript::run();
+				javascript::run($value);
 				die();
 				break;
 			

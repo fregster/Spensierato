@@ -100,12 +100,11 @@ class elementDefault
 		}
 		else
 		{
-			echo('saving');
 			if($this->process_save($built_xml, $title));
 			{
-				die('Updated');
+				return true;
 			}
-			die('Failed');
+			return false;
 		}
 				
 	}

@@ -427,7 +427,8 @@ class Database
 		$sql_start_time = Common::micro_time();
 		
 		//Query the database Object
-		if(	($writeuser == true) and ($this->write != NULL))
+		//if(	($writeuser == true) and ($this->write != NULL))
+		if($writeuser == true)
 		{
 			if($values == NULL)
 			{

@@ -312,15 +312,18 @@ class Database
 		$sql = 'UPDATE '. $this->sql_clean_input($table) . ' SET ';
 		
 		$i = 0;
+		$sql_temp_fields = '';
+		$sql_temp_values = '';
+		
 		while($i <= (count($fields) - 1))
 		{
-			$sql_temp_fields = $sql_temp_fields . $this->sql_clean_input($fields[$i]) .', ';
+			$sql_temp_fields .= $this->sql_clean_input($fields[$i]) .', ';
 		}
 		
 		$i = 0;
 		while($i <= (count($values) - 1))
 		{
-			$sql_temp_values = $sql_temp_values . $this->sql_clean_input($values[$i]) .', ';
+			$sql_temp_values .= $this->sql_clean_input($values[$i]) .', ';
 		}
 		
 		$sql = $sql	. $sql_temp_fields . ' VALUES ' . sql_temp_values;

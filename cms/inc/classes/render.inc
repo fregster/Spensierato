@@ -49,11 +49,13 @@ class Render
 	public function render_html($xml)
 	{	
 		/* send the headers and do 304 check before processing the page */
-		$page_id = common::node_from_xml($xml, '/page/@id');
-		$mod_date = common::node_from_xml($xml, '/page/@lastmodified');
-		$e_hash = common::node_from_xml($xml, '/page/@e_hash');
+		$details = common::node_from_xml($xml, '/page');
+//		$mod_date = common::node_from_xml($xml, '/page/@lastmodified');
+//		$e_string = common::node_from_xml($xml, '/page/@e_string');
+
+		print_r($details); die();
 		
-		Cache::headers_allow_cache_dynamic($page_id, $mod_date, $e_hash);
+		Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), $mod_date, $e_hash);
 		$this->render(Template::Singleton()->load(), $xml);
 	}
 	

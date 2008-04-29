@@ -67,6 +67,7 @@ class elementDefault
 	
 	public function save($draft = true)
 	{
+		die('Hello');
 		//Build posted data as XML structure
 		$xml = '<xml>';
 		foreach($_POST as $key => $value)

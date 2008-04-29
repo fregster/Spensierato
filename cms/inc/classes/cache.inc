@@ -41,12 +41,13 @@ abstract class Cache
 	public static function headers_allow_cache_dynamic($page_id, $mod_date, $e_string = null, $public = true, $expires = 3600, $maxage = 3600, $force_resend = false)
 	{
 		//Build E-Tag from page id and date
-		$ETag = $page_id .'-'.$e_string.'-'.$mod_date;
+		$ETag = $page_id .'-'.$e_string.'-'.$mod_date.'-'.user::Singleton()->id;
 		$gmdate_mod = gmdate('D, d M Y H:i:s', $mod_date) . ' GMT';
 		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
 		
-		if(!$force_resend) 
+		if((!$force_resend) or (options::Singleton()->get_option('force_reload'))) 
 		{
+			options::Singleton()->set_option('force_reload', false);
 			//Headers recieved from browser
 			$headers = apache_request_headers();
 			

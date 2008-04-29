@@ -77,15 +77,26 @@ function notification(text)
 {
 	var timer;
 	document.getElementById('notifications').innerHTML = text;
+	document.getElementById('notifications').style.display = '';
 	
-	new Effect.Opacity("notifications", {duration:1.0, from:0.0, to:1.0});
+	notes.toggle(0, 1)
 	
 	//After 2 seconds fade back out
-	timer=setTimeout("new Effect.Opacity(\"notifications\", {duration:0.5, from:1.0, to:0.0});",2000);
+	timer=setTimeout("notes.toggle(1, 0)",2000);
 	
 	return false;
+	
 }
 
 var ToolTips = new Tips($$('.ToolTip'), {
 	className: 'ToolTip'
 });
+
+
+window.onload = function()
+{
+	notes = new fx.Opacity('notifications', {duration: 800 });
+          
+	notes.setOpacity(0);
+	document.getElementById('notifications').style.display = 'none';
+}

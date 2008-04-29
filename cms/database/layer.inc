@@ -329,7 +329,7 @@ class Database
 		$i = 0;
 		while($i <= (count($values) - 1))
 		{
-			$sql_temp_values .= $this->sql_clean_input($values[$i]) .', ';
+			$sql_temp_values .= "'". $this->sql_clean_input($values[$i]) ."'";
 			if($i != (count($fields) -1))
 			{
 				//not the last one so add a ,

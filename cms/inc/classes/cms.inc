@@ -475,7 +475,7 @@ class CMS
 					{
 						//Save worked bounce to main page for element
 						//Common::redirect($element->main());
-						$this->saved();
+						$this->saved($element->main());
 					}
 					else
 					{
@@ -626,7 +626,7 @@ class CMS
 		}
 	}
 
-	private function saved()
+	private function saved($main)
 	{
 		echo('
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -643,7 +643,9 @@ class CMS
 </head>
 <body>
 	<p>
-	Your updates have been saved.
+	Your updates have been saved.<br />
+	You should be redirected back the page the element you changed is on in a few seconds<br/>
+	If not click <a href="'.$this->document_root.'/'.$main.'">here</a>
 	</p>
 
 </body>

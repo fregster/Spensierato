@@ -73,7 +73,7 @@ class cookie
 	
 	public function get_cookie_value($name)
 	{
-		if( (is_array($this->cookie_array)) and ($name != NULL) )
+		if( (is_array($this->cookie_array)) and (is_string($name)) )
 		{
 			if(isset($this->cookie_array[$name]));
 			{

@@ -92,7 +92,7 @@ class elementDefault
 			}
 		}
 		
-		
+		echo('hello');
 		
 		if($draft)
 		{

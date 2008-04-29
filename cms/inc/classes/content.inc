@@ -89,7 +89,7 @@ class Content
 		return $this->dom->saveXML();
 	}
 	
-	public function last_update()
+	public function last_updated()
 	{
 		return $this->lastmodified;
 	}

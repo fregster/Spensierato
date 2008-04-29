@@ -73,6 +73,19 @@ function searchFunction()
 		}
 }
 
+
+var ToolTips = new Tips($$('.ToolTip'), {
+	className: 'ToolTip'
+});
+
+var notes = new fx.Opacity('notifications', {duration: 800 });
+
+window.onload = function()
+{ 
+	notes.setOpacity(0);
+	document.getElementById('notifications').style.display = 'none';
+}
+
 function notification(text)
 {
 	var timer;
@@ -86,17 +99,4 @@ function notification(text)
 	
 	return false;
 	
-}
-
-var ToolTips = new Tips($$('.ToolTip'), {
-	className: 'ToolTip'
-});
-
-
-window.onload = function()
-{
-	notes = new fx.Opacity('notifications', {duration: 800 });
-          
-	notes.setOpacity(0);
-	document.getElementById('notifications').style.display = 'none';
 }

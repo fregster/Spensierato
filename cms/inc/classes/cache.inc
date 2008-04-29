@@ -40,11 +40,26 @@ abstract class Cache
 	
 	public static function headers_allow_cache_dynamic($page_id, $mod_date, $e_string = null, $public = true, $expires = 3600, $maxage = 3600, $force_resend = false)
 	{
+		//Build E-Tag from page id and date
+		$ETag = $page_id .'-'.$e_string.'-'.$mod_date;
+		$gmdate_mod = gmdate('D, d M Y H:i:s', $mod_date) . ' GMT';
+		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
 		
-//		if(!$force_resend) 
-//		{
-//			Cache::headers_check_304($path); 
-//		}
+		if(!$force_resend) 
+		{
+			if(isset($headers['If-None-Match']))
+			{
+				 if (strpos($headers['If-None-Match'], $ETag) != false)
+				 {
+					Cache::send_304($ETag);
+				}
+			}
+			
+			if ($gmdate_mod == $headers['If-Modified-Since']) 
+			{
+				Cache::send_304();
+			}
+		}
 
 		if($public == true)
 		{
@@ -54,11 +69,6 @@ abstract class Cache
 		{
 			$cache_control = 'private, no-cache, must-revalidate';
 		}
-			
-		//Build E-Tag from page id and date
-		$ETag = $page_id .'-'.$e_string.'-'.$mod_date;
-		$gmdate_mod = gmdate('D, d M Y H:i:s', $mod_date) . ' GMT';
-		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
 		
 		header('ETag: "'.$ETag.'"'); 
 		header('Last-Modified: ' . $gmdate_mod);

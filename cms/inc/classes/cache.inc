@@ -38,6 +38,38 @@ abstract class Cache
 
 	}
 	
+	public static function headers_allow_cache_dynamic($page_id, $mod_date, $public = true, $expires = 3600, $maxage = 3600, $force_resend = false)
+	{
+		
+//		if(!$force_resend) 
+//		{
+//			Cache::headers_check_304($path); 
+//		}
+
+		if($public == true)
+		{
+			$cache_control = 'public, must-revalidate';
+		}
+		else
+		{
+			$cache_control = 'private, no-cache, must-revalidate';
+		}
+			
+		//Build E-Tag from page id and date
+		$ETag = $page_id .'-'.$mod_date;
+		
+		header('ETag: "'.$ETag.'"'); 
+		$gmdate_mod = gmdate('D, d M Y H:i:s', $mod_date) . ' GMT';
+		header('Last-Modified: ' . $gmdate_mod);
+		header('Expires: ' . $expires);
+		header('Cache-Control: post-check=0, pre-check=0');
+		header('Cache-Control: '.$cache_control, false);
+		header('Cache-Control: max-age='.$maxage, false);
+		header('Pragma: '.$cache_control);
+		header('Content-Description: File serverd from a Spensierato site ');
+		
+	}
+	
 	private static function generate_etag($path)
 	{
 		// Inode

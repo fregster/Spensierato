@@ -184,7 +184,12 @@ class Content
 					{
 						$moded = $node['created'];
 					}
-					$this->lastmodified = max($lastmodified, $moded);
+					
+					print_r($moded);
+					print_r($node);
+					die();
+					
+					$this->lastmodified = max($this->lastmodified, $moded);
 					$this->e_string .=$node['element_id'];
 				}
 			}

@@ -51,9 +51,10 @@ abstract class Cache
 			//Headers recieved from browser
 			$headers = apache_request_headers();
 			
+			//Only check Etag with dynamic content
 			if(isset($headers['If-None-Match']))
 			{
-				 if ( (strpos($headers['If-None-Match'], $ETag) != false) and ($gmdate_mod == $headers['If-Modified-Since']) )
+				 if ( strpos($headers['If-None-Match'], $ETag) != false)
 				 {
 					Cache::send_304($ETag);
 				}

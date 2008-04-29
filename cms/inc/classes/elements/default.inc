@@ -71,7 +71,8 @@ class elementDefault
 		$xml = '<xml>';
 		foreach($_POST as $key => $value)
 		{
-			if($this->tags[$key] == 'html') { $value = htmlentities($value); }
+//			if($this->tags[$key] == 'html') { $value = htmlentities($value, ENT_QUOTES); }
+			$value = htmlentities($value, ENT_QUOTES);
 			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
 		}
 		$xml .= '</xml>';

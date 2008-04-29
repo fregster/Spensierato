@@ -50,6 +50,11 @@ class user
 		}
 	}
 	
+	public function id()
+	{
+		return $this->userid;
+	}
+	
 	public function is_logged_in()
 	{
 		if($this->userid == 0)

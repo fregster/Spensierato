@@ -67,18 +67,25 @@ class elementDefault
 	
 	public function save($draft = true)
 	{
+		//Build posted data as XML structure
+		$xml = null;
+		foreach($_POST as $key => $value)
+		{
+			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
+		}
 		//Check data
-//		foreach($this->tags as $key => $value)
-//		{
-////			$data = common::node_from_xml($dbxml, '/data/'.$key);
-////			if($value == 'html') { $data = htmlentities($data); }
-////			strip_tags($data);
-////			$built_xml .= '<'.$value.' type="'.$key.'">'.$data.'</'.$value.'>';
-//		}
+		foreach($this->tags as $key => $value)
+		{
+			$data = common::node_from_xml($xml, '/data/'.$key);
+			if($value == 'html') { $data = htmlentities($data); }
+			common::sql_clean(strip_tags($data));
+			$built_xml .= '<'.$value.' type="'.$key.'">'.$data.'</'.$value.'>';
+		}
 		
 		if($draft)
 		{
-			database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array(1,1), array('data', 'ts'), array('html', 1234567));
+			//database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array(1,1), array('data', 'ts'), array('html', 1234567));
+			//database::Singleton()->sql_update_by_id($this->id, $table, $fields = array(), $values = array())
 		}
 		else
 		{
@@ -89,7 +96,11 @@ class elementDefault
 	
 	protected function process_save($xml)
 	{
-		
+		//TODO call search code
+		$search = 'search text';
+		//TODO Archiving
+		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements', $fields = array('edited', 'editor'), $values = array(time(), User::Singleton()->id()));
+		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements_data', $fields = array('data', 'search'), $values = array($xml, $search));
 	}
 	
 	//add extra data when in admin mode

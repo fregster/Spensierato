@@ -56,7 +56,7 @@ class Render
 		}
 		else
 		{
-			Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string());
+			Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string(), 0, 0);
 		}
 		
 		$this->render(Template::Singleton()->load(), $xml);

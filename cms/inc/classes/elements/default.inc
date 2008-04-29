@@ -94,7 +94,9 @@ class elementDefault
 		}
 		else
 		{
-			die($built_xml);
+			echo($xml);
+			echo($built_xml);
+			die();
 			$this->process_save($built_xml);
 		}
 				

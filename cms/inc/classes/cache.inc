@@ -41,7 +41,7 @@ abstract class Cache
 	public static function headers_allow_cache_dynamic($page_id, $mod_date, $e_string = null, $public = true, $expires = 3600, $maxage = 3600, $force_resend = false)
 	{
 		//Build E-Tag from page id and date
-		$ETag = $page_id .'-'.$e_string.'-'.$mod_date.'-'.user::Singleton()->id;
+		$ETag = $page_id .'-'.$e_string.'-'.$mod_date.'-'.$_SESSION['userid'];
 		$gmdate_mod = gmdate('D, d M Y H:i:s', $mod_date) . ' GMT';
 		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
 		

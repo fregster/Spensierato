@@ -53,10 +53,10 @@ abstract class Cache
 			
 			if(isset($headers['If-None-Match']))
 			{
-				echo($ETag.' '.$headers['If-None-Match']);
-				die();
-				 if ( ($ETag == $headers['If-None-Match']) and ($gmdate_mod == $headers['If-Modified-Since']) )
+				 if ( ('"'.$ETag.'"' == $headers['If-None-Match']) and ($gmdate_mod == $headers['If-Modified-Since']) )
 				 {
+				 	echo('match');
+					die();
 					Cache::send_304($ETag);
 				}
 			}

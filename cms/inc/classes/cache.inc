@@ -47,6 +47,9 @@ abstract class Cache
 		
 		if(!$force_resend) 
 		{
+			//Headers recieved from browser
+			$headers = apache_request_headers();
+			
 			if(isset($headers['If-None-Match']))
 			{
 				 if (strpos($headers['If-None-Match'], $ETag) != false)

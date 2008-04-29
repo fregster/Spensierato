@@ -101,9 +101,6 @@ class elementDefault
 		}
 		else
 		{
-			echo($xml);
-			echo($built_xml);
-			die();
 			$this->process_save($built_xml, $title);
 		}
 				

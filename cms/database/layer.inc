@@ -317,7 +317,7 @@ class Database
 		
 		while($i <= (count($fields) - 1))
 		{
-			$sql_temp_fields .= '`'.$this->sql_clean_input($fields[$i]).'`';
+			$sql_temp_fields .= '`'.$this->sql_clean_input($fields[$i]).'` = '.$this->sql_clean_input($values[$i]);
 			if($i < (count($fields) -1))
 			{
 				//not the last one so add a ,
@@ -326,19 +326,7 @@ class Database
 			++$i;
 		}
 		
-		$i = 0;
-		while($i <= (count($values) - 1))
-		{
-			$sql_temp_values .= "'". $this->sql_clean_input($values[$i]) ."'";
-			if($i < (count($fields) -1))
-			{
-				//not the last one so add a ,
-				 $sql_temp_values .=', ';
-			}
-			++$i;
-		}
-		
-		$sql = $sql	. $sql_temp_fields . ' VALUES ' . $sql_temp_values;
+		$sql = $sql	. $sql_temp_fields . ' WHERE ID = ' . $this->sql_clean_input($id);
 		
 		//Logging info
 		$this->site_sql_count ++;

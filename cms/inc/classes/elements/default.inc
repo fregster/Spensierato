@@ -67,7 +67,6 @@ class elementDefault
 	
 	public function save($draft = true)
 	{
-		die('Hello');
 		//Build posted data as XML structure
 		$xml = '<xml>';
 		foreach($_POST as $key => $value)
@@ -77,8 +76,6 @@ class elementDefault
 			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
 		}
 		$xml .= '</xml>';
-		
-		die($xml);
 		
 		//Check data
 		foreach($this->tags as $key => $value)
@@ -95,8 +92,6 @@ class elementDefault
 			}
 		}
 		
-		echo('hello');
-		
 		if($draft)
 		{
 			die('draft');
@@ -106,7 +101,6 @@ class elementDefault
 		else
 		{
 			echo('saving');
-			die();
 			if($this->process_save($built_xml, $title));
 			{
 				die('Updated');

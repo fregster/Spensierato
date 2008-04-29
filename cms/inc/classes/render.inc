@@ -49,7 +49,7 @@ class Render
 	public function render_html($xml)
 	{	
 		/* send the headers and do 304 check before processing the page */		
-		Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), currentPage::Singleton()->last_updated(), currentPage::Singleton()->e_string());
+		Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string());
 		
 		$this->render(Template::Singleton()->load(), $xml);
 	}

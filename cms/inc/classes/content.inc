@@ -165,7 +165,14 @@ class Content
 					$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($node['element_id']));
 					$element = Element::type($data['type']);
 					$element->build($node['element_id']);
-					$moded = max($node['created'], $node['edited']);
+					if($node['edited'] != NULL)
+					{
+						$moded = $node['edited'];
+					}
+					else
+					{
+						$moded = $node['created'];
+					}
 					$lastmodified = max($lastmodified, $moded);
 					$title .=$node['title'];
 				}

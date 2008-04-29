@@ -102,7 +102,11 @@ class elementDefault
 		}
 		else
 		{
-			$this->process_save($built_xml, $title);
+			if($this->process_save($built_xml, $title));
+			{
+				die('Updated');
+			}
+			die('Failed');
 		}
 				
 	}
@@ -115,6 +119,8 @@ class elementDefault
 		
 		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements', $fields = array('edited', 'editor', 'title'), $values = array(time(), User::Singleton()->id()));
 		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements_data', $fields = array('data', 'search'), $values = array($xml, $search));
+		
+		return true;
 	}
 	
 	//add extra data when in admin mode

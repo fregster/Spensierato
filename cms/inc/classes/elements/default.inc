@@ -95,7 +95,7 @@ class elementDefault
 			{
 				$data = common::node_from_xml($xml, '/xml/'.$key);
 				$data = common::sql_clean(strip_tags($data));
-				$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
+				$built_xml .= '<'.$key.'>'.$data.'</'.$key.'>';
 			}
 		}
 		

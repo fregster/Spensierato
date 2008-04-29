@@ -185,10 +185,6 @@ class Content
 						$moded = $data['created'];
 					}
 					
-					print_r($moded);
-					print_r($data);
-					die();
-					
 					$this->lastmodified = max($this->lastmodified, $moded);
 					$this->e_string .=$node['element_id'];
 				}

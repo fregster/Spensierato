@@ -46,12 +46,12 @@ class Render
 		}
 	}
 	
-	public function render_html($xml, $force_reload = false)
+	public function render_html($xml)
 	{	
 		/* send the headers and do 304 check before processing the page */
 		if(!options::Singleton()->get_option('admin_mode'))
 		{	
-			Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string(), false, 3600, 3600, $force_reload);
+			Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string());
 		}
 		else
 		{

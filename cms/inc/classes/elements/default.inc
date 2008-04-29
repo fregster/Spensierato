@@ -85,7 +85,7 @@ class elementDefault
 			else
 			{
 				$data = common::node_from_xml($xml, '/xml/'.$key);
-				if($value == 'html') { $data = htmlentities($data); }
+//				if($value == 'html') { $data = htmlentities($data); }
 				common::sql_clean(strip_tags($data));
 				$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 			}

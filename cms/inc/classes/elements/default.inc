@@ -103,6 +103,7 @@ class elementDefault
 		else
 		{
 			echo('saving');
+			die();
 			if($this->process_save($built_xml, $title));
 			{
 				die('Updated');

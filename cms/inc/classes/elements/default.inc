@@ -74,17 +74,23 @@ class elementDefault
 			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
 		}
 		$xml .= '</xml>';
+		
 		//Check data
+		echo('checking data');
 		foreach($this->tags as $key => $value)
 		{
+			echo($key);
 			$data = common::node_from_xml($xml, '/xml/'.$key);
 			if($value == 'html') { $data = htmlentities($data); }
 			common::sql_clean(strip_tags($data));
 			$built_xml .= '<'.$value.' type="'.$key.'">'.$data.'</'.$value.'>';
 		}
 		
+		
+		
 		if($draft)
 		{
+			die('draft');
 			//database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array(1,1), array('data', 'ts'), array('html', 1234567));
 			//database::Singleton()->sql_update_by_id($this->id, $table, $fields = array(), $values = array())
 		}

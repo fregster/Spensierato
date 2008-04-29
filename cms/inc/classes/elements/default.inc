@@ -91,6 +91,7 @@ class elementDefault
 		else
 		{
 			$this->process_save($built_xml);
+			die($built_xml);
 		}
 				
 	}

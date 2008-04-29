@@ -86,7 +86,8 @@ class elementDefault
 			{
 				$data = common::node_from_xml($xml, '/xml/'.$key);
 				echo($xml);
-				die($data);
+				print_r($data);
+				die('end');
 //				if($value == 'html') { $data = htmlentities($data); }
 				$data = common::sql_clean(strip_tags($data));
 				$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';

@@ -30,9 +30,6 @@ abstract class javascript
 	{
 		$cachedir = Settings::singleton()->get_setting('cms_root') . '/writeable/cache';
 		$jsdir    = Settings::singleton()->get_setting('cms_root') . '/js';
-		
-		// Try the cache first to see if the combined files were already generated
-		$hash = sha1($files);
 
 		if(is_writable($cachedir))
 		{
@@ -50,6 +47,9 @@ abstract class javascript
 				$cache 	  = false;
 			}
 		}
+		
+		//Create a hash of the file names for createing and checking a single unique cache file
+		$hash = sha1($files);
 		$base = realpath($jsdir);
 		$type = 'javascript';
 		$elements = explode(',', $files);
@@ -73,6 +73,19 @@ abstract class javascript
 			$lastmodified = max($lastmodified, filemtime($path));
 		}
 		
+		//$cachefile = 'cache-' . $hash . '.' . $type . ($encoding != 'none' ? '.' . $encoding : '');	
+		$cachefile = 'cms-cache-' . $hash . '.' . $type;
+		$file = $cachedir . '/' . $cachefile;
+		
+		if (file_exists($file)) 
+		{
+			if($lastmodified < filemtime($file))
+			{
+				//JS files not moded since cached
+				Cache::headers_check_304($file);
+			}
+		}
+		
 		// Determine supported compression method
 		$gzip = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip');
 		$deflate = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate');
@@ -92,27 +105,14 @@ abstract class javascript
 				$encoding = 'none';
 		}
 		
-		$cachefile = 'cache-' . $hash . '.' . $type . ($encoding != 'none' ? '.' . $encoding : '');	
-		$file = $cachedir . '/' . $cachefile;
-		
-		if (file_exists($file)) 
-		{
-			if($lastmodified < filemtime($file))
-			{
-				//JS files not moded since cached
-				Cache::headers_check_304($file);
-			}
-		}
-		
-//		die('New or not cached');
-		
 		// First time visit or files were modified
 		if ($cache) 
 		{
 			if (file_exists($file)) {
 				if ($fp = fopen($file, 'rb')) 
 				{
-					Cache::headers_allow_cache($file, true, 360000, 360000, true);
+					//2678400 = 31 days
+					Cache::headers_allow_cache($file, true, 2678400, 2678400, true);
 //					if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 					header ('Content-type: text/' . $type);
 					header ('Content-Length: ' . filesize($file));
@@ -127,8 +127,7 @@ abstract class javascript
 				}
 			}
 		}
-	
-		//die('No cache or file not found');
+
 		// Get contents of the files
 		$contents = '';
 		reset($elements);

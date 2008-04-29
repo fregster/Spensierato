@@ -46,10 +46,10 @@ class Render
 		}
 	}
 	
-	public function render_html($xml)
+	public function render_html($xml, $allow_cache = false)
 	{	
 		/* send the headers and do 304 check before processing the page */
-		if(!options::Singleton()->get_option('admin_mode'))
+		if(!options::Singleton()->get_option('admin_mode') or $allow_cache)
 		{	
 			Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string());
 		}

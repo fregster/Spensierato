@@ -79,7 +79,7 @@ class cookie
 			{
 				//return $this->cookie_array[$name];
 				echo($name);
-				print_r($this->cookie_array);
+				print_r($this->cookie_array[$name]);
 			}
 		}
 		return NULL;

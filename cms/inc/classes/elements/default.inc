@@ -3,6 +3,7 @@ class elementDefault
 {
 	protected $id;
 	protected $data;
+	protected $details;
 	protected $type;
 	protected $name;
 	protected $image;
@@ -29,8 +30,14 @@ class elementDefault
 	public function build($id)
 	{
 		$this->id = $id;
+		$this->link = Database::Singleton()->sql_select_first(array('*'), 'tbl_page_elements', array('element_id', 'main'), array($id, 1));
 		$this->get_data();
 		Content::Singleton()->attach_content($this->render());
+	}
+	
+	public function main()
+	{
+		return $this->link['page_id'];
 	}
 	
 	public function render()

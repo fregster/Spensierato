@@ -471,7 +471,15 @@ class CMS
 				{
 					$element = Element::type($value);
 					$element->build($value);
-					$element->save(false);
+					if($element->save(false))
+					{
+						//Save worked bounce to main page for element
+						Common::redirect($element->main());
+					}
+					else
+					{
+						//Save failed show error page
+					}
 				}
 				else
 				{

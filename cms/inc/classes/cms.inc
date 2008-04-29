@@ -247,7 +247,7 @@ class CMS
 		{
 			case 'HTML':
 				//Database file, call content singleton
-				Render::Singleton()->render_html(Content::Singleton()->build());
+				Render::Singleton()->render_html(Content::Singleton()->build(), true);
 			    break;
 			    
 			case 'STYLESHEET':

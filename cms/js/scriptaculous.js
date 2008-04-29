@@ -48,20 +48,21 @@ var Scriptaculous = {
     //Modification because of JS cacheing
       //return (s.src && s.src.match(/scriptaculous\.js(\?.*)?$/))
       
-	var URL = unescape(location.href)	// get current URL in plain ASCII
-	var xstart = URL.lastIndexOf("/") + 1
-	var xend = URL.length
-	var herePath = URL.substring(0,xstart) + '../js/'
+	//var URL = unescape(location.href)	// get current URL in plain ASCII
+	//var xstart = URL.lastIndexOf("/") + 1
+	//var xend = URL.length
+	//var herePath = URL.substring(0,xstart) + '../js/'
     
-    return herePath
+    return document_root
       
     }).each( function(s) {
-      //var path = s.src.replace(/scriptaculous\.js(\?.*)?$/,'');
-      var URL = unescape(location.href)	// get current URL in plain ASCII
-		var xstart = URL.lastIndexOf("/") + 1
-		var xend = URL.length
-		var path = URL.substring(0,xstart) + '../js/';
+		//var path = s.src.replace(/scriptaculous\.js(\?.*)?$/,'');
+      	//var URL = unescape(location.href)	// get current URL in plain ASCII
+		//var xstart = URL.lastIndexOf("/") + 1
+		//var xend = URL.length
+		//var path = URL.substring(0,xstart) + '../js/';
 		//var path = 'http://www.fryer.org.uk/current/cms/js/'
+		var path = document_root;
       var includes = s.src.match(/\?.*load=([a-z,]*)/);
       (includes ? includes[1] : 'builder,effects,dragdrop,controls,slider,sound').split(',').each(
        function(include) { Scriptaculous.require(path+include+'.js') });

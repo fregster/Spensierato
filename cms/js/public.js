@@ -1,6 +1,6 @@
 // JavaScript Document
 <!-- AJAX Code for search -->
-var xmlHttp = false;
+var document_root = '__CMS__DOCUMENT_ROOT';
 
 function ajaxObject()
 {

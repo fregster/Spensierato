@@ -136,6 +136,8 @@ abstract class javascript
 			$contents .= "\n\n" . file_get_contents($path);
 		}
 		
+		$contents = str_replace('__CMS__DOCUMENT_ROOT', Settings::singleton()->get_setting('document_root'), $contents);
+		
 		//Remove comments from the string
 		switch (Settings::Singleton()->get_setting('js_minify')) 
 		{

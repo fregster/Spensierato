@@ -197,8 +197,7 @@ class Content
 					$element->build('blank');
 				}
 			}
-			$this->set_attribute('lastmodified', $lastmodified); 
-			$this->set_attribute('e_string', $id_string);
+			$this->set_attribute('lastmodified', $this->lastmodified); 
 		}
 	}
 }

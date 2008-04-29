@@ -178,15 +178,15 @@ class Content
 					$element->build($node['element_id']);
 					if($node['edited'] != NULL)
 					{
-						$moded = $node['edited'];
+						$moded = $data['edited'];
 					}
 					else
 					{
-						$moded = $node['created'];
+						$moded = $data['created'];
 					}
 					
 					print_r($moded);
-					print_r($node);
+					print_r($data);
 					die();
 					
 					$this->lastmodified = max($this->lastmodified, $moded);

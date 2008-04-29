@@ -107,7 +107,10 @@ class elementDefault
 		//TODO call search code
 		$search = 'search text';
 		//TODO Archiving
-		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements', $fields = array('edited', 'editor'), $values = array(time(), User::Singleton()->id()));
+		
+		$title =common::node_from_xml('<xml>'.$xml.'</xml>', '/xml/title');
+		
+		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements', $fields = array('edited', 'editor', 'title'), $values = array(time(), User::Singleton()->id()));
 		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements_data', $fields = array('data', 'search'), $values = array($xml, $search));
 	}
 	

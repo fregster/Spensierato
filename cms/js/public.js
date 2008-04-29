@@ -85,3 +85,7 @@ function notification(text)
 	
 	return false;
 }
+
+var ToolTips = new Tips($$('.ToolTip'), {
+	className: 'ToolTip'
+});

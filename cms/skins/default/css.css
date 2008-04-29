@@ -358,6 +358,28 @@ a.tooltip:hover span
 	background-color: red;
 	display: none;
 }
+
+.ToolTip-tip {
+	color: #000;
+	width: 130px;
+	z-index: 13000;
+}
+ 
+.ToolTip-title {
+	font-weight: bold;
+	font-size: 11px;
+	margin: 0;
+	color: #3E4F14;
+	padding: 8px 8px 4px;
+	background: #C3DF7D;
+	border-bottom: 1px solid #B5CF74;
+}
+ 
+.ToolTip-text {
+	font-size: 11px;
+	padding: 4px 8px 8px;
+	background: #CFDFA7;
+}
 /* Sprite information */
 .sprite {height:16px; width:18px; float:left; background: url(skin/csg-47fc8b141e478.png) no-repeat center center; position:relative; top:2px; left:1px }
 .sprite-accept { background-position: 0 -30px; } 

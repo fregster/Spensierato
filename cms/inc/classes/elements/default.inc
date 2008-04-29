@@ -71,6 +71,7 @@ class elementDefault
 		$xml = '<xml>';
 		foreach($_POST as $key => $value)
 		{
+			if($this->tage[$key] == 'html') { $value = htmlentities($value); }
 			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
 		}
 		$xml .= '</xml>';
@@ -85,10 +86,10 @@ class elementDefault
 			else
 			{
 				$data = common::node_from_xml($xml, '/xml/'.$key);
+				
 				echo($xml);
 				print_r($data);
 				die('end');
-//				if($value == 'html') { $data = htmlentities($data); }
 				$data = common::sql_clean(strip_tags($data));
 				$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 			}

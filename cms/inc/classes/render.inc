@@ -53,7 +53,8 @@ class Render
 //		$mod_date = common::node_from_xml($xml, '/page/@lastmodified');
 //		$e_string = common::node_from_xml($xml, '/page/@e_string');
 
-		print_r($details); die();
+		//print_r($details); 
+		echo($details->attributes["lastmodified"]); die();
 		
 		Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), $mod_date, $e_hash);
 		$this->render(Template::Singleton()->load(), $xml);

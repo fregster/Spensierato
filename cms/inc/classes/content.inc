@@ -156,7 +156,7 @@ class Content
 		{
 			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id'), array(currentPage::Singleton()->id()), array('sort'));
 			$lastmodified = 0;
-			$title = '';
+			$id_string = '';
 			
 			if(isset($elements[0]))
 			{
@@ -174,7 +174,7 @@ class Content
 						$moded = $node['created'];
 					}
 					$lastmodified = max($lastmodified, $moded);
-					$title .=$node['title'];
+					$id_string .=$node['id'];
 				}
 			}
 			else
@@ -187,7 +187,7 @@ class Content
 				}
 			}
 			$this->set_attribute('lastmodified', $lastmodified); 
-			$this->set_attribute('e_hash', md5($title));
+			$this->set_attribute('e_string', $id_string);
 		}
 	}
 }

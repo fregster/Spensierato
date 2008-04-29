@@ -51,7 +51,7 @@ class Render
 		/* send the headers and do 304 check before processing the page */
 		if(!user::Singleton()->is_logged_in())
 		{	
-			Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string());
+			Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string(), false);
 		}
 		else
 		{

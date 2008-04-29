@@ -78,8 +78,8 @@ class cookie
 			if(isset($this->cookie_array[$name]));
 			{
 				//return $this->cookie_array[$name];
-				echo($name);
-				print_r($this->cookie_array[$name]);
+				$value = $this->cookie_array[$name];
+				return $value;
 			}
 		}
 		return NULL;

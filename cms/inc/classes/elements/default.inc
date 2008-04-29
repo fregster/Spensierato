@@ -76,10 +76,8 @@ class elementDefault
 		$xml .= '</xml>';
 		
 		//Check data
-		echo('checking data');
 		foreach($this->tags as $key => $value)
 		{
-			echo($key);
 			$data = common::node_from_xml($xml, '/xml/'.$key);
 			if($value == 'html') { $data = htmlentities($data); }
 			common::sql_clean(strip_tags($data));

@@ -30,7 +30,17 @@
 					<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				</xsl:element>
 				</xsl:if>
-				
+				<script type="javascript">
+					var document_root = '<xsl:value-of select="/page/settings/document_root" />';
+					var current_page = '<xsl:value-of select="/page/@id" />';
+					
+					function returnRefresh(returnVal) 
+					{
+						window.top.document.body.innerHTML = '';
+						//window.top.location.reload();
+					    window.top.location = document_root+'/'+current_page;
+					}
+				</script>
 				<xsl:call-template name="javascript"/>
 			</head>
 	</xsl:template>

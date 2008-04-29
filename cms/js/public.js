@@ -1,8 +1,6 @@
 // JavaScript Document
 <!-- This code might not have all the copyright in as it can be removed as part of some compression techniques -->
 <!-- Please visit http://www.fryer.org.uk/blog/?page_id=36 for details -->
-var document_root = '__CMS__DOCUMENT_ROOT';
-var current_page = '__CMS__PAGE_ID';
 
 function ajaxObject()
 {

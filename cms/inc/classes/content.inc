@@ -3,6 +3,8 @@ class Content
 {
 	protected static $instance;
 	private $extra_elements;
+	private $lastmodified = 0;
+	private $e_string = '';
 	private $dom;
 
 	private $page;
@@ -155,7 +157,6 @@ class Content
 		if(CMS::Singleton()->page_details['type'] == 'HTML')
 		{
 			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id'), array(currentPage::Singleton()->id()), array('sort'));
-			$lastmodified = 0;
 			$id_string = '';
 			
 			if(isset($elements[0]))
@@ -173,8 +174,8 @@ class Content
 					{
 						$moded = $node['created'];
 					}
-					$lastmodified = max($lastmodified, $moded);
-					$id_string .=$node['id'];
+					$this->lastmodified = max($lastmodified, $moded);
+					$this->e_string .=$node['element_id'];
 				}
 			}
 			else

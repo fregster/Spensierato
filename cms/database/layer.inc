@@ -318,12 +318,14 @@ class Database
 		while($i <= (count($fields) - 1))
 		{
 			$sql_temp_fields .= $this->sql_clean_input($fields[$i]) .', ';
+			++$i;
 		}
 		
 		$i = 0;
 		while($i <= (count($values) - 1))
 		{
 			$sql_temp_values .= $this->sql_clean_input($values[$i]) .', ';
+			++$i;
 		}
 		
 		$sql = $sql	. $sql_temp_fields . ' VALUES ' . sql_temp_values;

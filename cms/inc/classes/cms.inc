@@ -415,14 +415,14 @@ class CMS
 				$file = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$value;
 				if(is_file($file))
 				{
-					FileTransfer::singleton()->get_file($file);
+					FileTransfer::singleton()->get_file($file, true);
 					die();
 				}
 				
 				$file = Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$value;
 				if(is_file($file))
 				{
-					FileTransfer::singleton()->get_file($file);
+					FileTransfer::singleton()->get_file($file, true);
 					die();
 				}
 				

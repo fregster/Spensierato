@@ -68,15 +68,16 @@ class elementDefault
 	public function save($draft = true)
 	{
 		//Build posted data as XML structure
-		$xml = null;
+		$xml = '<xml>';
 		foreach($_POST as $key => $value)
 		{
 			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
 		}
+		$xml .= '</xml>';
 		//Check data
 		foreach($this->tags as $key => $value)
 		{
-			$data = common::node_from_xml($xml, '/data/'.$key);
+			$data = common::node_from_xml($xml, '/xml/'.$key);
 			if($value == 'html') { $data = htmlentities($data); }
 			common::sql_clean(strip_tags($data));
 			$built_xml .= '<'.$value.' type="'.$key.'">'.$data.'</'.$value.'>';

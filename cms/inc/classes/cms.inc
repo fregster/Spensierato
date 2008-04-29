@@ -471,7 +471,7 @@ class CMS
 				{
 					$element = Element::type($value);
 					$element->build($value);
-					$element->save();
+					$element->save(false);
 				}
 				else
 				{

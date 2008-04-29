@@ -70,6 +70,13 @@ class Render
 			exit;
 		}
 		
+		/* send the headers and do 304 check before processing the page */
+		$page_id = common::node_from_xml($xml, '/page/@id');
+		$mod_date = common::node_from_xml($xml, '/page/@lastmodified');
+		$e_hash = common::node_from_xml($xml, '/page/@e_hash');
+		
+		Cache::headers_allow_cache_dynamic($page_id, $mod_date, $e_hash);
+		
 		$xslt = new xsltProcessor;
 		$xslt->registerPHPFunctions();
 		
@@ -82,8 +89,7 @@ class Render
 		/* hack to clean html */
 		$this->clean_html();
 		
-		/* send the headers */
-		Cache::headers_no_cache();
+		
 		
 		/* output the html */
 		echo(html_entity_decode($this->html));

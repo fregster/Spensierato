@@ -53,7 +53,7 @@ var Scriptaculous = {
 	//var xend = URL.length
 	//var herePath = URL.substring(0,xstart) + '../js/'
     
-    return document_root
+    return document_root +'/javascript/';
       
     }).each( function(s) {
 		//var path = s.src.replace(/scriptaculous\.js(\?.*)?$/,'');
@@ -62,7 +62,7 @@ var Scriptaculous = {
 		//var xend = URL.length
 		//var path = URL.substring(0,xstart) + '../js/';
 		//var path = 'http://www.fryer.org.uk/current/cms/js/'
-		var path = document_root;
+		var path = document_root +'/javascript/';
       var includes = s.src.match(/\?.*load=([a-z,]*)/);
       (includes ? includes[1] : 'builder,effects,dragdrop,controls,slider,sound').split(',').each(
        function(include) { Scriptaculous.require(path+include+'.js') });

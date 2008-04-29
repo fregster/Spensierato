@@ -74,9 +74,9 @@ function searchFunction()
 }
 
 
-var ToolTips = new Tips($$('.ToolTip'), {
-	className: 'ToolTip'
-});
+//var ToolTips = new Tips($$('.ToolTip'), {
+//	className: 'ToolTip'
+//});
 
 var notes = new fx.Opacity('notifications', {duration: 800 });
 

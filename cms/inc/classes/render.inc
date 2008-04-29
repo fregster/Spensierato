@@ -48,8 +48,16 @@ class Render
 	
 	public function render_html($xml)
 	{	
-		/* send the headers and do 304 check before processing the page */		
-		Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string());
+		/* send the headers and do 304 check before processing the page */
+		if(!user::Singleton()->is_logged_in())
+		{	
+			Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string());
+		}
+		else
+		{
+			//When in admin mode do not cache and do not allow cacheing
+			Cache::headers_no_cache();
+		}
 		
 		$this->render(Template::Singleton()->load(), $xml);
 	}

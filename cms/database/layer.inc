@@ -333,7 +333,7 @@ class Database
 			if($i < (count($fields) -1))
 			{
 				//not the last one so add a ,
-				 $sql_temp_fields .=', ';
+				 $sql_temp_values .=', ';
 			}
 			++$i;
 		}

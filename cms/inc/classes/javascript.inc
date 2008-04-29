@@ -137,7 +137,7 @@ abstract class javascript
 		}
 		
 		$contents = str_replace('__CMS__DOCUMENT_ROOT', Settings::singleton()->get_setting('document_root'), $contents);
-		
+		$contents = str_replace('__CMS__PAGE_ID', currentPage::singleton()->id(), $contents);
 		//Remove comments from the string
 		switch (Settings::Singleton()->get_setting('js_minify')) 
 		{

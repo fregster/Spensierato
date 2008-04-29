@@ -155,7 +155,8 @@ class Content
 		if(CMS::Singleton()->page_details['type'] == 'HTML')
 		{
 			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id'), array(currentPage::Singleton()->id()), array('sort'));
-		
+			$lastmodified = 0;
+			
 			if(isset($elements[0]))
 			{
 				foreach($elements as $node)
@@ -163,6 +164,8 @@ class Content
 					$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($node['element_id']));
 					$element = Element::type($data['type']);
 					$element->build($node['element_id']);
+					$moded = max($node['created'], $node['edited']);
+					$lastmodified = max($lastmodified, $moded);
 				}
 			}
 			else
@@ -174,6 +177,7 @@ class Content
 					$element->build('blank');
 				}
 			}
+			$this->set_attribute('lastmodified', $lastmodified); 
 		}
 	}
 }

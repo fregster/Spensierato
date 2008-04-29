@@ -338,7 +338,7 @@ class Database
 			++$i;
 		}
 		
-		$sql = $sql	. $sql_temp_fields . ' VALUES ' . sql_temp_values;
+		$sql = $sql	. $sql_temp_fields . ' VALUES ' . $sql_temp_values;
 		
 		//Logging info
 		$this->site_sql_count ++;

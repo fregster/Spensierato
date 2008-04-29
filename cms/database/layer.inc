@@ -309,7 +309,7 @@ class Database
 			return false;
 		}
 		
-		$sql = 'UPDATE '. $this->sql_clean_input($table) . ' SET ';
+		$sql = 'UPDATE `'. $this->sql_clean_input($table) . '` SET ';
 		
 		$i = 0;
 		$sql_temp_fields = '';

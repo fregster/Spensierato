@@ -57,9 +57,10 @@ abstract class Cache
 			
 		//Build E-Tag from page id and date
 		$ETag = $page_id .'-'.$e_string.'-'.$mod_date;
+		$gmdate_mod = gmdate('D, d M Y H:i:s', $mod_date) . ' GMT';
+		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
 		
 		header('ETag: "'.$ETag.'"'); 
-		$gmdate_mod = gmdate('D, d M Y H:i:s', $mod_date) . ' GMT';
 		header('Last-Modified: ' . $gmdate_mod);
 		header('Expires: ' . $expires);
 		header('Cache-Control: post-check=0, pre-check=0');
@@ -99,8 +100,10 @@ abstract class Cache
 	
 	public static function headers_no_cache()
 	{
+		$expires = gmdate('D, d M Y H:i:s', (time() - 36000)) . ' GMT';
+		
 		header('Cache-Control: private, no-cache, must-revalidate'); // HTTP/1.1
-		header('Expires: Mon, 01 Jan 2008 12:00:00 GMT'); // Date in the past
+		header('Expires: ' . $expires); // Date in the past
 		header('pragma: private'); 
 	}
 	

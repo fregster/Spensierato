@@ -318,7 +318,7 @@ class Database
 		while($i <= (count($fields) - 1))
 		{
 			$sql_temp_fields .= '`'.$this->sql_clean_input($fields[$i]).'`';
-			if($i != (count($fields) -1))
+			if($i < (count($fields) -1))
 			{
 				//not the last one so add a ,
 				 $sql_temp_fields .=', ';
@@ -330,7 +330,7 @@ class Database
 		while($i <= (count($values) - 1))
 		{
 			$sql_temp_values .= "'". $this->sql_clean_input($values[$i]) ."'";
-			if($i != (count($fields) -1))
+			if($i < (count($fields) -1))
 			{
 				//not the last one so add a ,
 				 $sql_temp_fields .=', ';

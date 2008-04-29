@@ -38,7 +38,7 @@ abstract class Cache
 
 	}
 	
-	public static function headers_allow_cache_dynamic($page_id, $mod_date, $public = true, $expires = 3600, $maxage = 3600, $force_resend = false)
+	public static function headers_allow_cache_dynamic($page_id, $mod_date, $e_hash = null, $public = true, $expires = 3600, $maxage = 3600, $force_resend = false)
 	{
 		
 //		if(!$force_resend) 
@@ -56,7 +56,7 @@ abstract class Cache
 		}
 			
 		//Build E-Tag from page id and date
-		$ETag = $page_id .'-'.$mod_date;
+		$ETag = $page_id .'-'.md5($mod_date.$e_hash);
 		
 		header('ETag: "'.$ETag.'"'); 
 		$gmdate_mod = gmdate('D, d M Y H:i:s', $mod_date) . ' GMT';

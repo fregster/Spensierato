@@ -10,7 +10,8 @@ class options
 	*/
 	private $valid_options = array(
 					'admin_mode' => array(false, true),
-					'test' => array(true)
+					'test' => array(true),
+					'force_reload' => array(false, true)
 							);
 
 	public static function Singleton()

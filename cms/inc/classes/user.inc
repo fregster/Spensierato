@@ -85,6 +85,7 @@ class user
 			}
 			//Load the previous option state
 			options::Singleton()->load_saved_options();
+			options::Singleton()->set_option('force_reload', true);
 		}
 		else
 		{	

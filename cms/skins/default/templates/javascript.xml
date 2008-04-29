@@ -15,9 +15,9 @@
 					<!-- User logged in and in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,admin.js,prototype.lite.js,moo.fx.js,moo.fx.pack.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,admin.js,prototype.lite.js,moo.fx.js,moo.fx.pack.js,submodal/common.js,submodal/subModal.js</xsl:attribute>
 						</xsl:element>
-						
+						<!-- 
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
 							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />submodal/common.js</xsl:attribute>
@@ -27,7 +27,7 @@
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
 							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />submodal/subModal.js</xsl:attribute>
 						</xsl:element>
-						<!-- 
+						
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
 							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />scriptaculous.js</xsl:attribute>

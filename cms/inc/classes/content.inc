@@ -89,6 +89,16 @@ class Content
 		return $this->dom->saveXML();
 	}
 	
+	public function last_update()
+	{
+		return $this->lastmodified;
+	}
+	
+	public function e_string()
+	{
+		return $this->e_string;
+	}
+	
 	public function set_attribute($name, $value)
 	{
 		$this->page->setAttribute($name, utf8_encode($value));		

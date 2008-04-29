@@ -78,10 +78,17 @@ class elementDefault
 		//Check data
 		foreach($this->tags as $key => $value)
 		{
-			$data = common::node_from_xml($xml, '/xml/'.$key);
-			if($value == 'html') { $data = htmlentities($data); }
-			common::sql_clean(strip_tags($data));
-			$built_xml .= '<'.$value.' type="'.$key.'">'.$data.'</'.$value.'>';
+			if($key == 'title')
+			{
+				$title = common::node_from_xml($xml, '/xml/'.$key);
+			}
+			else
+			{
+				$data = common::node_from_xml($xml, '/xml/'.$key);
+				if($value == 'html') { $data = htmlentities($data); }
+				common::sql_clean(strip_tags($data));
+				$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
+			}
 		}
 		
 		
@@ -97,18 +104,16 @@ class elementDefault
 			echo($xml);
 			echo($built_xml);
 			die();
-			$this->process_save($built_xml);
+			$this->process_save($built_xml, $title);
 		}
 				
 	}
 	
-	protected function process_save($xml)
+	protected function process_save($xml, $title)
 	{
 		//TODO call search code
 		$search = 'search text';
 		//TODO Archiving
-		
-		$title =common::node_from_xml('<xml>'.$xml.'</xml>', '/xml/title');
 		
 		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements', $fields = array('edited', 'editor', 'title'), $values = array(time(), User::Singleton()->id()));
 		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements_data', $fields = array('data', 'search'), $values = array($xml, $search));

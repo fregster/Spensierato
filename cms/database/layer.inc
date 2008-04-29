@@ -57,7 +57,8 @@ class Database
 	
 		//If logged in create db write user this should help prevent against SQL injection
 		//As only logged in can use the db writeable user
-		if(user::Singleton()->is_logged_in())
+//		if(user::Singleton()->is_logged_in())
+		if($_SESSION['user_id'] != 0)
 		{
 			//Create write user
 			$dsn = array(

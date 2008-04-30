@@ -88,7 +88,7 @@ window.onload = function()
 function pageReload(returnVal) 
 {
 	//returnRefresh(returnVal);
-	window.top.location.reload(true);
+	setTimeout("window.top.location.reload(true)",100);
 }
 
 function notification(text)

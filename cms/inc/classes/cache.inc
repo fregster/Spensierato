@@ -1,7 +1,7 @@
 <?
 abstract class Cache
 {
-	public static function headers_allow_cache($path = NULL, $public = true, $expires = 3600, $maxage = 3600, $force_resend = false)
+	public static function headers_allow_cache($path = NULL, $public = true, $expires = 5, $maxage = 5, $force_resend = false)
 	{
 		if($path != NULL) 
 		{ 

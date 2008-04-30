@@ -28,7 +28,7 @@
         </html>
 </xsl:template>
 
-<xsl:template match="@type">
+<xsl:template match="@type='html'">
 	<div>
 		<xsl:element name="textarea">
 		<xsl:attribute name="name"><xsl:value-of select="@type" /></xsl:attribute>

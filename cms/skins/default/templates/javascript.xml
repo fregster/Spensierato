@@ -33,13 +33,6 @@
 							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />scriptaculous.js</xsl:attribute>
 						</xsl:element>
 						 -->
-						<script type="text/javascript">
-						function pageReload(returnVal) 
-						{
-                        	window.top.document.body.innerHTML = '';
-							window.top.location = '<xsl:value-of select="/page/settings/document_root" />/'+returnVal;
-                        }
-						</script>
 					</xsl:if>
 				
 					<xsl:if test="/page/options/admin_mode != 1">

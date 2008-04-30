@@ -85,6 +85,11 @@ window.onload = function()
 	document.getElementById('notifications').style.display = 'none';
 }
 
+function pageReload(returnVal) 
+{
+	returnRefresh(returnVal);
+}
+
 function notification(text)
 {
 	var timer;

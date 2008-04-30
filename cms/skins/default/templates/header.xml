@@ -40,6 +40,7 @@
 						//window.top.location.reload();
 					    window.top.location = document_root+'/'+current_page;
 					}
+
 				</script>
 				<xsl:call-template name="javascript"/>
 			</head>

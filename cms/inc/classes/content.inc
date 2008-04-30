@@ -91,7 +91,6 @@ class Content
 	
 	public function last_updated()
 	{
-		die($this->lastmodified);
 		return $this->lastmodified;
 	}
 	

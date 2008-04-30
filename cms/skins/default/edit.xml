@@ -28,7 +28,7 @@
         </html>
 </xsl:template>
 
-<xsl:template match="/page/body/element/data/@type = 'html'">
+<xsl:template match="html">
 	<div>
 		<xsl:element name="textarea">
 		<xsl:attribute name="name"><xsl:value-of select="@type" /></xsl:attribute>
@@ -40,7 +40,7 @@
 		</xsl:element>
 	</div>
 </xsl:template>
-
+<!-- 
 <xsl:template match="@type = 'text'">
 	<div>
 		<xsl:value-of select="@type" />: <xsl:element name="input">
@@ -72,7 +72,7 @@
 		<xsl:value-of select="." />: <xsl:value-of select="." />
 	</div>
 </xsl:template>
-
+-->
 <xsl:template name="edit_header">
 	<div id="edit_header">
 		Element Name:

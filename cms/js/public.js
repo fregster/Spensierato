@@ -87,7 +87,8 @@ window.onload = function()
 
 function pageReload(returnVal) 
 {
-	returnRefresh(returnVal);
+	//returnRefresh(returnVal);
+	window.top.location.reload(true);
 }
 
 function notification(text)

@@ -62,7 +62,7 @@ abstract class Cache
 
 		if($public == true)
 		{
-			$cache_control = 'public, must-revalidate';
+			$cache_control = 'public, no-cache, must-revalidate';
 		}
 		else
 		{

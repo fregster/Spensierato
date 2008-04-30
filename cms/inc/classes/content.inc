@@ -177,7 +177,7 @@ class Content
 					$element = Element::type($data['type']);
 					$element->build($node['element_id']);
 					
-					$this->lastmodified = max($this->lastmodified, array($data['edited'],$data['created']));
+					$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $node['ts']);
 					$this->e_string .=$node['element_id'];
 				}
 			}

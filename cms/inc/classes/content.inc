@@ -176,16 +176,8 @@ class Content
 					$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($node['element_id']));
 					$element = Element::type($data['type']);
 					$element->build($node['element_id']);
-					if($node['edited'] > $data['created'])
-					{
-						$moded = $data['edited'];
-					}
-					else
-					{
-						$moded = $data['created'];
-					}
 					
-					$this->lastmodified = max($this->lastmodified, $moded);
+					$this->lastmodified = max($this->lastmodified, array($data['edited'],$data['created']));
 					$this->e_string .=$node['element_id'];
 				}
 			}

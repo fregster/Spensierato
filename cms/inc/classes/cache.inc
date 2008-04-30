@@ -21,6 +21,7 @@ abstract class Cache
 		if($public == true)
 		{
 			$cache_control = 'public, must-revalidate';
+			header('Expires: ' . $expires);
 		}
 		else
 		{
@@ -29,7 +30,7 @@ abstract class Cache
 		
 		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
 		
-		header('Expires: ' . $expires);
+		
 		header('Cache-Control: post-check=0, pre-check=0');
 		header('Cache-Control: '.$cache_control, false);
 		header('Cache-Control: max-age='.$maxage, false);

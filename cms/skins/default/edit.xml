@@ -28,7 +28,7 @@
         </html>
 </xsl:template>
 
-<xsl:template match="html">
+<xsl:template match="@type = html">
 	<div>
 		<xsl:element name="textarea">
 		<xsl:attribute name="name"><xsl:value-of select="@type" /></xsl:attribute>
@@ -41,7 +41,7 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="text">
+<xsl:template match="@type = text">
 	<div>
 		<xsl:value-of select="@type" />: <xsl:element name="input">
 		<xsl:attribute name="name"><xsl:value-of select="@type" /></xsl:attribute>
@@ -50,7 +50,7 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="file">
+<xsl:template match="@type = file">
 	<div>
 		<xsl:element name="input">
 			<xsl:attribute name="type">hidden</xsl:attribute>
@@ -61,15 +61,15 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="warning">
+<xsl:template match="@type = warning">
 	<div>
 		<xsl:value-of select="./title" /><em><xsl:value-of select="./description" /></em>
 	</div>
 </xsl:template>
 
-<xsl:template match="auto">
+<xsl:template match="@type = auto">
 	<div>
-		<xsl:value-of select="@type" />: <xsl:value-of select="." />
+		<xsl:value-of select="./" />: <xsl:value-of select="." />
 	</div>
 </xsl:template>
 

@@ -1,7 +1,7 @@
 <?
 abstract class Cache
 {
-	public static function headers_allow_cache($path = NULL, $public = true, $expires = 5, $maxage = 5, $force_resend = false)
+	public static function headers_allow_cache($path = NULL, $public = true, $expires = 3600, $maxage = 3600, $force_resend = false)
 	{
 		if($path != NULL) 
 		{ 
@@ -21,7 +21,6 @@ abstract class Cache
 		if($public == true)
 		{
 			$cache_control = 'public, must-revalidate';
-			header('Expires: ' . $expires);
 		}
 		else
 		{
@@ -30,7 +29,7 @@ abstract class Cache
 		
 		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
 		
-		
+		header('Expires: ' . $expires);
 		header('Cache-Control: post-check=0, pre-check=0');
 		header('Cache-Control: '.$cache_control, false);
 		header('Cache-Control: max-age='.$maxage, false);
@@ -39,7 +38,7 @@ abstract class Cache
 
 	}
 	
-	public static function headers_allow_cache_dynamic($page_id, $mod_date, $e_string = null, $public = false, $expires = 1, $maxage = 1, $force_resend = false)
+	public static function headers_allow_cache_dynamic($page_id, $mod_date, $e_string = null, $public = true, $expires = 0, $maxage = 0, $force_resend = false)
 	{
 		//Build E-Tag from page id and date
 		$ETag = $page_id .'-'.$e_string.'-'.$mod_date.'-'.$_SESSION['userid'];

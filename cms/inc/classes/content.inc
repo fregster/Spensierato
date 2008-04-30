@@ -91,6 +91,7 @@ class Content
 	
 	public function last_updated()
 	{
+		die($this->lastmodified);
 		return $this->lastmodified;
 	}
 	
@@ -178,7 +179,6 @@ class Content
 					$element->build($node['element_id']);
 					
 					$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $node['ts']);
-					die($this->lastmodified);
 					$this->e_string .=$node['element_id'];
 				}
 			}

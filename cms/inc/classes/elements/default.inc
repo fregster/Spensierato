@@ -122,8 +122,8 @@ class elementDefault
 		$search = 'search text';
 		//TODO Archiving
 		
-		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements', $fields = array('edited', 'editor', 'title'), $values = array(time(), User::Singleton()->id()));
-		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements_data', $fields = array('data', 'search'), $values = array($xml, $search));
+		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements', array('edited', 'editor', 'title'), array(time(), User::Singleton()->id(), $title));
+		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements_data', array('data', 'search'), array($xml, $search));
 		
 		return true;
 	}

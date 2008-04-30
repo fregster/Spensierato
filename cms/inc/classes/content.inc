@@ -176,7 +176,7 @@ class Content
 					$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($node['element_id']));
 					$element = Element::type($data['type']);
 					$element->build($node['element_id']);
-					if($node['edited'] != NULL)
+					if($node['edited'] > $data['created'])
 					{
 						$moded = $data['edited'];
 					}

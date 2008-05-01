@@ -91,7 +91,7 @@ class elementDefault
 			{
 				$title = new SimpleXMLElement($xml);
 				print_r($title->xml->title);
-				die($xml);
+				die('chicken');
 				$title = $title->xml->title;				
 			}
 			else

@@ -106,7 +106,7 @@ class elementDefault
 		}
 		else
 		{
-			if($this->process_save($built_xml, $title));
+			if($this->process_save($built_xml, $title->saveXML()));
 			{
 				return true;
 			}

@@ -154,7 +154,7 @@ class elementDefault
 	{
 		if($this->id != 'blank')
 		{
-			$db = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements_data', array('id'), array($this->id));
+			$db = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, TRUE);
 			$dbxml = '<data>'.$db['data'].'</data>';
 			
 			if(options::Singleton()->get_option('admin_mode'))

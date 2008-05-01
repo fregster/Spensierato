@@ -69,7 +69,7 @@
 		
 <xsl:template match="*[@type = 'auto']">
 	<div>
-		<xsl:value-of select="." />: <xsl:value-of select="." />
+		<xsl:value-of select="name()" />: <xsl:value-of select="." />
 	</div>
 </xsl:template>
 

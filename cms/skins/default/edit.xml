@@ -75,7 +75,7 @@
 			</div>
 		</xsl:when>
 	
-	</xs:choose>
+	</xsl:choose>
 </xsl:template>
 
 <xsl:template name="edit_header">

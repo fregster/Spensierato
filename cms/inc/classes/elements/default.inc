@@ -90,6 +90,7 @@ class elementDefault
 			if($key == 'title')
 			{
 				$title = new SimpleXMLElement($xml);
+				die($xml);
 				$title = $title->xml->title;				
 			}
 			else

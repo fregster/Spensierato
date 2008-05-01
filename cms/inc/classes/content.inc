@@ -166,14 +166,14 @@ class Content
 		//Only load elements from DB if page type = html
 		if(CMS::Singleton()->page_details['type'] == 'HTML')
 		{
-			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id'), array(currentPage::Singleton()->id()), array('sort'));
+			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id'), array(currentPage::Singleton()->id()), array('sort'), NULL, TRUE);
 			$id_string = '';
 			
 			if(isset($elements[0]))
 			{
 				foreach($elements as $node)
 				{
-					$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($node['element_id']));
+					$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($node['element_id']), NULL, NULL, TRUE);
 					$element = Element::type($data['type']);
 					$element->build($node['element_id']);
 					

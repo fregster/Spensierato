@@ -28,51 +28,54 @@
         </html>
 </xsl:template>
 
-<xsl:template match="/page/body/element/data/@type='html'">
-	<div>
-		<xsl:element name="textarea">
-		<xsl:attribute name="name"><xsl:value-of select="@type" /></xsl:attribute>
-		<xsl:attribute name="style">width:100%</xsl:attribute>
-		<xsl:attribute name="cols">80</xsl:attribute>
-		<xsl:attribute name="rows">15</xsl:attribute>
-		<xsl:attribute name="id">content</xsl:attribute>
-		<xsl:value-of select="." />
-		</xsl:element>
-	</div>
-</xsl:template>
-<!-- 
-<xsl:template match="@type = 'text'">
-	<div>
-		<xsl:value-of select="@type" />: <xsl:element name="input">
-		<xsl:attribute name="name"><xsl:value-of select="@type" /></xsl:attribute>
-		<xsl:value-of select="." />
-		</xsl:element>
-	</div>
-</xsl:template>
+<xsl:choose>
+	<xsl:when test="@type='html'">
+		<div>
+			<xsl:element name="textarea">
+			<xsl:attribute name="name"><xsl:value-of select="@type" /></xsl:attribute>
+			<xsl:attribute name="style">width:100%</xsl:attribute>
+			<xsl:attribute name="cols">80</xsl:attribute>
+			<xsl:attribute name="rows">15</xsl:attribute>
+			<xsl:attribute name="id">content</xsl:attribute>
+			<xsl:value-of select="." />
+			</xsl:element>
+		</div>
+	</xsl:when>
 
-<xsl:template match="@type = 'file'">
-	<div>
-		<xsl:element name="input">
-			<xsl:attribute name="type">hidden</xsl:attribute>
-			<xsl:attribute name="name">MAX_FILE_SIZE</xsl:attribute>
-			<xsl:attribute name="value"><xsl:value-of select="/page/settings/max_file_size" /></xsl:attribute>
-		</xsl:element>
-		Choose a file to upload: <input name="uploadedfile" type="file" /><br />
-	</div>
-</xsl:template>
+	<xsl:when test="@type = 'text'">
+		<div>
+			<xsl:value-of select="@type" />: <xsl:element name="input">
+			<xsl:attribute name="name"><xsl:value-of select="@type" /></xsl:attribute>
+			<xsl:value-of select="." />
+			</xsl:element>
+		</div>
+	</xsl:when>
+	
+	<xsl:when test="@type = 'file'">
+		<div>
+			<xsl:element name="input">
+				<xsl:attribute name="type">hidden</xsl:attribute>
+				<xsl:attribute name="name">MAX_FILE_SIZE</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="/page/settings/max_file_size" /></xsl:attribute>
+			</xsl:element>
+			Choose a file to upload: <input name="uploadedfile" type="file" /><br />
+		</div>
+	</xsl:when>
+	
+	<xsl:when test="@type = 'warning'">
+		<div>
+			<xsl:value-of select="./title" /><em><xsl:value-of select="./description" /></em>
+		</div>
+	</xsl:when>
+	
+	<xsl:when test="@type = 'auto'">
+		<div>
+			<xsl:value-of select="." />: <xsl:value-of select="." />
+		</div>
+	</xsl:when>
 
-<xsl:template match="@type = 'warning'">
-	<div>
-		<xsl:value-of select="./title" /><em><xsl:value-of select="./description" /></em>
-	</div>
-</xsl:template>
+</xs;:choose>
 
-<xsl:template match="@type = 'auto'">
-	<div>
-		<xsl:value-of select="." />: <xsl:value-of select="." />
-	</div>
-</xsl:template>
--->
 <xsl:template name="edit_header">
 	<div id="edit_header">
 		Element Name:

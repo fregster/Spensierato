@@ -89,7 +89,7 @@ class elementDefault
 		{
 			if($key == 'title')
 			{
-				$title = new SimpleXMLElement(common::node_from_xml($xml, '/xml/'.$key));
+				$title = new SimpleXMLElement('<title>'.common::node_from_xml($xml, '/xml/'.$key).'</title>');
 			}
 			else
 			{

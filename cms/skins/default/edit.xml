@@ -18,7 +18,7 @@
 						<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
 						<xsl:call-template name="edit_header"/><p>
 						
-						<xsl:apply-templates select="/page/body/element"/>
+						<xsl:apply-templates select="/page/body/element/data"/>
 						
 						</p>
 						<xsl:call-template name="edit_footer"/>
@@ -28,7 +28,7 @@
         </html>
 </xsl:template>
 
-<xsl:template match="*[@type = 'elementText']">
+<xsl:template match="*[@type = 'html']">
 <div>hello 2</div>
 </xsl:template>
 

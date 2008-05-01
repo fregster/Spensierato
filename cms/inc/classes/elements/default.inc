@@ -78,8 +78,8 @@ class elementDefault
 		$xml = '<xml>';
 		foreach($_POST as $key => $value)
 		{
-//			if($this->tags[$key] == 'html') { $value = htmlentities($value, ENT_QUOTES); }
-			$value = htmlentities($value, ENT_QUOTES);
+			if($this->tags[$key] == 'html') { $value = htmlentities($value, ENT_QUOTES); }
+			$value = common::sql_clean(strip_tags($value));
 			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
 		}
 		$xml .= '</xml>';
@@ -94,7 +94,6 @@ class elementDefault
 			else
 			{
 				$data = common::node_from_xml($xml, '/xml/'.$key);
-				$data = common::sql_clean(strip_tags($data));
 				$built_xml .= '<'.$key.'>'.$data.'</'.$key.'>';
 			}
 		}
@@ -123,6 +122,8 @@ class elementDefault
 		//TODO Archiving
 		
 		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements', array('edited', 'editor', 'title'), array(time(), User::Singleton()->id(), $title));
+		print_r (array(time(), User::Singleton()->id(), $title));
+		die();
 		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements_data', array('data', 'search'), array($xml, $search));
 		
 		return true;

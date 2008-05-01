@@ -78,7 +78,7 @@ class elementDefault
 		$xml = '<xml>';
 		foreach($_POST as $key => $value)
 		{
-			if($this->tags[$key] == 'html') { $value = htmlentities($value, ENT_QUOTES); }
+			if($key == 'html') { $value = htmlentities($value, ENT_QUOTES); }
 			$value = common::sql_clean(strip_tags($value));
 			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
 		}

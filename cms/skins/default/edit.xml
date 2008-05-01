@@ -28,6 +28,10 @@
         </html>
 </xsl:template>
 
+<xsl:template match="data/*/@type = 'html'">
+hello 2
+</xsl:template>
+
 <xsl:template match="/data">
 hello
 	<xsl:choose>

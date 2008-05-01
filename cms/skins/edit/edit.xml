@@ -1,0 +1,149 @@
+<xsl:template match="/">
+        <html>
+			<xsl:call-template name="header"/>
+
+			<xsl:element name="body">
+			<div id="notifications" onclick="new Effect.SwitchOff(this)">Content Editor</div>
+			<!-- <div id="notifications" onclick="new Effect.Opacity('notifications', {duration:1.0, from:1.0, to:0.0})">Content Editor</div> -->
+			
+			<!-- <xsl:attribute name="onload">tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />');</xsl:attribute> -->
+					<div id="page_edit">
+					<xsl:element name="form">
+						<xsl:attribute name="action"></xsl:attribute>
+						<xsl:attribute name="method">POST</xsl:attribute>
+						
+						<!-- test if we might upload a file and if so add the multipart attribute -->
+						<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+						
+						<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
+						<xsl:call-template name="edit_header"/><p>
+						
+						<xsl:apply-templates select="/page/body/element/data"/>
+						
+						</p>
+						<xsl:call-template name="edit_footer"/>
+					</xsl:element>
+					</div>
+			</xsl:element>
+        </html>
+</xsl:template>
+
+<xsl:template match="*[@type = 'html']">
+	<div>
+		<xsl:element name="textarea">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="style">width:100%</xsl:attribute>
+		<xsl:attribute name="cols">80</xsl:attribute>
+		<xsl:attribute name="rows">15</xsl:attribute>
+		<xsl:attribute name="id">content</xsl:attribute>
+		<xsl:value-of select="." />
+		</xsl:element>
+	</div>
+</xsl:template>
+	
+<xsl:template match="*[@type = 'text']">
+	<div>
+		<xsl:value-of select="@type" />: <xsl:element name="input">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:value-of select="." />
+		</xsl:element>
+	</div>
+</xsl:template>
+	
+<xsl:template match="*[@type = 'file']">	
+	<div>
+		<xsl:element name="input">
+			<xsl:attribute name="type">hidden</xsl:attribute>
+			<xsl:attribute name="name">MAX_FILE_SIZE</xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="/page/settings/max_file_size" /></xsl:attribute>
+		</xsl:element>
+		Choose a file to upload: <input name="uploadedfile" type="file" /><br />
+	</div>
+</xsl:template>
+		
+<xsl:template match="*[@type = 'warning']">
+	<div>
+		<xsl:value-of select="./title" /><em><xsl:value-of select="./description" /></em>
+	</div>
+</xsl:template>
+		
+<xsl:template match="*[@type = 'auto']">
+	<div>
+		<xsl:value-of select="." />: <xsl:value-of select="." />
+	</div>
+</xsl:template>
+
+<xsl:template name="edit_header">
+	<div id="edit_header">
+		Element Name:
+		Created By:
+		If edited last edited by:
+		Revision:
+		Aproved By:
+		Approved On:
+	</div>
+</xsl:template>
+
+<xsl:template name="edit_footer">
+	<div id="edit_footer">	
+		<xsl:element name="input">
+			<xsl:attribute name="type">button</xsl:attribute>
+			<xsl:attribute name="value">Re-Load</xsl:attribute>
+			<xsl:attribute name="onclick">ajaxLoad();</xsl:attribute>
+		</xsl:element>
+		<xsl:element name="input">
+			<xsl:attribute name="type">submit</xsl:attribute>
+			<xsl:attribute name="value">Save</xsl:attribute>
+		</xsl:element>
+	</div>
+</xsl:template>
+
+<xsl:template name="header">
+			<head>
+				<xsl:element name="title"><xsl:value-of select="/page/settings/site_name_short" /> | Content Editor</xsl:element>
+				
+				<xsl:element name="meta">
+					<xsl:attribute name="name">keywords</xsl:attribute>
+					<xsl:attribute name="content">Stylesheets</xsl:attribute>
+				</xsl:element>
+				
+				<xsl:element name="link">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css</xsl:attribute>
+					<xsl:attribute name="type">text/css</xsl:attribute>
+					<xsl:attribute name="rel">stylesheet</xsl:attribute>
+				</xsl:element>
+				
+				<xsl:element name="script">
+					<xsl:attribute name="type">text/javascript</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>
+				</xsl:element>
+				
+				<xsl:element name="script">
+					<xsl:attribute name="type">text/javascript</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,admin.js,prototype.lite.js,moo.fx.js,moo.fx.pack.js</xsl:attribute>
+				</xsl:element>
+				<!-- 
+				<xsl:element name="script">
+					<xsl:attribute name="type">text/javascript</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />prototype.js</xsl:attribute>
+				</xsl:element>
+				
+				<xsl:element name="script">
+					<xsl:attribute name="type">text/javascript</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />scriptaculous.js?load=effects</xsl:attribute>
+				</xsl:element>
+				 -->
+				<script type="text/javascript">
+				tinyMCE.init({
+						mode : "textareas",
+						theme : "simple",
+						button_tile_map : true
+						,setup : function(ed) {
+								//ed.onKeyUp.add(function(ed, e) { alert('Keyup event: ' + e.keyCode); })
+								ed.onKeyUp.add(function(ed, e) { delayedSave(); })
+									}
+					      });
+				element_id = 'e_<xsl:value-of select="/page/body/element/@id" />';		
+				</script>
+			</head>
+	</xsl:template>

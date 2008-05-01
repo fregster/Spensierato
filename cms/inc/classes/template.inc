@@ -57,7 +57,7 @@ class Template
 	
 	public function edit()
 	{
-		$path = $this->template_path .'/edit.xml';
+		$path = $this->template_path = Settings::Singleton()->get_setting('cms_root').'/skins/edit/edit.xml';
 		return $this->build_xslt_template(file_get_contents($path));
 	}
 	

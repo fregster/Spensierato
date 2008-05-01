@@ -123,8 +123,6 @@ class elementDefault
 		//TODO Archiving
 		
 		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements', array('edited', 'editor', 'title'), array(time(), User::Singleton()->id(), $title));
-		print_r(array(time(), User::Singleton()->id(), $title));
-		die('FUCKING SAVE THE GOD DAM MUTHER TITLE');
 		database::Singleton()->sql_update_by_id($this->id, 'cms_tbl_elements_data', array('data', 'search'), array($xml, $search));
 		
 		return true;

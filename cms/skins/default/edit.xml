@@ -29,7 +29,7 @@
 </xsl:template>
 
 <xsl:template match="/data/*/@type = 'html'">
-hello 2
+<div>hello 2</div>
 </xsl:template>
 
 <xsl:template match="/data">

@@ -127,7 +127,7 @@ Settings::Singleton()->new_setting('session_security_ip', false);
 //Setting login_capthca
 //Requires the user to enter a security code when login in
 //true / false
-Settings::Singleton()->new_setting('login_capthca', true);
+Settings::Singleton()->new_setting('login_capthca', false);
 
 //Setting login_capthca_length
 //Sets the length of the image

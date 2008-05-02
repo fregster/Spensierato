@@ -120,7 +120,7 @@ class Render
 	
 	private function tidy()
 	{
-		if(Settings::Singleton()->get_setting('tidy'))
+		if( (Settings::Singleton()->get_setting('tidy')) and (function_exists('tidy_parse_string')))
 		{
 			/**
 			 * Set configuration options for HTML tidy.

@@ -3,11 +3,24 @@ This CMS currnetly requires
 //PHP related
 PHP 5.2 ish
 
+	SimpleXML (PHP Core 5.2+)
 	PECL / PEAR
 	MDB2
+	XML/Serializer.php
+	PHP xsltProcessor
+	
 	GD and FreeType libraries
-	SimpleXML (PHP Core 5.2+)
+	
+	mcrypt //Pref
 	Hash //Optional
 
 //Database related
 MySQL (or SQL server that supports the LIMIT call)
+
+
+
+In Debian
+apt-get install php-xml-serializer php-xml-parser php5-xsl php5-mysql
+
+pear install MDB2
+pear install pear/MDB2#MySQLi

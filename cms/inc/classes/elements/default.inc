@@ -162,6 +162,7 @@ class elementDefault
 				$built_xml = '<data>';
 				foreach($this->tags as $key => $value)
 				{
+					echo('xml: '.$dmxml);
 					$data = common::node_from_xml($dbxml, '/data/'.$key);
 					echo('data '.$data);
 					echo('key '.$key);

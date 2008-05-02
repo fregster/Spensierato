@@ -164,8 +164,8 @@ class elementDefault
 				{
 					$data = common::node_from_xml($dbxml, '/data/'.$key);
 					echo('data '.$data);
-					echo($key);
-					echo($value);
+					echo('key '.$key);
+					echo('value '.$value);
 //					if($value == 'html') { $data = htmlentities($data); }
 //					strip_tags($data);
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';

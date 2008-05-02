@@ -174,4 +174,9 @@ Settings::Singleton()->new_setting('css_mobile', true);
 
 //Load the random key into the settings singleton
 Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key']);
+
+//Setting update_version_check
+//To enable auto version checking set this value to the update server
+Settings::Singleton()->new_setting('update_version_check', 'spensierato.fryer.org.uk');
+
 ?>

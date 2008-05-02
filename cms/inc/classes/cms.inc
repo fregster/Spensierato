@@ -651,5 +651,50 @@ class CMS
 </body>
 </html>');
 	}
+
+	private function version_check()
+	{
+		$hostname = Settings::singleton()->get_setting('update_version_check');
+		if($hostname != NULL)
+		{
+			return false;		
+		}
+		
+		//This function does not work in windows fo fake it
+		if(!function_exists('checkdnsrr'))
+		{
+		    function checkdnsrr($host, $type='')
+		    {
+		        if(!empty($host))
+		        {
+		            $type = (empty($type)) ? 'MX' :  $type;
+		            exec('nslookup -type='.$type.' '.escapeshellcmd($host), $result);
+		            $it = new ArrayIterator($result);
+		            foreach(new RegexIterator($it, '~^'.$host.'~', RegexIterator::GET_MATCH) as $result)
+		            {
+		                if($result)
+		                {
+		                    return true;
+		                }               
+		            }
+		        }
+		        return false;
+		   	}
+		}
+		
+		//If a DNS record is found
+		if(checkdnsrr($hostname, 'TXT'))
+		{
+			$dns = dns_get_record($hostname, DNS_TXT);
+			if($dns[] > CMS::$cms_version)
+			{
+				print_r($dns);
+				die();
+				return $dns['txt'];
+			}
+		}
+		
+		return false;
+	}
 }
 ?>

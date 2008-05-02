@@ -686,7 +686,7 @@ class CMS
 		if(checkdnsrr($hostname, 'TXT'))
 		{
 			$dns = dns_get_record($hostname, DNS_TXT);
-			if($dns[] > CMS::$cms_version)
+			if($dns['TXT'] > CMS::$cms_version)
 			{
 				print_r($dns);
 				die();

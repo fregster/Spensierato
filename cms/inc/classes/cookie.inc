@@ -9,6 +9,7 @@ class cookie
 	private $cookie_array = array();
 	private $cookie_update;
 	private $salt;
+	private $encryption = false;
 
 	private $cookie_life = 2678400; //31 days
 	private $cookie_name = 'CMS';
@@ -31,10 +32,18 @@ class cookie
 	
 	function __construct()
 	{
-		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
-   		$this->iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-	
+		if(function_exists('mcrypt_get_iv_size'))
+		{
+			$this->encryption = true;
+			$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+	   		$this->iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+		}
+		else
+		{
+			warnings::Singleton()->register('Encryption Failed', 'Your server does not support encryption. Your users cookies are not been encrypted');
+		}
 		$this->cookie_information = unserialize(stripslashes($_COOKIE[$this->cookie_name]));
+		
 		if(isset($this->cookie_information['salt']))
 		{
 			$this->salt = $this->cookie_information['salt'];
@@ -117,12 +126,22 @@ class cookie
 	
 	private function encrypt($decrypted_text)
 	{	
-		return mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->key_value(), $decrypted_text, MCRYPT_MODE_ECB, $this->iv);
+		if($this->encryption)
+		{
+			return mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->key_value(), $decrypted_text, MCRYPT_MODE_ECB, $this->iv);
+		}
+		
+		return $decrypted_text;
 	}
 	
 	private function decrypt($encrypted_text)
 	{
-		return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key_value(), $encrypted_text, MCRYPT_MODE_ECB, $this->iv);
+		if($this->encryption)
+		{
+			return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key_value(), $encrypted_text, MCRYPT_MODE_ECB, $this->iv);
+		}
+		
+		return $encrypted_text;
 	}
 }
 ?>

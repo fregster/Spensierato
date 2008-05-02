@@ -163,11 +163,12 @@ class elementDefault
 				foreach($this->tags as $key => $value)
 				{
 					$data = common::node_from_xml($dbxml, '/data/'.$key);
-					if($value == 'html') { $data = htmlentities($data); }
-					strip_tags($data);
+//					if($value == 'html') { $data = htmlentities($data); }
+//					strip_tags($data);
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 				}
 				$built_xml .= '</data>';
+				die($built_xml);
 				$this->data = $built_xml;
 			}
 			else

@@ -162,14 +162,14 @@ class elementDefault
 				$built_xml = '<data>';
 				foreach($this->tags as $key => $value)
 				{
-					print_r($db);
+//					print_r($db);
 //					echo('<br />xml: '.$dmxml);
 					$data = common::node_from_xml($dbxml, '/data/'.$key);
 //					echo('<br />data '.$data);
 //					echo('<br />key '.$key);
 //					echo('<br />value '.$value);
-//					if($value == 'html') { $data = htmlentities($data); }
-//					strip_tags($data);
+					if($value == 'html') { $data = htmlentities($data); }
+					strip_tags($data);
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 				}
 				$built_xml .= '</data>';

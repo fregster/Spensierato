@@ -84,7 +84,7 @@ class elementDefault
 		}
 		$xml .= '</xml>';
 		
-		die($xml);
+		echo($xml);
 		
 		//Check data
 		foreach($this->tags as $key => $value)
@@ -100,6 +100,8 @@ class elementDefault
 				$built_xml .= '<'.$key.'>'.$data.'</'.$key.'>';
 			}
 		}
+		
+		die($built_xml);
 		
 		if($draft)
 		{

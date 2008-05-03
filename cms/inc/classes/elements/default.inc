@@ -84,6 +84,8 @@ class elementDefault
 		}
 		$xml .= '</xml>';
 		
+		die($xml);
+		
 		//Check data
 		foreach($this->tags as $key => $value)
 		{

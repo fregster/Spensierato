@@ -84,8 +84,6 @@ class elementDefault
 		}
 		$xml .= '</xml>';
 		
-		echo($xml);
-		
 		//Check data
 		foreach($this->tags as $key => $value)
 		{
@@ -100,8 +98,6 @@ class elementDefault
 				$built_xml .= '<'.$key.'>'.common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES))).'</'.$key.'>';
 			}
 		}
-		
-		die($built_xml);
 		
 		if($draft)
 		{

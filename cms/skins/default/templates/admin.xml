@@ -52,7 +52,7 @@
 				</xsl:element>
 				
 				<xsl:element name="form">
-					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit</xsl:attribute>
+					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
 					<xsl:attribute name="method">POST</xsl:attribute>
 					<xsl:attribute name="id">new_<xsl:value-of select="/page/@id" /></xsl:attribute>
 						<p>New Element <xsl:call-template name="new_element" /> 
@@ -66,7 +66,7 @@
 		</xsl:template>
 		
 		<xsl:template name="new_element">
-			<select>
+			<select name="new_type">
 				<option value="newPage">Child Page</option>
 				<xsl:for-each select="/page/settings/elementTypes/setting">
 					<xsl:element name="option">

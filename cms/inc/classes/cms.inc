@@ -482,8 +482,15 @@ class CMS
 				{
 					if(Security::singleton()->can_edit($value))
 					{
-						$element = Element::type($_POST['new_type']);
-						$element->create($value);
+						if($_POST['new_type'] == 'newPage')
+						{
+							$this->create_new_page($value);
+						}
+						else
+						{
+							$element = Element::type($_POST['new_type']);
+							$element->create($value);
+						}
 					}
 				}
 				else
@@ -545,6 +552,14 @@ class CMS
 			default:
 			    die('500 Unable in include any content because type (' . $type . ') unknown  (' . $value.')');
 		}
+	}
+	
+	private function create_new_page($parent_id)
+	{
+		$sort = database::Singleton()->sql_max_field('tbl_pages', 'sort', array('parent_id'), array($parent_id));
+		$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array($parent_id, $time, user::Singleton()->id()));
+		common::redirect($id);
+		
 	}
 	
 	private function get_html()

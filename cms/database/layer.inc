@@ -422,6 +422,34 @@ class Database
 //end 
 	}
 
+	public function sql_insert($table, $fields, $values)
+	{
+		if(	(count($fields)) != (count($values))	)
+		{
+			return false;
+		}
+		
+		$i = 0;
+		while($i <= (count($fields) - 1))
+		{
+			$sql_temp_fields = $sql_temp_fields . '`'.$this->sql_clean_input($fields[$i]) .'` ';
+			if($i < (count($fields) - 1)) { $sql_temp_fields .=', '; }
+			$i++;
+		}
+		
+		$i = 0;
+		while($i <= (count($values) - 1))
+		{
+			$sql_temp_values = $sql_temp_values . '"'.$this->sql_clean_input($values[$i]) .'" ';
+			if($i < (count($values) - 1)) { $sql_temp_values .=', '; }
+			$i++;
+		}
+		
+		$sql = 'INSERT INTO '. $this->sql_clean_input($table) . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
+		
+		$this->sql_exe($sql, $values, true);
+	}
+	
 	//$Values is for when I get around to implimenting MDB2 properly!
 	private function sql_exe($sql, $values, $writeuser = false)
 	{

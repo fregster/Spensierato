@@ -289,7 +289,8 @@ class Database
 	public function sql_max_field($table, $field)
 	{
 		$sql = 'SELECT max( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`';
-		return $this->sql_select_exe($sql, NULL, TRUE);
+		$result = $this->sql_select_exe($sql, NULL, TRUE);
+		return $result[0]['max( sort )'];
 	}
 	
 	//SQL Update time field query

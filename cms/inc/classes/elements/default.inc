@@ -33,11 +33,8 @@ class elementDefault
 		$this->id = database::Singleton()->sql_insert('tbl_elements', array('type', 'created', 'creator'), array(__CLASS__, $time, user::Singleton()->id()));
 		$sort = database::Singleton()->sql_max_field('tbl_page_elements', 'sort');
 		
-		print_r($this->id);
-		print_r($sort);
-		die();
-		database::Singleton()->sql_insert('tbl_page_elements', array('page_id', 'element_id', 'main','ts', 'sort'), array($main_page, $this->id, 1, $time));
-		database::Singleton()->sql_insert('tbl_elements_data', array('id', 'data'), array($id));
+		database::Singleton()->sql_insert('tbl_page_elements', array('page_id', 'element_id', 'main','ts', 'sort'), array($main_page, $this->id, 1, $time, $sort+1));
+		database::Singleton()->sql_insert('tbl_elements_data', array('id', 'data'), array($id, '<null />'));
 		common::redirect($main_page);
 	}
 	

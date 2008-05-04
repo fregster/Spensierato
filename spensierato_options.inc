@@ -5,7 +5,7 @@
 //Alows overwriting of the db settings with settings from this file
 //Must be GLOBAL as this var is called in the construct function
 //true / false
-Settings::Singleton()->new_setting('protect_db_settings', true);
+Settings::Singleton()->new_setting('protect_db_settings', true, true, false);
 
 //Setting Intro text
 //String
@@ -46,7 +46,7 @@ Settings::Singleton()->new_setting('show_copyright', true);
 //Setting skin
 //Set this to the path of the skin you wish to use
 //Folder name from cms/skins/
-Settings::Singleton()->new_setting('skin', 'default');
+Settings::Singleton()->new_setting('skin', 'default', false, true);
 
 //Setting send_as_xml
 //Set this to send the page as un-rendered XML (sends link to the stylesheet with XML)
@@ -60,12 +60,22 @@ Settings::Singleton()->new_setting('send_as_xml', false);
 //100000
 Settings::Singleton()->new_setting('max_file_size', 100000);
 
-//Setting js_minify /* Currently breaks JS */
-//clean the javascript to reduce the file size defaults to internal (1) just removes comments and break lines
+//Setting js_minify /* Currently breaks JS if not well formed */
+//clean the javascript to reduce the file size defaults to internal (1) just removes comments
 //0 no cleaning
-//1 use internal cleaner
-//2 use JSMin
-Settings::Singleton()->new_setting('js_minify', 0);
+//1 use internal cleaner coments only
+//2 use internal cleaner comments and line breaks //This and higher require wellformed JS
+//3 use JSMin
+Settings::Singleton()->new_setting('js_minify', 0, false, true);
+
+
+//Setting js_cache
+//This setting allows the javascript once built to be cached on the file system
+//The reduces the number of external scripts called, improves compression and reduces load on your server
+//The folder with in the CMS 'writable' or '/tmp/cms' needs to be writeable by the web server
+Settings::Singleton()->new_setting('js_cache', true, false, true);
+
+Settings::Singleton()->new_setting('css_minify', true, false, true);
 
 //Setting search
 //Allow site searching
@@ -75,17 +85,17 @@ Settings::Singleton()->new_setting('search', true);
 //Setting related_pages
 //Allow site related_pages searching
 //true / false
-Settings::Singleton()->new_setting('related_pages', true);
+Settings::Singleton()->new_setting('related_pages', true, false, true);
 
 //Setting search_with_security
 //Allow searching when a user is logged in to include pages with security
 //Slower but gives more results
 //true / false
-Settings::Singleton()->new_setting('search_with_security', true);
+Settings::Singleton()->new_setting('search_with_security', true, false, true);
 
 //Setting cache_use_ETags
 //Might only work on unix style file systems
-Settings::Singleton()->new_setting('cache_use_ETags', true);
+Settings::Singleton()->new_setting('cache_use_ETags', true, false, true);
 
 //Setting site_option_showpagetime
 //true / false
@@ -94,7 +104,7 @@ Settings::Singleton()->new_setting('site_option_showpagetime', true);
 //Setting tidy
 //Askes the render method to call tidy on the html output, the default skin should not need this but its here anyway.
 //true / false
-Settings::Singleton()->new_setting('tidy', true);
+Settings::Singleton()->new_setting('tidy', true, false, true);
 
 //Site file options
 Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'));
@@ -105,24 +115,24 @@ Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/
 Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['site_root'] . '/js/'));
 
 //Temporay uploads folder
-Settings::Singleton()->new_setting('cms_folder_uploads', 'documents/uploads/tmp/');
+Settings::Singleton()->new_setting('cms_folder_uploads', 'documents/uploads/tmp/', false, true);
 
 //Permanant uploads folder
-Settings::Singleton()->new_setting('cms_folder_downloads', 'documents/uploads/');
+Settings::Singleton()->new_setting('cms_folder_downloads', 'documents/uploads/', false, true);
 
 //Unscaled images
-Settings::Singleton()->new_setting('cms_folder_orig_images', 'documents/uploads/original_images/');
+Settings::Singleton()->new_setting('cms_folder_orig_images', 'documents/uploads/original_images/', false, true);
 
 /* Session security */
 //Setting session_security_enhanced
 //Requires that the headers for the user_agent is constant with when the session was created
 //true / false
-Settings::Singleton()->new_setting('session_security_enhanced', true);
+Settings::Singleton()->new_setting('session_security_enhanced', true, false, true);
 
 //Setting session_security_ip
 //Requires the origonating IP to be constant with when the session was created
 //true / false
-Settings::Singleton()->new_setting('session_security_ip', false);
+Settings::Singleton()->new_setting('session_security_ip', false, false, true);
 
 //Setting login_capthca
 //Requires the user to enter a security code when login in
@@ -148,16 +158,16 @@ Settings::Singleton()->new_setting('login_capthca_remember', true);
 //			2 Log SQL (All)
 //			5 Force Displaying SQL
 //			10 Save debug to file
-Settings::Singleton()->new_setting('debug', 1);
+Settings::Singleton()->new_setting('debug', 1, false, true);
 
 //Setting debug_log_folder
 //string path to the debug log folder
 //Default = '/var/log/cms'
-Settings::Singleton()->new_setting('debug_log_folder', '/var/log/cms');
+Settings::Singleton()->new_setting('debug_log_folder', '/var/log/cms', false, true);
 
 //Encryption hash type used for passwords standard is md5 or sha1 (min recomended) other types may require PECL hash installing
 //Note changing this once users have entered there passwords will require reseting ALL there accounts.
-Settings::Singleton()->new_setting('site_option_encryption', 'sha256');
+Settings::Singleton()->new_setting('site_option_encryption', 'sha256', false, true);
 
 //Setting google_ads
 //This requires google_ad_slot and google_ad_client to also be set
@@ -173,7 +183,7 @@ Settings::Singleton()->new_setting('google_ad_height', 150);
 Settings::Singleton()->new_setting('css_mobile', true);
 
 //Load the random key into the settings singleton
-Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key']);
+Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key'], true, true);
 
 //Setting update_version_check
 //To enable auto version checking set this value to the update server

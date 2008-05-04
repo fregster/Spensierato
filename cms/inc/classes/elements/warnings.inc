@@ -15,7 +15,6 @@ class elementWarnings extends elementDefault
 			$this->data = '<data>'. warnings::Singleton()->get_as_xml() .'</data>';
 			$this->search = NULL;
 	}
+	
 }
-
-
 ?>

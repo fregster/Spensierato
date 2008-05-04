@@ -43,6 +43,7 @@ class elementLogin extends elementDefault
 		$this->data = '<data>'. htmlentities($html, ENT_QUOTES, Settings::Singleton()->get_setting('char_set')) .'</data>';
 		$this->search = NULL;
 	}
+
 }
 
 

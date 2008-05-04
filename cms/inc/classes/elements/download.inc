@@ -10,7 +10,7 @@ class elementDownload extends elementDefault
 		$this->image = 'download.png';
 		$this->edit_height = 600;
 	}
+
+
 }
-
-
 ?>

@@ -10,7 +10,6 @@ class elementText extends elementDefault
 		$this->allowed_tags(array('html' => 'html'));
 		$this->edit_height = 600;
 	}
+	
 }
-
-
 ?>

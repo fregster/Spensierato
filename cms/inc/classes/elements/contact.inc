@@ -10,7 +10,6 @@ class elementContact extends elementDefault
 		$this->allowed_tags(array('name' => 'text', 'email' => 'email', 'userid' => 'numeric'));
 		$this->edit_height = 600;
 	}
+
 }
-
-
 ?>

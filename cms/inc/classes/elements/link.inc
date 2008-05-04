@@ -11,7 +11,6 @@ class elementLink extends elementDefault
 		$this->allowed_tags(array('text' => 'text', 'href' => 'href'));
 		$this->edit_height = 600;
 	}
+
 }
-
-
 ?>

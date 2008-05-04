@@ -10,7 +10,6 @@ class elementImage extends elementDownload
 		$this->image = 'image.png';
 		$this->allowed_tags(array('href' => 'href'));
 	}
+
 }
-
-
 ?>

@@ -8,7 +8,7 @@ class elementAccount extends elementDefault
 		$this->image = 'account.png';
 		$this->edit_height = 600;
 	}
-	
+
 	protected function get_data()
 	{
 		/*

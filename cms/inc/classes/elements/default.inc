@@ -30,9 +30,14 @@ class elementDefault
 	public function create($main_page)
 	{
 		$time = time();
-		$id = database::Singleton()->sql_insert('tbl_elements', array('type', 'created', 'creator'), array(__CLASS__, $time, user::Singleton()->id()));
-		database::Singleton()->sql_insert('tbl_elements_data', array('id'), array($id));
-		database::Singleton()->sql_insert('tbl_page_elements', array('page_id', 'element_id', 'main','ts'), array($main_page, $id, 1, $time));
+		$this->id = database::Singleton()->sql_insert('tbl_elements', array('type', 'created', 'creator'), array(__CLASS__, $time, user::Singleton()->id()));
+		$sort = database::Singleton()->sql_max_field('tbl_page_elements', 'sort');
+		
+		print_r($this->id);
+		print_r($sort);
+		die();
+		database::Singleton()->sql_insert('tbl_page_elements', array('page_id', 'element_id', 'main','ts', 'sort'), array($main_page, $this->id, 1, $time));
+		database::Singleton()->sql_insert('tbl_elements_data', array('id', 'data'), array($id));
 		common::redirect($main_page);
 	}
 	
@@ -99,7 +104,11 @@ class elementDefault
 			if($key == 'title')
 			{
 				$title = new SimpleXMLElement($xml);
-				$title = ''.$title->title;				
+				$title = ''.$title->title;
+				if(strlen($title) < 2)
+				{
+					$title = NULL;
+				}
 			}
 			else
 			{

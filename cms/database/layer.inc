@@ -286,6 +286,12 @@ class Database
 	
 	}
 	
+	public function sql_max_field($table, $field)
+	{
+		$sql = 'SELECT max( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`';
+		return $this->sql_exe($sql);
+	}
+	
 	//SQL Update time field query
 	public function sql_update_time($table, $id)
 	{
@@ -449,7 +455,7 @@ class Database
 		
 		$sql = 'INSERT INTO '. $table . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 		
-		$this->sql_exe($sql, $values, true);
+		$this->sql_exe($sql, NULL, true);
 		return $this->write->lastInsertID($table,'id');
 	}
 	

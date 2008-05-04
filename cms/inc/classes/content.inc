@@ -176,7 +176,7 @@ class Content
 				{
 					array_push($ids, $id['element_id']);
 				}
-				$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($ids), NULL, NULL, options::Singleton()->get_option('admin_mode'));
+				$data = Database::Singleton()->sql_select(array('*'), 'tbl_elements', array('id'), array($ids), NULL, NULL, options::Singleton()->get_option('admin_mode'));
 				
 				$i=0;
 				foreach($data as $data)

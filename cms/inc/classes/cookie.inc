@@ -96,7 +96,7 @@ class cookie
 	
 	private function key_value()
 	{
-		$key_value = md5('randomtextstringhere'.$this->salt());
+		$key_value = md5(Settings::singleton()->get_setting('random_key').$this->salt());
 		
 		return $key_value;
 	}
@@ -124,21 +124,23 @@ class cookie
 		}
 	}
 	
-	private function encrypt($decrypted_text)
+	private function encrypt($decrypted_text, $key = NULL)
 	{	
 		if($this->encryption)
 		{
-			return mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->key_value(), $decrypted_text, MCRYPT_MODE_ECB, $this->iv);
+			if($key == NULL) { $key = $this->key_value(); }
+			return mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $decrypted_text, MCRYPT_MODE_ECB, $this->iv);
 		}
 		
 		return $decrypted_text;
 	}
 	
-	private function decrypt($encrypted_text)
-	{
+	private function decrypt($encrypted_text, $key = NULL)
+	{	
 		if($this->encryption)
 		{
-			return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key_value(), $encrypted_text, MCRYPT_MODE_ECB, $this->iv);
+			if($key == NULL) { $key = $this->key_value(); }
+			return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $encrypted_text, MCRYPT_MODE_ECB, $this->iv);
 		}
 		
 		return $encrypted_text;

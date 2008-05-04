@@ -31,21 +31,32 @@ abstract class javascript
 		$cachedir = Settings::singleton()->get_setting('cms_root') . '/writeable/cache';
 		$jsdir    = Settings::singleton()->get_setting('cms_root') . '/js';
 
-		if(is_writable($cachedir))
+		if(Settings::singleton()->get_setting('js_cache'))
 		{
-			$cache 	  = true;
-		}
-		else
-		{
-			$cachedir = '/tmp/cms';
 			if(is_writable($cachedir))
 			{
 				$cache 	  = true;
 			}
 			else
 			{
-				$cache 	  = false;
+				if(is_writable(Settings::singleton()->get_setting('cms_root') . '/writeable'))
+				{
+					mkdir($cachedir);
+				}
+				$cachedir = '/tmp/cms';
+				if(is_writable($cachedir))
+				{
+					$cache 	  = true;
+				}
+				else
+				{
+					$cache 	  = false;
+				}
 			}
+		}
+		else
+		{
+			$cache 	  = false;
 		}
 		
 		//Create a hash of the file names for createing and checking a single unique cache file
@@ -145,8 +156,13 @@ abstract class javascript
 				//Use internal code minification
 				$contents = Common::remove_js_comments(file_get_contents($contents));
 			    break;
-			
+			    
 			case '2':
+				//Use internal code minification
+				$contents = Common::remove_js_comments(file_get_contents($contents));
+			    break;
+			
+			case '3':
 				//Use JSMini
 				$contents =  JSMin::minify(file_get_contents($contents));
 			    break;

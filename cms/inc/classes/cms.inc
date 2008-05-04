@@ -52,6 +52,7 @@ class CMS
 		{
 			$time = Common::time_with_microseconds();
 		}
+		$this->time_start = time();
 		
 		//Get path vars
 		$this->path_vars = Common::get_path_vars();
@@ -69,6 +70,11 @@ class CMS
 
 		//Static includes folder
 		Settings::Singleton()->new_setting('site_folder_static_includes', ($this->cms_root . '/inc/static/'));
+	}
+	
+	public function time()
+	{
+		return $this->time_start;
 	}
 	
 	/**
@@ -306,6 +312,9 @@ class CMS
 				
 			case 'LOGIN':
 				//CMS Login
+				
+				//Check cookies are enabled first
+				Common::cookie_check();
 				if($_SERVER['REQUEST_METHOD'] == 'GET')
 				{
 					//If not loged in load box else redirect to $value

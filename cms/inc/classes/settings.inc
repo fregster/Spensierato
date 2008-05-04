@@ -39,13 +39,13 @@ class Settings
 		}
 	}
 
-	public function new_setting($name, $value, $protected = false)
+	public function new_setting($name, $value, $protected = false, $hidden = false)
 	{
 			if(!isset($this->settings[$name]))
 			{
 				$this->settings[$name] = array();
 			}
-			$setting_details = array('protected' => $protected, 'value' => $value);
+			$setting_details = array('protected' => $protected, 'hidden' => $hidden, 'value' => $value);
 			array_push($this->settings[$name], $setting_details);
 	}
 	
@@ -74,7 +74,10 @@ class Settings
 		foreach($this->settings as $setting)
 		{
 			$key = array_keys($this->settings);
-			$settings[$key[$i]] = $setting[0]['value'];
+			if($setting[0]['hidden'] != true)
+			{
+				$settings[$key[$i]] = $setting[0]['value'];
+			}
 			$i++;
 		}
 		return Common::array_to_xml($settings, $serializer_options);

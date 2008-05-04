@@ -162,12 +162,16 @@ class elementDefault
 				$built_xml = '<data>';
 				foreach($this->tags as $key => $value)
 				{
-//					print_r($db);
-//					echo('<br />xml: '.$dmxml);
-					$data = common::node_from_xml($dbxml, '/data/'.$key);
-//					echo('<br />data '.$data);
-//					echo('<br />key '.$key);
-//					echo('<br />value '.$value);
+					if($key == 'title')
+					{
+						$data = Database::Singleton()->sql_select_first(array('title'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);
+						$data = $data['title'];
+					}
+					else
+					{
+						$data = common::node_from_xml($dbxml, '/data/'.$key);
+					}
+					
 					if($value == 'html') { $data = htmlentities($data); }
 					strip_tags($data);
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';

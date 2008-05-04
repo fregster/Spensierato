@@ -38,16 +38,57 @@
 </div>
 			</xsl:if>
 		</xsl:template>
+		
+		<xsl:template name="admin_edit_bar">
+		<xsl:if test="/page/options/admin_mode = 1">
+		<xsl:if test="/page/security/can_edit = 1">
+			<xsl:element name="div">
+				<xsl:attribute name="class">element_header</xsl:attribute>
+				Page Title "<xsl:value-of select="/page/@title" />" | 
+				<xsl:element name="a">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/page_details/<xsl:value-of select="/page/@id" /></xsl:attribute>
+					<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/tools/page_details/<xsl:value-of select="/page/@id" />', 650, 450, pageReload); return false;</xsl:attribute>
+					Page Details
+				</xsl:element>
+				
+				<xsl:element name="form">
+					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit</xsl:attribute>
+					<xsl:attribute name="method">POST</xsl:attribute>
+					<xsl:attribute name="id">new_<xsl:value-of select="/page/@id" /></xsl:attribute>
+						<p>New Element <xsl:call-template name="new_element" /> 
+						<input type="submit" value="Create" />
+						</p>
+				</xsl:element>
+			</xsl:element>
+			<br />
+		</xsl:if>
+		</xsl:if>
+		</xsl:template>
+		
+		<xsl:template name="new_element">
+			<select>
+				<option value="newPage">Child Page</option>
+				<xsl:for-each select="/page/settings/elementTypes/setting">
+					<xsl:element name="option">
+						<xsl:attribute name="value"><xsl:value-of select="./class" /></xsl:attribute>
+						<xsl:if test="./class = 'elementText'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="./name" />
+					</xsl:element>
+				</xsl:for-each>
+			</select>
+		</xsl:template>
 	
 		<xsl:template name="element_admin_header">
 		<!-- If in admin show admin header -->
 		<xsl:if test="/page/options/admin_mode = 1">
 			<xsl:element name="div">
 				<xsl:attribute name="id">eid_admin_<xsl:value-of select="./@id" /></xsl:attribute>
-				<xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute>
+				<xsl:attribute name="title"><xsl:value-of select="./data/title" /></xsl:attribute>
 				<xsl:attribute name="class">element_header</xsl:attribute>
 				<div class="sprite sprite-accept" />
-				This is a <xsl:value-of select="./@name" />
+				<xsl:value-of select="./@etype" /> | <xsl:value-of select="./data/title" />
 				
 				<xsl:element name="a">
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="./@id" /></xsl:attribute>
@@ -55,7 +96,6 @@
 					<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="./@id" />', 650, <xsl:value-of select="./@eh" />, pageReload); return false;</xsl:attribute>
 					Edit Content
 				</xsl:element>
-				this is just a lot of junk text to mess about the styling to see what happens as the div grows and grows and grows etc, this should evently wrap to the next line but push the div to the max width of the container div.
 			</xsl:element>			
 		</xsl:if>
 	</xsl:template>

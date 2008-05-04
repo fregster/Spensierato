@@ -285,7 +285,7 @@ abstract class Common
 		return Common::remove_extra_lines($input);
 	}
 	
-	public function remove_js_comments($code) 
+	public static function remove_js_comments($code) 
 	{  
      $mq = $sq = $mc = $sc = false;  
      $output = "";  
@@ -366,6 +366,32 @@ abstract class Common
 		    	return($result);
 			}
 		}
+	}
+
+	public static function cookie_check()
+	{
+		if((!isset($_SESSION['cookie'])) and (isset($_GET['cookie'])))
+		{
+			//The session values have not been reloaded
+			if($_GET['cookie'] > (time() - 900))
+			{
+				//The session has probably not been reloaded because the session has timed out
+				warnings::Singleton()->register('Cookies are disabled', 'Your browser does not support cookies, logging in is disabled', 0);
+				return false;
+			}
+		}
+		
+		if(isset($_SESSION['cookie']))
+		{
+			//The session has been reloaded
+			options::Singleton()->set_option('cookie', true);
+			return true;
+		}
+		
+		//Session not checked
+		$_SESSION['cookie'] = true;
+		header('Location: ?cookie='.time());
+		die();
 	}
 }
 ?>

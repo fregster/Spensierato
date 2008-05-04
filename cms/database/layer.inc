@@ -338,7 +338,7 @@ class Database
 	
 	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array())
 	{
-		
+		$table = $this->prefix.$this->sql_clean_input($table);
 		if(	(count($where_fields)) != (count($where_values))	)
 		{
 			return false;
@@ -349,7 +349,7 @@ class Database
 			return false;
 		}
 		
-		$sql = 'IF EXISTS (SELECT * FROM '. $this->sql_clean_input($table) . ' AS t1 ';
+		$sql = 'IF EXISTS (SELECT * FROM '. $table . ' AS t1 ';
 		
 		
 		$i = 0;
@@ -402,7 +402,7 @@ class Database
 		
 		//Simple insert query
 		
-		$sql .= 'INSERT INTO '. $this->sql_clean_input($table) . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
+		$sql .= 'INSERT INTO '. $table . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 		
 		$sql .= ' end ';
 		
@@ -424,6 +424,8 @@ class Database
 
 	public function sql_insert($table, $fields, $values)
 	{
+		$table = $this->prefix.$this->sql_clean_input($table);
+		
 		if(	(count($fields)) != (count($values))	)
 		{
 			return false;
@@ -445,9 +447,10 @@ class Database
 			$i++;
 		}
 		
-		$sql = 'INSERT INTO '. $this->sql_clean_input($table) . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
+		$sql = 'INSERT INTO '. $table . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 		
 		$this->sql_exe($sql, $values, true);
+		return $this->write->lastInsertID($table,'id');
 	}
 	
 	//$Values is for when I get around to implimenting MDB2 properly!

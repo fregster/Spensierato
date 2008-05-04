@@ -27,6 +27,15 @@ class elementDefault
 		}
 	}
 
+	public function create($main_page)
+	{
+		$time = time();
+		$id = database::Singleton()->sql_insert('tbl_elements', array('type', 'created', 'creator'), array(__CLASS__, $time, user::Singleton()->id()));
+		database::Singleton()->sql_insert('tbl_elements_data', array('id'), array($id));
+		database::Singleton()->sql_insert('tbl_page_elements', array('page_id', 'element_id', 'main','ts'), array($main_page, $id, 1, $time));
+		common::redirect($main_page);
+	}
+	
 	public function build($id)
 	{
 		$this->id = $id;

@@ -476,25 +476,39 @@ class CMS
 				break;
 				
 			case 'EDITSAVE':
-				if(Security::singleton()->can_edit_element($value))
+				//Is this an update or createing a new element
+				//TODO remove refrences to POST
+				if(isset($_POST['new_type']))
 				{
-					$element = Element::type($value);
-					$element->build($value);
-					if($element->save(false))
+					if(Security::singleton()->can_edit($value))
 					{
-						//Save worked bounce to main page for element
-						//Common::redirect($element->main());
-						$this->saved($element->main());
-					}
-					else
-					{
-						//Save failed show error page
+						$element = Element::type($_POST['new_type']);
+						$element->create($value);
 					}
 				}
 				else
 				{
-					CMS::do403();
+					if(Security::singleton()->can_edit_element($value))
+					{
+						$element = Element::type($value);
+						$element->build($value);
+						if($element->save(false))
+						{
+							//Save worked bounce to main page for element
+							//Common::redirect($element->main());
+							$this->saved($element->main());
+						}
+						else
+						{
+							//Save failed show error page
+						}
+					}
+					else
+					{
+						CMS::do403();
+					}
 				}
+				
 				break;
 	
 			case 'OPTIONTOGGLE':

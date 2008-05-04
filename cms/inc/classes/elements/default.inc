@@ -38,11 +38,18 @@ class elementDefault
 		common::redirect($main_page);
 	}
 	
-	public function build($id)
+	public function build($id, $data = NULL, $link = NULL)
 	{
 		$this->id = $id;
-		$this->link = Database::Singleton()->sql_select_first(array('*'), 'tbl_page_elements', array('element_id', 'main'), array($id, 1));
-		$this->get_data();
+		if($link == NULL)
+		{
+			$this->link = Database::Singleton()->sql_select_first(array('*'), 'tbl_page_elements', array('element_id', 'main'), array($id, 1));
+		}
+		else
+		{
+			$this->link = $link;
+		}
+		$this->get_data($data);
 		Content::Singleton()->attach_content($this->render());
 	}
 	
@@ -165,12 +172,17 @@ class elementDefault
 		//$this->data = $this->data;
 	}
 	
-	protected function get_data()
+	protected function get_data($data = NULL)
 	{
 		if($this->id != 'blank')
 		{
-			$db = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, TRUE);
-			$dbxml = '<data>'.$db['data'].'</data>';
+			if($data == NULL)
+			{
+				$db = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
+				$data = $db['data'];
+			}
+
+			$dbxml = '<data>'.$data.'</data>';
 			
 			if(options::Singleton()->get_option('admin_mode'))
 			{

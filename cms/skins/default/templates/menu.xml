@@ -3,7 +3,36 @@
 		<xsl:element name="a">
 			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="id" /></xsl:attribute>
 			<xsl:attribute name="class">link</xsl:attribute>
-			<xsl:value-of select="title" />
+			<xsl:if test="/page/options/admin_mode = 1">
+				<xsl:if test="visible != '1'">
+				<em>
+					<xsl:if test="./deleted = '1'">
+						<!-- Hidden and deleted -->
+						<s><xsl:value-of select="title" /> [Hidden]</s>
+					</xsl:if>
+					<xsl:if test="./deleted != '1'">
+						<!-- Hidden and NOT Deleted -->
+						<xsl:value-of select="title" /> [Hidden]
+					</xsl:if>
+				</em>
+				</xsl:if>
+				
+				<xsl:if test="visible = '1'">
+					<xsl:if test="./deleted = '1'">
+						<!-- NOT hidden but IS deleted -->
+						<s><xsl:value-of select="title" /></s>
+					</xsl:if>
+					
+					<xsl:if test="./deleted != '1'">
+						<!-- NOT hidden and NOT deleted -->
+						<xsl:value-of select="title" />
+					</xsl:if>
+				</xsl:if>
+			</xsl:if>
+			
+			<xsl:if test="/page/options/admin_mode != 1">
+				<xsl:value-of select="title" />
+			</xsl:if>
 		</xsl:element>
 	</xsl:template>
 

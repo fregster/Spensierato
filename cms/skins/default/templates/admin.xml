@@ -49,6 +49,11 @@
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/page_details/<xsl:value-of select="/page/@id" /></xsl:attribute>
 					<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/tools/page_details/<xsl:value-of select="/page/@id" />', 650, 450, pageReload); return false;</xsl:attribute>
 					Page Details
+				</xsl:element> | 
+				<xsl:element name="a">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/page_security/<xsl:value-of select="/page/@id" /></xsl:attribute>
+					<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/tools/page_security/<xsl:value-of select="/page/@id" />', 650, 450, pageReload); return false;</xsl:attribute>
+					Page Security
 				</xsl:element>
 				
 				<xsl:element name="form">

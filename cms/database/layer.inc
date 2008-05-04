@@ -180,7 +180,7 @@ class Database
 		}
 		
 		
-		$sql = "SELECT $sql_temp_select FROM ".$this->prefix.$this->sql_clean_input($table);
+		$sql = "SELECT $sql_temp_select FROM `".$this->prefix.$this->sql_clean_input($table).'`';
 		
 		
 		//Include Where clause into sql if set
@@ -247,7 +247,7 @@ class Database
 					$order = 'DESC';
 				}
 				
-				$sql_temp_order = $sql_temp_order . ' ' . $this->sql_clean_input($order_fields[$i]) .' '. $order .' ';
+				$sql_temp_order = $sql_temp_order . ' `' . $this->sql_clean_input($order_fields[$i]) .'` '. $order .' ';
 				
 				if($i < (count($order_fields) - 1))
 				{
@@ -286,9 +286,58 @@ class Database
 	
 	}
 	
-	public function sql_max_field($table, $field)
+	public function sql_max_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		$sql = 'SELECT max( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`';
+		
+		//Include Where clause into sql if set
+		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
+		{
+			$i = 0;
+			while($i <= (count($where_values) - 1))
+			{
+				
+				//Check if this is an or statment
+				if(is_array($where_values[$i]))
+				{
+					$or_values = array();
+					foreach($where_values[$i] as $or)
+					{
+						array_push($or_values, $or);
+					}
+					
+					$j = 0;
+					while($j <= (count($or_values) - 1))
+					{
+						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
+						//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
+						
+						if($j < (count($or_values) - 1))
+						{
+							$sql_temp_where_or = $sql_temp_where_or . ' OR ';
+						}
+						$j++;
+					}
+					
+					$sql_temp_where = ' (' . $sql_temp_where_or . ') ';
+				}
+				else
+				{
+					$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($where_values[$i]) .'")';
+					//$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = ?';
+				}
+				
+				
+				if($i < (count($where_values) - 1))
+				{
+					$sql_temp_where = $sql_temp_where . ' AND ';
+				}
+				
+				$i++;
+			}
+			$sql = $sql	. ' WHERE ' . $sql_temp_where;
+		}
+		
 		$result = $this->sql_select_exe($sql, NULL, TRUE);
 		return $result[0]['max( sort )'];
 	}

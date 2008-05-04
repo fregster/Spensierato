@@ -2,6 +2,9 @@
 	<xsl:template name="body">
 		<div id="page_section_body">
 			<xsl:call-template name="admin_edit_bar" />
-			<xsl:apply-templates select="/page/body"/>
+			<xsl:for-each select="/page/body">
+			<xsl:sort select="element/@sort"/>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
 		</div>
 	</xsl:template>

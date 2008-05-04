@@ -184,7 +184,7 @@ class Menu
 	
 	private function get_children_of($id = 0)
 	{
-		if(options::Singleton()->get_setting('admin_mode'))
+		if(options::Singleton()->get_option('admin_mode'))
 		{
 			$where = array('parent_id');
 			$values = array($id);

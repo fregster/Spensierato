@@ -184,7 +184,17 @@ class Menu
 	
 	private function get_children_of($id = 0)
 	{
-		$details = Database::Singleton()->sql_select(array('id', 'title', 'parent_id', 'visible', 'deleted'), 'tbl_pages', array('parent_id', 'visible', 'deleted'), array($id, '1', '0'), array('sort'));
+		if(options::Singleton()->get_setting('admin_mode'))
+		{
+			$where = array('parent_id');
+			$values = array($id);
+		}
+		else
+		{
+			$where = array('parent_id', 'visible', 'deleted');
+			$values = array($id, '1', '0');
+		}
+		$details = Database::Singleton()->sql_select(array('id', 'title', 'parent_id', 'visible', 'deleted'), 'tbl_pages', $where, $values, array('sort'));
 
 		$i = 0;
 		if(is_array($details))

@@ -54,12 +54,15 @@ class Menu
 		
 		//Test if we are on a top page and so don't need parents and parallel links
 		$toppage = false;
-		foreach($menu_array['top'] as $top)
+		if(is_array($menu_array['top']))
 		{
-			if($top['id'] == $this->current_page)
+			foreach($menu_array['top'] as $top)
 			{
-				$toppage = true;
-			}
+				if($top['id'] == $this->current_page)
+				{
+					$toppage = true;
+				}
+		}
 		}
 		if(!$toppage)
 		{

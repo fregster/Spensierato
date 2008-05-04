@@ -166,19 +166,27 @@ class Content
 		//Only load elements from DB if page type = html
 		if(CMS::Singleton()->page_details['type'] == 'HTML')
 		{
-			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id'), array(currentPage::Singleton()->id()), array('sort'), NULL, TRUE);
+			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id'), array(currentPage::Singleton()->id()), array('sort'), NULL, options::Singleton()->get_option('admin_mode'));
 			$id_string = '';
 			
 			if(isset($elements[0]))
 			{
-				foreach($elements as $node)
+				$ids = array();
+				foreach($elements as $id)
 				{
-					$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($node['element_id']), NULL, NULL, TRUE);
+					array_push($ids, $id['element_id']);
+				}
+				$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($ids), NULL, NULL, options::Singleton()->get_option('admin_mode'));
+				
+				$i=0;
+				foreach($data as $data)
+				{
 					$element = Element::type($data['type']);
-					$element->build($node['element_id']);
+					$element->build($elements[$i]['element_id']);
 					
-					$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $node['ts']);
-					$this->e_string .=$node['element_id'];
+					$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $elements[$i]['ts']);
+					$this->e_string .=$elements[$i]['element_id'];
+					++$i;
 				}
 			}
 			else

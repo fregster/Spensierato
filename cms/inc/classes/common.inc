@@ -442,6 +442,7 @@ abstract class Common
 		
 		// Additional headers
 		$headers .= 'From: ' .$from. "\r\n";
+		$headers .= 'Return-path: ' .$from. "\r\n";
 		if(isset($cc_string)) { $headers .= 'Cc: ' .$cc_string. "\r\n"; }
 		if(isset($bcc_string)) { $headers .= 'Bcc: ' .$bcc_string. "\r\n"; }
 		

@@ -144,7 +144,7 @@ class user
 	 */
 	public function email()
 	{
-		return $this->user_details['username'].'<'.$this->user_details['email'].'>';
+		return $this->user_details['username'].' <'.$this->user_details['email'].'>';
 	}
 	
 	private function set_user_details()

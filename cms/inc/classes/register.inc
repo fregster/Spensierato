@@ -96,7 +96,7 @@ class Register
 		if($data['hash'] == $_GET['key'])
 		{
 			database::Singleton()->force_write_user();
-//				database::Singleton()->sql_delete_by_colum_equals('tbl_temp', 'id', $id);
+			database::Singleton()->sql_delete_by_colum_equals('tbl_temp', 'id', $id);
 			database::Singleton()->destroy_write_user();
 			user::Singleton()->create($data['username'], $data['email']);
 			die();

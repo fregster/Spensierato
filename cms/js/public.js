@@ -77,12 +77,14 @@ function searchFunction()
 //	className: 'ToolTip'
 //});
 
-var notes = new fx.Opacity('notifications', {duration: 800 });
+var notes;
 
 window.onload = function()
 { 
+	notes = new fx.Opacity('notifications', {duration: 800 });
 	notes.setOpacity(0);
-	document.getElementById('notifications').style.display = 'none';
+//	document.getElementById('notifications').style.display = 'none';
+	document.getElementById('notifications').style.visibility = 'hidden';
 }
 
 function pageReload(returnVal) 
@@ -95,7 +97,7 @@ function notification(text)
 {
 	var timer;
 	document.getElementById('notifications').innerHTML = text;
-	document.getElementById('notifications').style.display = '';
+//	document.getElementById('notifications').style.display = '';
 	
 	notes.toggle(0, 1)
 	

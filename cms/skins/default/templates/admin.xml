@@ -98,7 +98,7 @@
 				<xsl:attribute name="class">element_header</xsl:attribute>
 				
 				<xsl:element name="img">
-					<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 					<xsl:attribute name="class">sprite sprite-accept</xsl:attribute>
 					<xsl:attribute name="alt">Icon</xsl:attribute>
 				</xsl:element>

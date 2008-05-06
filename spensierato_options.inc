@@ -189,4 +189,13 @@ Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key'], true, t
 //To enable auto version checking set this value to the update server
 Settings::Singleton()->new_setting('update_version_check', 'spensierato.fryer.org.uk');
 
+//Setting user_incorect_logins
+//To enable brute force login protection set the max number of failed logins per username
+//On reaching the value a new password is generated
+Settings::Singleton()->new_setting('user_incorect_logins', 10);
+
+//Setting user_auto_email_password
+//To enable the system to automatacily email new passwords if re-set by the system
+//The email includes a note about account security
+Settings::Singleton()->new_setting('user_auto_email_password', true);
 ?>

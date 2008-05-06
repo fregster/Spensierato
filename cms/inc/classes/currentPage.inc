@@ -115,6 +115,20 @@ class currentPage
 							return array('type' => 'AJAX',
 										'value' => CMS::Singleton()->path_vars);
 							break;
+							
+					case 'register':
+						if($_SERVER['REQUEST_METHOD'] == 'POST')
+						{
+							//Submision of registration details
+							return array('type' => 'REGISTER_DETAILS',
+										'value' => CMS::Singleton()->path_vars[1]);
+						}
+						else
+						{
+							//Filling in registration forms
+							return array('type' => 'REGISTER',
+										'value' => CMS::Singleton()->path_vars[1]);
+						}
 					
 					//CMS Included Files page specific security checks
 					case 'cms':

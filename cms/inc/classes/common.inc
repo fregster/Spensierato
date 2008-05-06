@@ -393,5 +393,74 @@ abstract class Common
 		header('Location: ?cookie='.time());
 		die();
 	}
+
+	/**
+	 * This method currently only use PHP inbuilt mailer which is not very efficent if ussing on larger sites
+	 * then please write a method that extends or replaces this with one using PEAR::Mail and give me the patch!
+	 */
+	public static function email($to = array(), $from, $subject, $content, $html = true, $bcc = NULL, $cc = NULL)
+	{
+		if(is_array($to))
+		{
+			foreach($to as $to)
+			{
+				if(!common::email_address_check())
+				{
+					return false;
+				}
+				else
+				{
+					$to_string = $to_string . $to .', ';
+				}
+			}
+		}
+		else
+		{
+			$to_string = $to;
+		}
+		
+		if(!isset($to_string))
+		{
+			return false;
+		}
+		
+		//Subjects should not have line breaks in them or html
+		$subject = str_replace('\n', '', strip_tags($subject));
+		
+		//Email text should not be more than 70 chars
+		$message = wordwrap($content, 70);
+		
+		$headers = '';
+		if($html)
+		{
+			// To send HTML mail, the Content-type header must be set
+			$headers .= 'MIME-Version: 1.0' . "\r\n";
+			$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+			
+			$message = '<html><head><title>'.$subject.'</title></head><body>'.$message.'</body></html>';
+		}
+		
+		// Additional headers
+		$headers .= 'From: ' .$from. "\r\n";
+		if(isset($cc_string)) { $headers .= 'Cc: ' .$cc_string. "\r\n"; }
+		if(isset($bcc_string)) { $headers .= 'Bcc: ' .$bcc_string. "\r\n"; }
+		
+		// Mail it
+		return mail($to_string, $subject, $message, $headers);
+	}
+	
+	public static function group_email($bcc = array(), $subject, $content, $from = NULL, $html = true)
+	{
+		if($from == NULL)
+		{
+			$from = user::Singleton()->email();
+		}
+		return common::email($from, $from, $subject, $content, $bcc, $html);
+	}
+	
+	public static function email_address_check($email)
+	{
+		return true;
+	}
 }
 ?>

@@ -67,14 +67,24 @@ class user
 		}
 	}
 	
+	public function create($username, $email)
+	{
+		database::Singleton()->force_write_user();
+			$this->userid = database::singleton()->sql_insert('tbl_users', array('username'), array($username));
+			database::singleton()->sql_insert('tbl_users_data', array('data', 'user_id'), array('<email>'.$email.'</email>', $this->userid));
+			$this->set_user_details();
+			$this->reset_password();
+		database::Singleton()->destroy_write_user();
+		
+		$this->do_login();
+		Common::redirect(1);
+	}
+	
 	public function login()
 	{
-		//Regenerate the session ID
-		CMS::Singleton()->regenerate_session();
 		$auth = $this->site_auth($_POST['username'], $_POST['password'], $_POST['security_code']);
-		if($auth == true)
+		if($auth = true)
 		{
-			$this->set_user_details();
 			if(isset($_POST['login_rememberme']))
 			{
 				cookie::Singleton()->set_cookie('username', $_POST['username']);
@@ -83,9 +93,7 @@ class user
 			{
 				cookie::Singleton()->remove_cookie('login_rememberme');
 			}
-			//Load the previous option state
-			options::Singleton()->load_saved_options();
-			options::Singleton()->set_option('force_reload', true);
+			$this->do_login();
 		}
 		else
 		{
@@ -100,6 +108,24 @@ class user
 		//TODO
 	}
 	
+	public function reset_password()
+	{
+		//Create a password
+		$password = common::generate_random_string(6);
+		
+		$hash = hash(Settings::Singleton()->get_setting('site_option_encryption'), $password);
+		
+		//Save the password in the DB
+		$this->update_password($hash);
+		
+		//Email the password out
+		$message = 'Your password for your account on '. Settings::singleton()->get_setting('site_name_long').' has been reset<br />Your password is '.$password;
+		$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
+		$subject = 'Password change at '.settings::singleton()->get_setting('site_name_long');
+
+		return common::email($this->email(), $from, $subject, $message, true);
+	}
+	
 	public function user_details_as_xml()
 	{
 		$serializer_options = array ( 
@@ -110,6 +136,15 @@ class user
 			   'defaultTagName'  => 'detail'
 			);
 		return Common::array_to_xml($this->user_details, $serializer_options);
+	}
+
+	/**
+	 * Returns the users email address as string 'User <email@address.tld>'
+	 * Returns false if there is a problem
+	 */
+	public function email()
+	{
+		return $this->user_details['username'].'<'.$this->user_details['email'].'>';
 	}
 	
 	private function set_user_details()
@@ -150,6 +185,9 @@ class user
 			return 'Security Code was incorect';
 		}
 		
+		//Make username case insensative by forcing lowercase
+		$username = strtolower($username);
+		
 		//Get hash type for posted username
 		$hash_type_db = Database::Singleton()->sql_select_first(array('hash_type'), 'tbl_users', array('username'), array($username));
 		//Check hash type if count ! 1 then the username is not set
@@ -180,9 +218,7 @@ class user
 			{
 				$this->update_password($hash);
 			}
-			
 			$this->userid = $id['id'];
-			$_SESSION['userid'] = $this->userid;
 			return true;
 		}
 		else
@@ -193,7 +229,20 @@ class user
 	
 	private function update_password($hash)
 	{
-		return Database::Singleton()->sql_update_by_id(array('password', 'hash_type'), array($hash, Settings::Singleton()->get_setting('site_option_encryption')));
+		return Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('password', 'hash_type'), array($hash, Settings::Singleton()->get_setting('site_option_encryption')));
+	}
+	
+	private function do_login()
+	{
+		//Regenerate the session ID
+		CMS::Singleton()->regenerate_session();
+		
+		$_SESSION['userid'] = $this->userid;
+		$this->set_user_details();
+
+		//Load the previous option state
+		options::Singleton()->load_saved_options();
+		options::Singleton()->set_option('force_reload', true);
 	}
 	
 }

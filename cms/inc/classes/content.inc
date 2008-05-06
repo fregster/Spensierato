@@ -166,7 +166,7 @@ class Content
 		//Only load elements from DB if page type = html
 		if(CMS::Singleton()->page_details['type'] == 'HTML')
 		{
-			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id'), array(currentPage::Singleton()->id()), array('sort'), NULL, options::Singleton()->get_option('admin_mode'));
+			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id'), array(currentPage::Singleton()->id()), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
 			$id_string = '';
 			
 			if(isset($elements[0]))
@@ -176,13 +176,14 @@ class Content
 				{
 					array_push($ids, $id['element_id']);
 				}
-				$data = Database::Singleton()->sql_select(array('*'), 'tbl_elements', array('id'), array($ids), NULL, NULL, options::Singleton()->get_option('admin_mode'));
+				$data = Database::Singleton()->sql_select(array('*'), 'tbl_elements', array('id'), array($ids), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
+				$element_data = $db = Database::Singleton()->sql_select(array('*'), 'tbl_elements_data', array('id'), array($ids), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
 				
 				$i=0;
 				foreach($data as $data)
 				{
 					$element = Element::type($data['type']);
-					$element->build($elements[$i]['element_id']);
+					$element->build($elements[$i]['element_id'], $element_data[$i]['data']);
 					
 					$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $elements[$i]['ts']);
 					$this->e_string .=$elements[$i]['element_id'];
@@ -191,7 +192,7 @@ class Content
 			}
 			else
 			{
-				if($this->elements_attached != true)
+				if(($this->elements_attached != true) and (!options::singleton()->get_option('admin_mode')))
 				{
 					//$this->insert_xml(Render::Singleton()->render_element('STRING', 'There are no elements on this page yet'));
 					$element = Element::type('elementText');

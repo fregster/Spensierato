@@ -287,6 +287,47 @@ class CMS
 				$this->get_html();
 				break;
 				
+			case 'REGISTER':
+				//If not loged in load box else redirect to $value
+				if(User::Singleton()->is_logged_in())
+				{
+					Common::redirect($value);
+				}
+				else
+				{
+					if(isset($_GET['key']))
+					{
+						register::singleton()->verify_register();
+						die();
+					}
+					else
+					{
+						//Check cookies are enabled first
+						Common::cookie_check();
+
+						//Load CMS Registration box
+						$element = Element::type('elementRegister');
+						$element->build('Register');
+						$this->get_html($value);
+					}
+				}
+				break;
+				
+			case 'REGISTER_DETAILS':
+				if(User::Singleton()->is_logged_in())
+				{
+					Common::redirect($value);
+				}
+				else
+				{
+					//Do registration function
+					register::singleton()->new_registration();
+					$element = Element::type('elementRegister');
+					$element->build('Register');
+					$this->get_html($value);
+				}
+				break;
+				
 			case 'WARNINGS':
 				$element = Element::type('elementWarnings');
 				$element->build('Warnings');

@@ -5,7 +5,10 @@
 			<xsl:if test="/page/user/id = 0">
 				<xsl:element name="a">
 					<xsl:attribute name="class">link</xsl:attribute>
-					<xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/login/<xsl:value-of select="page/@id" /></xsl:attribute>Login</xsl:element>
+					<xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/login/<xsl:value-of select="page/@id" /></xsl:attribute>Login</xsl:element> | 
+					<xsl:element name="a">
+					<xsl:attribute name="class">link</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/register/<xsl:value-of select="page/@id" /></xsl:attribute>Register</xsl:element>
 			</xsl:if>
 			<xsl:if test="/page/user/id != 0">
 	Welcome back <xsl:value-of select="page/user/nickname" /> [<xsl:element name="a">

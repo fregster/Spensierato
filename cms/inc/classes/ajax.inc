@@ -9,6 +9,13 @@ class ajax
 				ajax::edit($vars[2]);
 			break;
 			
+			case 'register':
+				if(Capthca::Code_check($_POST['security_code']))
+				{
+					register::username_check($_POST['username']);
+				}
+			break;
+				
 			default:
 				print_r($vars);
 				die();

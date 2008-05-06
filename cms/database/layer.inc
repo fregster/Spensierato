@@ -10,6 +10,7 @@ class Database
 	private $prefix;
 	private $sql_db_type;
 	private $dsn;
+	private $dsn_default;
 	
 	private $sql_cache = array();
 	private $sql_cache_max_results = 20;
@@ -45,7 +46,7 @@ class Database
 	{
 		$this->prefix = $GLOBALS['table_prefix'];
 
-		$dsn = array(
+		$this->dsn_default = array(
 		    'phptype'  => $GLOBALS['database_driver'],
 		    'username' => $GLOBALS['database_user_read'],
 		    'password' => $GLOBALS['database_password'],
@@ -53,7 +54,7 @@ class Database
 		    'database' => $GLOBALS['database_name'],
 		);
 	
-		$this->read = $this->connect($dsn);
+		$this->read = $this->connect($this->dsn_default);
 	
 		//If logged in create db write user this should help prevent against SQL injection
 		//As only logged in can use the db writeable user
@@ -81,6 +82,25 @@ class Database
 		//A DSN has been set so create the connection with the specified options
 		//Create the read user
 		return $this->connect($dsn);
+	}
+	
+	public function force_write_user()
+	{
+		//Create write user
+		$this->dsn = array(
+		    'phptype'  => $GLOBALS['database_driver'],
+		    'username' => $GLOBALS['database_user_readwrite'],
+		    'password' => $GLOBALS['database_password'],
+		    'hostspec' => $GLOBALS['database_host'],
+		    'database' => $GLOBALS['database_name'],
+		);
+		$this->write = $this->connect($this->dsn);
+	}
+	
+	public function destroy_write_user()
+	{
+		unset($this->write);
+		$this->dsn = $this->dsn_default;
 	}
 	
 	private function connect($dsn)
@@ -422,8 +442,8 @@ class Database
 			return false;
 		}
 		
-		$sql = 'UPDATE `'. $this->sql_clean_input($table) . '` SET ';
-		
+		$sql = 'UPDATE `'. $this->prefix.$this->sql_clean_input($table) . '` SET ';
+
 		$i = 0;
 		$sql_temp_fields = '';
 		$sql_temp_values = '';
@@ -563,6 +583,13 @@ class Database
 		
 		$this->sql_exe($sql, NULL, true);
 		return $this->write->lastInsertID($table,'id');
+	}
+	
+	public function sql_delete_by_colum_equals($table, $col, $equals)
+	{
+		$table = $this->prefix.$this->sql_clean_input($table);
+		$sql = 'DELETE FROM '.$table.' WHERE `'.$this->sql_clean_input($col).'` = "'.$this->sql_clean_input($equals).'"';
+		return $this->sql_exe($sql, NULL, true);
 	}
 	
 	//$Values is for when I get around to implimenting MDB2 properly!

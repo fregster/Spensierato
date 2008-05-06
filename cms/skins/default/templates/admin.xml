@@ -16,7 +16,10 @@
 						<!--  If the user is a site admin show site warnings -->
 						<xsl:if test="/page/user/administrator = 1">
 							<xsl:if test="/page/warnings/warning">
-							| <div class="sprite sprite-delete" />
+							| <xsl:element name="img">
+								<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+								<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
+							</xsl:element>
 								<xsl:element name="a">
 									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/warnings</xsl:attribute>
 									<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/warnings', 650, 450, pageReload); return false;</xsl:attribute>
@@ -92,7 +95,11 @@
 				<xsl:attribute name="id">eid_admin_<xsl:value-of select="./@id" /></xsl:attribute>
 				<xsl:attribute name="title"><xsl:value-of select="./data/title" /></xsl:attribute>
 				<xsl:attribute name="class">element_header</xsl:attribute>
-				<div class="sprite sprite-accept" />
+				
+				<xsl:element name="img">
+					<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+					<xsl:attribute name="class">sprite sprite-accept</xsl:attribute>
+				</xsl:element>
 				<xsl:value-of select="./@etype" /> | <xsl:value-of select="./data/title" />
 				
 				<xsl:element name="a">

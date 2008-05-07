@@ -78,12 +78,9 @@ function searchFunction()
 //	className: 'ToolTip'
 //});
 
-var notes;
-
 window.onload = function()
 { 
-	notes = new Fx.Style('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
-	document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
+	init.notification();
 }
 
 function pageReload(returnVal) 
@@ -92,17 +89,27 @@ function pageReload(returnVal)
 	setTimeout("window.top.location.reload(true)",100);
 }
 
+var notes;
+var init;
+function init.notification()
+{
+	if(init != true)
+	{
+	init = true;
+	notes = new Fx.Style('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
+	document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
+	}
+}
+
 function notification(text)
 {
 	var timer;
 	document.getElementById('notifications').innerHTML = text;
-//	document.getElementById('notifications').style.display = '';
 	
 	notes.start(-0, 1);
 	
-	//After 2 seconds fade back out
-	timer=setTimeout("notes.start(1, 0);",2000);
+	//After 3 seconds fade back out
+	timer=setTimeout("notes.start(1, 0);",3000);
 	
 	return false;
-	
 }

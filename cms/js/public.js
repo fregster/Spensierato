@@ -105,7 +105,7 @@ function notification(text)
 	notes.start(-0, 1);
 	
 	//After 3 seconds fade back out
-	timer=setTimeout(notes.start(1, 0);,3000);
+	timer=setTimeout(notes.start(1, 0),3000);
 	
 	return false;
 }

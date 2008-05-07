@@ -66,7 +66,7 @@ Settings::Singleton()->new_setting('max_file_size', 100000);
 //1 use internal cleaner coments only
 //2 use internal cleaner comments and line breaks //This and higher require wellformed JS
 //3 use JSMin
-Settings::Singleton()->new_setting('js_minify', 1, false, true);
+Settings::Singleton()->new_setting('js_minify', 0, false, true);
 
 
 //Setting js_cache

@@ -115,13 +115,13 @@ Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/
 Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['site_root'] . '/js/'));
 
 //Temporay uploads folder
-Settings::Singleton()->new_setting('cms_folder_uploads', 'documents/uploads/tmp/', false, true);
+Settings::Singleton()->new_setting('cms_folder_uploads', 'writeable/uploads/tmp/', false, true);
 
 //Permanant uploads folder
-Settings::Singleton()->new_setting('cms_folder_downloads', 'documents/uploads/', false, true);
+Settings::Singleton()->new_setting('cms_folder_downloads', 'writeable/uploads/', false, true);
 
 //Unscaled images
-Settings::Singleton()->new_setting('cms_folder_orig_images', 'documents/uploads/original_images/', false, true);
+Settings::Singleton()->new_setting('cms_folder_orig_images', 'writeable/uploads/original_images/', false, true);
 
 /* Session security */
 //Setting session_security_enhanced

@@ -75,8 +75,7 @@ function searchFunction()
 //});
 function pageReload(returnVal) 
 {
-	//returnRefresh(returnVal);
-	setTimeout("window.top.location.reload(true)",100);
+	setTimeout(window.top.location.reload(true),100);
 }
 
 var notes;

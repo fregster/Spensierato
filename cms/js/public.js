@@ -81,7 +81,7 @@ var notes;
 
 window.onload = function()
 { 
-	notes = new Fx.Style('notifications', 'margin-top', {duration:500});
+	notes = new Fx.Style('notifications', 'top', {duration:500});
 	notes.hide;
 	
 	//new fx.Opacity('notifications', {duration: 800 });

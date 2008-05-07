@@ -81,9 +81,8 @@ var notes;
 
 window.onload = function()
 { 
-	notes = new Fx.Style('notifications', 'top', {duration:500});
-	notes.hide;
-	
+	notes = new Fx.Style('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
+
 	//new fx.Opacity('notifications', {duration: 800 });
 	//notes.setOpacity(0);
 //	document.getElementById('notifications').style.display = 'none';
@@ -101,10 +100,10 @@ function notification(text)
 	document.getElementById('notifications').innerHTML = text;
 //	document.getElementById('notifications').style.display = '';
 	
-	notes.start(-100, 100);
+	notes.start(-0, 1);
 	
 	//After 2 seconds fade back out
-	timer=setTimeout("notes.start(100, -100);",2000);
+	timer=setTimeout("notes.start(1, 0);",2000);
 	
 	return false;
 	

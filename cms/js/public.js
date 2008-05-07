@@ -73,12 +73,6 @@ function searchFunction()
 //var ToolTips = new Tips($$('.ToolTip'), {
 //	className: 'ToolTip'
 //});
-
-window.onload = function()
-{ 
-	initNotification();
-};
-
 function pageReload(returnVal) 
 {
 	//returnRefresh(returnVal);
@@ -109,3 +103,8 @@ function notification(text)
 	
 	return false;
 }
+
+window.onload = function()
+{ 
+	initNotification();
+};

@@ -2,8 +2,11 @@
 <xsl:template match="/">
         <html>
 			<xsl:call-template name="header"/>
-
+				
 			<xsl:element name="body">
+				<xsl:if test="/page/warnings/warning">
+					<xsl:attribute name="onload">notification('The site has configuration problems'); return false;</xsl:attribute>
+				</xsl:if>
 			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>
 			<div id="notifications" style="visibility: hidden;">Notifications</div>
 			<div id="site_frame">

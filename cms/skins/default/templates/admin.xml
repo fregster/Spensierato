@@ -24,7 +24,6 @@
 								<xsl:element name="a">
 									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/warnings</xsl:attribute>
 									<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/warnings', 650, 450, pageReload); return false;</xsl:attribute>
-									<xsl:attribute name="onload">notification('The site has configuration problems'); return false;</xsl:attribute>
 									View warnings
 								</xsl:element>
 		

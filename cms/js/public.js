@@ -44,15 +44,16 @@ function ajaxPost(url, parameters)
 function ajaxGetXML()
 {
 	//IE does not return responseXML
+	var xmldoc
 	if(window.ActiveXObject)
 	{
-		var xmldoc = new ActiveXObject("Microsoft.XMLDOM");
+		xmldoc = new ActiveXObject("Microsoft.XMLDOM");
 		xmldoc.async="false";
 		xmldoc.loadXML(http.responseText);
 	}
 	else
 	{
-		var xmldoc = http.responseXML;
+		xmldoc = http.responseXML;
 	}
 	
 	return xmldoc;

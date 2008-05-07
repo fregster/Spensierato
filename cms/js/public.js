@@ -1,7 +1,3 @@
-// JavaScript Document
-<!-- This code might not have all the copyright in as it can be removed as part of some compression techniques -->
-<!-- Please visit http://www.fryer.org.uk/blog/?page_id=36 for details -->
-
 function ajaxObject()
 {
 	var http = false;
@@ -17,7 +13,7 @@ function ajaxObject()
 	//If ActiveX is not available, use the XMLHttpRequest of Firefox/Mozilla etc. to load the document.
 	} else if (XMLHttpRequest) {
 		try {http = new XMLHttpRequest();}
-		catch (e) {http = false;}
+		catch (ee) {http = false;}
 	}
 	
 	return http;
@@ -70,7 +66,7 @@ function searchFunction()
 			{
 			        document.getElementById('page_section_main').innerHTML = http.responseText;
 			}
-		}
+		};
 }
 
 
@@ -81,7 +77,7 @@ function searchFunction()
 window.onload = function()
 { 
 	initNotification();
-}
+};
 
 function pageReload(returnVal) 
 {
@@ -93,7 +89,7 @@ var notes;
 var init;
 function initNotification()
 {
-	if(init != true)
+	if(init !== true)
 	{
 	init = true;
 	notes = new Fx.Style('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
@@ -109,7 +105,7 @@ function notification(text)
 	notes.start(-0, 1);
 	
 	//After 3 seconds fade back out
-	timer=setTimeout("notes.start(1, 0);",3000);
+	timer=setTimeout(notes.start(1, 0);,3000);
 	
 	return false;
 }

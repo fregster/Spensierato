@@ -57,8 +57,8 @@ function ajaxGetXML()
 
 function searchFunction()
 {
-        ajaxGet('http://www.fryer.org.uk/test/nuneaton/tools/search?s=', document.forms["searchform"].elements["searchtext"].value );
-        document.forms["searchform"].elements["searchtext"].value = '';
+        ajaxGet('http://www.fryer.org.uk/test/nuneaton/tools/search?s=', document.forms.searchform.elements.searchtext.value );
+        document.forms.searchform.elements.searchtext.value = '';
         
         http.onreadystatechange=function()
     	{

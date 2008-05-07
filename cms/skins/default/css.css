@@ -356,7 +356,6 @@ a.tooltip:hover span
 	left: 0px;
 	width: 100%;
 	background-color: red;
-	display: none;
 }
 
 .ToolTip-tip {

@@ -5,7 +5,7 @@
 
 			<xsl:element name="body">
 			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>
-			<div id="notifications">Notifications</div>
+			<div id="notifications style="visibility: hidden;">Notifications</div>
 			<div id="site_frame">
 				<div id="page_main">
 					<xsl:call-template name="banner"/>

@@ -27,7 +27,8 @@ class FileTransfer
 			
 			if($cache = true)
 			{
-				Cache::headers_allow_cache($file, true, 36000, 36000);
+				//Allow cache for 31 days
+				Cache::headers_allow_cache($file, true, 2678400, 2678400, true);
 			}
 			else
 			{

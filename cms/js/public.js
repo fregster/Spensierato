@@ -81,10 +81,12 @@ var notes;
 
 window.onload = function()
 { 
-	notes = new fx.Opacity('notifications', {duration: 800 });
-	notes.setOpacity(0);
+	notes = new Fx.Style('notifications', 'margin-top', {duration:500});
+	notes.hide;
+	
+	//new fx.Opacity('notifications', {duration: 800 });
+	//notes.setOpacity(0);
 //	document.getElementById('notifications').style.display = 'none';
-	document.getElementById('notifications').style.visibility = 'hidden';
 }
 
 function pageReload(returnVal) 
@@ -99,10 +101,10 @@ function notification(text)
 	document.getElementById('notifications').innerHTML = text;
 //	document.getElementById('notifications').style.display = '';
 	
-	notes.toggle(0, 1)
+	notes.start(-100, 100);
 	
 	//After 2 seconds fade back out
-	timer=setTimeout("notes.toggle(1, 0)",2000);
+	timer=setTimeout("notes.start(100, -100);",2000);
 	
 	return false;
 	

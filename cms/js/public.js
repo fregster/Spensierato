@@ -44,7 +44,7 @@ function ajaxPost(url, parameters)
 function ajaxGetXML()
 {
 	//IE does not return responseXML
-	var xmldoc
+	var xmldoc;
 	if(window.ActiveXObject)
 	{
 		xmldoc = new ActiveXObject("Microsoft.XMLDOM");

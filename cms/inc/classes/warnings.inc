@@ -39,10 +39,10 @@ class warnings
 		if(Options::Singleton()->get_option('admin_mode'))
 		{
 			//Check paths are writable
-			$paths = array(Settings::singleton()->get_setting('cms_folder_uploads'),
+			$paths = array( Settings::singleton()->get_setting('cms_root') . '/writeable',
+							Settings::singleton()->get_setting('cms_folder_uploads'),
 							Settings::singleton()->get_setting('cms_folder_downloads'),
-							Settings::singleton()->get_setting('cms_folder_orig_images'),
-							Settings::singleton()->get_setting('cms_root') . '/writeable'
+							Settings::singleton()->get_setting('cms_folder_orig_images')
 						);
 			
 			foreach($paths as $path)

@@ -80,7 +80,7 @@ function searchFunction()
 
 window.onload = function()
 { 
-	init.notification();
+	initNotification();
 }
 
 function pageReload(returnVal) 
@@ -91,7 +91,7 @@ function pageReload(returnVal)
 
 var notes;
 var init;
-function init.notification()
+function initNotification()
 {
 	if(init != true)
 	{

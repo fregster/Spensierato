@@ -163,14 +163,17 @@ class Menu
 			$parallel = $this->get_children_of($this->current_page_details['parent_id']);
 			
 			$i=0;
-			foreach($parallel as $link)
+			if(isset($parallel[0]))
 			{
-				if($link['id'] == $this->current_page)
+				foreach($parallel as $link)
 				{
-					unset($parallel[$i]);
-					break;
+					if($link['id'] == $this->current_page)
+					{
+						unset($parallel[$i]);
+						break;
+					}
+					$i++;
 				}
-				$i++;
 			}
 			return $parallel;
 		//}

@@ -95,10 +95,10 @@ function notification(text)
 	var timer;
 	document.getElementById('notifications').innerHTML = text;
 	
-	notes.start(-0, 1);
+	notes.start(-0, 0.8);
 	
 	//After 3 seconds fade back out
-	timer=setTimeout('notes.start(1, 0)',3000);
+	timer=setTimeout('notes.start(0.8, 0)',3000);
 	
 	return false;
 }

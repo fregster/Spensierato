@@ -101,6 +101,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$user_rw = post::variable('rw_user', 'sql');
 	$user_db_password = post::variable('db_password', 'sql');
 	
+	debug('Vars set');
 	/*
 	 * Create the db object
 	 */
@@ -108,13 +109,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		    											'username' => $username,
 													    'password' => $password,
 													    'hostspec' => $host));
+	debug('db connected');
 	$db->loadModule('Manager');
+	debug('Manager loaded');
 	/*
 	 * Create the database
 	 */
 	
 	$db->create_database($database);
 	
+	debug('DB created');
 	//Replace the db object with a new one in the database
 	$db = database::Singleton()->custom_db_object(array('phptype'  => $driver,
 		    											'username' => $username,
@@ -122,6 +126,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 													    'hostspec' => $host,
 														'database' => $database));
 	
+	debug('Connection replaced');
 	//Include the file which processes the SQL code
 	//Load aproprate sql file
 
@@ -130,6 +135,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		die('Unable to load install sql file for type '.$driver);
 	}
 	
+	debug('Loading setup file');
 	$sql = file_get_contents($driver);
 	
 	//Process sql
@@ -137,6 +143,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	
 	
 	//Execute sql
+	debug('Running...');
 	$db->direct_sql($sql);
 	
 	//Create the DB users and give permissions over the database
@@ -146,6 +153,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	'CREATE USER \''.$user_r.'\'@\'localhost\' [IDENTIFIED BY [PASSWORD] '.$user_db_password.']',
 	'GRANT SELECT ON '.$database.' TO '. $user_r);
 	
+	debug('Createing users and permissions');
 	foreach($user_create_sql as $sql)
 	{
 		$db->direct_sql($sql);
@@ -177,5 +185,14 @@ $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 	 */
 	fwrite($settings_file_handle, $settings_file_string);
 	fclose($settings_file_handle);
+	debug('Settings file created');
+	
+	echo('The site is now setup');
+}
+
+function debug($text)
+{
+	$debug = true;
+	if($debug){ echo('<br />'.$text); }
 }
 ?>

@@ -44,7 +44,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 		<div>Host: <input type="text" name="host" value="localhost" /></div>
 		<div>MDB2 Host type: <input type="text" name="type" value="mysqli" /></div>
 		<div>Username: <input type="text" name="username" value="root" /></div>
-		<div>Password: <input type="text" name="password" /></div>
+		<div>Password: <input type="password" name="password" /></div>
 	</div>
 
 	<div id="database">
@@ -67,7 +67,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 		If the password set is does not meet the recomended length an random password will also be created
 		<div>Read only username: <input type="text" name="r_user" value="spensierato_read" /></div>
 		<div>Read Write username: <input type="text" name="rw_user" value="spensierato_writ" /></div>
-		<div>Users password: <input type="text" name="db_password" value="<? echo(Common::generate_random_string(16)); ?>" /></div>
+		<div>Users password: <input type="password" name="db_password" value="<? echo(Common::generate_random_string(16)); ?>" /></div>
 	</div>
 	
 	<input type="submit" value="Create Site" />
@@ -81,7 +81,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	 * check the file
 	 * load the settings
 	 */
-	$settings_file_handle = fopen($settings_file, 'w+') or die("can't open file");
+	$settings_file_handle = fopen($settings_file, 'w+') or die('can\'t open file you may need to give the webserver temporay permissions over the install folder or create the setup file manual with write permissions for the webserver');
 	
 	
 	//SQL connection settings

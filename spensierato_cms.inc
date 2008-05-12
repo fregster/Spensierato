@@ -9,7 +9,10 @@ function get_site_host()
 $GLOBALS['site_root'] = get_site_host();
 
 //Include the Site setup code
-require_once('spensierato_setup.inc');
+if(is_file('spensierato_setup.inc'))
+{
+	require_once('spensierato_setup.inc');
+}
 
 //Include the CMS
 require_once('cms/cms_includes.inc');

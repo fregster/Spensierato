@@ -82,10 +82,16 @@ class CMS
 	* Use this function to initalise the CMS code
 	* It sets up all the vars required to use the run_cms method
 	*/
-	public function start()
+	public function start($install)
 	{
 		//Start the session
 		$this->start_session();
+		
+		if($install)
+		{
+			include($this->cms_root.'/install/install.inc');
+			die();
+		}
 		
 		//Call the methods to set all the required vars
 		//These should all be simple functions that do not require any external functions outside of CMS or Common and should not hit the DB
@@ -344,11 +350,6 @@ class CMS
 				$element = Element::type('elementAccess');
 				$element->build('access');
 				$this->get_html();
-				break;
-			
-			case 'INSTALL':
-				include($this->cms_root.'/install/install.inc');
-				die();
 				break;
 				
 			case 'LOGIN':

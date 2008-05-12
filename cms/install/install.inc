@@ -69,6 +69,8 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 		<div>Read Write username: <input type="text" name="rw_user" value="spensierato_writ" /></div>
 		<div>Users password: <input type="text" name="db_password" value="" /></div>
 	</div>
+	
+	<input type="submit" value="Create Site" />
 </form>
 <?
 }

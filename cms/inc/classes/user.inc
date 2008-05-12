@@ -82,12 +82,12 @@ class user
 	
 	public function login()
 	{
-		$auth = $this->site_auth($_POST['username'], $_POST['password'], $_POST['security_code']);
+		$auth = $this->site_auth(post::variable('username'), post::variable('password'), post::variable('security_code'));
 		if($auth = true)
 		{
-			if(isset($_POST['login_rememberme']))
+			if(isset(post::variable('login_rememberme')))
 			{
-				cookie::Singleton()->set_cookie('username', $_POST['username']);
+				cookie::Singleton()->set_cookie('username', post::variable('username'));
 			}
 			else
 			{

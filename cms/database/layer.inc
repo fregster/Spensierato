@@ -111,7 +111,7 @@ class Database
 		    die($mdb2->getMessage());
 		}
 		
-		if(isset($mods))
+		if(isset($mods[0]))
 		{
 			foreach($mods as $mod)
 			{

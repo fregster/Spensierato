@@ -75,13 +75,13 @@ class Database
 		$this->dsn = $dsn;
 	}
 	
-	public function custom_db_object($dsn)
+	public function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{
 		$this->dsn = $dsn;
 		
 		//A DSN has been set so create the connection with the specified options
 		//Create the read user
-		return $this->connect($dsn);
+		return $this->connect($dsn, $options, $mods);
 	}
 	
 	public function force_write_user()
@@ -103,12 +103,17 @@ class Database
 		$this->dsn = $this->dsn_default;
 	}
 	
-	private function connect($dsn)
+	private function connect($dsn, $options = NULL, $mods = NULL)
 	{	
 		$mdb2 =& MDB2::singleton($dsn, $options);
 		if (PEAR::isError($mdb2)) 
 		{
 		    die($mdb2->getMessage());
+		}
+		
+		foreach($mods as $mod)
+		{
+			$mdb2->loadModule($mod);
 		}
 		
 		return $mdb2;

@@ -139,6 +139,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	//Execute sql
 	$db->direct_sql($sql);
 	
+	//Create the DB users and give permissions over the database
+	//TODO allow connections from specified places
+	$user_create_sql = array('CREATE USER \''.$user_w.'\'@\'localhost\' [IDENTIFIED BY [PASSWORD] '.$user_db_password.']',
+	'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$database.' TO '. $user_w,
+	'CREATE USER \''.$user_r.'\'@\'localhost\' [IDENTIFIED BY [PASSWORD] '.$user_db_password.']',
+	'GRANT SELECT ON '.$database.' TO '. $user_r);
+	
+	foreach($user_create_sql as $sql)
+	{
+		$db->direct_sql($sql);
+	}
+	
 	/*
 	 * Build the settings file string
 	 */

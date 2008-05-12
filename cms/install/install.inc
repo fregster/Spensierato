@@ -108,10 +108,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$db = database::Singleton()->custom_db_object(array('phptype'  => $driver,
 		    											'username' => $username,
 													    'password' => $password,
-													    'hostspec' => $host));
+													    'hostspec' => $host),
+														NULL,
+														array('Manager'));
 	debug('db connected');
-	$db->loadModule('Manager');
-	debug('Manager loaded');
 	/*
 	 * Create the database
 	 */
@@ -124,7 +124,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		    											'username' => $username,
 													    'password' => $password,
 													    'hostspec' => $host,
-														'database' => $database));
+														'database' => $database),
+														NULL,
+														array('Manager'));
 	
 	debug('Connection replaced');
 	//Include the file which processes the SQL code

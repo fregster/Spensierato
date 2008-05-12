@@ -111,9 +111,12 @@ class Database
 		    die($mdb2->getMessage());
 		}
 		
-		foreach($mods as $mod)
+		if(isset($mods))
 		{
-			$mdb2->loadModule($mod);
+			foreach($mods as $mod)
+			{
+				$mdb2->loadModule($mod);
+			}
 		}
 		
 		return $mdb2;

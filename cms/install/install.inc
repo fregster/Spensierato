@@ -81,8 +81,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	 * check the file
 	 * load the settings
 	 */
-	$settings_file_handle = fopen($settings_file, 'w+') or die('can\'t open file you may need to give the webserver temporay permissions over the install folder or create the setup file manual with write permissions for the webserver');
-	
+//	$settings_file_handle = fopen($settings_file, 'w+') or die('can\'t open file you may need to give the webserver temporay permissions over the install folder or create the setup file manual with write permissions for the webserver');
+	$settings_file_handle = fopen($settings_file, 'w+');
 	
 	//SQL connection settings
 	$username = post::variable('username', 'sql');

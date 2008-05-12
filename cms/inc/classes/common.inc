@@ -56,7 +56,7 @@ abstract class Common
 		return round($time / 10000000000, $round);
 	}
 
-	public function get_file_contents_as_string($file)
+	public static function get_file_contents_as_string($file)
 	{
 		if(is_file($file))
 		{
@@ -158,102 +158,31 @@ abstract class Common
 	public static function array_to_xml($array, $serializer_options = NULL)
 	{
 		// include class file 
-		if(include_once('XML/Serializer.php'))
-		{ 	
-			// An array of serializer options
-			if(is_null($serializer_options))
-			{
-				$serializer_options = array ( 
-				   'addDecl' => FALSE, 
-				   'encoding' => 'ISO-8859-1', 
-				   'indent' => '  ',
-				   'rootName'  => 'xml',
-				   'defaultTagName'  => 'item'
-				);
-			}
-			
-			// create object 
-			$serializer = new XML_Serializer($serializer_options);
-			
-			// perform serialization 
-			$result = $serializer->serialize($array); 
-			
-			// check result code and display XML if success 
-			if($result === true) 
-			{ 
-				return $serializer->getSerializedData(); 
-			} 
-		}
-		else
+		require_once('XML/Serializer.php'); 
+		
+		// An array of serializer options
+		if(is_null($serializer_options))
 		{
-			return Common::toXml($array, $serializer_options['rootName'], $serializer_options['defaultTagName']);
+			$serializer_options = array ( 
+			   'addDecl' => FALSE, 
+			   'encoding' => 'ISO-8859-1', 
+			   'indent' => '  ',
+			   'rootName'  => 'xml',
+			   'defaultTagName'  => 'item'
+			);
 		}
-	}
-
-	/**
-	* The main function for converting to an XML document.
-	* Pass in a multi dimensional array and this recrusively loops through and builds up an XML document.
-	*
-	* @param array $data
-	* @param string $rootNodeName - what you want the root node to be - defaultsto data.
-	* @param SimpleXMLElement $xml - should only be used recursively
-	* @return string XML
-	*/
-	public static function toXml($data, $rootNodeName = 'data', $tagName = 'unknownNode_', $xml=null, $prefix=null)
-	{
-		// turn off compatibility mode as simple xml throws a wobbly if you don't.
-		if (ini_get('zend.ze1_compatibility_mode') == 1)
-		{
-			ini_set ('zend.ze1_compatibility_mode', 0);
-		}
-	
-		if ($xml == null)
-		{
-/*			if($prefix != null)
-//			{
-//				$string = "<? xml version='1.0' encoding='utf-8' ?><$rootNodeName />";
-//			}
-//			else
-*///			{
-				$string = "<$rootNodeName />";
-//			}
-			$xml = simplexml_load_string($string);
-		}
-	
-		// loop through the data passed in.
-		//print_r($data);
-		//die();
-		if($data != null)
-		{
-			foreach($data as $key => $value)
-			{
-				// no numeric keys in our xml please!
-				if (is_numeric($key))
-				{
-					// make string key...
-					$key = $tagName;
-				}
-			
-				// replace anything not alpha numeric
-				$key = preg_replace('/[^a-z]/i', '', $key);
-			
-				// if there is another array found recrusively call this function
-				if (is_array($value))
-				{
-					$node = $xml->addChild($key);
-					// recrusive call.
-					Common::toXml($value, $rootNodeName, $tagName, $node);
-				}
-				else
-				{
-					// add single node.
-					$value = htmlentities($value);
-					$xml->addChild($key,$value);
-				}
-			}
-		}
-		// pass back as string. or simple xml object if you want!
-		return $xml->asXML();
+		
+		// create object 
+		$serializer = new XML_Serializer($serializer_options);
+		
+		// perform serialization 
+		$result = $serializer->serialize($array); 
+		
+		// check result code and display XML if success 
+		if($result === true) 
+		{ 
+			return $serializer->getSerializedData(); 
+		} 
 	}
 
 	public static function random_number($start = 0, $count = 10)
@@ -285,7 +214,7 @@ abstract class Common
 		return Common::remove_extra_lines($input);
 	}
 	
-	public static function remove_js_comments($code) 
+	public function remove_js_comments($code) 
 	{  
      $mq = $sq = $mc = $sc = false;  
      $output = "";  
@@ -368,31 +297,7 @@ abstract class Common
 		}
 	}
 
-	public static function cookie_check()
-	{
-		if((!isset($_SESSION['cookie'])) and (isset($_GET['cookie'])))
-		{
-			//The session values have not been reloaded
-			if($_GET['cookie'] > (time() - 900))
-			{
-				//The session has probably not been reloaded because the session has timed out
-				warnings::Singleton()->register('Cookies are disabled', 'Your browser does not support cookies, logging in is disabled', 0);
-				return false;
-			}
-		}
-		
-		if(isset($_SESSION['cookie']))
-		{
-			//The session has been reloaded
-			options::Singleton()->set_option('cookie', true);
-			return true;
-		}
-		
-		//Session not checked
-		$_SESSION['cookie'] = true;
-		header('Location: ?cookie='.time());
-		die();
-	}
+	
 
 	/**
 	 * This method currently only use PHP inbuilt mailer which is not very efficent if ussing on larger sites

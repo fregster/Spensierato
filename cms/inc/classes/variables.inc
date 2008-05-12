@@ -5,15 +5,27 @@
 abstract class variables
 {
 	public function variable($input, $type = NULL)
-	{
-		if($type == NULL)
+	{	
+		$type .= '';
+		if(function_exists($type))
 		{
-			return $input;
+			return variables::$type($input);
 		}
-		
-		return variables::$type($input);
+
+		return variables::default_string($input);
 	}
 	
+	protected function default_string($input)
+	{
+		$remove = array('<', '>', '"', "'");
+
+		return(str_replace($remove, '', $input));
+	}
+	
+	protected function html($input)
+	{
+		return htmlentities($input, ENT_QUOTES, Settings::singleton()->get_setting('char_set'));
+	}
 	
 	protected function string($input)
 	{

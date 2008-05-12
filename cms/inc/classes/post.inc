@@ -7,8 +7,7 @@ class post extends variables
 {
 	public function variable($input, $type = NULL)
 	{
-		//return parent::variable($_POST[$input], $type);
-		return true;
+		return parent::variable($_POST[$input], $type);
 	}
 }
 ?>

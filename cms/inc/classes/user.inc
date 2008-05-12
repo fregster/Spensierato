@@ -85,7 +85,7 @@ class user
 		$auth = $this->site_auth(post::variable('username'), post::variable('password'), post::variable('security_code'));
 		if($auth = true)
 		{
-			if(isset(post::variable('login_rememberme')))
+			if(post::variable('login_rememberme') == 'true')
 			{
 				cookie::Singleton()->set_cookie('username', post::variable('username'));
 			}

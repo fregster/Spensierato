@@ -103,6 +103,8 @@ function notification(text)
 	return false;
 }
 
+//Init scripts to auto load stuff
+window.onDomReady(function(){ new SmoothScroll({duration: 1200}); }); //Load the smooth scroller
 window.onload = function()
 { 
 	initNotification();

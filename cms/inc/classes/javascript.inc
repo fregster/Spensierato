@@ -90,10 +90,12 @@ abstract class javascript
 		
 		if (file_exists($file)) 
 		{
-			if($lastmodified < filemtime($file))
+			$cached = filemtime($file);
+			if($lastmodified < $cached)
 			{
 				//JS files not moded since cached
 				Cache::headers_check_304($file);
+				header('Cached-Updated: '.$cached.'-'.$lastmodified);
 			}
 		}
 		

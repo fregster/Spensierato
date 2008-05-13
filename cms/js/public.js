@@ -104,8 +104,8 @@ function notification(text)
 }
 
 //Init scripts to auto load stuff
-window.onDomReady(function(){ new SmoothScroll({duration: 1200}); }); //Load the smooth scroller
 window.onload = function()
 { 
-	initNotification();
+	new SmoothScroll({duration: 1200}); }); //Load the smooth scroller
+	initNotification(); //Load the notification bar
 };

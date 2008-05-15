@@ -100,7 +100,7 @@ class user
 			warnings::Singleton()->register('Login Failed', 'Either your Username or Password was incorrect or you are not registered', 0);
 			Common::reload_with_vars(array('authfailed'), array($auth));
 		}
-		Common::redirect(1);
+		Common::bounce_to_referer();
 	}
 	
 	public function update_user_session_id()

@@ -19,11 +19,17 @@ if(is_file('spensierato_setup.inc'))
 //Include the CMS
 require_once('cms/cms_includes.inc');
 
+if($install)
+{
+	include('cms/install/install.inc');
+	die();
+}
+
 //Include the Options file
 require_once('spensierato_options.inc');
 
 //Start site
-CMS::Singleton()->start($install);
+CMS::Singleton()->start();
 
 //Make any custom changes here after the CMS code has loaded but before the site is ran
 if(is_file('custom.inc')) { include('custom.inc'); }

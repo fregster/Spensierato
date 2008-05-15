@@ -1,4 +1,4 @@
-<?
+<?php
 //This file contains the CMS settings required before we include the CMS code.
 
 //Database vars
@@ -11,7 +11,6 @@ $GLOBALS['database_name'] = 'spensierato';
 $GLOBALS['database_user_read'] = 'spensierato_read';
 $GLOBALS['database_user_readwrite'] = 'spensierato_writ';
 $GLOBALS['database_password'] = 'SBu8vPYdAm3F,c2e';
-$GLOBALS['table_prefix'] = 'cms_';
-$GLOBALS['random_key'] = 'kjh&*&^oikjlkjlHKJHJK&*^kjhkbn,mnsdou*&^';
+$GLOBALS['table_prefix'] = 'cms_'
 
 ?>

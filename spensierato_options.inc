@@ -43,6 +43,14 @@ Settings::Singleton()->new_setting('menu_max_levels', 2);
 //true / false
 Settings::Singleton()->new_setting('show_copyright', true);
 
+//Setting allow_registration
+//true / false
+Settings::Singleton()->new_setting('allow_registration', true);
+
+//Setting show_login
+//true / false
+Settings::Singleton()->new_setting('show_login', true);
+
 //Setting skin
 //Set this to the path of the skin you wish to use
 //Folder name from cms/skins/
@@ -198,4 +206,7 @@ Settings::Singleton()->new_setting('user_incorect_logins', 10);
 //To enable the system to automatacily email new passwords if re-set by the system
 //The email includes a note about account security
 Settings::Singleton()->new_setting('user_auto_email_password', true);
+
+Settings::singleton()->new_setting('memcached_sql', true);
+Settings::singleton()->new_setting('memcached_session', true);
 ?>

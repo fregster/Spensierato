@@ -27,15 +27,15 @@
 	Write settings file out 
 */
 
-$settings_file = Settings::singleton()->get_setting('cms_root').'/../spensierato_setup.inc';
+//$settings_file = Settings::singleton()->get_setting('cms_root').'/../spensierato_setup.inc';
 
 if($_SERVER['REQUEST_METHOD'] == 'GET')
 {
 	//Check that the settings file does not exsist
-	if(is_file($settings_file))
-	{
-		die('The site has been setup delete the settings file to start again');
-	}
+//	if(is_file($settings_file))
+//	{
+//		die('The site has been setup delete the settings file to start again');
+//	}
 
 ?>
 <form method="POST" action="">
@@ -49,7 +49,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 
 	<div id="database">
 		Database to connect to or create
-		<div>Database name: <input type="text" name="database" value="Spensierato" /></div>
+		<div>Database name: <input type="text" name="database" value="spensierato" /></div>
 	</div>
 
 	<div id="prefix">
@@ -85,27 +85,28 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$settings_file_handle = fopen($settings_file, 'w+');
 	
 	//SQL connection settings
-	$username = post::variable('username', 'sql');
-	$password = post::variable('password', 'sql');
-	$host = post::variable('host', 'sql');
-	$driver =  post::variable('type', 'sql');
+	$username = post::variable('username');
+	$password = post::variable('password');
+	$host = post::variable('host');
+	$driver =  post::variable('type');
 	
 	//Database to create
-	$database = post::variable('database', 'sql');
+	$database = post::variable('database');
 	
 	//Tables
-	$prefix = post::variable('prefix', 'sql');
+	$prefix = post::variable('prefix');
 	
 	//Users
-	$user_r = post::variable('r_user', 'sql');
-	$user_rw = post::variable('rw_user', 'sql');
-	$user_db_password = post::variable('db_password', 'sql');
+	$user_r = post::variable('r_user');
+	$user_rw = post::variable('rw_user');
+	$user_db_password = post::variable('db_password');
 	
 	debug('Vars set');
+
 	/*
 	 * Create the db object
 	 */
-	$db = database::Singleton()->custom_db_object(array('phptype'  => $driver,
+	$db = database::custom_db_object(array('phptype'  => $driver,
 		    											'username' => $username,
 													    'password' => $password,
 													    'hostspec' => $host),
@@ -115,12 +116,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	/*
 	 * Create the database
 	 */
-	
-	$db->create_database($database);
+
+	$db->createDatabase($database);
 	
 	debug('DB created');
 	//Replace the db object with a new one in the database
-	$db = database::Singleton()->custom_db_object(array('phptype'  => $driver,
+	$db = database::custom_db_object(array('phptype'  => $driver,
 		    											'username' => $username,
 													    'password' => $password,
 													    'hostspec' => $host,
@@ -132,33 +133,55 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	//Include the file which processes the SQL code
 	//Load aproprate sql file
 
-	if(!is_file($driver))
+	if(!is_file('/mnt/www/workspace/Spensierato/cms/install/'.$driver.'.txt'))
 	{
-		die('Unable to load install sql file for type '.$driver);
+		die('<br/>Unable to load install sql file '.$driver.'.txt');
 	}
 	
 	debug('Loading setup file');
-	$sql = file_get_contents($driver);
+	$sql = file_get_contents('/mnt/www/workspace/Spensierato/cms/install/'.$driver.'.txt');
 	
 	//Process sql
-	str_replace('cms_', $prefix, $sql);
+	$sql = str_replace('cms_', $prefix.'_', $sql);
 	
 	
 	//Execute sql
 	debug('Running...');
-	$db->direct_sql($sql);
+	
+//	$link = mysql_connect($host.':3307', $username, $password);
+//	if (!$link) {
+//	    die('Could not connect: ' . mysql_error());
+//	}
+//	echo 'Connected successfully';
+//	$result = mysql_query($sql);
+//	mysql_close($link);
+	
+	
+	$resultset = $db->query($sql);
+	
+	if(PEAR::isError($resultset)) 
+	{
+		$error = 'Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
+		debug($error);
+	}
 	
 	//Create the DB users and give permissions over the database
 	//TODO allow connections from specified places
-	$user_create_sql = array('CREATE USER \''.$user_w.'\'@\'localhost\' [IDENTIFIED BY [PASSWORD] '.$user_db_password.']',
-	'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$database.' TO '. $user_w,
+	$user_create_sql = array('CREATE USER \''.$user_rw.'\'@\'localhost\' [IDENTIFIED BY [PASSWORD] '.$user_db_password.']',
+	'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$database.' TO '. $user_rw,
 	'CREATE USER \''.$user_r.'\'@\'localhost\' [IDENTIFIED BY [PASSWORD] '.$user_db_password.']',
 	'GRANT SELECT ON '.$database.' TO '. $user_r);
 	
 	debug('Createing users and permissions');
 	foreach($user_create_sql as $sql)
 	{
-		$db->direct_sql($sql);
+		$resultset = $db->query($sql);
+	
+		if(PEAR::isError($resultset)) 
+		{
+			$error = 'Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
+			debug($error);
+		}
 	}
 	
 	/*
@@ -188,6 +211,14 @@ $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 	fwrite($settings_file_handle, $settings_file_string);
 	fclose($settings_file_handle);
 	debug('Settings file created');
+	
+	debug('Createing Homepage');
+	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array(0, time(), 0));
+	
+	debug('Adding starting element');
+	$element = Element::type('elementText');
+	$element->create($id);
+	
 	
 	echo('The site is now setup');
 }

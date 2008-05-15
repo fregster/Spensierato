@@ -36,6 +36,21 @@ abstract class Common
 		die();
 	}
 	
+	public static function redirect_inc_vars($url, $vars)
+	{
+		if(substr($url, 0, 4) != 'http')
+		{
+			$url = Settings::Singleton()->get_setting('document_root').'/'.$url;
+		}
+		
+		$var_string ='?';
+		foreach($vars as $key => $var)
+		{
+			$var_string .= $key.'='.$var.'&';
+		}
+		header('Location: '.$url.$var_string);
+		die();
+	}
 	public static function clean_path($path)
 	{
 		return(str_ireplace('..', '',  $path));
@@ -366,6 +381,24 @@ abstract class Common
 	
 	public static function email_address_check($email)
 	{
+		return true;
+	}
+
+	public static function cookie_check()
+	{
+		if(!isset($_SESSION['cookies_enabled']))
+		{
+			if(!isset($_GET['cookie_check']))
+			{
+				$_SESSION['cookies_enabled'] = true;
+				common::redirect_inc_vars(Common::clean_and_combine_url(CMS::Singleton()->path_vars, 0), array('cookie_check' => 1));
+			}
+			else
+			{
+				warnings::singleton()->register('Cookies', 'Cookies must be enabled to be able to login');
+				return false;
+			}
+		}
 		return true;
 	}
 }

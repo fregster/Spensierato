@@ -85,7 +85,7 @@ abstract class javascript
 		}
 		
 		//$cachefile = 'cache-' . $hash . '.' . $type . ($encoding != 'none' ? '.' . $encoding : '');	
-		$cachefile = 'cms-cache-' . $hash . '.' . $type;
+		$cachefile = 'cms-cache-'.$type.'-'.$hash.'.txt';
 		$file = $cachedir . '/' . $cachefile;
 		
 		if (file_exists($file)) 

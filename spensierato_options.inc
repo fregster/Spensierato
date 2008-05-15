@@ -28,8 +28,8 @@ Settings::Singleton()->new_setting('site_lang', 'en');
 Settings::Singleton()->new_setting('char_set', 'UTF-8');
 
 //Setting homepage
-//int default 0
-Settings::Singleton()->new_setting('homepage', 1);
+//int default sql select lowest value from db set to reduce sql hits or force to defaut to another page
+//Settings::Singleton()->new_setting('homepage', 1);
 
 //Setting menu_level
 //int default 0

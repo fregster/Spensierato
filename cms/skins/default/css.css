@@ -380,7 +380,7 @@ a.tooltip:hover span
 	background: #CFDFA7;
 }
 /* Sprite information */
-.sprite {height:16px; width:18px; float:left; background: url(skin/csg-47fc8b141e478.png) no-repeat center center; border:0px}
+.sprite {height:16px; width:18px; background: url(skin/csg-47fc8b141e478.png) no-repeat center center; border:0px}
 .sprite-accept { background-position: 0 -30px; } 
 .sprite-add { background-position: 0 -76px; } 
 .sprite-application { background-position: 0 -122px; } 

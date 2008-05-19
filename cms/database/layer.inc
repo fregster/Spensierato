@@ -75,13 +75,13 @@ class Database
 		$this->dsn = $dsn;
 	}
 	
-	public function custom_db_object($dsn, $options = NULL, $mods = NULL)
+	public static function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{
-		$this->dsn = $dsn;
+//		$this->dsn = $dsn;
 		
 		//A DSN has been set so create the connection with the specified options
 		//Create the read user
-		return $this->connect($dsn, $options, $mods);
+		return database::connect($dsn, $options, $mods);
 	}
 	
 	public function force_write_user()

@@ -46,9 +46,49 @@
 		<xsl:template name="admin_edit_bar">
 		<xsl:if test="/page/options/admin_mode = 1">
 		<xsl:if test="/page/security/can_edit = 1">
+			<xsl:element name="form">
+				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
+				<xsl:attribute name="method">POST</xsl:attribute>
+				<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
+				<xsl:element name="div">	
+					<xsl:attribute name="class">element_header</xsl:attribute>
+					Page Title 
+					<xsl:element name="input">
+						<xsl:attribute name="type">text</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/@title" /></xsl:attribute>
+						<input type="Submit" value="Update" />
+					</xsl:element> | 
+					<xsl:element name="a">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" />/visibility</xsl:attribute>
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:if test="/page/@visible = 1">
+								<xsl:attribute name="class">sprite sprite-lightbulb</xsl:attribute>
+								<xsl:attribute name="alt">Visibile</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="/page/@visible = 0">
+								<xsl:attribute name="class">sprite sprite-lightbulb-off</xsl:attribute>
+								<xsl:attribute name="alt">Hidden</xsl:attribute>
+							</xsl:if>
+						</xsl:element>
+					</xsl:element> | 
+					<xsl:element name="a">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" />/visibility</xsl:attribute>
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:if test="/page/@deleted = 0">
+								<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
+								<xsl:attribute name="alt">Delete</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="/page/@deleted = 1">
+								<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
+								<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
+							</xsl:if>
+						</xsl:element>
+					</xsl:element>
+				</xsl:element>
+			</xsl:element>
 			<xsl:element name="div">
-				<xsl:attribute name="class">element_header</xsl:attribute>
-				Page Title "<xsl:value-of select="/page/@title" />" | 
 				<xsl:element name="a">
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/page_details/<xsl:value-of select="/page/@id" /></xsl:attribute>
 					<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/tools/page_details/<xsl:value-of select="/page/@id" />', 650, 450, pageReload); return false;</xsl:attribute>
@@ -64,11 +104,11 @@
 					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
 					<xsl:attribute name="method">POST</xsl:attribute>
 					<xsl:attribute name="id">new_<xsl:value-of select="/page/@id" /></xsl:attribute>
-						<p>New Element <xsl:call-template name="new_element" /> 
-						<input type="submit" value="Create" />
-						</p>
+					<p>New Element <xsl:call-template name="new_element" /> 
+					<input type="submit" value="Create" />
+					</p>
 				</xsl:element>
-			</xsl:element>
+		</xsl:element>
 			<br />
 		</xsl:if>
 		</xsl:if>

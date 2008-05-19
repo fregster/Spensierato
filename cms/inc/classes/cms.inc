@@ -17,6 +17,7 @@ class CMS
 	//Private vars
 	private $time_start;
 	private $time_finish;
+	private $memcached;
 	//Switch to turn on testing / debuging / logging
 	private $testing = true;
 	
@@ -84,6 +85,9 @@ class CMS
 	*/
 	public function start()
 	{
+		//Is memcached supported
+		$this->memcached();
+		
 		//Start the session
 		$this->start_session();
 		
@@ -150,6 +154,13 @@ class CMS
 	
 	private function start_session()
 	{
+		if($this->memcached == true)
+		{
+			$session_save_path = "tcp://localhost:11211?persistent=1&weight=2&timeout=2&retry_interval=10,  ,tcp://$host:$port  ";
+			ini_set('session.save_handler', 'memcache');
+			ini_set('session.save_path', $session_save_path);
+		}
+			
 		session_set_cookie_params(0, Settings::Singleton()->get_setting('document_root'), $_SERVER['SERVER_NAME'], NULL, TRUE);
 		session_start();
 		
@@ -401,7 +412,7 @@ class CMS
 				}
 				else
 				{
-					CMS::do404();
+					error::do404();
 				}
 			    break;
 				
@@ -424,7 +435,7 @@ class CMS
 				}
 				else
 				{
-					CMS::do403();
+					error::do403();
 				}
 				break;
 			
@@ -445,7 +456,7 @@ class CMS
 				}
 				else
 				{
-					CMS::do403();
+					error::do403();
 				}
 				break;
 				
@@ -502,7 +513,7 @@ class CMS
 				}
 				else
 				{
-					CMS::do403();
+					error::do403();
 				}
 				break;
 				
@@ -548,7 +559,7 @@ class CMS
 					}
 					else
 					{
-						CMS::do403();
+						error::do403();
 					}
 				}
 				
@@ -582,7 +593,7 @@ class CMS
 				}
 				else
 				{
-					CMS::do403();
+					error::do403();
 				}
 				
 			default:
@@ -769,6 +780,23 @@ class CMS
 		}
 		
 		return false;
+	}
+
+	private function memcached()
+	{
+
+//		$memcache = new Memcache;
+//		$memcache->connect('localhost', 11211) or die ("Could not connect");
+		$this->memcached = false;		
+		
+//		print_r($memcache);
+//		
+//		
+//		$version = $memcache->getVersion();
+//		echo "Server's version: ".$version."<br/>\n";
+		
+		
+		return $this->memcached;
 	}
 }
 ?>

@@ -213,7 +213,7 @@ $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 	debug('Settings file created');
 	
 	debug('Createing Homepage');
-	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array(0, time(), 0));
+	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible'), array(0, time(), 0, 1));
 	
 	debug('Adding starting element');
 	$element = Element::type('elementText');

@@ -37,7 +37,6 @@
 					function returnRefresh(returnVal) 
 					{
 						window.top.document.body.innerHTML = '';
-						//window.top.location.reload();
 					    window.top.location = document_root+'/'+current_page;
 					}
 

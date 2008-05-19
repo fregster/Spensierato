@@ -108,6 +108,7 @@ class Security
 		$page = Databases::singleton()->database($GLOBALS['cms_db_name'])->table('tbl_link_page_elements')->get_records_by_equalto_query(array('element_id', 'main'), array(array($element_id), array(1)), array('page_id'));
 		return $this->can_do('view', $page[0]['page_id']);
 	}
+
 }
 
 ?>

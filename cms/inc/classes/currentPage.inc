@@ -79,8 +79,19 @@ class currentPage
 		if(!isset(CMS::Singleton()->path_vars[0]))
 		{
 			//$path_vars is not set get homepage from the settings class
+			
+			if(Settings::Singleton()->get_setting('homepage'))
+			{
+				$value = Settings::Singleton()->get_setting('homepage');
+			}
+			else
+			{
+				$value = database::singleton()->sql_select_first(array('id'), 'tbl_pages', NULL, NULL, array('id'), 'ASC');
+				$value = $value['id'];
+			}
+			
 			return array('type' => 'HTML',
-						'value' => Settings::Singleton()->get_setting('homepage'));
+						'value' => $value);
 		}
 		else
 		{

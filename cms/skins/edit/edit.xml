@@ -4,9 +4,6 @@
 
 			<xsl:element name="body">
 			<div id="notifications" style="visibility: hidden;">Notifications</div>
-			<!-- <div id="notifications" onclick="new Effect.Opacity('notifications', {duration:1.0, from:1.0, to:0.0})">Content Editor</div> -->
-			
-			<!-- <xsl:attribute name="onload">tinyMCE_onkeyup('e_<xsl:value-of select="/page/body/element/@id" />');</xsl:attribute> -->
 					<div id="page_edit">
 					<xsl:element name="form">
 						<xsl:attribute name="action"></xsl:attribute>
@@ -36,6 +33,7 @@
 		<xsl:attribute name="cols">80</xsl:attribute>
 		<xsl:attribute name="rows">15</xsl:attribute>
 		<xsl:attribute name="id">content</xsl:attribute>
+		<xsl:attribute name="class">mceAdvanced</xsl:attribute>
 		<xsl:value-of select="." />
 		</xsl:element>
 	</div>
@@ -129,9 +127,21 @@
 					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>
 				</xsl:element>
 				
+				<script type="text/javascript">
+					var document_root = '<xsl:value-of select="/page/settings/document_root" />';
+					var current_page = '<xsl:value-of select="/page/@id" />';
+					
+					function returnRefresh(returnVal) 
+					{
+						window.top.document.body.innerHTML = '';
+					    window.top.location = document_root+'/'+current_page;
+					}
+
+				</script>
+				
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
-					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,admin.js,prototype.lite.js,moo.fx.js,moo.fx.pack.js</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools-release-1.11.js,public.js,logged_in.js,admin.js</xsl:attribute>
 				</xsl:element>
 				<!-- 
 				<script type="text/javascript">
@@ -148,11 +158,33 @@
 				tinyMCE.init({
 						mode : "textareas",
 						theme : "simple",
+						force_br_newlines : true,
+						editor_selector : "mceSimple",
 						button_tile_map : true
-						,setup : function(ed) {
-								//ed.onKeyUp.add(function(ed, e) { alert('Keyup event: ' + e.keyCode); })
-								ed.onKeyUp.add(function(ed, e) { delayedSave(); })
-									}
+                        });
+				tinyMCE.init({
+						mode : "textareas",
+						width:"100%",
+						theme:"advanced",
+						editor_selector : "mceAdvanced",
+						//theme_advanced_buttons:"undo,redo,|,pastetext,pasteword,removeformat,|,bullist,numlist,blockquote,|,justifyleft,justifycenter,justifyfull,justifyright,|,outdent,indent,|,link,unlink|,spellchecker,|bold,italic,underline,strikethrough,forecolor,formatselect,charmap|,fullscreen",
+						language:"en",
+						spellchecker_languages:"+English=en",
+						theme_advanced_toolbar_location:"top",theme_advanced_toolbar_align:"left",
+						theme_advanced_statusbar_location:"bottom",theme_advanced_resizing:"1",
+						theme_advanced_resize_horizontal:"",dialog_type:"modal",relative_urls:"",
+						remove_script_host:"",
+						convert_urls:"",
+						apply_source_formatting:"",
+						remove_linebreaks:"1",
+						paste_convert_middot_lists:"1",
+						paste_remove_spans:"1",
+						paste_remove_styles:"1",
+						gecko_spellcheck:"1",
+						plugins:"safari,paste,fullscreen,spellchecker,inlinepopups",
+						
+						button_tile_map : true,
+						setup : function(ed) { ed.onKeyUp.add(function(ed, e) { delayedSave(); })	}
 					      });
 				element_id = 'e_<xsl:value-of select="/page/body/element/@id" />';		
 				</script>

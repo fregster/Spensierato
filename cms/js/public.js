@@ -70,9 +70,14 @@ function searchFunction()
 }
 
 
-//var ToolTips = new Tips($$('.ToolTip'), {
-//	className: 'ToolTip'
-//});
+var ToolTips = new Tips($$('.ToolTip'), {
+	className: 'ToolTip'
+});
+
+var SpriteTips = new Tips($$('.sprite'), {
+	className: 'ToolTip'
+});
+
 function pageReload(returnVal) 
 {
 	setTimeout('window.top.location.reload(true)',100);

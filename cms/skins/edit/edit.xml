@@ -129,7 +129,7 @@
 					themes : 'simple,advanced',
 					languages : 'en',
 					disk_cache : true,
-					debug : false
+					debug : true
 				});
 				</script>
 				<script type="text/javascript">

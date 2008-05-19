@@ -113,6 +113,17 @@
 					<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				</xsl:element>
 				
+				<script type="text/javascript">
+					var document_root = '<xsl:value-of select="/page/settings/document_root" />';
+					var current_page = '<xsl:value-of select="/page/@id" />';
+					
+					function returnRefresh(returnVal) 
+					{
+						window.top.document.body.innerHTML = '';
+					    window.top.location = document_root+'/'+current_page;
+					}
+				</script>
+				
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
 					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>

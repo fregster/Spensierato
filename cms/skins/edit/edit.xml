@@ -115,13 +115,14 @@
 				
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
-					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce_gzip.js</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>
 				</xsl:element>
 				
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
 					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />public.js,logged_in.js,admin.js,prototype.lite.js,moo.fx.js,moo.fx.pack.js</xsl:attribute>
 				</xsl:element>
+				<!-- 
 				<script type="text/javascript">
 				tinyMCE_GZ.init({
 					plugins : 'style,layer,table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,media,'+ 
@@ -131,7 +132,7 @@
 					disk_cache : true,
 					debug : true
 				});
-				</script>
+				</script> -->
 				<script type="text/javascript">
 				tinyMCE.init({
 						mode : "textareas",

@@ -51,6 +51,14 @@ Settings::Singleton()->new_setting('allow_registration', true);
 //true / false
 Settings::Singleton()->new_setting('show_login', true);
 
+//Setting show_help
+//true / false
+Settings::Singleton()->new_setting('show_help', true);
+
+//Setting show_access
+//true / false
+Settings::Singleton()->new_setting('show_access', true);
+
 //Setting skin
 //Set this to the path of the skin you wish to use
 //Folder name from cms/skins/

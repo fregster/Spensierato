@@ -324,6 +324,10 @@ class CMS
 							$this->get_html($value);
 						}
 					}
+					else
+					{
+						Error::do403();
+					}
 				}
 				break;
 				
@@ -341,6 +345,10 @@ class CMS
 						$element = Element::type('elementRegister');
 						$element->build('Register');
 						$this->get_html($value);
+					}
+					else
+					{
+						Error::do403();
 					}
 				}
 				break;

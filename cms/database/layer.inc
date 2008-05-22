@@ -12,6 +12,7 @@ class Database
 	private $dsn;
 	private $dsn_default;
 	
+	private $sql_cache_enabled = true;
 	private $sql_cache = array();
 	private $sql_cache_max_results = 20;
 	private $sql_cache_max_time = 30;
@@ -125,6 +126,14 @@ class Database
 	public function __clone()
 	{
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
+	}
+	
+	public function sql_cache_disable()
+	{
+		//Disable cacheing
+		$this->sql_cache_enabled = false;
+		//Clear the cache
+		session_unregister('sql_cache');
 	}
 	
 	public function sql_show_log()
@@ -442,6 +451,21 @@ class Database
 		return true;
 	}
 	
+	public function sql_toggle_field_by_id($id, $table, $field)
+	{
+		$current_value = $this->sql_select_first(array($field), $table, array('id'), array($id));
+		if($current_value[$field] == 0)
+		{
+			$new_value = 1;
+		}
+		else
+		{
+			$new_value = 0;
+		}
+		$this->sql_update_by_id($id, $table, array($field), array($new_value));
+		return $new_value;
+	}
+	
 	//SQL update fileds by id
 	public function sql_update_by_id($id, $table, $fields = array(), $values = array())
 	{
@@ -689,43 +713,43 @@ class Database
 	
 	private function sql_check_cache($sql, $values)
 	{
-		//Set cache hit to false only set true if actually a hit
-		$this->sql_cache_hit = false;
-		
-		if(isset($_SESSION['sql_cache'][$sql]))
+		if($this->sql_cache_enabled)
 		{
-			if($values != NULL)
-			{
-				//This was a prepared statment return the correct cached result
-				if(	(isset($_SESSION['sql_cache'][$sql][$values])) and ($_SESSION['sql_cache'][$sql][$values]['time'] >= (time() - 30)))
-				{
-					return $_SESSION['sql_cache'][$sql][$values];
-				}
-				//SQL Query has been done before but with diffrent values
-				return false;
-			}
+			//Set cache hit to false only set true if actually a hit
+			$this->sql_cache_hit = false;
 			
-			if($_SESSION['sql_cache'][$sql]['time'] >= (time() - 30) )
+			if(isset($_SESSION['sql_cache'][$sql]))
 			{
-				//Result cached and current
-				$this->sql_cache_hit = true;
-				$this->sql_cache_hits++;
-				$this->sql_log($this->site_sql_count, $sql, 0, true);
+				if($values != NULL)
+				{
+					//This was a prepared statment return the correct cached result
+					if(	(isset($_SESSION['sql_cache'][$sql][$values])) and ($_SESSION['sql_cache'][$sql][$values]['time'] >= (time() - 30)))
+					{
+						return $_SESSION['sql_cache'][$sql][$values];
+					}
+					//SQL Query has been done before but with diffrent values
+					return false;
+				}
 				
-				return $_SESSION['sql_cache'][$sql]['result'];
-			}
-			else
-			{
-				//SQL Query is old so delete it and re-check the DB
-				unset($_SESSION['sql_cache'][$sql]);
-				return false;
+				if($_SESSION['sql_cache'][$sql]['time'] >= (time() - 30) )
+				{
+					//Result cached and current
+					$this->sql_cache_hit = true;
+					$this->sql_cache_hits++;
+					$this->sql_log($this->site_sql_count, $sql, 0, true);
+					
+					return $_SESSION['sql_cache'][$sql]['result'];
+				}
+				else
+				{
+					//SQL Query is old so delete it and re-check the DB
+					unset($_SESSION['sql_cache'][$sql]);
+					return false;
+				}
 			}
 		}
-		else
-		{
-			//Result not caches
-			return false;
-		}
+		//Result not caches
+		return false;
 	}
 	
 	private function sql_cache($sql, $values, $result)

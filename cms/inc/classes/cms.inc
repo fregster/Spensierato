@@ -94,6 +94,11 @@ class CMS
 		//Call the methods to set all the required vars
 		//These should all be simple functions that do not require any external functions outside of CMS or Common and should not hit the DB
 		
+		if(Options::singleton()->get_option('admin_mode'))
+		{
+			Database::Singleton()->sql_cache_disable();
+		}
+		
 		//Update the settings with those from the DB
 		Settings::Singleton()->get_database_settings();
 		
@@ -531,6 +536,17 @@ class CMS
 			case 'EDIT_TOGGLE_PAGE':
 				if(Security::singleton()->can_edit($value[1]))
 				{	
+					//TODO update from laptop as required classes have not been comited
+					//Bodge until I update from laptop, sorry
+					if($value[2] == 'visibility')
+					{
+						database::singleton()->sql_toggle_field_by_id($value[1], 'tbl_pages', 'visible');
+					}
+					
+					if($value[2] == 'delete')
+					{
+						database::singleton()->sql_toggle_field_by_id($value[1], 'tbl_pages', 'deleted');
+					}
 					common::redirect($value[1]);
 				}
 				else

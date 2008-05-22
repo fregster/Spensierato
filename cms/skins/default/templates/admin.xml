@@ -59,7 +59,7 @@
 						<input type="Submit" value="Update" />
 					</xsl:element> | 
 					<xsl:element name="a">
-					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" />/visibility</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tp/<xsl:value-of select="/page/@id" />/visibility</xsl:attribute>
 						<xsl:element name="img">
 							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 							<xsl:if test="/page/@visible = 1">
@@ -73,7 +73,7 @@
 						</xsl:element>
 					</xsl:element> | 
 					<xsl:element name="a">
-					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" />/delete</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tp/<xsl:value-of select="/page/@id" />/delete</xsl:attribute>
 						<xsl:element name="img">
 							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 							<xsl:if test="/page/@deleted = 0">

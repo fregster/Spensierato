@@ -15,7 +15,7 @@
 			<xsl:if test="/page/user/id != 0">
 	Welcome back <xsl:value-of select="page/user/nickname" /> [<xsl:element name="a">
 					<xsl:attribute name="class">link</xsl:attribute>
-					<xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/logout/<xsl:value-of select="page/@id" /></xsl:attribute>Logout</xsl:element>] [<xsl:element name="a"><xsl:attribute name="class">link</xsl:attribute><xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/account/<xsl:value-of select="page/@id" /></xsl:attribute>My Account</xsl:element>]</xsl:if> |
+					<xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/logout/<xsl:value-of select="page/@id" /></xsl:attribute>Logout</xsl:element>] [<xsl:element name="a"><xsl:attribute name="class">link</xsl:attribute><xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/account/<xsl:value-of select="page/@id" /></xsl:attribute>My Account</xsl:element>] | </xsl:if>
 			<xsl:if test="/page/settings/show_help != 0">	 
 				<xsl:element name="a">
 					<xsl:attribute name="class">link</xsl:attribute>

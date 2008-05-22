@@ -6,7 +6,7 @@
 						<!-- can edit this page -->
 						<xsl:if test="/page/options/admin_mode = 1">
 							<!--  Show toggle admin and edit options -->
-							<a href="toggle/admin_mode">Swith off Admin Mode</a> | Edit page details			
+							<a href="toggle/admin_mode">Swith off Admin Mode</a> | Edit Site details | Edit Site Structure 			
 						</xsl:if>
 						<xsl:if test="/page/options/admin_mode != 1">
 							<!--  Show toggle admin -->
@@ -47,7 +47,7 @@
 		<xsl:if test="/page/options/admin_mode = 1">
 		<xsl:if test="/page/security/can_edit = 1">
 			<xsl:element name="form">
-				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
+				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/up/<xsl:value-of select="/page/@id" /></xsl:attribute>
 				<xsl:attribute name="method">POST</xsl:attribute>
 				<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
 				<xsl:element name="div">	
@@ -56,6 +56,8 @@
 					<xsl:element name="input">
 						<xsl:attribute name="type">text</xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="/page/@title" /></xsl:attribute>
+						<xsl:attribute name="name">title</xsl:attribute>
+						<xsl:attribute name="id">title</xsl:attribute>
 						<input type="Submit" value="Update" />
 					</xsl:element> | 
 					<xsl:element name="a">
@@ -67,7 +69,7 @@
 								<xsl:attribute name="alt">Visibile</xsl:attribute>
 							</xsl:if>
 							<xsl:if test="/page/@visible = 0">
-								<xsl:attribute name="class">sprite sprite-lightbulb-off</xsl:attribute>
+								<xsl:attribute name="class">sprite sprite-lightbulb_off</xsl:attribute>
 								<xsl:attribute name="alt">Hidden</xsl:attribute>
 							</xsl:if>
 						</xsl:element>

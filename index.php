@@ -1,5 +1,5 @@
 <?
-require_once('spensierato_cms.inc');
+require_once('./spensierato_cms.inc');
 
 /*
 require_once('sections/header.inc');

@@ -306,20 +306,23 @@ class CMS
 				}
 				else
 				{
-					if(isset($_GET['key']))
+					if(Settings::singleton()->get_setting('allow_registration'))
 					{
-						register::singleton()->verify_register();
-						die();
-					}
-					else
-					{
-						//Check cookies are enabled first
-						Common::cookie_check();
-
-						//Load CMS Registration box
-						$element = Element::type('elementRegister');
-						$element->build('Register');
-						$this->get_html($value);
+						if(isset($_GET['key']))
+						{
+							register::singleton()->verify_register();
+							die();
+						}
+						else
+						{
+							//Check cookies are enabled first
+							Common::cookie_check();
+	
+							//Load CMS Registration box
+							$element = Element::type('elementRegister');
+							$element->build('Register');
+							$this->get_html($value);
+						}
 					}
 				}
 				break;
@@ -331,11 +334,14 @@ class CMS
 				}
 				else
 				{
-					//Do registration function
-					register::singleton()->new_registration();
-					$element = Element::type('elementRegister');
-					$element->build('Register');
-					$this->get_html($value);
+					if(Settings::singleton()->get_setting('allow_registration'))
+					{
+						//Do registration function
+						register::singleton()->new_registration();
+						$element = Element::type('elementRegister');
+						$element->build('Register');
+						$this->get_html($value);
+					}
 				}
 				break;
 				
@@ -503,13 +509,32 @@ class CMS
 			case 'EDIT':
 				//Edit render element
 				if(Security::singleton()->can_edit_element($value))
-				{
-//					Content::singleton()->render_mode('edit');
-					
-					//$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($value));
+				{	
 					$element = Element::type($value);
 					$element->build($value);
 					Render::Singleton()->render_edit(Content::Singleton()->build());
+				}
+				else
+				{
+					error::do403();
+				}
+				break;
+				
+			case 'EDIT_TOGGLE_PAGE':
+				if(Security::singleton()->can_edit($value[1]))
+				{	
+					common::redirect($value[1]);
+				}
+				else
+				{
+					error::do403();
+				}
+				break;
+				
+			case 'EDIT_TOGGLE_ELEMENT':
+				if(Security::singleton()->can_edit_element($value[1]))
+				{	
+					common::redirect($value[1]);
 				}
 				else
 				{

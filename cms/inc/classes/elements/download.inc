@@ -1,16 +1,18 @@
-<?
-element::register('File Download', 'elementDownload');
-class elementDownload extends elementDefault
+<?php
+if(Settings::Singleton()->get_setting('uploads_enabled'))
 {
-	function __construct()
+	element::register('File Download', 'elementDownload');
+	class elementDownload extends elementDefault
 	{
-		$this->allowed_tags(array('filename' => 'auto', 'file' => 'file', 'filesize' => 'auto', 'mime' => 'auto', 'description' => 'html'));
-		$this->type = __CLASS__;
-		$this->name = 'File Download';
-		$this->image = 'download.png';
-		$this->edit_height = 600;
+		function __construct()
+		{
+			$this->allowed_tags(array('filename' => 'auto', 'file' => 'file', 'filesize' => 'auto', 'mime' => 'auto', 'description' => 'html'));
+			$this->type = __CLASS__;
+			$this->name = 'File Download';
+			$this->image = 'download.png';
+			$this->edit_height = 600;
+		}
+	
 	}
-
-
 }
 ?>

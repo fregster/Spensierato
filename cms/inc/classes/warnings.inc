@@ -60,6 +60,7 @@ class warnings
 				if (!is_writable($path)) 
 				{
     				$this->register('Folder is not writable', 'The folder '.$path.' does not have write permissions');
+    				Settings::Singleton()->overwrite_setting('uploads_enabled', false);
 				}
 			}
 		}

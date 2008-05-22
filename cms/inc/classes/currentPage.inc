@@ -239,6 +239,11 @@ class currentPage
 							return array('type' => 'EDIT_TOGGLE_ELEMENT',
 										'value' => CMS::Singleton()->path_vars);
 						break;
+						
+					case 'up':
+							return array('type' => 'EDIT_UPDATE_PAGE',
+										'value' => CMS::Singleton()->path_vars);
+						break;
 							
 					//Set a CMS var and bounce back	
 					case 'toggle':

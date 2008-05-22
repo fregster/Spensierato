@@ -555,6 +555,22 @@ class CMS
 				}
 				break;
 				
+			case 'EDIT_UPDATE_PAGE':
+				if(Security::singleton()->can_edit($value[1]))
+				{	
+					//TODO update from laptop as required classes have not been comited
+					if(isset($_POST['title']))
+					{
+						database::singleton()->sql_update_by_id($value[1], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
+					}
+					common::redirect($value[1]);
+				}
+				else
+				{
+					error::do403();
+				}
+				break;
+				
 			case 'EDIT_TOGGLE_ELEMENT':
 				if(Security::singleton()->can_edit_element($value[1]))
 				{	

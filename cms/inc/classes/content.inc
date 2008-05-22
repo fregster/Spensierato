@@ -62,9 +62,11 @@ class Content
 		$this->debug = $this->dom->createElement('debug');
 		$this->debug_data = $this->dom->createDocumentFragment();
 		
+		//TODO update to use page class when I upload it!
+		$page_info = currentpage::Singleton()->page_information();
 		$this->set_attribute('title', currentPage::Singleton()->title());
-		$this->set_attribute('visible', 1);
-		$this->set_attribute('deleted', 0);
+		$this->set_attribute('visible', $page_info['visible']);
+		$this->set_attribute('deleted', $page_info['deleted']);
 		$this->set_attribute('content', 'blank');
 		$this->set_attribute('render_mode', Render::Singleton()->renderMode());
 		$this->set_attribute('id', currentPage::Singleton()->id());

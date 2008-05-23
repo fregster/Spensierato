@@ -19,6 +19,8 @@ class Database
 	private $sql_cache_hit = false;
 	private $sql_cache_hits = 0;
 	
+	private $memcached = false;
+	
 	private $sql_log_array = array();
 	private $site_sql_count = 0;
 	private $sql_time = 0;
@@ -85,6 +87,19 @@ class Database
 		return database::connect($dsn, $options, $mods);
 	}
 	
+	
+	/**
+	 * force_write_user
+	 * Use this method to overwrite the read user with the write user
+	 * This can be used then to allow database updates if there is a requirement to do
+	 * inserts etc with a not logged in user
+	 * 
+	 * When finished call destroy_write_user() to revert back to the read user
+	 * Examples for use are in registration when you wish to store some data but the user will not be logged in
+	 * 
+	 * Please be careful and ensure to fully protect the input against posible auto form fillers etc.
+	 *
+	 */
 	public function force_write_user()
 	{
 		//Create write user
@@ -152,6 +167,10 @@ class Database
 		return array($this->site_sql_count, $percent, $this->sql_cache_hits);
 	}
 	
+	public function use_memcached()
+	{
+		$this->memcached = true;
+	}
 	
 	private function sql_clean_input($var)
 	{
@@ -754,16 +773,23 @@ class Database
 	
 	private function sql_cache($sql, $values, $result)
 	{
-		if($values == NULL)
+		if($this->memcached)
 		{
-			$_SESSION['sql_cache'][$sql]['time'] = time();
-			$_SESSION['sql_cache'][$sql]['result'] = $result;
+			
 		}
 		else
 		{
-			//This was a prepared statment so its results are cached slightly diffrently
-			$_SESSION['sql_cache'][$sql][$values]['time'] = time();
-			$_SESSION['sql_cache'][$sql][$values] = $result;
+			if($values == NULL)
+			{
+				$_SESSION['sql_cache'][$sql]['time'] = time();
+				$_SESSION['sql_cache'][$sql]['result'] = $result;
+			}
+			else
+			{
+				//This was a prepared statment so its results are cached slightly diffrently
+				$_SESSION['sql_cache'][$sql][$values]['time'] = time();
+				$_SESSION['sql_cache'][$sql][$values] = $result;
+			}
 		}
 	}
 

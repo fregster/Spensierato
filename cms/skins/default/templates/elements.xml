@@ -24,7 +24,7 @@
 		<xsl:if test="/user/administrator =1">You are set as a site Admin you have global edit permissions and have the ability to change site options</xsl:if>
 			<div id="account_personal_details_title">Personal Details for <xsl:value-of select="/page/user/username" /></div>
 			<xsl:element name="form">
-				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/ue/account</xsl:attribute>
+				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/account</xsl:attribute>
 				<xsl:attribute name="method">POST</xsl:attribute>
 				<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
 			<div>

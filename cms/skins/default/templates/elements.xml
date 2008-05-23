@@ -22,21 +22,49 @@
 	<xsl:template match="element[@type = 'elementAccount']">
 		<div id="account_personal_details">
 			<div id="account_personal_details_title">Personal Details</div>
+			<form action="" method="POST">
 			<div>
 				<div class="account_title">Nickname: </div>
-				<div class="account_detail"><xsl:value-of select="/page/user/nickname" /></div>
+				<div class="account_detail">
+					<xsl:element name="input">
+						<xsl:attribute name="type">text</xsl:attribute>
+						<xsl:attribute name="id">nickname</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/user/nickname" /></xsl:attribute>
+					</xsl:element>
+				</div>
 			</div>
 			<div>
 				<div class="account_title">Forename: </div>
-				<div class="account_detail"><xsl:value-of select="/page/user/forename" /></div>
+				<div class="account_detail">
+					<xsl:element name="input">
+						<xsl:attribute name="type">text</xsl:attribute>
+						<xsl:attribute name="id">forename</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/user/forename" /></xsl:attribute>
+					</xsl:element>
+				
+			</div>
 			</div>
 				<div class="account_title">Surname: </div>
-				<div class="account_detail"><xsl:value-of select="/page/user/surname" /></div>
+				<div class="account_detail">
+					<xsl:element name="input">
+						<xsl:attribute name="type">text</xsl:attribute>
+						<xsl:attribute name="id">surname</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/user/surname" /></xsl:attribute>
+					</xsl:element>
+				
+			</div>
 			<div>
 				<div class="account_title">E-Mail: </div>
-				<div class="account_detail"><xsl:value-of select="/page/user/email" /></div>
+				<div class="account_detail">
+					<xsl:element name="input">
+						<xsl:attribute name="type">text</xsl:attribute>
+						<xsl:attribute name="id">email</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/user/email" /></xsl:attribute>
+					</xsl:element>
+				</div>
+			<input type="submit" value="Update" />
 			</div>
-			
+			</form>
 			<div id="account_change_password_link">
 			<xsl:element name="a"><xsl:attribute name="class">link tooltop</xsl:attribute><xsl:attribute name="href">
 			<xsl:value-of select="/page/settings/document_root" />/changepassword/<xsl:value-of select="page/@id" /></xsl:attribute>Change Password<span>Change Password</span></xsl:element>

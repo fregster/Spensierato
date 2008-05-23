@@ -111,6 +111,6 @@ function notification(text)
 //Init scripts to auto load stuff
 window.onload = function()
 { 
-	//new SmoothScroll({duration: 1200}); //Load the smooth scroller
+	new Fx.Scroll({duration: 1200}); //Load the smooth scroller
 	initNotification(); //Load the notification bar
 };

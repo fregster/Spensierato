@@ -312,7 +312,10 @@ abstract class Common
 		}
 	}
 
-	
+	public static function html($input)
+	{
+		return htmlentities($input, ENT_QUOTES, Settings::singleton()->get_setting('char_set'));
+	}
 
 	/**
 	 * This method currently only use PHP inbuilt mailer which is not very efficent if ussing on larger sites

@@ -455,7 +455,7 @@ class Database
 	}
 	
 	//SQL Update time field query
-	public function sql_update_time($table, $id)
+	public function sql_update_time($table, $id, $destroy_cache = false)
 	{
 		$sql_start_time = Common::micro_time();
 		
@@ -470,7 +470,7 @@ class Database
 		return true;
 	}
 	
-	public function sql_toggle_field_by_id($id, $table, $field)
+	public function sql_toggle_field_by_id($id, $table, $field, $destroy_cache = false)
 	{
 		$current_value = $this->sql_select_first(array($field), $table, array('id'), array($id));
 		if($current_value[$field] == 0)
@@ -519,7 +519,7 @@ class Database
 		return $this->sql_update_exe($sql);
 	}
 	
-	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array())
+	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false)
 	{
 		$table = $this->prefix.$this->sql_clean_input($table);
 		if(	(count($where_fields)) != (count($where_values))	)
@@ -636,7 +636,7 @@ class Database
 		return $this->write->lastInsertID($table,'id');
 	}
 	
-	public function sql_delete_by_colum_equals($table, $col, $equals)
+	public function sql_delete_by_colum_equals($table, $col, $equals, $destroy_cache = false)
 	{
 		$table = $this->prefix.$this->sql_clean_input($table);
 		$sql = 'DELETE FROM '.$table.' WHERE `'.$this->sql_clean_input($col).'` = "'.$this->sql_clean_input($equals).'"';
@@ -644,8 +644,13 @@ class Database
 	}
 	
 	//$Values is for when I get around to implimenting MDB2 properly!
-	private function sql_exe($sql, $values, $writeuser = false)
+	private function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{
+		if($destroy_cache)
+		{
+			session_unregister('sql_cache');
+		}
+		
 		$sql_start_time = Common::micro_time();
 		
 		//Query the database Object
@@ -698,9 +703,9 @@ class Database
 		return $resultset;
 	}
 	
-	private function sql_update_exe($sql, $values = NULL)
+	private function sql_update_exe($sql, $values = NULL, $destroy_cache = false)
 	{
-		return $this->sql_exe($sql, $values, true);
+		return $this->sql_exe($sql, $values, true, $destroy_cache);
 	}
 	
 	private function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)

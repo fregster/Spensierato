@@ -125,7 +125,7 @@ class user
 			}
 		}
 		
-		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array($xml));
+		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array($xml), true);
 	}
 	
 	public function reset_password()

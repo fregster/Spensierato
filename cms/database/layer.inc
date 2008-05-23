@@ -481,12 +481,12 @@ class Database
 		{
 			$new_value = 0;
 		}
-		$this->sql_update_by_id($id, $table, array($field), array($new_value));
+		$this->sql_update_by_id($id, $table, array($field), array($new_value), $destroy_cache);
 		return $new_value;
 	}
 	
 	//SQL update fileds by id
-	public function sql_update_by_id($id, $table, $fields = array(), $values = array())
+	public function sql_update_by_id($id, $table, $fields = array(), $values = array(), $destroy_cache = false)
 	{
 		if(	(count($fields)) != (count($values))	)
 		{
@@ -516,7 +516,7 @@ class Database
 		$this->site_sql_count ++;
 		
 		//Run the SQL
-		return $this->sql_update_exe($sql);
+		return $this->sql_update_exe($sql, NULL, $destroy_cache);
 	}
 	
 	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false)

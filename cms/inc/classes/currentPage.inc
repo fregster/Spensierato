@@ -1,4 +1,10 @@
-<?
+<?php
+/**
+ * currentPage class
+ * This class is for the working out what the current URL page should be doing
+ * This is not specific to HTML pages just working out what the page is 
+ *
+ */
 class currentPage
 {
 	private static $instance;
@@ -223,6 +229,12 @@ class currentPage
 						}
 						else
 						{
+							if(CMS::Singleton()->path_vars[1] == 'toggle')
+							{
+								return array('type' => 'EDIT_TOGGLE',
+											'value' => array(CMS::Singleton()->path_vars[2],CMS::Singleton()->path_vars[3]));
+							}
+
 							//View an element in edit mode
 							return array('type' => 'EDIT',
 										'value' => CMS::Singleton()->path_vars[1]);

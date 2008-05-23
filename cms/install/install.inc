@@ -120,6 +120,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$db->createDatabase($database);
 	
 	debug('DB created');
+	/**
+	 * Add the db users with the appropriate permissions
+	 * Read user select on all
+	 * Write user select, update, insert, delete on all
+	 */
+	
+	//TODO add grant sql
+	
 	//Replace the db object with a new one in the database
 	$db = database::custom_db_object(array('phptype'  => $driver,
 		    											'username' => $username,

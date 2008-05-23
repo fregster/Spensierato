@@ -21,7 +21,8 @@
 	
 	<xsl:template match="element[@type = 'elementAccount']">
 		<div id="account_personal_details">
-			<div id="account_personal_details_title">Personal Details</div>
+		<xsl:if test="/user/administrator =1">You are set as a site Admin you have global edit permissions and have the ability to change site options</xsl:if>
+			<div id="account_personal_details_title">Personal Details for <xsl:value-of select="/page/user/username" /></div>
 			<form action="" method="POST">
 			<div>
 				<div class="account_title">Nickname: </div>

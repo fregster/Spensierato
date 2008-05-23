@@ -32,7 +32,7 @@
 				<div class="account_detail">
 					<xsl:element name="input">
 						<xsl:attribute name="type">text</xsl:attribute>
-						<xsl:attribute name="id">nickname</xsl:attribute>
+						<xsl:attribute name="name">nickname</xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="/page/user/nickname" /></xsl:attribute>
 					</xsl:element>
 				</div>
@@ -42,7 +42,7 @@
 				<div class="account_detail">
 					<xsl:element name="input">
 						<xsl:attribute name="type">text</xsl:attribute>
-						<xsl:attribute name="id">forename</xsl:attribute>
+						<xsl:attribute name="name">forename</xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="/page/user/forename" /></xsl:attribute>
 					</xsl:element>
 				
@@ -52,7 +52,7 @@
 				<div class="account_detail">
 					<xsl:element name="input">
 						<xsl:attribute name="type">text</xsl:attribute>
-						<xsl:attribute name="id">surname</xsl:attribute>
+						<xsl:attribute name="name">surname</xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="/page/user/surname" /></xsl:attribute>
 					</xsl:element>
 				
@@ -62,7 +62,7 @@
 				<div class="account_detail">
 					<xsl:element name="input">
 						<xsl:attribute name="type">text</xsl:attribute>
-						<xsl:attribute name="id">email</xsl:attribute>
+						<xsl:attribute name="name">email</xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="/page/user/email" /></xsl:attribute>
 					</xsl:element>
 				</div>

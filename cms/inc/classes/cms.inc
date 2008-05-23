@@ -590,6 +590,12 @@ class CMS
 			case 'EDITSAVE':
 				//Is this an update or createing a new element
 				//TODO remove refrences to POST
+				if($value = 'account')
+				{
+					User::Singleton()->update_from_post();
+					Common::redirect('account');
+				}
+				
 				if(isset($_POST['new_type']))
 				{
 					if(Security::singleton()->can_edit($value))

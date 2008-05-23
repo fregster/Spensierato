@@ -108,6 +108,26 @@ class user
 		//TODO
 	}
 	
+	public function update_from_post()
+	{
+		$values = array('nickname' => post::variable('nickname'),
+						'forename' => post::variable('forename'),
+						'surname' => post::variable('surname'),
+						'email' => post::variable('email')
+					);
+
+		$xml = '';
+		foreach($values as $key => $value)
+		{
+			if($value != '')
+			{
+				$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
+			}
+		}
+		
+		database::Singleton()->sql_update_by_id($this->id(), 'tbl_user_data', array('data'), array($xml));
+	}
+	
 	public function reset_password()
 	{
 		//Create a password

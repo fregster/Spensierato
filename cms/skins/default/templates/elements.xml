@@ -23,7 +23,10 @@
 		<div id="account_personal_details">
 		<xsl:if test="/user/administrator =1">You are set as a site Admin you have global edit permissions and have the ability to change site options</xsl:if>
 			<div id="account_personal_details_title">Personal Details for <xsl:value-of select="/page/user/username" /></div>
-			<form action="" method="POST">
+			<xsl:element name="form">
+				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/ue/account</xsl:attribute>
+				<xsl:attribute name="method">POST</xsl:attribute>
+				<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
 			<div>
 				<div class="account_title">Nickname: </div>
 				<div class="account_detail">
@@ -65,7 +68,7 @@
 				</div>
 			<input type="submit" value="Update" />
 			</div>
-			</form>
+			</xsl:element>
 			<div id="account_change_password_link">
 			<xsl:element name="a"><xsl:attribute name="class">link tooltop</xsl:attribute><xsl:attribute name="href">
 			<xsl:value-of select="/page/settings/document_root" />/changepassword/<xsl:value-of select="page/@id" /></xsl:attribute>Change Password<span>Change Password</span></xsl:element>

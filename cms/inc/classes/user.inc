@@ -121,11 +121,11 @@ class user
 		{
 			if($value != '')
 			{
-				$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
+				$xml .= '<'.$key.'>'.common::html($value).'</'.$key.'>';
 			}
 		}
 		
-		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array(common::html($xml)));
+		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array($xml));
 	}
 	
 	public function reset_password()

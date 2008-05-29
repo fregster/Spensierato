@@ -128,6 +128,11 @@ class user
 		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array($xml), true);
 	}
 	
+	public function is_admin()
+	{
+		return $this->user_details['administrator'];
+	}
+	
 	public function reset_password()
 	{
 		//Create a password

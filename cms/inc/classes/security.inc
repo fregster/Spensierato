@@ -43,7 +43,7 @@ class Security
 	//can_view checks can_view permissions first if false it checks for can_edit and returns the result of that.
 	public function is_admin()
 	{
-		return User::Singelton()->is_admin();
+		return User::Singleton()->is_admin();
 	}
 	
 	public function can_view($page_id = NULL, $user_id = NULL)

@@ -1,14 +1,19 @@
-<?
+<?php
 // Standard error functions
 abstract class error
 {
-	public function error($text, $e = NULL)
+	public function error($text, $exception = NULL)
 	{	
-		if(isset($e))
+		if(isset($exception))
 		{
-			echo $e->getMessage();
+			echo $exception->getMessage();
 		}
 		die($text);
+	}
+	
+	public function exception($exception)
+	{
+		error::error('An exception was thrown', $exception);
 	}
 	
 	// Load error page
@@ -27,4 +32,6 @@ abstract class error
 		die('404 File not found');
 	}
 }
+//Over write the exception handler to use the now loaded error class
+set_exception_handler('error::exception');
 ?>

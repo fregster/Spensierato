@@ -138,7 +138,7 @@ class user
 		//Create a password
 		$password = common::generate_random_string(6);
 		
-		$hash = hash(Settings::Singleton()->get_setting('site_option_encryption'), $password);
+		$hash = hash(Settings::Singleton()->get_setting('site_option_encryption'), $userid.$password);
 		
 		//Save the password in the DB
 		$this->update_password($hash);
@@ -208,21 +208,25 @@ class user
 		if(!Capthca::Code_check($security_code))
 		{
 			return 'Security Code was incorect';
+			warnings::singleton()->register('Security Code was incorect');
 		}
 		
 		//Make username case insensative by forcing lowercase
 		$username = strtolower($username);
 		
 		//Get hash type for posted username
-		$hash_type_db = Database::Singleton()->sql_select_first(array('hash_type'), 'tbl_users', array('username'), array($username));
+		$hash_type_db = Database::Singleton()->sql_select_first(array('hash_type', 'id'), 'tbl_users', array('username'), array($username));
 		//Check hash type if count ! 1 then the username is not set
 		//Check hash type is default if not auth against it and update the db on sucsessful auth
 		if(!isset($hash_type_db['hash_type']))
 		{
 			//Username unknown
 			//Return username and password error else it gives away the username is valid
+			warnings::singleton()->register('Username and password do not match');
 			return 'Username and password do not match';
 		}
+		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
+		$pwd = $hash_type_db['id'].$password;
 
 		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_encryption'))
 		{
@@ -230,11 +234,11 @@ class user
 		}
 		if($hash_outdated == true)
 		{
-			$sql_password = hash($hash_type_db['hash_type'], $password);
+			$sql_password = hash($hash_type_db['hash_type'], $pwd);
 		}
 		else
 		{
-			$sql_password = Common::return_hash($password, false);
+			$sql_password = Common::return_hash($pwd, false);
 		}
 		$id = Database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('username', 'password'), array($username, $sql_password));
 		if(count($id) == 1)

@@ -117,7 +117,7 @@ class elementDefault
 			else
 			{
 				$data = common::node_from_xml($xml, '/xml/'.$key);
-				$built_xml .= '<'.$key.'>'.common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES))).'</'.$key.'>';
+				$built_xml .= '<'.$key.'>'.utf8_encode(common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES)))).'</'.$key.'>';
 			}
 		}
 		
@@ -200,7 +200,7 @@ class elementDefault
 					}
 					
 					if($value == 'html') { $data = htmlentities($data); }
-					strip_tags($data);
+					$data = utf8_dencode(strip_tags($data));
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 				}
 				$built_xml .= '</data>';

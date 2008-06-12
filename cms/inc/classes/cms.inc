@@ -590,7 +590,7 @@ class CMS
 			case 'EDITSAVE':
 				//Is this an update or createing a new element
 				//TODO remove refrences to POST
-				if($value = 'account')
+				if($value == 'account')
 				{
 					User::Singleton()->update_from_post();
 					Common::redirect('account');

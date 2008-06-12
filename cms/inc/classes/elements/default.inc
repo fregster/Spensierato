@@ -200,7 +200,7 @@ class elementDefault
 					}
 					
 					if($value == 'html') { $data = htmlentities($data); }
-					$data = utf8_dencode(strip_tags($data));
+					$data = utf8_decode(strip_tags($data));
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 				}
 				$built_xml .= '</data>';

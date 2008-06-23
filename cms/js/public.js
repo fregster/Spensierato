@@ -135,8 +135,6 @@ function stepFontSize(increment) {
       }
       
       s = s + increment;
-      alert(s);
-      alert(increment);
       
       if(s > fontMin && s < fontMax) {
           p[i].style.fontSize = s+"px";

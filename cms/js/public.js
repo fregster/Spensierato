@@ -114,3 +114,30 @@ window.onload = function()
 	new Fx.Scroll({duration: 1200}); //Load the smooth scroller
 	initNotification(); //Load the notification bar
 };
+
+function increaseFontSize() {
+   stepFontSize(1);
+}
+function decreaseFontSize() {
+	stepFontSize(-1);  
+}
+
+function stepFontSize(increment) {
+	var p = document.getElementsByTagName('p');
+	var fontMin=8;
+	var fontMax=18;
+	
+   for(i=0;i<p.length;i++) {
+      if(p[i].style.fontSize) {
+         var s = parseInt(p[i].style.fontSize.replace("px",""));
+      } else {
+         var s = 12;
+      }
+      
+      s += increment;
+      
+      if(s!<fontMin and s!>fontMax) {
+          p[i].style.fontSize = s+"px";
+      }
+   }  
+}

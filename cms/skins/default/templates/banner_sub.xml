@@ -26,7 +26,22 @@
 					<xsl:attribute name="class">link</xsl:attribute>
 					<xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/access/<xsl:value-of select="page/@id" /></xsl:attribute>Accessability</xsl:element>
 			</xsl:if>
-			<a href="javascript:decreaseFontSize();"><img src="/images/font-dec.gif" alt="Decrease Font Size" style="border:0px;" /></a>
-			<a href="javascript:increaseFontSize();"><img src="/images/font-inc.gif" alt="Increase Font Size" style="border:0px;" /></a>
+			
+			<a href="javascript:decreaseFontSize();">
+				<xsl:element name="img">
+					<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/images/font-dec.gif</xsl:attribute>
+					<xsl:attribute name="alt">Decrease Font Size</xsl:attribute>
+					<xsl:attribute name="style">border:0px;</xsl:attribute>
+				</xsl:element>
+			</a>
+			
+			<a href="javascript:decreaseFontSize();">
+				<xsl:element name="img">
+					<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/images/font-inc.gif</xsl:attribute>
+					<xsl:attribute name="alt">Increase Font Size</xsl:attribute>
+					<xsl:attribute name="style">border:0px;</xsl:attribute>
+				</xsl:element>
+			</a>
+			
 			</div>	
 		</xsl:template>

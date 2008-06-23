@@ -38,6 +38,7 @@
 
 	<xsl:template name="menu">
 		<div id="page_section_left_menu">
+		<p>
 			<xsl:for-each select="/page/menu/menu/top/menu_item">
 				<xsl:choose>
 					<xsl:when test="selected = '1'">
@@ -49,6 +50,7 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:for-each>
+		</p>
 		</div>
 	</xsl:template>
 	

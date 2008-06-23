@@ -131,10 +131,12 @@ function stepFontSize(increment) {
       if(p[i].style.fontSize) {
          var s = parseInt(p[i].style.fontSize.replace("px",""));
       } else {
-         var s = 14;
+         var s = 12;
       }
       
       s = s + increment;
+      alert(s);
+      alert(increment);
       
       if(s > fontMin && s < fontMax) {
           p[i].style.fontSize = s+"px";

@@ -35,7 +35,7 @@
 				</xsl:element>
 			</a>
 			
-			<a href="javascript:decreaseFontSize();">
+			<a href="javascript:increaseFontSize();">
 				<xsl:element name="img">
 					<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/font-inc.gif</xsl:attribute>
 					<xsl:attribute name="alt">Increase Font Size</xsl:attribute>

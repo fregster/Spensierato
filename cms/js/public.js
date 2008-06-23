@@ -124,14 +124,14 @@ function decreaseFontSize() {
 
 function stepFontSize(increment) {
 	var p = document.getElementsByTagName('p');
-	var fontMin=8;
+	var fontMin=6;
 	var fontMax=18;
 	
    for(i=0;i<p.length;i++) {
       if(p[i].style.fontSize) {
          var s = parseInt(p[i].style.fontSize.replace("px",""));
       } else {
-         var s = 12;
+         var s = 14;
       }
       
       s = s + increment;

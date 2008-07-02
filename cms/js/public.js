@@ -114,7 +114,6 @@ function init()
 	new Fx.Scroll({duration: 1200}); //Load the smooth scroller
 	initNotification(); //Load the notification bar
 	stepFontSize(readCookie('fontSize')); //Set the font size
-	alert(readCookie('fontSize'));
 };
 
 function increaseFontSize() {

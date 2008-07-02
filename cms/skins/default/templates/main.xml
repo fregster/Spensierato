@@ -5,7 +5,7 @@
 				
 			<xsl:element name="body">
 				<xsl:if test="/page/warnings/warning">
-					<xsl:attribute name="onload">initNotification(); notification('The site has configuration problems'); return false;</xsl:attribute>
+					<xsl:attribute name="onload">initNotification(); notification('The site has configuration problems'); stepFontSize(<xsl:value-of select="/page/options/fontSize" -3 />); return false;</xsl:attribute>
 				</xsl:if>
 			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>
 			<div id="notifications" style="visibility: hidden;">Notifications</div>

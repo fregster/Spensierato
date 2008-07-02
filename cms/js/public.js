@@ -113,7 +113,7 @@ window.onload = function()
 { 
 	new Fx.Scroll({duration: 1200}); //Load the smooth scroller
 	initNotification(); //Load the notification bar
-	stepFontSize(readCookie('fontSize')-3);
+	stepFontSize(readCookie('fontSize')); //Set the font size
 };
 
 function increaseFontSize() {
@@ -143,7 +143,7 @@ function stepFontSize(increment) {
           p[i].style.fontSize = fontSizes[s];
           
          //Save the font size in a cookie
-          createCookie('fontSize',s,'365');
+          createCookie('fontSize',s-3,'365');
       }
    }
 }

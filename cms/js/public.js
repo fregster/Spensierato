@@ -143,7 +143,7 @@ function stepFontSize(increment) {
           p[i].style.fontSize = fontSizes[s];
           
          //Save the font size in a cookie
-          createCookie('fontSize',s-3,'365');
+          createCookie('fontSize',Math.floor(s-(fontSizes.length / 2)),'365');
       }
    }
 }

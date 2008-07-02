@@ -139,7 +139,7 @@ function stepFontSize(increment) {
       
       s = s + increment;
       
-      if(s > 0 && s < fontSizes.length) {
+      if(s >= 0 && s < fontSizes.length) {
           p[i].style.fontSize = fontSizes[s];
           
          //Save the font size in a cookie

@@ -4,11 +4,11 @@
 			<xsl:call-template name="header"/>
 				
 			<xsl:element name="body">
-			<xsl:attribute name="onload">initNotification();
+			<xsl:attribute name="onload">initNotification(); stepFontSize(<xsl:value-of select="/page/options/fontSize -3" />);
 				<xsl:if test="/page/warnings/warning">
 					 notification('The site has configuration problems');
 				</xsl:if>
-				 stepFontSize(<xsl:value-of select="/page/options/fontSize -3" />); return false;
+				  return false;
 			</xsl:attribute>
 			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>
 			<div id="notifications" style="visibility: hidden;">Notifications</div>

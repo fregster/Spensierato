@@ -142,7 +142,7 @@ function stepFontSize(increment) {
           p[i].style.fontSize = fontSizes[s];
           
           //Make AJAX request to set the font size in the session
-          ajaxGet(document_root+'/ajax/font/', increment );
+          ajaxGet(document_root+'/ajax/font/', s );
       }
    }
 }

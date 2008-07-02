@@ -1,6 +1,6 @@
 
 		<xsl:template name="menu_link">
-		<p>
+		<!--  <p>  -->
 		<xsl:element name="a">
 			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="id" /></xsl:attribute>
 			<xsl:attribute name="class">link</xsl:attribute>
@@ -35,7 +35,7 @@
 				<xsl:value-of select="title" />
 			</xsl:if>
 		</xsl:element>
-		</p>
+		<!-- </p> -->
 	</xsl:template>
 
 	<xsl:template name="menu">

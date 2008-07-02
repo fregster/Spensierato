@@ -84,15 +84,11 @@ function pageReload(returnVal)
 }
 
 var notes;
-var init;
+
 function initNotification()
 {
-	if(init !== true)
-	{
-	init = true;
 	notes = new Fx.Style('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
 	document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
-	}
 }
 
 function notification(text)
@@ -109,11 +105,16 @@ function notification(text)
 }
 
 //Init scripts to auto load stuff
+var init;
 function init()
 { 
-	new Fx.Scroll({duration: 1200}); //Load the smooth scroller
-	initNotification(); //Load the notification bar
-	stepFontSize(readCookie('fontSize')); //Set the font size
+	if(init !== true)
+	{
+		new Fx.Scroll({duration: 1200}); //Load the smooth scroller
+		initNotification(); //Load the notification bar
+		stepFontSize(readCookie('fontSize')); //Set the font size
+		init = true;
+	}
 };
 
 function increaseFontSize() {
@@ -125,26 +126,27 @@ function decreaseFontSize() {
 
 function stepFontSize(increment) {
 	var p = document.getElementsByTagName('p');
-	
 	var fontSizes = new Array("xx-small", "x-small", "small", "medium", "large", "x-large", "xx-large");
+	var s = 3;
+	var increment = parseInt(increment);
 	
-   for(i=0;i<p.length;i++) {
-   	var s = 3;
+	for(i=0;i<p.length;i++) {
       if(p[i].style.fontSize) {
-         
+        
          for(f=0;f<fontSizes.length;f++) {
          	if(p[i].style.fontSize == fontSizes[f]) { var s = f; }
          }
       }
       
-      s = s + increment;
+      var s = s + increment;
       
-      if(s >= 0 && s < fontSizes.length) {
-          p[i].style.fontSize = fontSizes[s];
+      if(s < 0) { s = 0; }
+      if(s >= fontSizes.length) { s = fontSizes.length -1; } 
+
+		p[i].style.fontSize = fontSizes[s];
           
-         //Save the font size in a cookie
-          createCookie('fontSize',s-Math.floor(fontSizes.length / 2),'365');
-      }
+		//Save the font size in a cookie
+		createCookie('fontSize',s-Math.floor(fontSizes.length / 2),'365');
    }
 }
 

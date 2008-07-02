@@ -124,20 +124,26 @@ function decreaseFontSize() {
 
 function stepFontSize(increment) {
 	var p = document.getElementsByTagName('p');
-	var fontMin=6;
-	var fontMax=18;
+	
+	var fontSizes = new Array("xx-small", "x-small", "small", "medium", "large", "x-large", "xx-large");
 	
    for(i=0;i<p.length;i++) {
+   	var s = 3;
       if(p[i].style.fontSize) {
-         var s = parseInt(p[i].style.fontSize.replace("px",""));
-      } else {
-         var s = 12;
+         
+         for(f=0;i<fontSizes.length;f++) {
+         	if(if(p[i].style.fontSize == fontSizes[f]) { var s = f; }
+         }
+         
       }
       
       s = s + increment;
       
-      if(s > fontMin && s < fontMax) {
-          p[i].style.fontSize = s+"px";
+      if(s > 0 && s < fontSizes.length) {
+          p[i].style.fontSize = fontSizes[s];
+          
+          //Make AJAX request to set the font size in the session
+          ajaxGet(document_root+'/ajax/font?s=', s );
       }
    }  
 }

@@ -113,6 +113,7 @@ window.onload = function()
 { 
 	new Fx.Scroll({duration: 1200}); //Load the smooth scroller
 	initNotification(); //Load the notification bar
+	stepFontSize(readCookie('fontSize')-3);
 };
 
 function increaseFontSize() {
@@ -141,8 +142,33 @@ function stepFontSize(increment) {
       if(s > 0 && s < fontSizes.length) {
           p[i].style.fontSize = fontSizes[s];
           
-          //Make AJAX request to set the font size in the session
-          ajaxGet(document_root+'/ajax/font/', s );
+         //Save the font size in a cookie
+          createCookie('fontSize',s,'365');
       }
    }
+}
+
+function createCookie(name,value,days) {
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "; expires="+date.toGMTString();
+	}
+	else var expires = "";
+	document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+function eraseCookie(name) {
+	createCookie(name,"",-1);
 }

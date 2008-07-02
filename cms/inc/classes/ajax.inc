@@ -25,7 +25,7 @@ class ajax
 				{
 					$vars[2] = 0;
 				}
-				Settings::Singleton()->overwrite_setting('fontSize', $vars[2]);
+				options::Singleton()->set_option('fontSize', $vars[2]);
 			break;
 				
 			default:

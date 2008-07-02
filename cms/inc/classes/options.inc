@@ -11,6 +11,7 @@ class options
 	private $valid_options = array(
 					'admin_mode' => array(false, true),
 					'test' => array(true),
+					'fontSize' =>array(3,0,1,2,3,4,5,6),
 					'force_reload' => array(false, true)
 							);
 

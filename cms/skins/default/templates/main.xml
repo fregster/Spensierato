@@ -4,7 +4,7 @@
 			<xsl:call-template name="header"/>
 				
 			<xsl:element name="body">
-			<xsl:attribute name="onload">initNotification(); stepFontSize(readCookie('fontSize'));<!-- <xsl:if test="/page/options/fontSize">stepFontSize(<xsl:value-of select="/page/options/fontSize -3" />);</xsl:if> --> 
+			<xsl:attribute name="onload">initNotification(); stepFontSize(readCookie(fontSize));<!-- <xsl:if test="/page/options/fontSize">stepFontSize(<xsl:value-of select="/page/options/fontSize -3" />);</xsl:if> --> 
 				<xsl:if test="/page/warnings/warning">
 					 notification('The site has configuration problems');
 				</xsl:if>

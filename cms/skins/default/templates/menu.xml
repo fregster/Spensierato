@@ -1,5 +1,6 @@
 
 		<xsl:template name="menu_link">
+		<p>
 		<xsl:element name="a">
 			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="id" /></xsl:attribute>
 			<xsl:attribute name="class">link</xsl:attribute>
@@ -34,11 +35,11 @@
 				<xsl:value-of select="title" />
 			</xsl:if>
 		</xsl:element>
+		</p>
 	</xsl:template>
 
 	<xsl:template name="menu">
 		<div id="page_section_left_menu">
-		<p>
 			<xsl:for-each select="/page/menu/menu/top/menu_item">
 				<xsl:choose>
 					<xsl:when test="selected = '1'">
@@ -50,7 +51,6 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:for-each>
-		</p>
 		</div>
 	</xsl:template>
 	

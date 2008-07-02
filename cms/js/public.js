@@ -131,7 +131,7 @@ function stepFontSize(increment) {
    	var s = 3;
       if(p[i].style.fontSize) {
          
-         for(f=0;i<fontSizes.length;f++) {
+         for(f=0;f<fontSizes.length;f++) {
          	if(p[i].style.fontSize == fontSizes[f]) { var s = f; }
          }
          

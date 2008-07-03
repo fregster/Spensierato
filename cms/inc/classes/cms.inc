@@ -816,40 +816,53 @@ class CMS
 			return false;		
 		}
 		
-		//This function does not work in windows fo fake it
-		if(!function_exists('checkdnsrr'))
-		{
-		    function checkdnsrr($host, $type='')
-		    {
-		        if(!empty($host))
-		        {
-		            $type = (empty($type)) ? 'MX' :  $type;
-		            exec('nslookup -type='.$type.' '.escapeshellcmd($host), $result);
-		            $it = new ArrayIterator($result);
-		            foreach(new RegexIterator($it, '~^'.$host.'~', RegexIterator::GET_MATCH) as $result)
-		            {
-		                if($result)
-		                {
-		                    return true;
-		                }               
-		            }
-		        }
-		        return false;
-		   	}
-		}
 		
-		//If a DNS record is found
-		if(checkdnsrr($hostname, 'TXT'))
+		$update_log = Settings::singleton()->get_setting('cms_root') . '/writeable/logs/update.log';
+		$pervious_update_check = file_get_contents($update_log);
+		$update_interval = Settings::Singleton()->get_setting('update_version_check_schedule')*24*60*60;
+		
+		if($pervious_update_check+$update_interval > time())
 		{
-			$dns = dns_get_record($hostname, DNS_TXT);
-			if($dns['TXT'] > CMS::$cms_version)
+
+			$update_log = fopen($update_log, 'w');
+			
+			fwrite($update_log, time());
+			fclose($update_log);
+			
+			
+			//This function does not work in windows fo fake it
+			if(!function_exists('checkdnsrr'))
 			{
-				print_r($dns);
-				die();
-				return $dns['txt'];
+			    function checkdnsrr($host, $type='')
+			    {
+			        if(!empty($host))
+			        {
+			            $type = (empty($type)) ? 'MX' :  $type;
+			            exec('nslookup -type='.$type.' '.escapeshellcmd($host), $result);
+			            $it = new ArrayIterator($result);
+			            foreach(new RegexIterator($it, '~^'.$host.'~', RegexIterator::GET_MATCH) as $result)
+			            {
+			                if($result)
+			                {
+			                    return true;
+			                }               
+			            }
+			        }
+			        return false;
+			   	}
+			}
+			
+			//If a DNS record is found
+			if(checkdnsrr($hostname, 'TXT'))
+			{
+				$dns = dns_get_record($hostname, DNS_TXT);
+				if($dns['TXT'] > CMS::$cms_version)
+				{
+					warnings::Singleton()->register('New version of Spensierato released', 'There is a new version available ('.$dns['txt'].') to download which might contain new features, bug fixes and security updates, please visit the spensierato website for details');
+					return true;
+				}
 			}
 		}
-		
 		return false;
 	}
 

@@ -67,6 +67,11 @@ class warnings
 		
 	}
 	
+	private function __destruct()
+	{
+		options::singleton()->set_option('display_warnings', false);
+	}
+	
 	public function register($warning_title, $description, $level = 2)
 	{
 		if(!is_array($this->warnings[$level]))

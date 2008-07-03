@@ -4,10 +4,12 @@
 			<xsl:call-template name="header"/>
 				
 			<xsl:element name="body">
-			<xsl:attribute name="onload">init();<!-- <xsl:if test="/page/options/fontSize">stepFontSize(<xsl:value-of select="/page/options/fontSize -3" />);</xsl:if> --> 
+			<xsl:attribute name="onload">init();<!-- <xsl:if test="/page/options/fontSize">stepFontSize(<xsl:value-of select="/page/options/fontSize -3" />);</xsl:if> -->
+			<xsl:if test="/page/options/display_warnings">
 				<xsl:if test="/page/warnings/warning">
 					 notification('The site has configuration problems');
 				</xsl:if>
+			</xsl:if>
 				  return false;
 			</xsl:attribute>
 			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>

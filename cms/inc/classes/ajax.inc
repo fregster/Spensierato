@@ -15,18 +15,6 @@ class ajax
 					register::username_check($_POST['username']);
 				}
 			break;
-			
-			case 'font':
-				if($vars[2] > 6)
-				{
-					$vars[2] = 6;
-				}
-				if($vars[2] < 0)
-				{
-					$vars[2] = 0;
-				}
-				options::Singleton()->set_option('fontSize', $vars[2]);
-			break;
 				
 			default:
 				print_r($vars);

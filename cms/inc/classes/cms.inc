@@ -398,7 +398,7 @@ class CMS
 				
 				//Check cookies are enabled first
 				Common::cookie_check();
-				if($_SERVER['REQUEST_METHOD'] == 'GET')
+				if($_SERVER['REQUEST_METHOD'] == 'GET' and !isset(get::variable('username')))
 				{
 					//If not loged in load box else redirect to $value
 					if(User::Singleton()->is_logged_in())

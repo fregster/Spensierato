@@ -82,7 +82,15 @@ class user
 	
 	public function login()
 	{
-		$auth = $this->site_auth(post::variable('username'), post::variable('password'), post::variable('security_code'));
+		if($_SERVER['REQUEST_METHOD'] == 'GET')
+		{
+			$auth = $this->site_auth_hash(get::variable('username'), get::variable('hash'));
+		}
+		else
+		{
+			$auth = $this->site_auth(post::variable('username'), post::variable('password'), post::variable('security_code'));
+		}
+		
 		if($auth = true)
 		{
 			if(post::variable('login_rememberme') == 'true')
@@ -201,6 +209,57 @@ class user
 		$this->lists = Lists::Singleton()->get_lists_for_user($this->userid);
 	}
 
+	private function site_auth_hash($username, $hash)
+	{
+		
+		//Make username case insensative by forcing lowercase
+		$username = strtolower($username);
+		
+		//Get hash type for posted username
+		$hash_type_db = Database::Singleton()->sql_select_first(array('hash_type', 'id'), 'tbl_users', array('username'), array($username));
+		//Check hash type if count ! 1 then the username is not set
+		//Check hash type is default if not auth against it and update the db on sucsessful auth
+		if(!isset($hash_type_db['hash_type']))
+		{
+			//Username unknown
+			//Return username and password error else it gives away the username is valid
+			warnings::singleton()->register('Username and password do not match');
+			return 'Username and password do not match';
+		}
+		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
+		$pwd = $hash_type_db['id'].$password;
+
+		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_encryption'))
+		{
+			$hash_outdated = true;
+		}
+		if($hash_outdated == true)
+		{
+			$sql_password = hash($hash_type_db['hash_type'], $pwd);
+		}
+		else
+		{
+			$sql_password = Common::return_hash($pwd, false);
+		}
+		$id = Database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('username', 'password'), array($username, $sql_password));
+		if(count($id) == 1)
+		{
+			if($hash_outdated == true)
+			{
+				$this->update_password($hash);
+			}
+			$this->userid = $id['id'];
+			return true;
+		}
+		else
+		{
+			return 'Username and password do not match';
+		}
+		
+		
+		
+	}
+	
 	//Returns true on sucsess or false on fail
 	private function site_auth($username, $password, $security_code)
 	{

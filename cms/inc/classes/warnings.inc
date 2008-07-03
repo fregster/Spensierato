@@ -67,7 +67,7 @@ class warnings
 		
 	}
 	
-	private function __destruct()
+	public function __destruct()
 	{
 		options::singleton()->set_option('display_warnings', false);
 	}

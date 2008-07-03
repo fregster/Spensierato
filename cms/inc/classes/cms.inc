@@ -116,7 +116,7 @@ class CMS
 
 		//Do any admin checks
 		$this->admin();
-		
+
 		//Decide what to do with the current page
 		$this->get_page($this->page_details['type'], $this->page_details['value']);
 		
@@ -172,7 +172,7 @@ class CMS
 //		session_set_cookie_params(0, Settings::Singleton()->get_setting('document_root'), $_SERVER['SERVER_NAME'], NULL, TRUE);
 		if(Settings::Singleton()->get_setting('document_root') != '/')
 		{
-			session_set_cookie_params(0, NULL, NULL, NULL, TRUE);
+//			session_set_cookie_params(0, NULL, NULL, NULL, TRUE);
 		}
 		
 		session_start();

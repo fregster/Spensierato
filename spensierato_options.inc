@@ -203,7 +203,14 @@ Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key'], true, t
 
 //Setting update_version_check
 //To enable auto version checking set this value to the update server
+//If the log dir is not writeable auto update checking will be disabled
 Settings::Singleton()->new_setting('update_version_check', 'spensierato.fryer.org.uk');
+
+//Setting update_version_check_schedule
+//Set the timeperiod between version update checking in days
+//If the log dir is not writeable auto update checking will be disabled
+//default: 7
+Settings::Singleton()->new_setting('update_version_check_schedule', 7);
 
 //Setting user_incorect_logins
 //To enable brute force login protection set the max number of failed logins per username
@@ -215,6 +222,6 @@ Settings::Singleton()->new_setting('user_incorect_logins', 10);
 //The email includes a note about account security
 Settings::Singleton()->new_setting('user_auto_email_password', true);
 
-Settings::singleton()->new_setting('memcached_sql', true);
-Settings::singleton()->new_setting('memcached_session', true);
+Settings::singleton()->new_setting('memcached_sql', false);
+Settings::singleton()->new_setting('memcached_session', false);
 ?>

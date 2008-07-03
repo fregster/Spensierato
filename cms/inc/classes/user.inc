@@ -39,15 +39,17 @@ class user
 		}
 		
 		$this->set_user_details();
-	}
-
-	public function start()
-	{
+		
 		//Check that default required values are set		
 		if(!isset($this->lists))
 		{
 			$this->lists = array(0 => 0);
 		}
+	}
+
+	public function start()
+	{
+		
 	}
 	
 	public function id()

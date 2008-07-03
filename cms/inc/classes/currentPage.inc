@@ -86,7 +86,7 @@ class currentPage
 		{
 			//$path_vars is not set so load an empty page from page
 			return array('type' => 'HTML',
-						'value' => Page::Singleton()->load());
+						'value' => Page::Singleton()->load(NULL));
 		}
 		else
 		{

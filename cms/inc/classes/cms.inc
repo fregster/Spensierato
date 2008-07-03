@@ -563,7 +563,7 @@ class CMS
 					{
 						database::singleton()->sql_update_by_id($value[1], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
 					}
-					common::redirect($value[12]);
+					common::redirect($value[1]);
 				}
 				else
 				{

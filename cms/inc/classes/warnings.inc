@@ -74,6 +74,7 @@ class warnings
 			$this->warnings[$level] = array();
 		}
 		array_push($this->warnings[$level], array('title' => $warning_title, 'description' => $description));
+		options::singleton()->set_option('display_warnings', true);
 	}
 	
 	public function get($level = 2)

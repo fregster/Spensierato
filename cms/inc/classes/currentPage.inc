@@ -254,7 +254,7 @@ class currentPage
 						
 					case 'up':
 							return array('type' => 'EDIT_UPDATE_PAGE',
-										'value' => CMS::Singleton()->path_vars[1]);
+										'value' => CMS::Singleton()->path_vars[2]);
 						break;
 							
 					//Set a CMS var and bounce back	

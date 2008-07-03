@@ -256,14 +256,19 @@ class Database
 					}
 					
 					$j = 0;
+					$sql_temp_where_or ='(';
 					while($j <= (count($or_values) - 1))
 					{
-						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
+						$sql_temp_where_or .= $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
 						//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
 						
 						if($j < (count($or_values) - 1))
 						{
-							$sql_temp_where_or = $sql_temp_where_or . ' OR ';
+							$sql_temp_where_or .= ' OR ';
+						}
+						else
+						{
+							$sql_temp_where_or .= ')';
 						}
 						$j++;
 					}

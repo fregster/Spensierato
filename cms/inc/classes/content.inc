@@ -6,6 +6,8 @@ class Content
 	private $lastmodified = 0;
 	private $e_string = '';
 	private $dom;
+	private $deleted = 0;
+	private $visible;
 
 	private $page;
 	private $page_data;
@@ -61,6 +63,20 @@ class Content
 		
 		$this->debug = $this->dom->createElement('debug');
 		$this->debug_data = $this->dom->createDocumentFragment();
+		
+		if(Options::Singleton()->get_option('admin_mode') and Security::Singleton()->can_edit())
+		{
+			if(Options::Singleton()->get_option('show_deleted'))
+			{
+				$this->deleted = array(0,1);
+			}
+			$this->visible = array(0, 1);
+		}
+		else
+		{
+			$this->visible = 1;
+			$this->deleted = 0;
+		}
 		
 		//TODO update to use page class when I upload it!
 		$page_info = currentpage::Singleton()->page_information();
@@ -168,7 +184,7 @@ class Content
 		//Only load elements from DB if page type = html
 		if(CMS::Singleton()->page_details['type'] == 'HTML')
 		{
-			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id'), array(currentPage::Singleton()->id()), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
+			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible'), array(currentPage::Singleton()->id(), $this->visible), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
 			$id_string = '';
 			
 			if(isset($elements[0]))
@@ -178,8 +194,8 @@ class Content
 				{
 					array_push($ids, $id['element_id']);
 				}
-				$data = Database::Singleton()->sql_select(array('*'), 'tbl_elements', array('id'), array($ids), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
-				$element_data = $db = Database::Singleton()->sql_select(array('*'), 'tbl_elements_data', array('id'), array($ids), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
+				$data = Database::Singleton()->sql_select(array('*'), 'tbl_elements', array('id', 'visible', 'deleted'), array($ids, $this->visible, $this->deleted), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
+				$element_data = Database::Singleton()->sql_select(array('*'), 'tbl_elements_data', array('id'), array($ids), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
 				
 				$i=0;
 				foreach($data as $data)

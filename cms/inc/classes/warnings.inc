@@ -66,6 +66,7 @@ class warnings
 			
 			if(!is_writable(Settings::singleton()->get_setting('cms_root') . '/writeable/logs'))
 			{
+				$this->register('Logs are not writable', 'The folder '.$path.' does not have write permissions logging and autoupdates are now disabled', 1);
 				Settings::Singleton()->overwrite_setting('update_version_check', NULL, true);
 			}
 			else

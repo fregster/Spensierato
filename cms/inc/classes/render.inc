@@ -1,4 +1,4 @@
-<?
+<?php
 class Render
 {
 	private static $instance;
@@ -73,8 +73,6 @@ class Render
 		// Load the site XML pass directly into Render
 		if($_GET['xml'] or Settings::singleton()->get_setting('send_as_xml'))
 		{
-			print_r($_SESSION);
-			die(user::singleton()->id());
 			//Just send the XML
 			header('content-type: text/xml');
 			$search = '<?xml version="1.0"?>';

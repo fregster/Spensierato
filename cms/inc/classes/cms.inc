@@ -861,6 +861,11 @@ class CMS
 					warnings::Singleton()->register('New version of Spensierato released', 'There is a new version available ('.$dns['txt'].') to download which might contain new features, bug fixes and security updates, please visit the spensierato website for details');
 					return true;
 				}
+				else
+				{
+					warnings::Singleton()->register('Auto update check', 'Update check shows you are running the latest version of Spensierato', 3);
+					return false;
+				}
 			}
 		}
 		return false;

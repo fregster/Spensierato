@@ -286,6 +286,7 @@ class CMS
 		{
 			case 'HTML':
 				//Database file, call content singleton
+				die(User::Singleton()->id());
 				Render::Singleton()->render_html(Content::Singleton()->build(), true);
 			    break;
 			    
@@ -403,7 +404,6 @@ class CMS
 					//If not loged in load box else redirect to $value
 					if(User::Singleton()->is_logged_in())
 					{
-						die(User::Singleton()->id());
 						Common::redirect($value);
 					}
 					else

@@ -556,14 +556,14 @@ class CMS
 				break;
 				
 			case 'EDIT_UPDATE_PAGE':
-				if(Security::singleton()->can_edit($value[1]))
+				if(Security::singleton()->can_edit($value[2]))
 				{	
 					//TODO update from laptop as required classes have not been comited
 					if(isset($_POST['title']))
 					{
-						database::singleton()->sql_update_by_id($value[1], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
+						database::singleton()->sql_update_by_id($value[2], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
 					}
-					common::redirect($value[1]);
+					common::redirect($value[2]);
 				}
 				else
 				{

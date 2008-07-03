@@ -84,20 +84,9 @@ class currentPage
 		//Page id checking, if not set goto homepage
 		if(!isset(CMS::Singleton()->path_vars[0]))
 		{
-			//$path_vars is not set get homepage from the settings class
-			
-			if(Settings::Singleton()->get_setting('homepage'))
-			{
-				$value = Settings::Singleton()->get_setting('homepage');
-			}
-			else
-			{
-				$value = database::singleton()->sql_select_first(array('id'), 'tbl_pages', NULL, NULL, array('id'), 'ASC');
-				$value = $value['id'];
-			}
-			
+			//$path_vars is not set so load an empty page from page
 			return array('type' => 'HTML',
-						'value' => $value);
+						'value' => Page::Singleton()->load());
 		}
 		else
 		{
@@ -210,13 +199,13 @@ class currentPage
 					//CMS Users Account page
 					case 'account':
 						return array('type' => 'ACCOUNT',
-									'value' => CMS::Singleton()->path_vars[1]);
+									'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
 						break;
 						
 					//CMS Users Account page
 					case 'warnings':
 						return array('type' => 'WARNINGS',
-									'value' => CMS::Singleton()->path_vars[1]);
+									'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
 						break;
 					
 					//CMS in edit mode
@@ -269,53 +258,21 @@ class currentPage
 						
 					//Logging in / out options
 					case 'login':
-						if(is_numeric(CMS::Singleton()->path_vars[1]))
-						{
-							$value = CMS::Singleton()->path_vars[1];
-						}
-						else
-						{
-							$value = Settings::Singleton()->get_setting('homepage');
-						}
 						return array(	'type' => 'LOGIN',
-										'value' => $value);
+										'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
 										
 					case 'logout':
-						if(is_numeric(CMS::Singleton()->path_vars[1]))
-						{
-							$value = CMS::Singleton()->path_vars[1];
-						}
-						else
-						{
-							$value = Settings::Singleton()->get_setting('homepage');
-						}
 						return array(	'type' => 'LOGOUT',
-										'value' => $value);
+										'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
 								
 					//Static CMS content type pages		
 					case 'help':
-						if(is_numeric(CMS::Singleton()->path_vars[1]))
-						{
-							$value = CMS::Singleton()->path_vars[1];
-						}
-						else
-						{
-							$value = Settings::Singleton()->get_setting('homepage');
-						}
 						return array(	'type' => 'HELP',
-										'value' => $value);
+										'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
 										
 					case 'access':
-						if(is_numeric(CMS::Singleton()->path_vars[1]))
-						{
-							$value = CMS::Singleton()->path_vars[1];
-						}
-						else
-						{
-							$value = Settings::Singleton()->get_setting('homepage');
-						}
 						return array(	'type' => 'ACCESS',
-										'value' => $value);
+										'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
 						
 					case 'install':
 						return array( 'type' => 'INSTALL',

@@ -68,18 +68,20 @@ class warnings
 			{
 				Settings::Singleton()->overwrite_setting('update_version_check', NULL, true);
 			}
-			
-			$update_log = Settings::singleton()->get_setting('cms_root') . '/writeable/logs/update.log';
-			
-			if(!is_file($update_log))
+			else
 			{
-				if(fopen($update_log, 'w'))
+				$update_log = Settings::singleton()->get_setting('cms_root') . '/writeable/logs/update.log';
+				
+				if(!is_file($update_log))
 				{
-					fclose($update_log);	
-				}
-				else
-				{
-					Settings::Singleton()->overwrite_setting('update_version_check', NULL, true);
+					if(fopen($update_log, 'w'))
+					{
+						fclose($update_log);	
+					}
+					else
+					{
+						Settings::Singleton()->overwrite_setting('update_version_check', NULL, true);
+					}
 				}
 			}
 		}

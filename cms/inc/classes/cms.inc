@@ -168,8 +168,9 @@ class CMS
 			ini_set('session.save_handler', 'memcache');
 			ini_set('session.save_path', $session_save_path);
 		}
-			
-		session_set_cookie_params(0, Settings::Singleton()->get_setting('document_root'), $_SERVER['SERVER_NAME'], NULL, TRUE);
+//			Setting the domain seems to sometimes stop the browser from saving the cookie
+//		session_set_cookie_params(0, Settings::Singleton()->get_setting('document_root'), $_SERVER['SERVER_NAME'], NULL, TRUE);
+		session_set_cookie_params(0, Settings::Singleton()->get_setting('document_root'), NULL, NULL, TRUE);
 		session_start();
 		
 		$this->session_user_agent_check();
@@ -586,7 +587,10 @@ class CMS
 			case 'EDIT_TOGGLE_ELEMENT':
 				if(Security::singleton()->can_edit_element($value[1]))
 				{	
-					common::redirect($value[1]);
+					$element = Element::type($value[1]);
+					$element->build($value[1]);
+					$element->toggle($value[2]);
+					common::redirect($element->main());
 				}
 				else
 				{

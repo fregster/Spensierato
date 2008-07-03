@@ -119,7 +119,6 @@ class CMS
 
 		//Decide what to do with the current page
 		$this->get_page($this->page_details['type'], $this->page_details['value']);
-		
 	}
 	
 	public function end_cms()
@@ -286,7 +285,6 @@ class CMS
 		{
 			case 'HTML':
 				//Database file, call content singleton
-				die(User::Singleton()->id());
 				Render::Singleton()->render_html(Content::Singleton()->build(), true);
 			    break;
 			    

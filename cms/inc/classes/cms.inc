@@ -170,7 +170,15 @@ class CMS
 		}
 //			Setting the domain seems to sometimes stop the browser from saving the cookie
 //		session_set_cookie_params(0, Settings::Singleton()->get_setting('document_root'), $_SERVER['SERVER_NAME'], NULL, TRUE);
-		session_set_cookie_params(0, Settings::Singleton()->get_setting('document_root'), NULL, NULL, TRUE);
+		if(Settings::Singleton()->get_setting('document_root') == '/')
+		{
+			session_set_cookie_params(0, NULL, NULL, NULL, TRUE);
+		}
+		else
+		{
+			session_set_cookie_params(0, Settings::Singleton()->get_setting('document_root'), NULL, NULL, TRUE);
+		}
+		
 		session_start();
 		
 		$this->session_user_agent_check();

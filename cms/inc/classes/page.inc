@@ -33,7 +33,7 @@ class page
 	
 	public function load($id = NULL)
 	{
-		if($id == NULL and !is_numeric($id))
+		if($id == NULL or !is_numeric($id))
 		{	
 			if(Settings::Singleton()->get_setting('homepage'))
 			{

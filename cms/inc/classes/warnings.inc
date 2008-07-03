@@ -63,6 +63,25 @@ class warnings
     				Settings::Singleton()->overwrite_setting('uploads_enabled', false);
 				}
 			}
+			
+			if(!is_writable(Settings::singleton()->get_setting('cms_root') . '/writeable/logs'))
+			{
+				Settings::Singleton()->overwrite_setting('update_version_check', NULL, true);
+			}
+			
+			$update_log = Settings::singleton()->get_setting('cms_root') . '/writeable/logs/update.log';
+			
+			if(!is_file($update_log))
+			{
+				if(fopen($update_log, 'w'))
+				{
+					fclose($update_log);	
+				}
+				else
+				{
+					Settings::Singleton()->overwrite_setting('update_version_check', NULL, true);
+				}
+			}
 		}
 		
 	}

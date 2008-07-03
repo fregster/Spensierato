@@ -114,6 +114,9 @@ class CMS
 		//Work out what sort of page we are running
 		$this->page_details = currentPage::Singleton()->page_details();
 
+		//Do any admin checks
+		$this->admin();
+		
 		//Decide what to do with the current page
 		$this->get_page($this->page_details['type'], $this->page_details['value']);
 		
@@ -217,6 +220,15 @@ class CMS
 			{
 				$_SESSION['CREATED_TIME'] = time();
 			}
+		}
+	}
+	
+	private function admin()
+	{
+		if(Options::singleton()->get_option('admin_mode'))
+		{
+			//When in admin mode do extra code such as version checking
+			$this->version_check();
 		}
 	}
 	

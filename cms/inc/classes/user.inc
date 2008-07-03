@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 // Proxy class to the user and membership backends
 // Well should be!

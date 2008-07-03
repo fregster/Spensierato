@@ -1,4 +1,4 @@
-<?
+<?php
 class Menu
 {
 	protected static $instance;
@@ -32,7 +32,7 @@ class Menu
 	public function build()
 	{
 		//Get current page details
-		$this->current_page = currentPage::Singleton()->id();
+		$this->current_page = Page::Singleton()->id();
 		$this->current_page_details = currentPage::Singleton()->page_information();
 		
 		//Get path to current page

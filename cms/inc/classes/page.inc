@@ -11,6 +11,11 @@ class page
 	private $id;
 	private $page_details;
 	
+	function __construct()
+	{
+		$this->load();
+	}
+	
 	public static function Singleton()
 	{
 	   if (!isset(self::$instance)) {
@@ -26,12 +31,29 @@ class page
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 	
-	public function load($id)
+	public function load($id = NULL)
 	{
-		$this->id = $id;
+		if($id == NULL and !is_numeric($id))
+		{	
+			if(Settings::Singleton()->get_setting('homepage'))
+			{
+				$this->id = Settings::Singleton()->get_setting('homepage');
+			}
+			else
+			{
+				$value = database::singleton()->sql_select_first(array('id'), 'tbl_pages', NULL, NULL, array('id'), 'ASC');
+				$this->id = $value['id'];
+			}
+		}
+		else
+		{
+			$this->id = $id;
+		}
 		
 		//Get current page details
 		$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->id));
+		
+		return $this->id;
 	}
 	
 	

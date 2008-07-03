@@ -1,4 +1,4 @@
-<?
+<?php
 class Settings
 {
 	private $settings = array();

@@ -875,7 +875,7 @@ class CMS
 				}
 				else
 				{
-					warnings::Singleton()->register('Auto update check', 'Update check shows you are running the latest version of Spensierato', 3);
+					warnings::Singleton()->register('Auto update check', 'Update check shows you are running the latest version of Spensierato '.$dns['txt'], 3);
 					return false;
 				}
 			}

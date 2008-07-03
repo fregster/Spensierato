@@ -47,7 +47,7 @@
 		<xsl:if test="/page/options/admin_mode = 1">
 		<xsl:if test="/page/security/can_edit = 1">
 			<xsl:element name="form">
-				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/up/<xsl:value-of select="/page/@id" /></xsl:attribute>
+				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/up/<xsl:value-of select="/page/@id" /></xsl:attribute>
 				<xsl:attribute name="method">POST</xsl:attribute>
 				<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
 				<xsl:element name="div">	

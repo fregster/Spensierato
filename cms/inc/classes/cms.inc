@@ -561,6 +561,7 @@ class CMS
 					//TODO update from laptop as required classes have not been comited
 					if(isset($_POST['title']))
 					{
+						print_r($value);
 						database::singleton()->sql_update_by_id($value[2], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
 					}
 					common::redirect($value[2]);

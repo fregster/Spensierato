@@ -63,10 +63,10 @@ class warnings
     				Settings::Singleton()->overwrite_setting('uploads_enabled', false);
 				}
 			}
-			
-			if(!is_writable(Settings::singleton()->get_setting('cms_root') . '/writeable/logs'))
+			$log_folder = Settings::singleton()->get_setting('cms_root') . '/writeable/logs';
+			if(!is_writable($log_folder))
 			{
-				$this->register('Logs are not writable', 'The folder '.$path.' does not have write permissions logging and autoupdates are now disabled', 1);
+				$this->register('Logs are not writable', 'The folder '.$log_folder.' does not have write permissions logging and autoupdates are now disabled', 1);
 				Settings::Singleton()->overwrite_setting('update_version_check', NULL, true);
 			}
 			else

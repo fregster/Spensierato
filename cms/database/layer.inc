@@ -245,7 +245,7 @@ class Database
 			$i = 0;
 			while($i <= (count($where_values) - 1))
 			{
-				
+				$sql_temp_where_or =' (';
 				//Check if this is an or statment
 				if(is_array($where_values[$i]))
 				{
@@ -256,7 +256,7 @@ class Database
 					}
 					
 					$j = 0;
-					$sql_temp_where_or ='(';
+					
 					while($j <= (count($or_values) - 1))
 					{
 						$sql_temp_where_or .= $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
@@ -273,7 +273,7 @@ class Database
 						$j++;
 					}
 					
-					$sql_temp_where = ' (' . $sql_temp_where_or . ') ';
+					$sql_temp_where .= ' (' . $sql_temp_where_or . ') ';
 				}
 				else
 				{
@@ -289,7 +289,7 @@ class Database
 				
 				$i++;
 			}
-			$sql = $sql	. ' WHERE ' . $sql_temp_where;
+			$sql .= ' WHERE (' . $sql_temp_where.')';
 		}
 		
 		

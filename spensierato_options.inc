@@ -1,5 +1,8 @@
 <?
 //Site Settings
+//Settings::Singleton()->new_setting($name, $value, $protected = false, $hidden = false)
+//Protected stops the value been overwriten in the future by DB settings
+//Hidden stops the settings been viewed in the XML, useful for hiding directory structure
 
 //Setting $GLOBALS['protect_db_settings']
 //Alows overwriting of the db settings with settings from this file
@@ -22,6 +25,18 @@ Settings::Singleton()->new_setting('site_name_short', 'Spensierato');
 //Setting site_lang
 //For language template (Not implemented)
 Settings::Singleton()->new_setting('site_lang', 'en');
+
+//Setting meta_description
+//
+Settings::singleton()->new_setting('meta_description', 'A free and easy to use, open source content managment system');
+
+//Setting meta_keywords
+//String of Comma seperated values
+Settings::Singleton()->new_setting('meta_keywords', 'cms, open, free, gpl, spensierato, content, managment, system');
+
+//Setting meta_verify-v1
+//Google verification string
+Settings::Singleton()->new_setting('meta_verify-v1', NULL);
 
 //Setting char_set
 //Default encodeing set

@@ -5,8 +5,20 @@
 				
 				<xsl:element name="meta">
 					<xsl:attribute name="name">keywords</xsl:attribute>
-					<xsl:attribute name="content">Stylesheets</xsl:attribute>
+					<xsl:attribute name="content"><xsl:value-of select="/page/settings/meta_keywords" /></xsl:attribute>
 				</xsl:element>
+				
+				<xsl:element name="meta">
+					<xsl:attribute name="name">description</xsl:attribute>
+					<xsl:attribute name="content"><xsl:value-of select="/page/settings/meta_description" /></xsl:attribute>
+				</xsl:element>
+				
+				<xsl:if test="/page/settings/meta_verify-v1 != ''">
+				<xsl:element name="meta">
+					<xsl:attribute name="name">verify-v1</xsl:attribute>
+					<xsl:attribute name="content"><xsl:value-of select="/page/settings/meta_verify-v1" /></xsl:attribute>
+				</xsl:element>
+				</xsl:if>
 				
 				<xsl:element name="link">
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css</xsl:attribute>

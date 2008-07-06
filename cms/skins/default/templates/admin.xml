@@ -77,13 +77,13 @@
 					<xsl:element name="a">
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tp/<xsl:value-of select="/page/@id" />/delete</xsl:attribute>
 						<xsl:element name="img">
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 							<xsl:if test="/page/@deleted = 0">
-								<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
+								<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
 								<xsl:attribute name="alt">Delete</xsl:attribute>
 							</xsl:if>
 							<xsl:if test="/page/@deleted = 1">
-								<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
+								<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
 								<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
 							</xsl:if>
 						</xsl:element>
@@ -150,8 +150,42 @@
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="./@id" /></xsl:attribute>
 					<!--<xsl:attribute name="onclick">editContent('eid_<xsl:value-of select="./@id" />'); return false;</xsl:attribute>  -->
 					<xsl:attribute name="onclick">showPopWin('<xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="./@id" />', 650, <xsl:value-of select="./@eh" />, pageReload); return false;</xsl:attribute>
-					Edit Content
+					<xsl:element name="img">
+						<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+						<xsl:attribute name="alt">Edit Content</xsl:attribute>
+						<xsl:attribute name="class">sprite sprite-page_white</xsl:attribute>
+					</xsl:element>
+							
 				</xsl:element>
+				 | 
+					<xsl:element name="a">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/te/<xsl:value-of select="./@id" />/visibility</xsl:attribute>
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:if test="./@visible = 1">
+								<xsl:attribute name="class">sprite sprite-lightbulb</xsl:attribute>
+								<xsl:attribute name="alt">Visibile</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="./@visible = 0">
+								<xsl:attribute name="class">sprite sprite-lightbulb_off</xsl:attribute>
+								<xsl:attribute name="alt">Hidden</xsl:attribute>
+							</xsl:if>
+						</xsl:element>
+					</xsl:element> | 
+					<xsl:element name="a">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/te/<xsl:value-of select="./@id" />/delete</xsl:attribute>
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:if test="./@deleted = 0">
+								<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
+								<xsl:attribute name="alt">Delete</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="./@deleted = 1">
+								<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
+								<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
+							</xsl:if>
+						</xsl:element>
+					</xsl:element>
 			</xsl:element>			
 		</xsl:if>
 	</xsl:template>

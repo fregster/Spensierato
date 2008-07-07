@@ -13,7 +13,6 @@ set_include_path(
       'COOKIE' => $_COOKIE
   );
   $init = IDS_Init::init(dirname(__FILE__) .'/config.ini');
-  print_r($init);
 
   $ids = new IDS_Monitor($request, $init);
   $result = $ids->run();

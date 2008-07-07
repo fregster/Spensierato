@@ -86,7 +86,8 @@ class IDS_Init
 
         $this->setConfigPath($configPath);
         $this->config = parse_ini_file($this->configPath, true);
-
+		$this->config['general']['filter_path'] = dirname(__FILE__).'/'.$this->config['general']['filter_path'];
+		
         return $this;
     }
 

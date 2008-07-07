@@ -14,7 +14,7 @@ set_include_path(
   );
   $init = IDS_Init::init(dirname(__FILE__) .'/config.ini');
   print_r($init);
-  $init['config']['general']['filter_path'] = dirname(__FILE__) .'/lib/'.$init['config']['general']['filter_path'];
+
   $ids = new IDS_Monitor($request, $init);
   $result = $ids->run();
 

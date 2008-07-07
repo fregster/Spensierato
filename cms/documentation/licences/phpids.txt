@@ -1,0 +1,5 @@
+PHPIDS
+
+http://php-ids.org/
+
+Released under the Lesser GPL

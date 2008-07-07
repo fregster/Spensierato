@@ -1,4 +1,4 @@
-<?
+<?php
 //Site Settings
 //Settings::Singleton()->new_setting($name, $value, $protected = false, $hidden = false)
 //Protected stops the value been overwriten in the future by DB settings
@@ -136,6 +136,10 @@ Settings::Singleton()->new_setting('site_option_showpagetime', true);
 //Askes the render method to call tidy on the html output, the default skin should not need this but its here anyway.
 //true / false
 Settings::Singleton()->new_setting('tidy', true, false, true);
+
+//Setting phpids
+//Use PHPIDS (Intrusion Detection System)
+Settings::singleton()->new_setting('phpids', true, false, true);
 
 //Site file options
 Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'));

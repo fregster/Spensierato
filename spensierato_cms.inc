@@ -18,23 +18,29 @@ try
 	$install = true;
 	
 	//Include the Site setup code
-	if(is_file('spensierato_setup.inc'))
+	if(is_file('./spensierato_setup.inc'))
 	{
-		require_once('spensierato_setup.inc');
+		require_once('./spensierato_setup.inc');
 		$install = false;
 	}
 	
 	//Include the CMS
-	require_once('cms/cms_includes.inc');
+	require_once('./cms/cms_includes.inc');
 	
 	if($install)
 	{
-		include('cms/install/install.inc');
+		include('./cms/install/install.inc');
 		die();
 	}
 	
 	//Include the Options file
-	require_once('spensierato_options.inc');
+	require_once('./spensierato_options.inc');
+	
+	//If required include PHPIDS
+	if(Settings::singleton()->get_setting('phpids'))
+	{
+		require_once('./phpids/phpids.inc');
+	}
 	
 	//Start site
 	CMS::Singleton()->start();

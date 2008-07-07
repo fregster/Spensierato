@@ -1,4 +1,4 @@
-This CMS currnetly requires
+This CMS currently requires
 
 //PHP related
 PHP 5.2 ish

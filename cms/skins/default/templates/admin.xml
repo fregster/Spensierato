@@ -63,8 +63,8 @@
 					<xsl:element name="a">
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tp/<xsl:value-of select="/page/@id" />/visibility</xsl:attribute>
 						<xsl:element name="img">
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
-							<xsl:if test="/page/@visible != 0">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:if test="/page/@visible = 1">
 								<xsl:attribute name="class">sprite sprite-lightbulb</xsl:attribute>
 								<xsl:attribute name="alt">Visibile</xsl:attribute>
 							</xsl:if>
@@ -82,7 +82,7 @@
 								<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
 								<xsl:attribute name="alt">Delete</xsl:attribute>
 							</xsl:if>
-							<xsl:if test="/page/@deleted != 0">
+							<xsl:if test="/page/@deleted = 1">
 								<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
 								<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
 							</xsl:if>
@@ -141,7 +141,7 @@
 				
 				<xsl:element name="img">
 					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
-					<xsl:attribute name="class">sprite sprite-accept</xsl:attribute>
+					<xsl:attribute name="class">sprite sprite-<xsl:value-of select="./@image" /></xsl:attribute>
 					<xsl:attribute name="alt">Icon</xsl:attribute>
 				</xsl:element>
 				<xsl:value-of select="./@etype" /> | <xsl:value-of select="./data/title" />
@@ -153,7 +153,7 @@
 					<xsl:element name="img">
 						<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 						<xsl:attribute name="alt">Edit Content</xsl:attribute>
-						<xsl:attribute name="class">sprite sprite-page_white</xsl:attribute>
+						<xsl:attribute name="class">sprite sprite-<xsl:value-of select="./@image_edit" /></xsl:attribute>
 					</xsl:element>
 							
 				</xsl:element>
@@ -161,12 +161,12 @@
 					<xsl:element name="a">
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/te/<xsl:value-of select="./@id" />/visibility</xsl:attribute>
 						<xsl:element name="img">
-							<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 							<xsl:if test="./@visible = 1">
 								<xsl:attribute name="class">sprite sprite-lightbulb</xsl:attribute>
 								<xsl:attribute name="alt">Visibile</xsl:attribute>
 							</xsl:if>
-							<xsl:if test="./@visible = 0">
+							<xsl:if test="./@visible != 1">
 								<xsl:attribute name="class">sprite sprite-lightbulb_off</xsl:attribute>
 								<xsl:attribute name="alt">Hidden</xsl:attribute>
 							</xsl:if>
@@ -180,7 +180,7 @@
 								<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
 								<xsl:attribute name="alt">Delete</xsl:attribute>
 							</xsl:if>
-							<xsl:if test="./@deleted = 1">
+							<xsl:if test="./@deleted != 0">
 								<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
 								<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
 							</xsl:if>

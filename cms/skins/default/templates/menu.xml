@@ -1,7 +1,7 @@
 
 		<xsl:template name="menu_link">
 		<xsl:element name="a">
-			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="id" /></xsl:attribute>
+			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="./id" /></xsl:attribute>
 			<xsl:attribute name="class">link</xsl:attribute>
 			<xsl:if test="/page/options/admin_mode = 1">
 				<xsl:if test="visible != '1'">
@@ -76,13 +76,9 @@
 	</xsl:template>
 	
 	<xsl:template name="menu_current">
-			<div id="menu_current">
-				<xsl:element name="a">
-					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="/page/menu/menu/current/id" /></xsl:attribute>
-					<xsl:attribute name="class">link</xsl:attribute>
-					<xsl:value-of select="/page/menu/menu/current/title" />
-				</xsl:element>
-			</div>
+		<xsl:for-each select="/page/menu/menu/current">
+			<div id="menu_current"><xsl:call-template name="menu_link"/></div>
+		</xsl:for-each>
 	</xsl:template>
 	
 	<xsl:template name="menu_parallel">

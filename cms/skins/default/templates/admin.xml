@@ -82,7 +82,7 @@
 								<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
 								<xsl:attribute name="alt">Delete</xsl:attribute>
 							</xsl:if>
-							<xsl:if test="/page/@deleted = 1">
+							<xsl:if test="/page/@deleted != 0">
 								<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
 								<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
 							</xsl:if>

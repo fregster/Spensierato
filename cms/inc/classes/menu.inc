@@ -34,10 +34,10 @@ class Menu
 		//Get current page details
 		$this->current_page = Page::Singleton()->id();
 		$this->current_page_details = currentPage::Singleton()->page_information();
-		
+
 		//Get path to current page
 		$this->path = array_reverse($this->get_path());
-		
+
 		//Get the parents of the current page
 		$this->get_parents();
 		

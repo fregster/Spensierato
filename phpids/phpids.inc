@@ -41,7 +41,7 @@ set_include_path(
   
   catch(Exception $e)
   {
-  	Warnings::register('PHPIDS', 'An exception was thrown ('.$e->getMessage().'). PHPIDS has been disabled', 3);
+  	Warnings::Singleton()->register('PHPIDS', 'An exception was thrown ('.$e->getMessage().'). PHPIDS has been disabled', 3);
   }
   
 set_include_path(NULL);

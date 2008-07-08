@@ -168,7 +168,7 @@ class currentPage
 					
 					//TODO Merge
 					//CMS JS files running through combine no security and cached
-					case 'javascript':
+					case 'js-combine':
 						return array('type' => 'JAVASCRIPT',
 									'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
 						break;

@@ -13,7 +13,7 @@ class page
 	
 	function __construct()
 	{
-		$this->load();
+//		$this->load();
 	}
 	
 	public static function Singleton()

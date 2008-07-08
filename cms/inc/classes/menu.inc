@@ -62,7 +62,7 @@ class Menu
 				{
 					$toppage = true;
 				}
-			}
+		}
 		}
 		if(!$toppage)
 		{
@@ -82,7 +82,6 @@ class Menu
 			);
 
 		$this->menu_xml = Common::array_to_xml($menu_array, $serializer_options);
-
 		return $this->menu_xml;
 	}
 	

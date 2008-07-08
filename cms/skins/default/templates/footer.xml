@@ -14,4 +14,5 @@
 					pageTracker._trackPageview();
 					</script>
 				</xsl:if>
+				<!-- tested by blogsecurify -->
 	</xsl:template>

@@ -10,6 +10,7 @@ if(class_exists('elementDownload'))
 			$this->type = __CLASS__;
 			$this->name = 'Image';
 			$this->image = 'image.png';
+			$this->image_edit = '';
 			$this->allowed_tags(array('href' => 'href'));
 		}
 	

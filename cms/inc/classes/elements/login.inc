@@ -6,6 +6,7 @@ class elementLogin extends elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'Login Box Element';
 		$this->image = 'login.png';
+		$this->image_edit = '';
 		$this->edit_height = 600;
 	}
 	

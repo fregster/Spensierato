@@ -46,6 +46,14 @@ Settings::Singleton()->new_setting('char_set', 'UTF-8');
 //int default sql select lowest value from db set to reduce sql hits or force to defaut to another page
 //Settings::Singleton()->new_setting('homepage', 1);
 
+//Settings content_require_approval
+//Allow contributors to make changes but they must wait for an editor to approve the content before it gets published
+Settings::Singleton()->new_setting('content_require_approval', true);
+
+//Settings content_auto_publish
+//If you can aprove your own content on saving it will be automaticaly published
+Settings::Singleton()->new_setting('content_auto_publish', true);
+
 //Setting menu_level
 //int default 0
 Settings::Singleton()->new_setting('menu_level', 0);

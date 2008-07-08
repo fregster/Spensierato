@@ -10,6 +10,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			$this->type = __CLASS__;
 			$this->name = 'File Download';
 			$this->image = 'download.png';
+			$this->image_edit = '';
 			$this->edit_height = 600;
 		}
 	

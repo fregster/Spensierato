@@ -184,7 +184,7 @@ class Content
 		//Only load elements from DB if page type = html
 		if(CMS::Singleton()->page_details['type'] == 'HTML')
 		{
-			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible'), array(currentPage::Singleton()->id(), $this->visible), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
+			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible', 'sort'), array(currentPage::Singleton()->id(), $this->visible), array('id'), array('sort'), options::Singleton()->get_option('admin_mode'));
 			$id_string = '';
 			
 			if(isset($elements[0]))

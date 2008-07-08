@@ -85,6 +85,9 @@ class CMS
 	*/
 	public function start()
 	{
+		//Set time
+		$this->time_start = time();
+		
 		//Is memcached supported
 		$this->memcached();
 		
@@ -592,6 +595,7 @@ class CMS
 				{	
 					$element = Element::type($value[1]);
 					$element->build($value[1]);
+					
 					$element->toggle($value[2]);
 					common::redirect($element->main());
 				}

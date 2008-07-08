@@ -6,6 +6,7 @@ class elementWarnings extends elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'CMS Warnings Element';
 		$this->image = '';
+		$this->image_edit = '';
 		$this->edit_height = 450;
 	}
 	

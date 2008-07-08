@@ -648,6 +648,63 @@ class Database
 		return $this->sql_exe($sql, NULL, true);
 	}
 	
+	public function sql_count_where($table, $fields, $values, $FORCE_NO_CACHE = FALSE)
+	{
+		$sql = 'SELECT count(*) FROM `'.$this->prefix. $this->sql_clean_input($table).'`';
+		
+		//Include Where clause into sql if set
+		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
+		{
+			$i = 0;
+			while($i <= (count($where_values) - 1))
+			{
+				
+				//Check if this is an or statment
+				if(is_array($where_values[$i]))
+				{
+					$or_values = array();
+					foreach($where_values[$i] as $or)
+					{
+						array_push($or_values, $or);
+					}
+					
+					$j = 0;
+					while($j <= (count($or_values) - 1))
+					{
+						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
+						//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
+						
+						if($j < (count($or_values) - 1))
+						{
+							$sql_temp_where_or .= ' OR ';
+						}
+						$j++;
+					}
+					
+					$sql_temp_where = ' (' . $sql_temp_where_or . ') ';
+				}
+				else
+				{
+					$sql_temp_where .= '(' . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($where_values[$i]) .'")';
+					//$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = ?';
+				}
+				
+				
+				if($i < (count($where_values) - 1))
+				{
+					$sql_temp_where .= ' AND ';
+				}
+				
+				$i++;
+			}
+			$sql .= ' WHERE (' . $sql_temp_where.')';
+		}
+		
+		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+		return $result[0]['count(*)'];
+	}
+	
+	
 	//$Values is for when I get around to implimenting MDB2 properly!
 	private function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{

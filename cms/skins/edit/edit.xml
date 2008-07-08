@@ -3,6 +3,7 @@
 			<xsl:call-template name="header"/>
 
 			<xsl:element name="body">
+			<xsl:attribute name="onload">init();</xsl:attribute>
 			<div id="notifications" style="visibility: hidden;">Notifications</div>
 					<div id="page_edit">
 					<xsl:element name="form">
@@ -83,12 +84,15 @@
 
 <xsl:template name="edit_header">
 	<div id="edit_header">
-		Element Name:
-		Created By:
-		If edited last edited by:
-		Revision:
-		Aproved By:
-		Approved On:
+		Created By: <xsl:value-of select="/page/body/element/@creator" /> ( ) | 
+		<xsl:if test="/page/body/element/@editor">
+			Edited by: <xsl:value-of select="/page/body/element/@editor" /> ( ) | 
+			Revision: <xsl:value-of select="/page/body/element/@revision" /><br />
+			<xsl:if test="/page/body/element/@approved">
+				Last Aproved By: <xsl:value-of select="/page/body/element/@approved" /><br />
+				Approved On: <xsl:value-of select="/page/body/element/@approver" /><br />
+			</xsl:if>
+		</xsl:if>
 	</div>
 </xsl:template>
 
@@ -101,7 +105,7 @@
 		</xsl:element>
 		<xsl:element name="input">
 			<xsl:attribute name="type">submit</xsl:attribute>
-			<xsl:attribute name="value">Save</xsl:attribute>
+			<xsl:attribute name="value">Save and Close</xsl:attribute>
 		</xsl:element>
 	</div>
 </xsl:template>

@@ -7,6 +7,7 @@ class elementContact extends elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'Page Contact';
 		$this->image = 'contact.png';
+		$this->image_edit = '';
 		$this->allowed_tags(array('name' => 'text', 'email' => 'email', 'userid' => 'numeric'));
 		$this->edit_height = 600;
 	}

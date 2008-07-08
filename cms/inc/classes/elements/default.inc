@@ -7,7 +7,17 @@ class elementDefault
 	protected $type;
 	protected $name;
 	protected $image;
+	protected $image_edit;
 	protected $edit_height;
+	protected $visible;
+	protected $deleted;
+	protected $created;
+	protected $creator;
+	protected $edited;
+	protected $editor;
+	protected $approved;
+	protected $approver;
+	protected $revision;
 	private $tags = array('title' => 'text');
 	private $element;
 	
@@ -15,7 +25,8 @@ class elementDefault
 	{
 		$this->type = __CLASS__;
 		$this->name = 'Default Element';
-		$this->image = 'default.png';
+		$this->image = 'accept';
+		$this->image_edit = 'page_edit';
 		$this->edit_height = 600;
 	}
 	
@@ -70,6 +81,7 @@ class elementDefault
 		$this->element->setAttribute('type', $this->type);
 		$this->element->setAttribute('etype', $this->name);
 		$this->element->setAttribute('eh', $this->edit_height);
+		$this->element->setAttribute('image', $this->image);
 		
 		$this->admin();
 		
@@ -138,6 +150,43 @@ class elementDefault
 				
 	}
 	
+	public function toggle($what)
+	{
+		switch ($what)
+		{
+			case 'visibility':
+				return( $this->toggle_visibility());
+				break;
+
+			case 'delete':
+				return( $this->toggle_deleted());
+				break;
+			
+		default:
+			return false;
+		}
+			
+	}
+	
+	protected function toggle_visibility()
+	{
+		$new_visibility = ($this->visible - 1)*(-1);
+		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('visible'), array($new_visibility));
+	}
+	
+	protected function toggle_deleted()
+	{
+		if($this->deleted == (NULL or 0))
+		{
+			$this->deleted = CMS::time();
+		}
+		else
+		{
+			$this->deleted = NULL;
+		}
+		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('deleted'), array($this->deleted));
+	}
+	
 	protected function process_save($xml, $title)
 	{
 		//TODO call search code
@@ -155,9 +204,28 @@ class elementDefault
 	{
 		if(options::Singleton()->get_option('admin_mode'))
 		{
-			$this->element->setAttribute('edited', '456');
-			$this->element->setAttribute('editon', '123');
-			$this->element->setAttribute('revision', 'draft');
+			$this->get_revision();
+			$this->element->setAttribute('created', $this->created);
+			$this->element->setAttribute('creator', $this->creator);
+			if($this->edited != NULL)
+			{
+				$this->element->setAttribute('edited', $this->edited);
+				$this->element->setAttribute('editor', $this->editor);
+			}
+			if(isset($this->$approved))
+			{
+				$this->element->setAttribute('approved', $this->$approved);
+			}
+			
+			if(isset($this->$approver))
+			{
+				$this->element->setAttribute('approver', $this->$approver);
+			}
+			
+			$this->element->setAttribute('revision', $this->revision);
+			$this->element->setAttribute('image_edit', $this->image_edit);
+			$this->element->setAttribute('visible', $this->visible);
+			$this->element->setAttribute('deleted', $this->deleted);
 		}
 	}
 	
@@ -191,8 +259,18 @@ class elementDefault
 				{
 					if($key == 'title')
 					{
-						$data = Database::Singleton()->sql_select_first(array('title'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);
+						$data = Database::Singleton()->sql_select_first(array('title', 'visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);
+						
+						$this->visible = $data['visible'];
+						$this->deleted = $data['deleted'];
+						$this->created = $data['created'];
+						$this->creator = $data['creator'];
+						$this->edited = $data['edited'];
+						$this->editor = $data['editor'];
+						$this->approved = $data['approved'];
+						$this->aprover = $data['aprover'];
 						$data = $data['title'];
+
 					}
 					else
 					{
@@ -220,6 +298,12 @@ class elementDefault
 			$this->data = '<data>Blank</data>';
 			$this->search = NULL;
 		}
+	}
+	
+	protected function get_revision()
+	{
+		$this->revision = Database::Singleton()->sql_count_where('tbl_element_data_archive', 'element_id', $this->id, options::Singleton()->get_option('admin_mode'));
+		return $this->revision;
 	}
 
 }

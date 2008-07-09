@@ -15,9 +15,13 @@
 					<!-- User logged in and in admin mode-->
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js,submodal/common.js</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js</xsl:attribute>
 						</xsl:element>
 						
+						<xsl:element name="script">
+							<xsl:attribute name="type">text/javascript</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />submodal/common.js</xsl:attribute>
+						</xsl:element>
 						<xsl:element name="script">
 							<xsl:attribute name="type">text/javascript</xsl:attribute>
 							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />submodal/subModal.js</xsl:attribute>

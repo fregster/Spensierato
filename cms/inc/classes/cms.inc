@@ -1,4 +1,4 @@
-<?
+<?php
 class CMS
 {
 	public static $cms_version = '0.0.1';
@@ -116,10 +116,10 @@ class CMS
 	{
 		//Work out what sort of page we are running
 		$this->page_details = currentPage::Singleton()->page_details();
-
+		
 		//Do any admin checks
 		$this->admin();
-
+	
 		//Decide what to do with the current page
 		$this->get_page($this->page_details['type'], $this->page_details['value']);
 	}
@@ -283,7 +283,7 @@ class CMS
 	}
 	
 	private function get_page($type, $value)
-	{		
+	{
 		switch ($type) 
 		{
 			case 'HTML':

@@ -13,7 +13,7 @@ class page
 	
 	function __construct()
 	{
-		$this->load(currentPage::Singleton()->id());
+		$this->load(NULL);
 	}
 	
 	public static function Singleton()

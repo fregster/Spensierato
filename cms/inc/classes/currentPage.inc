@@ -26,10 +26,12 @@ class currentPage
 	{
 		//Work out what the current page is
 		$this->page_type = $this->check_page();
+
 		$this->id = $this->page_type['value'];
 		
 		//Get current page details
 		$this->get_page_details();
+		
 	}
 	
 	public function __clone()

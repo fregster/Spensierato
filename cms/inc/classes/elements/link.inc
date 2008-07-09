@@ -7,8 +7,8 @@ class elementLink extends elementDefault
 	{
 		$this->type = __CLASS__;
 		$this->name = 'Link';
-		$this->image = 'link.png';
-		$this->image_edit = '';
+		$this->image = 'link';
+		$this->image_edit = 'link_edit';
 		$this->allowed_tags(array('text' => 'text', 'href' => 'href'));
 		$this->edit_height = 600;
 	}

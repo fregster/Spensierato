@@ -160,22 +160,9 @@ abstract class javascript
 			    break;
 			
 			case '2':
-				//Use JavaScriptPack
+				//Use external minification
 				
-				$fast_decode = true;
-  				$special_char = true;
-  
-//  				require 'class.JavaScriptPacker.php';
-				$t1 = microtime(true);
-				$packer = new JavaScriptPacker($script, $encoding, $fast_decode, $special_char);
-				$contents = $packer->pack();
-				$t2 = microtime(true);
-				  
-				$originalLength = strlen($script);
-				$packedLength = strlen($contents);
-				$ratio =  number_format($packedLength / $originalLength, 3);
-				$time = sprintf('%.4f', ($t2 - $t1) );
-     			$ratio = $originalLength / $packedLength;
+				$contents = JSMin::minify(file_get_contents($contents));
      			
      			echo($contents);
      			
@@ -187,13 +174,6 @@ abstract class javascript
 				$contents = $contents;
 		}
 		
-		// Store cache
-		if ($cache) {
-			if ($fp = fopen($cachedir . '/' . $cachefile, 'wb')) {
-				$cached = fwrite($fp, $contents);
-				fclose($fp);
-			}
-		}
 		if($cached)
 		{
 			Cache::headers_allow_cache($cachedir . '/' . $cachefile);
@@ -215,6 +195,14 @@ abstract class javascript
 			// Send regular contents
 			header ('Content-Length: ' . strlen($contents));
 			echo $contents;
+		}
+		
+		// Store cache
+		if ($cache) {
+			if ($fp = fopen($cachedir . '/' . $cachefile, 'wb')) {
+				$cached = fwrite($fp, $contents);
+				fclose($fp);
+			}
 		}
 	}
 }

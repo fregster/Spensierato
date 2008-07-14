@@ -176,7 +176,11 @@ abstract class javascript
 				$ratio =  number_format($packedLength / $originalLength, 3);
 				$time = sprintf('%.4f', ($t2 - $t1) );
      			$ratio = $originalLength / $packedLength;
-     			 
+     			
+     			echo($contents);
+     			
+     			die();
+     			
 			    break;
 			
 			default:

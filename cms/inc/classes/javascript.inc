@@ -158,15 +158,25 @@ abstract class javascript
 				//Use internal code minification
 				$contents = Common::remove_js_comments(file_get_contents($contents));
 			    break;
-			    
-			case '2':
-				//Use internal code minification
-				$contents = Common::remove_js_comments(file_get_contents($contents));
-			    break;
 			
-			case '3':
-				//Use JSMini
-				$contents =  JSMin::minify(file_get_contents($contents));
+			case '2':
+				//Use JavaScriptPack
+				
+				$fast_decode = true;
+  				$special_char = true;
+  
+//  				require 'class.JavaScriptPacker.php';
+				$t1 = microtime(true);
+				$packer = new JavaScriptPacker($script, $encoding, $fast_decode, $special_char);
+				$contents = $packer->pack();
+				$t2 = microtime(true);
+				  
+				$originalLength = strlen($script);
+				$packedLength = strlen($contents);
+				$ratio =  number_format($packedLength / $originalLength, 3);
+				$time = sprintf('%.4f', ($t2 - $t1) );
+     			$ratio = $originalLength / $packedLength;
+     			 
 			    break;
 			
 			default:

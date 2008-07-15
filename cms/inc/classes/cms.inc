@@ -114,6 +114,7 @@ class CMS
 	
 	public function run_cms()
 	{
+		
 		//Work out what sort of page we are running
 		$this->page_details = currentPage::Singleton()->page_details();
 		
@@ -236,7 +237,15 @@ class CMS
 		{
 			//When in admin mode do extra code such as version checking
 			$this->version_check();
+			
+			//Register any shutdown cleanup functions
+			register_shutdown_function('CMS::Singleton()->shutdown');
 		}
+	}
+	
+	private function shutdown()
+	{
+		
 	}
 	
 	private function session_ip_check()

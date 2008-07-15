@@ -146,6 +146,7 @@ class CMS
 	
 	public function page_exists()
 	{
+		//TODO write page_exists function
 		return true;
 	}
 	
@@ -514,20 +515,27 @@ class CMS
 				 * Check the related page details
 				 * call file transfer retrieve
 				 */
-				$file = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$value;
-				if(is_file($file))
-				{
-					FileTransfer::singleton()->get_file($file, true);
-					die();
-				}
 				
-				$file = Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$value;
-				if(is_file($file))
+				$pre_load=null;
+				if($value ==='pre-load-images')
 				{
-					FileTransfer::singleton()->get_file($file, true);
-					die();
+					$pre_load = '../pre-load-images/';
+					$value = $this->path_vars[2];
 				}
+					
+				$file_search = array(
+				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$pre_load.$value,
+				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$pre_load.$value
+				);
 				
+				foreach($file_search as $file)
+				{
+					if(is_file($file))
+					{
+						FileTransfer::singleton()->get_file($file, true);
+						die();
+					}
+				}
 				
 				break;
 				
@@ -582,7 +590,7 @@ class CMS
 				}
 				break;
 				
-			case 'EDIT_UPDATE_PAGE':
+			case 'EDIT_UPDATE_PAGE':			
 				if(Security::singleton()->can_edit($value[1]))
 				{	
 					//TODO update from laptop as required classes have not been comited
@@ -705,8 +713,21 @@ class CMS
 	
 	private function create_new_page($parent_id)
 	{
-		$sort = database::Singleton()->sql_max_field('tbl_pages', 'sort', array('parent_id'), array($parent_id));
-		$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array($parent_id, $time, user::Singleton()->id()));
+		echo($parent_id);
+		
+		if($parent_id === '-1')
+		{
+			if(Security::Singleton()->is_admin())
+			{
+				$id = database::Singleton()->sql_insert('tbl_pages', array('created', 'creator', 'title'), array(time(), user::Singleton()->id(), 'Homepage'));
+			}
+		}
+		else
+		{
+			$sort = database::Singleton()->sql_max_field('tbl_pages', 'sort', array('parent_id'), array($parent_id));
+			$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array($parent_id, time(), user::Singleton()->id()));
+		}
+		
 		common::redirect($id);
 		
 	}

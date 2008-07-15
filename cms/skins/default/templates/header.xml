@@ -49,7 +49,7 @@
 					<xsl:if test="count(/page/settings/pre_load_images/setting) > 0">
 					// set pre-loading image list
 				       images = new Array();
-				       <xsl:for-each select="/page/settings/pre_load_images/setting">images[0]="<xsl:value-of select="/page/settings/document_root" />/skin/pre-load-images/<xsl:value-of select="."/>"
+				       <xsl:for-each select="/page/settings/pre_load_images/setting">images[<xsl:value-of select="position() -1" />]="<xsl:value-of select="/page/settings/document_root" />/skin/pre-load-images/<xsl:value-of select="."/>"
 				     </xsl:for-each>
 					</xsl:if>
 					function returnRefresh(returnVal) 

@@ -122,9 +122,9 @@
 			
 			<xsl:otherwise>
 				<xsl:element name="form">
-					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/up/<xsl:value-of select="/page/@id" /></xsl:attribute>
+					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/-1</xsl:attribute>
 					<xsl:attribute name="method">POST</xsl:attribute>
-					<div><input type="submit" value="Create Homepage" /></div>
+					<div><input type="hidden" name="new_type" value="newPage" /><input type="submit" value="Create Homepage" /></div>
 					
 				</xsl:element>
 			</xsl:otherwise>

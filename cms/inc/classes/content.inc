@@ -86,7 +86,7 @@ class Content
 		$this->set_attribute('deleted', $page_info['deleted']);
 		$this->set_attribute('content', 'blank');
 		$this->set_attribute('render_mode', Render::Singleton()->renderMode());
-		$this->set_attribute('id', $page_details['id']);
+		$this->set_attribute('id', $page_details['value']);
 		$this->set_attribute('type', $page_details['type']);
 		
 	}

@@ -239,7 +239,7 @@ class CMS
 			$this->version_check();
 			
 			//Register any shutdown cleanup functions
-			register_shutdown_function('CMS::Singleton()->shutdown');
+			register_shutdown_function(array(&$this, 'shutdown'));
 		}
 	}
 	

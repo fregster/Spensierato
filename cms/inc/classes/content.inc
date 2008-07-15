@@ -79,13 +79,15 @@ class Content
 		}
 		
 		//TODO update to use page class when I upload it!
+		$page_details = currentPage::Singleton()->page_details();
 		$page_info = currentpage::Singleton()->page_information();
 		$this->set_attribute('title', currentPage::Singleton()->title());
 		$this->set_attribute('visible', $page_info['visible']);
 		$this->set_attribute('deleted', $page_info['deleted']);
 		$this->set_attribute('content', 'blank');
 		$this->set_attribute('render_mode', Render::Singleton()->renderMode());
-		$this->set_attribute('id', currentPage::Singleton()->id());
+		$this->set_attribute('id', $page_details['id']);
+		$this->set_attribute('type', $page_details['type']);
 		
 	}
 	

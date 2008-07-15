@@ -330,6 +330,9 @@ class user
 		$_SESSION['userid'] = $this->userid;
 		$this->set_user_details();
 
+		//Update last login time
+		Database::Singleton()->sql_update_time('tbl_users', $this->userid);
+		
 		//Load the previous option state
 		options::Singleton()->load_saved_options();
 		options::Singleton()->set_option('force_reload', true);

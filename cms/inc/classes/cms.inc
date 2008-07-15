@@ -275,9 +275,8 @@ class CMS
 	private function site_login($id)
 	{
 		$_SESSION['site_login'] = true;
-		$_SESSION['user_id'] = $id;
-		User::site_get_users_details($_SESSION['user_id']);
-		Database::Singleton()->sql_update_time('tbl_users', $_SESSION['user_id']);
+		User::site_get_users_details($id);
+		
 		
 		//Redirect after login
 		if(isset($_GET['option']))

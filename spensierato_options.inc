@@ -48,11 +48,11 @@ Settings::Singleton()->new_setting('char_set', 'UTF-8');
 
 //Settings content_require_approval
 //Allow contributors to make changes but they must wait for an editor to approve the content before it gets published
-Settings::Singleton()->new_setting('content_require_approval', true);
+Settings::Singleton()->new_setting('content_require_approval', true, false, true);
 
 //Settings content_auto_publish
 //If you can aprove your own content on saving it will be automaticaly published
-Settings::Singleton()->new_setting('content_auto_publish', true);
+Settings::Singleton()->new_setting('content_auto_publish', true, false, true);
 
 //Setting menu_level
 //int default 0
@@ -150,13 +150,13 @@ Settings::Singleton()->new_setting('tidy', true, false, true);
 Settings::singleton()->new_setting('phpids', true, false, true);
 
 //Site file options
-Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'));
-Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['site_root'] . '/graphics/'));
-Settings::Singleton()->new_setting('site_folder_uploads', ($GLOBALS['site_root'] . '/writeable/uploads/tmp/'));
-Settings::Singleton()->new_setting('site_folder_downloads', ($GLOBALS['site_root'] . '/writeable/downloads/'));
+Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'), false, true);
+Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['site_root'] . '/graphics/'), false, true);
+Settings::Singleton()->new_setting('site_folder_uploads', ($GLOBALS['site_root'] . '/writeable/uploads/tmp/'), false, true);
+Settings::Singleton()->new_setting('site_folder_downloads', ($GLOBALS['site_root'] . '/writeable/downloads/'), false, true);
 /* This has been changed from javascript to js-combine due to debians prototype package url rewriting */
-Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/js-combine/'));
-Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['site_root'] . '/js/'));
+Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/js-combine/'), false, true);
+Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['site_root'] . '/js/'), false, true);
 
 //Temporay uploads folder
 Settings::Singleton()->new_setting('cms_folder_uploads', 'writeable/uploads/tmp/', false, true);
@@ -186,7 +186,7 @@ Settings::Singleton()->new_setting('login_capthca', true);
 //Setting login_capthca_length
 //Sets the length of the image
 //int max 8
-Settings::Singleton()->new_setting('login_capthca_length', 5);
+Settings::Singleton()->new_setting('login_capthca_length', 5, false, true);
 
 //Setting login_capthca_remember
 //If the user logs in with remember me do not use capthca
@@ -232,24 +232,24 @@ Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key'], true, t
 //Setting update_version_check
 //To enable auto version checking set this value to the update server
 //If the log dir is not writeable auto update checking will be disabled
-Settings::Singleton()->new_setting('update_version_check', 'spensierato.fryer.org.uk');
+Settings::Singleton()->new_setting('update_version_check', 'spensierato.fryer.org.uk', false, true);
 
 //Setting update_version_check_schedule
 //Set the timeperiod between version update checking in days
 //If the log dir is not writeable auto update checking will be disabled
 //default: 7
-Settings::Singleton()->new_setting('update_version_check_schedule', 7);
+Settings::Singleton()->new_setting('update_version_check_schedule', 7, false, true);
 
 //Setting user_incorect_logins
 //To enable brute force login protection set the max number of failed logins per username
 //On reaching the value a new password is generated
-Settings::Singleton()->new_setting('user_incorect_logins', 10);
+Settings::Singleton()->new_setting('user_incorect_logins', 10, false, true);
 
 //Setting user_auto_email_password
 //To enable the system to automatacily email new passwords if re-set by the system
 //The email includes a note about account security
-Settings::Singleton()->new_setting('user_auto_email_password', true);
+Settings::Singleton()->new_setting('user_auto_email_password', true, false, true);
 
-Settings::singleton()->new_setting('memcached_sql', false);
-Settings::singleton()->new_setting('memcached_session', false);
+Settings::singleton()->new_setting('memcached_sql', false, false, true);
+Settings::singleton()->new_setting('memcached_session', false, false, true);
 ?>

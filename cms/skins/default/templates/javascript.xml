@@ -1,4 +1,3 @@
-<!-- Put Scriptolucios first -->
 		<xsl:template name="javascript">
 				<xsl:if test="/page/user/id = 0">
 				<!-- User Not logged in -->

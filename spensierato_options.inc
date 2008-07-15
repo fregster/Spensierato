@@ -150,13 +150,13 @@ Settings::Singleton()->new_setting('tidy', true, false, true);
 Settings::singleton()->new_setting('phpids', true, false, true);
 
 //Site file options
-Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'), false, true);
-Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['site_root'] . '/graphics/'), false, true);
+Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'));
+Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['site_root'] . '/graphics/'));
 Settings::Singleton()->new_setting('site_folder_uploads', ($GLOBALS['site_root'] . '/writeable/uploads/tmp/'), false, true);
 Settings::Singleton()->new_setting('site_folder_downloads', ($GLOBALS['site_root'] . '/writeable/downloads/'), false, true);
 /* This has been changed from javascript to js-combine due to debians prototype package url rewriting */
-Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/js-combine/'), false, true);
-Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['site_root'] . '/js/'), false, true);
+Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/js-combine/'));
+Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['site_root'] . '/js/'));
 
 //Temporay uploads folder
 Settings::Singleton()->new_setting('cms_folder_uploads', 'writeable/uploads/tmp/', false, true);

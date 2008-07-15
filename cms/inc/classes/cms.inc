@@ -146,7 +146,6 @@ class CMS
 	
 	public function page_exists()
 	{
-		//TODO write page_exists function
 		return true;
 	}
 	
@@ -244,7 +243,7 @@ class CMS
 		}
 	}
 	
-	private function shutdown()
+	public function shutdown()
 	{
 		
 	}

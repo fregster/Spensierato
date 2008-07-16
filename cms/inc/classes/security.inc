@@ -144,11 +144,13 @@ class Security
 		print_r($security_array);
 		echo('</pre>');
 		
-		if (in_array($user_id, $security_array[$what]['user'])) 
+		if(isset($security_array[$what]['user']))
 		{
-    		echo 'Yes';
+			if (in_array($user_id, $security_array[$what]['user'])) 
+			{
+	    		echo 'Yes';
+			}
 		}
-		
 		die();
 	}
 	

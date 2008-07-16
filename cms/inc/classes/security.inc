@@ -112,7 +112,16 @@ class Security
 	
 	protected function can_do($what, $page_ids = NULL, $user_id = NULL)
 	{
-		if($user_id == NULL) { $user_id = User::Singleton()->id(); }
+		if($user_id == NULL)
+		{
+			$user_id = User::Singleton()->id();
+			$lists = User::Singleton()->lists(); 
+		}
+		else
+		{
+			//TODO write get lists for user function
+			$lists = array();
+		}
 		
 		$this->is_level($what);
 		
@@ -143,6 +152,33 @@ class Security
 		print_r($page_security_xml);
 		print_r($security_array);
 		echo('</pre>');
+		
+		/**
+		 * Check for blocked first
+		 */
+		
+		if(isset($security_array['blocked']['user']))
+		{
+			if (in_array($user_id, $security_array['blocked']['user'])) 
+			{
+	    		return false;
+			}
+		}
+		
+		if(isset($lists[0]))
+		{
+			if(isset($security_array['blocked']['user']))
+			{
+				if (in_array($lists, $security_array['blocked']['group'])) 
+				{
+		    		return false;
+				}
+			}
+		}
+		
+		/**
+		 * The user has not been blocked check the specific security
+		 */
 		
 		if(isset($security_array[$what]['user']))
 		{

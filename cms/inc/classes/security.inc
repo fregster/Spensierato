@@ -121,7 +121,7 @@ class Security
 			$page_ids = currentPage::Singleton()->page_path();
 		}
 		
-		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('id'), array($page_ids));
+		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
 		
 		$security_array = Common::xml_to_array($this->default_security_xml());
 		foreach($page_security_xml as $xml)

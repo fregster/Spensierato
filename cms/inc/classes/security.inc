@@ -179,7 +179,7 @@ class Security
 	
 	protected function default_security_xml()
 	{
-		return '<security><can_view/><can_edit/><can_approve/><blocked/></security>';
+		return '<security><view/><edit/><approve/><blocked/></security>';
 	}
 
 	private function is_level($what)

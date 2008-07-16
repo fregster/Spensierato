@@ -132,10 +132,11 @@ class Security
 				$security_array = array_merge_recursive($security_array, Common::xml_to_array($xml));			
 			}
 		}
+		echo('<pre>');
 		print_r($page_ids);
 		print_r($page_security_xml);
 		print_r($security_array);
-		die();
+		die('</pre>');
 	}
 	
 	public function get_who_can_do($what, $page_ids = NULL)

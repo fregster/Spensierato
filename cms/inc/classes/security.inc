@@ -144,14 +144,6 @@ class Security
 				}			
 			}
 		}
-		echo('<pre>');
-		echo('what: '.$what.'<br/>');
-		echo('user: '.$user_id.'<br/>');
-		echo('pages: '.$page_ids.'<br/>');
-		print_r($page_ids);
-		print_r($page_security_xml);
-		print_r($security_array);
-		echo('</pre>');
 		
 		/**
 		 * Check for blocked first
@@ -180,11 +172,12 @@ class Security
 		 * The user has not been blocked check the specific security
 		 */
 		
-		if(isset($security_array[$what]['user']))
+		if(isset($security_array[$what]['user'][0]))
 		{
 			if (in_array($user_id, $security_array[$what]['user'])) 
 			{
-	    		echo 'Yes';
+	    		echo 'User Id'.$user_id.' is in array ';
+	    		print_r($security_array[$what]['user']);
 			}
 		}
 		die();

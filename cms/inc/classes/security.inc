@@ -1,7 +1,26 @@
-<?
+<?php
+/**
+ * Security class
+ * This security class is the default Spensierato security
+ *
+ * There are 4 levels in security and permissions are inherited down unless explicetly blocked
+ * Block
+ * View
+ * Edit
+ * Approve
+ * 
+ * If no security is set can_view returns true and only site admins can edit and approve
+ * 
+ * Once view is set public access is blocked
+ * Users with Edit and Approve can always view
+ * 
+ * If a user is listed in 'Block' all inherited security is dropped and false is returned
+ * unless the security for a specific page has been requested
+ */
 class Security
 {
 	protected static $instance;
+	protected $levels;
 	
 	public static function Singleton()
 	{
@@ -24,7 +43,7 @@ class Security
 	
 	function __construct()
 	{
-		
+		$this->levels = array('block', 'view', 'edit', 'approve');
 	}
 	
 	public function __clone()
@@ -37,6 +56,7 @@ class Security
 		return '<security>
 				<can_view>'.$this->can_view().'</can_view>
 				<can_edit>'.$this->can_edit().'</can_edit>
+				<can_approve>'.$this->can_approve().'</can_approve>
 				</security>';
 	}
 	
@@ -46,49 +66,80 @@ class Security
 		return User::Singleton()->is_admin();
 	}
 	
+	/**
+	 * can_view a proxy to can_do
+	 */
 	public function can_view($page_id = NULL, $user_id = NULL)
 	{
-		if($this->can_do('view', $page_id, $user_id) != true)
-		{
-			//can_do('view') permission was false, check for higher permissions and return the result
-			return $this->can_edit($page_id, $user_id);
-		}
-		else
-		{
-			//can_do was true
-			return true;
-		}
+		return $this->can_do('view', $page_id, $user_id);
 	}
 	
+	/**
+	 * can_edit a proxy to can_do
+	 */
 	public function can_edit($page_id = NULL, $user_id = NULL)
 	{
-		if($user_id == NULL) { $user_id = $_SESSION['user_id']; }
-		//die(get_class($this));
 		return $this->can_do('edit', $page_id, $user_id);
 	}
 	
-	public function can_edit_element($element_id)
+	/**
+	 * can_approve a proxy to can_do
+	 */
+	public function can_approve($page_id = NULL, $user_id = NULL)
 	{
-		return true;
-//		$page = Database::Singleton()->sql_select_first(array('main'), 'tbl_element', array('id'), array($element_id));
-//
-//		return $this->can_do('edit', $page[0]['page_id']);
+		return $this->can_do('approve', $page_id, $user_id);
+	}
+	
+	/**
+	 * can_approve_element
+	 * Looks up elements main page and calls can_approve
+	 */
+	public function can_approve_element($element_id = NULL, $user_id = NULL)
+	{
+		$page = Database::Singleton()->sql_select_first(array('main'), 'tbl_element', array('id'), array($element_id));
+		return $this->can_do('approve', $page[0]['page_id']);
+	}
+	
+	/**
+	 * can_edit_element
+	 * Looks up elements main page and calls can_edit on page id
+	 */
+	public function can_edit_element($element_id, $user_id = NULL)
+	{
+		$page = Database::Singleton()->sql_select_first(array('main'), 'tbl_element', array('id'), array($element_id));
+		return $this->can_do('edit', $page[0]['page_id']);
 	}
 	
 	protected function can_do($what, $page_ids = NULL, $user_id = NULL)
 	{
-		$options = array('edit', 'view');
+		if($user_id == NULL) { $user_id = $_SESSION['user_id']; }
 		
-		if(!in_array($what, $options) )
+		$this->is_level($what);
+		
+		if($page_ids == NULL)
 		{
-			error('xx', 'You can not call that');
+			$page_ids = currentPage::Singleton()->page_path();
 		}
-		return true;
+		
+		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('id'), array($page_ids));
+		
+		$security_array = Common::xml_to_array($this->default_security_xml());
+		foreach($page_security_xml as $xml)
+		{
+			$security_array = array_merge_recursive($security_array, Common::xml_to_array($xml));			
+		}
+		
+		print_r($security_array);
+		die();
 	}
 	
 	public function get_who_can_do($what, $page_ids = NULL)
 	{
-		return 'EVERYONE';
+		if($this->is_level($what))
+		{
+			return 'EVERYONE';
+		}
+		return NULL;
 	}
 	
 	public function get_security($what, $page_id = NULL, $parent = 0 )
@@ -113,7 +164,21 @@ class Security
 		$page = Databases::singleton()->database($GLOBALS['cms_db_name'])->table('tbl_link_page_elements')->get_records_by_equalto_query(array('element_id', 'main'), array(array($element_id), array(1)), array('page_id'));
 		return $this->can_do('view', $page[0]['page_id']);
 	}
+	
+	protected function default_security_xml()
+	{
+		return '<security><can_view/><can_edit/><can_approve/><blocked/></security>';
+	}
 
+	private function is_level($what)
+	{
+		if(!in_array($what, $this->levels) )
+		{
+			return false;
+//			error('xx', $what.' is not a supported security level');
+		}
+		return $what;
+	}
 }
 
 ?>

@@ -112,7 +112,7 @@ class Security
 	
 	protected function can_do($what, $page_ids = NULL, $user_id = NULL)
 	{
-		if($user_id == NULL) { $user_id = $_SESSION['user_id']; }
+		if($user_id == NULL) { $user_id = User::Singleton()->id(); }
 		
 		$this->is_level($what);
 		

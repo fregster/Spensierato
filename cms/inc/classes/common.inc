@@ -172,21 +172,27 @@ abstract class Common
 	{
 		$xml = simplexml_load_string($xml);
 		
-		foreach ($xml->children() as $child)
-		{			
-			if(isset($php_array[$child->getName()]))
-			{
-				$children = array();
-				array_push($children, array($child->getName(),$php_array[$child->getName()]));
-				array_push($children, array($child->getName(),strip_tags($child->saveXML())));
-				$php_array[$child->getName()] = $children;
+		function process_children($xml)
+		{
+			foreach ($xml->children() as $child)
+			{				
+				foreach($child->children() as $grandchild)
+				{
+					$php_array[$child->getName()] = process_children($child);
+				}
+				if($child->children())
+				{
+					$php_array[$child->getName()] = process_children($child);
+				}
+				else
+				{
+					$php_array[$child->getName()] = strip_tags($child->saveXML());
+				}
 			}
-			else
-			{
-				$php_array[$child->getName()] = strip_tags($child->saveXML());
-			}
-		}
-		return $php_array;
+			return $php_array;
+		}	
+				
+		return process_children($xml);
 	}
 	
 	public static function array_to_xml($array, $serializer_options = NULL)

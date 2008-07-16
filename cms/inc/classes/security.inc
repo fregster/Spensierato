@@ -133,6 +133,12 @@ class Security
 		{
 			$page_ids = currentPage::Singleton()->page_path();
 		}
+		
+		if(!isset($page_ids[0]))
+		{
+			$page_ids = array($page_ids);
+			$page_ids = array_merge($page_ids, currentPage::Singleton()->get_page_parents($page_ids));
+		}
 
 		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
 		

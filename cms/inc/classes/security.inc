@@ -96,7 +96,7 @@ class Security
 	 */
 	public function can_approve_element($element_id = NULL, $user_id = NULL)
 	{
-		$page = Database::Singleton()->sql_select_first(array('main'), 'tbl_element', array('id'), array($element_id));
+		$page = Database::Singleton()->sql_select_first(array('main'), 'tbl_elements', array('id'), array($element_id));
 		return $this->can_do('approve', $page[0]['page_id']);
 	}
 	
@@ -106,7 +106,7 @@ class Security
 	 */
 	public function can_edit_element($element_id, $user_id = NULL)
 	{
-		$page = Database::Singleton()->sql_select_first(array('main'), 'tbl_element', array('id'), array($element_id));
+		$page = Database::Singleton()->sql_select_first(array('main'), 'tbl_elements', array('id'), array($element_id));
 		return $this->can_do('edit', $page[0]['page_id']);
 	}
 	

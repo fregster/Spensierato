@@ -332,9 +332,9 @@ class currentPage
 				
 			while($parents_exist == true) 
 			{
-				$result = Database::Singleton()->sql_select(array('id', 'parentid'), 'tbl_pages', array('id'), array($current_page));
+				$result = Database::Singleton()->sql_select(array('id', 'parent_id'), 'tbl_pages', array('id'), array($current_page));
 		
-				$id = $result[0]['parentid'];
+				$id = $result[0]['parent_id'];
 				
 				array_push($parents, $id);
 						

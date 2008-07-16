@@ -115,7 +115,7 @@ class user
 	
 	public function update_user_session_id()
 	{
-		//TODO
+		Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('session_id'), $values = array(session_id()));
 	}
 	
 	public function update_from_post()
@@ -324,6 +324,8 @@ class user
 	
 	private function do_login()
 	{
+		Database::Singleton()->force_write_user();
+		
 		//Regenerate the session ID
 		CMS::Singleton()->regenerate_session();
 		
@@ -331,13 +333,13 @@ class user
 		$this->set_user_details();
 
 		//Update last login time
-		Database::Singleton()->force_write_user();
 		Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('last_login'), $values = array(time()));
-		Database::Singleton()->destroy_write_user();
 		
 		//Load the previous option state
 		options::Singleton()->load_saved_options();
 		options::Singleton()->set_option('force_reload', true);
+		
+		Database::Singleton()->destroy_write_user();
 	}
 	
 }

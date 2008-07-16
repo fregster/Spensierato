@@ -319,7 +319,7 @@ class currentPage
 			return $this->parents;
 		}
 		
-		$this->parents = get_page_parents($this->id);
+		$this->parents = $this->get_page_parents($this->id);
 	}
 	
 	public function get_page_parents($id) 

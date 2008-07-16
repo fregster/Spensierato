@@ -132,7 +132,8 @@ class Security
 				$security_array = array_merge_recursive($security_array, Common::xml_to_array($xml));			
 			}
 		}
-		
+		print_r($page_ids);
+		print_r($page_security_xml);
 		print_r($security_array);
 		die();
 	}

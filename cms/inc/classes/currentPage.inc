@@ -11,6 +11,7 @@ class currentPage
 	private $page_details;
 	private $page_type;
 	private $id;
+	private $parents;
 	
 	public static function Singleton()
 	{
@@ -311,6 +312,15 @@ class currentPage
 		}
 	}
 	
+	public function page_path()
+	{
+		if(isset($this->parents[0]))
+		{
+			return $this->parents;
+		}
+		
+		$this->parents = get_page_parents($this->id);
+	}
 	
 	public function get_page_parents($id) 
 	{

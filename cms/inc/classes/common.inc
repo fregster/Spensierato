@@ -172,25 +172,28 @@ abstract class Common
 	{
 		$xml = simplexml_load_string($xml);
 		
-		function process_children($xml)
+		if(!function_exists('process_children'))
 		{
-			foreach ($xml->children() as $child)
-			{				
-				foreach($child->children() as $grandchild)
-				{
-					$php_array[$child->getName()] = process_children($child);
+			function process_children($xml)
+			{
+				foreach ($xml->children() as $child)
+				{				
+					foreach($child->children() as $grandchild)
+					{
+						$php_array[$child->getName()] = process_children($child);
+					}
+					if($child->children())
+					{
+						$php_array[$child->getName()] = process_children($child);
+					}
+					else
+					{
+						$php_array[$child->getName()] = strip_tags($child->saveXML());
+					}
 				}
-				if($child->children())
-				{
-					$php_array[$child->getName()] = process_children($child);
-				}
-				else
-				{
-					$php_array[$child->getName()] = strip_tags($child->saveXML());
-				}
+				return $php_array;
 			}
-			return $php_array;
-		}	
+		}
 				
 		return process_children($xml);
 	}

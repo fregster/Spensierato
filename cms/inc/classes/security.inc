@@ -114,6 +114,10 @@ class Security
 	{
 		if($user_id == NULL)
 		{
+			if($this->is_admin())
+			{
+				return true;
+			}
 			$user_id = User::Singleton()->id();
 			$lists = User::Singleton()->lists(); 
 		}

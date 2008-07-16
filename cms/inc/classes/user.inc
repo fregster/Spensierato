@@ -332,7 +332,7 @@ class user
 
 		//Update last login time
 		Database::Singleton()->force_write_user();
-		Database::Singleton()->sql_update_time('tbl_users', $this->userid);
+		Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('last_login'), $values = array(time()));
 		Database::Singleton()->destroy_write_user();
 		
 		//Load the previous option state

@@ -142,7 +142,14 @@ class Security
 		print_r($page_ids);
 		print_r($page_security_xml);
 		print_r($security_array);
-		die('</pre>');
+		echo('</pre>');
+		
+		if (in_array($user_id, $security_array[$what]['user'])) 
+		{
+    		echo 'Yes';
+		}
+		
+		die();
 	}
 	
 	public function get_who_can_do($what, $page_ids = NULL)
@@ -179,7 +186,7 @@ class Security
 	
 	protected function default_security_xml()
 	{
-		return '<security><view/><edit/><approve/><blocked/></security>';
+		return '<security><view><user/><group/></view><edit><user/><group/></edit><approve><user/><group/></approve><blocked><user/><group/></blocked></security>';
 	}
 
 	private function is_level($what)

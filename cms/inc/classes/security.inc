@@ -97,7 +97,7 @@ class Security
 	public function can_approve_element($element_id = NULL, $user_id = NULL)
 	{
 		$page = Database::Singleton()->sql_select_first(array('page_id'), 'tbl_page_elements', array('element_id', 'main'), array($element_id, 1));
-		return $this->can_do('approve', $page[0]['page_id']);
+		return $this->can_approve($page[0]['page_id']);
 	}
 	
 	/**
@@ -107,7 +107,7 @@ class Security
 	public function can_edit_element($element_id, $user_id = NULL)
 	{
 		$page = Database::Singleton()->sql_select_first(array('page_id'), 'tbl_page_elements', array('element_id', 'main'), array($element_id, 1));
-		return $this->can_do('edit', $page[0]['page_id']);
+		return $this->can_edit($page[0]['page_id']);
 	}
 	
 	protected function can_do($what, $page_ids = NULL, $user_id = NULL)
@@ -129,11 +129,16 @@ class Security
 		
 		$this->is_level($what);
 		
+		/**
+		 * No page id has been passed in
+		 */
 		if($page_ids == NULL or $page_ids == '')
 		{
 			$page_ids = currentPage::Singleton()->page_path();
 		}
-		
+		/**
+		 * A page id has been passed in but it is not an array so get its parents for inherited security
+		 */
 		if(!isset($page_ids[0]))
 		{
 			$page_ids = array($page_ids);

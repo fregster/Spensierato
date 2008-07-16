@@ -116,6 +116,9 @@ class Security
 		
 		$this->is_level($what);
 		
+		print_r($user_id);
+		die();
+		
 		if($page_ids == NULL or $page_ids == '')
 		{
 			$page_ids = currentPage::Singleton()->page_path();

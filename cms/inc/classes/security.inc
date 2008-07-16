@@ -161,27 +161,43 @@ class Security
 		{
 			if(isset($security_array['blocked']['group'][0]))
 			{
-				if (in_array($lists, $security_array['blocked']['group'])) 
+				if(count(array_intersect($lists, $security_array['group']['group'])) > 0)
 				{
-		    		return false;
+					return false; 
 				}
 			}
 		}
 		
 		/**
 		 * The user has not been blocked check the specific security
+		 * If view and view array is not set then return true ie public
 		 */
+		
+		if($what === 'view')
+		{
+			if(!isset($security_array['view']['user'][0]) and !isset($security_array['view']['group'][0]))
+			{
+				return true;
+			}
+		}
 		
 		if(isset($security_array[$what]['user'][0]))
 		{
-			if (in_array($user_id, $security_array[$what]['user'])) 
+			if(in_array($user_id, $security_array[$what]['user']))
 			{
-				echo(in_array($user_id, $security_array[$what]['user']));
-	    		echo ' User Id'.$user_id.' is in array ';
-	    		print_r($security_array[$what]['user']);
+				return true; 
 			}
 		}
-		die();
+		
+		if(isset($security_array[$what]['user'][0]))
+		{
+			if(count(array_intersect($lists, $security_array[$what]['group'])) > 0)
+			{
+				return true; 
+			}
+		}
+	
+		return false;
 	}
 	
 	public function get_who_can_do($what, $page_ids = NULL)

@@ -176,7 +176,8 @@ class Security
 		{
 			if (in_array($user_id, $security_array[$what]['user'])) 
 			{
-	    		echo 'User Id'.$user_id.' is in array ';
+				echo(in_array($user_id, $security_array[$what]['user']));
+	    		echo ' User Id'.$user_id.' is in array ';
 	    		print_r($security_array[$what]['user']);
 			}
 		}

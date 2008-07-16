@@ -157,7 +157,7 @@ class Security
 		 * Check for blocked first
 		 */
 		
-		if(isset($security_array['blocked']['user']))
+		if(isset($security_array['blocked']['user'][0]))
 		{
 			if (in_array($user_id, $security_array['blocked']['user'])) 
 			{
@@ -167,7 +167,7 @@ class Security
 		
 		if(isset($lists[0]))
 		{
-			if(isset($security_array['blocked']['user']))
+			if(isset($security_array['blocked']['group'][0]))
 			{
 				if (in_array($lists, $security_array['blocked']['group'])) 
 				{

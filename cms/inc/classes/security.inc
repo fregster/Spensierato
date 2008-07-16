@@ -116,16 +116,11 @@ class Security
 		
 		$this->is_level($what);
 		
-		print_r($page_ids);
-		
-		
 		if($page_ids == NULL or $page_ids == '')
 		{
 			$page_ids = currentPage::Singleton()->page_path();
-			print_r($page_ids);
-			die('page changed');
 		}
-		die('Not changed');
+
 		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
 		
 		$security_array = Common::xml_to_array($this->default_security_xml());

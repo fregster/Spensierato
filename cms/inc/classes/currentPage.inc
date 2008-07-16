@@ -320,6 +320,7 @@ class currentPage
 		}
 		
 		$this->parents = $this->get_page_parents($this->id);
+		return $this->parents;
 	}
 	
 	public function get_page_parents($id) 

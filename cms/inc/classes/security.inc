@@ -206,7 +206,7 @@ class Security
 			}
 		}
 		
-		if(isset($security_array[$what]['user'][0]) and isset($lists[0]))
+		if(isset($security_array[$what]['group'][0]) and isset($lists[0]))
 		{
 			if(count(array_intersect($lists, $security_array[$what]['group'])) > 0)
 			{

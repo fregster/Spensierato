@@ -158,15 +158,34 @@ abstract class Common
 		return str_ireplace('..', '',  $url);
 	}
 	
+	public static function xml_merge($xml1, $xml2)
+	{	
+		return array_to_xml(common::xml_merge_to_array($xml1, $xml2));
+	}
+	
+	public static function xml_merge_to_array($xml1, $xml2)
+	{
+		return array_merge_recursive(xml_to_array($xml1), xml_to_array($xml2));
+	}
+	
 	public static function xml_to_array($xml)
 	{
 		$xml = simplexml_load_string($xml);
 		
 		foreach ($xml->children() as $child)
-		{
-			$php_array[$child->getName()] = strip_tags($child->saveXML());
+		{			
+			if(isset($php_array[$child->getName()]))
+			{
+				$children = array();
+				array_push($children, $php_array[$child->getName()]);
+				array_push($children, strip_tags($child->saveXML()));
+				$php_array[$child->getName()] = $children;
+			}
+			else
+			{
+				$php_array[$child->getName()] = strip_tags($child->saveXML());
+			}
 		}
-
 		return $php_array;
 	}
 	
@@ -198,6 +217,91 @@ abstract class Common
 		{ 
 			return $serializer->getSerializedData(); 
 		} 
+	}
+
+	public static function xml_merge($xml1, $xml2)
+	{	
+		$oldPreferences = new SimpleXMLElement($xml1);
+		$newPreferences = new SimpleXMLElement($xml2);
+ 		
+		$mergedPreferencesDom = new DOMDocument();
+		$mergedPreferencesDom->loadXML('<xml/>');
+		
+                // Compare existing/old preferences with the new ones.
+                // If a new preference matches an old, we'll skip
+                // copying the old (as it is superseded by the new).
+                // A match means the old and new match in node name,
+                // attribute names and attribute values.
+                // (Also note that all preferences are assumed to reside
+                // directly under the root <preferences> node.)
+		foreach ($oldPreferences->children() as $oldPreferenceName => $oldPreference)
+		{
+			$found = false;
+ 
+			foreach ($newPreferences->children() as $newPreferenceName => $newPreference)
+			{
+				if ($newPreferenceName == $oldPreferenceName)
+				{
+					if ((count($newPreference->attributes()) > 0) && (count($oldPreference->attributes()) > 0))
+					{
+						if (count($newPreference->attributes()) == count($oldPreference->attributes()))
+						{
+							$foundAllAttrs = true;
+ 
+							foreach ($oldPreference->attributes() as $oldPreferenceAttrName => $oldPreferenceAttr)
+							{
+								$foundAttr = false;
+ 
+								foreach ($newPreference->attributes() as $newPreferenceAttrName => $newPreferenceAttr)
+								{
+									if (($newPreferenceAttrName == $oldPreferenceAttrName) &&
+										((string)$newPreferenceAttr == (string)$oldPreferenceAttr))
+									{
+										$foundAttr = true;
+										break;
+									}
+								}
+ 
+								if (!$foundAttr)
+								{
+									$foundAllAttrs = false;
+									break;
+								}
+							}
+ 
+							$found = $foundAllAttrs;
+						}
+					}
+					else
+					{
+						$found = true;
+					}
+				}
+ 
+				if ($found) { break; }
+			}
+ 
+			if (!$found)
+			{
+                                // No match, copy the old preference.
+				$df = $mergedPreferencesDom->createDocumentFragment();
+				$df->appendXML($oldPreference->asXML());
+ 
+				$mergedPreferencesDom->documentElement->appendChild($df);
+			}
+		}
+ 
+                // Merge/Copy all new preferences.
+		foreach ($newPreferences->children() as $newPreference)
+		{
+			$df = $mergedPreferencesDom->createDocumentFragment();
+			$df->appendXML($newPreference->asXML());
+ 
+			$mergedPreferencesDom->documentElement->appendChild($df);
+		}
+ 
+                // Save the merged preferences.
+		return simplexml_import_dom($mergedPreferencesDom);
 	}
 
 	public static function random_number($start = 0, $count = 10)

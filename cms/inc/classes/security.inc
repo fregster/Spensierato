@@ -133,9 +133,9 @@ class Security
 			}
 		}
 		echo('<pre>');
-		echo($what);
-		echo($user_id);
-		echo($page_ids);
+		echo('what: '.$what.'<br/>');
+		echo('user: '.$user_id.'<br/>');
+		echo('pages: '.$page_ids.'<br/>');
 		print_r($page_ids);
 		print_r($page_security_xml);
 		print_r($security_array);

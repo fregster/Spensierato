@@ -124,9 +124,13 @@ class Security
 		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
 		
 		$security_array = Common::xml_to_array($this->default_security_xml());
-		foreach($page_security_xml as $xml)
+		if(isset($page_security_xml[0]))
 		{
-			$security_array = array_merge_recursive($security_array, Common::xml_to_array($xml));			
+			//Security has been set
+			foreach($page_security_xml as $xml)
+			{
+				$security_array = array_merge_recursive($security_array, Common::xml_to_array($xml));			
+			}
 		}
 		
 		print_r($security_array);

@@ -122,6 +122,7 @@ class Security
 		if($page_ids == NULL or $page_ids == '')
 		{
 			$page_ids = currentPage::Singleton()->page_path();
+			print_r($page_ids);
 			die('page changed');
 		}
 		die('Not changed');

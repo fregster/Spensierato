@@ -177,8 +177,8 @@ abstract class Common
 			if(isset($php_array[$child->getName()]))
 			{
 				$children = array();
-				array_push($children, $php_array[$child->getName()]);
-				array_push($children, strip_tags($child->saveXML()));
+				array_push($children, array($child->getName(),$php_array[$child->getName()]));
+				array_push($children, array($child->getName(),strip_tags($child->saveXML())));
 				$php_array[$child->getName()] = $children;
 			}
 			else

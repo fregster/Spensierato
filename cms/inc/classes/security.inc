@@ -129,7 +129,10 @@ class Security
 			//Security has been set
 			foreach($page_security_xml as $xml)
 			{
-				$security_array = array_merge_recursive($security_array, Common::xml_to_array($xml));			
+				if(strlen($xml['data']) > 0)
+				{
+					$security_array = array_merge_recursive($security_array, Common::xml_to_array($xml['data']));
+				}			
 			}
 		}
 		echo('<pre>');

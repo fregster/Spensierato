@@ -33,6 +33,8 @@ class currentPage
 		//Get current page details
 		$this->get_page_details();
 		
+		//Load the page class
+		$page = new page;
 	}
 	
 	public function __clone()

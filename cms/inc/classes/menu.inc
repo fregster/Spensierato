@@ -70,9 +70,11 @@ class Menu
 			//pop the last parent off as it should be in the top array then reverse it
 
 //				$menu_array['parents'] = array_reverse(array_pop($this->parents));
-
-				$menu_array['parents'] = array_reverse($this->parents);
-			
+			$menu_array['parents'] = array_reverse($this->parents);
+			if(isset($menu_array['parents'][1]))
+			{
+				unset($menu_array['parents'][0]);
+			}
 			
 			$menu_array['parallel'] = $this->get_parallel_links();
 			$menu_array['current'] = $this->current_page_details;

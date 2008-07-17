@@ -274,6 +274,7 @@ class CMS
 	
 	private function site_login($id)
 	{
+		die();
 		$_SESSION['site_login'] = true;
 		User::site_get_users_details($id);
 		
@@ -658,7 +659,7 @@ class CMS
 						if($element->save(false))
 						{
 							//Save worked bounce to main page for element
-							//Common::redirect($element->main());
+							Common::redirect($element->main());
 							$this->saved($element->main());
 						}
 						else
@@ -671,6 +672,7 @@ class CMS
 						error::do403();
 					}
 				}
+				common::redirect($value);
 				
 				break;
 	

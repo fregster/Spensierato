@@ -641,6 +641,7 @@ class CMS
 					{
 						if($_POST['new_type'] == 'newPage')
 						{
+							die('new Page');
 							$this->create_new_page($value);
 						}
 						else

@@ -68,14 +68,10 @@ class Menu
 		if(!$toppage)
 		{
 			//pop the last parent off as it should be in the top array then reverse it
-			if(count($this->parents) > 1)
-			{
-				$menu_array['parents'] = array_reverse(array_pop($this->parents));
-			}
-			else
-			{
+
+//				$menu_array['parents'] = array_reverse(array_pop($this->parents));
+
 				$menu_array['parents'] = array_reverse($this->parents);
-			}
 			
 			
 			$menu_array['parallel'] = $this->get_parallel_links();

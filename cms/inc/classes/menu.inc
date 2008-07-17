@@ -232,7 +232,12 @@ class Menu
 					//Remove from children as can_view failed
 					unset($details[$i]);
 				}
-							
+
+				if((options::Singleton()->get_option('admin_mode')) and ($page['visible'] != 1 or $page['deleted'] != 0) and (!Security::Singleton()->can_edit($page['id'])))
+				{
+					//Remove from children as can_view failed
+					unset($details[$i]);
+				}
 				$i++;
 			}
 		}

@@ -97,7 +97,7 @@ class Security
 	public function can_approve_element($element_id = NULL, $user_id = NULL)
 	{
 		$page = Database::Singleton()->sql_select_first(array('page_id'), 'tbl_page_elements', array('element_id', 'main'), array($element_id, 1));
-		return $this->can_approve($page[0]['page_id']);
+		return $this->can_approve($page['page_id']);
 	}
 	
 	/**
@@ -107,11 +107,13 @@ class Security
 	public function can_edit_element($element_id, $user_id = NULL)
 	{
 		$page = Database::Singleton()->sql_select_first(array('page_id'), 'tbl_page_elements', array('element_id', 'main'), array($element_id, 1));
-		return $this->can_edit($page[0]['page_id']);
+		return $this->can_edit($page['page_id']);
 	}
 	
 	protected function can_do($what, $page_ids = NULL, $user_id = NULL)
 	{
+		$this->is_level($what);
+		
 		if($user_id == NULL)
 		{
 			if($this->is_admin())
@@ -127,8 +129,6 @@ class Security
 			$lists = array();
 		}
 		
-		$this->is_level($what);
-		
 		/**
 		 * No page id has been passed in
 		 */
@@ -139,16 +139,15 @@ class Security
 		/**
 		 * A page id has been passed in but it is not an array so get its parents for inherited security
 		 */
-		if(!isset($page_ids[0]))
+		if(!is_array($page_ids))
 		{
-			$page_ids = array($page_ids);
-			$page_ids = array_merge($page_ids, currentPage::Singleton()->get_page_parents($page_ids));
+			$pages = currentPage::Singleton()->get_page_parents($page_ids);
+			array_push($pages, $page_ids);
+			$page_ids = $pages;
 		}
 		
-		
-
 		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
-		
+
 		$security_array = Common::xml_to_array($this->default_security_xml());
 		if(isset($page_security_xml[0]))
 		{
@@ -161,7 +160,7 @@ class Security
 				}			
 			}
 		}
-		
+
 		/**
 		 * Check for blocked first
 		 */
@@ -189,7 +188,7 @@ class Security
 		 * The user has not been blocked check the specific security
 		 * If view and view array is not set then return true ie public
 		 */
-		
+
 		if($what === 'view')
 		{
 			if(!isset($security_array['view']['user'][0]) and !isset($security_array['view']['group'][0]))
@@ -197,7 +196,7 @@ class Security
 				return true;
 			}
 		}
-		
+
 		if(isset($security_array[$what]['user'][0]))
 		{
 			if(in_array($user_id, $security_array[$what]['user']))
@@ -205,7 +204,7 @@ class Security
 				return true; 
 			}
 		}
-		
+
 		if(isset($security_array[$what]['group'][0]) and isset($lists[0]))
 		{
 			if(count(array_intersect($lists, $security_array[$what]['group'])) > 0)
@@ -213,7 +212,6 @@ class Security
 				return true; 
 			}
 		}
-	
 		return false;
 	}
 	

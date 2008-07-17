@@ -42,6 +42,15 @@ class options
 			//Load saved options
 			$this->load_saved_options();
 		}
+		
+		//Admin mode hack
+		if($this->get_option('admin_mode'))
+		{
+			if(!Security::Singleton()->can_edit())
+			{
+				$this->set_option('admin_mode', false);
+			}
+		}
 	}
 	
 	public function load_saved_options()

@@ -46,8 +46,7 @@
 		</xsl:template>
 		
 		<xsl:template name="admin_edit_bar">
-		<xsl:if test="/page/options/admin_mode = 1">
-		<xsl:if test="/page/security/can_edit = 1">
+		<xsl:if test="/page/options/admin_mode = 1 and /page/security/can_edit =1">
 			<xsl:choose>
 				<xsl:when test="/page/@id != ''">
 				<xsl:if test="/page/@type = 'HTML'">
@@ -128,7 +127,6 @@
 				</xsl:element>
 			</xsl:otherwise>
 			</xsl:choose>
-		</xsl:if>
 		</xsl:if>
 		</xsl:template>
 		

@@ -91,12 +91,10 @@ function dhtmlLoadScript(url)
    e.src = url;
    e.type="text/javascript";
    document.getElementsByTagName("head")[0].appendChild(e);
-   alert(e);
 }
 
 function dynamicjsloader()
 {
-	alert('hello');
 	 dhtmlLoadScript(document_root+"/js/submodal/common.js");
 	 dhtmlLoadScript(document_root+"/js/submodal/subModal.js");
 }

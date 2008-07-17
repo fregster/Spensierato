@@ -657,6 +657,7 @@ class CMS
 					}
 					else
 					{
+						die('Security Failed');
 						error::do403();
 					}
 				}

@@ -35,6 +35,7 @@
 				</xsl:element>
 				</xsl:if>
 				
+				<!--
 				<xsl:if test="/page/options/admin_mode = 1">
 				<xsl:element name="link">
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css/submodal</xsl:attribute>
@@ -42,6 +43,7 @@
 					<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				</xsl:element>
 				</xsl:if>
+				-->
 				<script type="text/javascript">
 					var document_root = '<xsl:value-of select="/page/settings/document_root" />';
 					var current_page = '<xsl:value-of select="/page/@id" />';

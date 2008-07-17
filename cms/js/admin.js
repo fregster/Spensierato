@@ -93,8 +93,18 @@ function dhtmlLoadScript(url)
    document.getElementsByTagName("head")[0].appendChild(e);
 }
 
+function dhtmlLoadCSS(url)
+{
+   var e = document.createElement("link");
+   e.href = url;
+   e.type="text/css";
+   e.rel="stylesheet";
+   document.getElementsByTagName("head")[0].appendChild(e);
+}
+
 function dynamicjsloader()
 {
+	 dhtmlLoadCSS(document_root+"/css/submodal");
 	 dhtmlLoadScript(document_root+"/js/submodal/common.js");
 	 dhtmlLoadScript(document_root+"/js/submodal/subModal.js");
 }

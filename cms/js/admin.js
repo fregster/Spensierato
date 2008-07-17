@@ -96,6 +96,7 @@ function dhtmlLoadScript(url)
 
 function dynamicjsloader()
 {
+	alert('hello');
 	 dhtmlLoadScript(document_root+"/js/submodal/common.js");
 	 dhtmlLoadScript(document_root+"/js/submodal/subModal.js");
 }

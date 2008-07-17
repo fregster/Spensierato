@@ -91,6 +91,7 @@ function dhtmlLoadScript(url)
    e.src = url;
    e.type="text/javascript";
    document.getElementsByTagName("head")[0].appendChild(e);
+   alert(e);
 }
 
 function dynamicjsloader()

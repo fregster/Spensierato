@@ -42,6 +42,7 @@ class Menu
 		$this->get_parents();
 		
 		//Get top level links of current tree
+		$menu_array['top'] = $this->get_children_of($this->path[0]);
 		
 		//Get children of current page
 		$this->children = $this->get_children();
@@ -50,7 +51,7 @@ class Menu
 		
 		
 		//Build complete menu array
-		$menu_array['top'] = $this->get_children_of($this->path[0]);
+		
 		
 		//Test if we are on a top page and so don't need parents and parallel links
 		$toppage = false;
@@ -62,13 +63,17 @@ class Menu
 				{
 					$toppage = true;
 				}
-		}
+			}
 		}
 		if(!$toppage)
 		{
-			$menu_array['parents'] = array_reverse($this->parents);
+			//pop the last parent off as it should be in the top array then reverse it
+			$menu_array['parents'] = array_reverse(array_pop($this->parents));
 			$menu_array['parallel'] = $this->get_parallel_links();
 			$menu_array['current'] = $this->current_page_details;
+			
+			
+			
 
 		}
 		$menu_array['children']= $this->children;

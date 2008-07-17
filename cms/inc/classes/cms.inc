@@ -637,6 +637,9 @@ class CMS
 				
 				if(isset($_POST['new_type']))
 				{
+					print_r($value);
+					print_r($_POST);
+					die();
 					if(Security::singleton()->can_edit($value))
 					{
 						if($_POST['new_type'] == 'newPage')

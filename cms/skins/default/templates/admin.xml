@@ -7,7 +7,7 @@
 						<xsl:choose>
 						<xsl:when test="/page/options/admin_mode = 1">
 							<!--  Show toggle admin and edit options -->
-							<a href="toggle/admin_mode">Swith off Admin Mode</a> | Edit Site details | Edit Site Structure 			
+							<a href="toggle/admin_mode">Swith off Admin Mode</a><xsl:if test="/page/user/administrator =1"> | Edit Site details | Edit Site Structure</xsl:if> 			
 						</xsl:when>
 						<xsl:otherwise>
 							<!--  Show toggle admin -->

@@ -97,4 +97,5 @@ function dynamicjsloader()
 {
 	 dhtmlLoadScript(document_root+"/js/submodal/common.js");
 	 dhtmlLoadScript(document_root+"/js/submodal/subModal.js");
+	 initPopUp();
 }

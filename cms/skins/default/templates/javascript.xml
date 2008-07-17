@@ -1,40 +1,44 @@
 		<xsl:template name="javascript">
-				<xsl:if test="/page/user/id = 0">
+			<xsl:choose>
+							
+				<xsl:when test="/page/user/id != 0">
+				<!-- User logged in -->
+					<xsl:choose>
+						<xsl:when test="/page/options/admin_mode = 1">
+						<!-- User logged in and in admin mode-->
+							<xsl:element name="script">
+								<xsl:attribute name="type">text/javascript</xsl:attribute>
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js</xsl:attribute>
+							</xsl:element>
+							<!-- 
+							<xsl:element name="script">
+								<xsl:attribute name="type">text/javascript</xsl:attribute>
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />submodal/common.js</xsl:attribute>
+							</xsl:element>
+							<xsl:element name="script">
+								<xsl:attribute name="type">text/javascript</xsl:attribute>
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />submodal/subModal.js</xsl:attribute>
+							</xsl:element>
+							-->
+						</xsl:when>
+					
+						<xsl:otherwise>
+						<!-- User logged in and NOT in admin mode-->
+							<xsl:element name="script">
+								<xsl:attribute name="type">text/javascript</xsl:attribute>
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js</xsl:attribute>
+							</xsl:element>
+					</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				
+				<xsl:otherwise>
 				<!-- User Not logged in -->
 					<xsl:element name="script">
 						<xsl:attribute name="type">text/javascript</xsl:attribute>
 						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js</xsl:attribute>
 					</xsl:element>
-				</xsl:if>
+				</xsl:otherwise>
 				
-				<xsl:if test="/page/user/id != 0">
-				<!-- User logged in -->
-				
-					<xsl:if test="/page/options/admin_mode = 1">
-					<!-- User logged in and in admin mode-->
-						<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js</xsl:attribute>
-						</xsl:element>
-						<!-- 
-						<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />submodal/common.js</xsl:attribute>
-						</xsl:element>
-						<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js_direct" />submodal/subModal.js</xsl:attribute>
-						</xsl:element>
-						-->
-					</xsl:if>
-				
-					<xsl:if test="/page/options/admin_mode != 1">
-					<!-- User logged in and NOT in admin mode-->
-						<xsl:element name="script">
-							<xsl:attribute name="type">text/javascript</xsl:attribute>
-							<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js</xsl:attribute>
-						</xsl:element>
-					</xsl:if>
-					
-				</xsl:if>
+				</xsl:choose>
 		</xsl:template>

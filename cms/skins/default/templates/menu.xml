@@ -77,7 +77,7 @@
 	
 	<xsl:template name="menu_current">
 		<xsl:for-each select="/page/menu/menu/current">
-			<div id="menu_current"><xsl:call-template name="menu_link"/></div>
+			<div id="menu_current"> - <xsl:call-template name="menu_link"/></div>
 		</xsl:for-each>
 	</xsl:template>
 	

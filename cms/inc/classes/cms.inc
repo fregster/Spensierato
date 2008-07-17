@@ -639,7 +639,7 @@ class CMS
 				{
 					print_r($value);
 					print_r($_POST);
-					die();
+
 					if(Security::singleton()->can_edit($value))
 					{
 						if($_POST['new_type'] == 'newPage')
@@ -649,9 +649,14 @@ class CMS
 						}
 						else
 						{
+							die('New Element');
 							$element = Element::type($_POST['new_type']);
 							$element->create($value);
 						}
+					}
+					else
+					{
+						error::do403();
 					}
 				}
 				else

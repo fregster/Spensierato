@@ -83,12 +83,12 @@
 	
 	<xsl:template name="menu_parallel">
 		<xsl:for-each select="/page/menu/menu/parallel/menu_item">
-			<div id="menu_parallel"><xsl:call-template name="menu_link"/></div>
+			<div id="menu_parallel"> - <xsl:call-template name="menu_link"/></div>
 		</xsl:for-each>
 	</xsl:template>
 	
 	<xsl:template name="menu_children">
 		<xsl:for-each select="/page/menu/menu/children/menu_item">
-				<div class="menu_children"> - <xsl:call-template name="menu_link"/></div>
+				<div class="menu_children"> -- <xsl:call-template name="menu_link"/></div>
 		</xsl:for-each>
 	</xsl:template>

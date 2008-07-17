@@ -84,3 +84,17 @@ function exist (a) {
 	catch(e){return false;}
 	return true;
 }
+
+function dhtmlLoadScript(url)
+{
+   var e = document.createElement("script");
+   e.src = url;
+   e.type="text/javascript";
+   document.getElementsByTagName("head")[0].appendChild(e);
+}
+
+function dynamicjsloader()
+{
+	 dhtmlLoadScript(document_root+"/js/submodal/common.js");
+	 dhtmlLoadScript(document_root+"/js/submodal/subModal.js");
+}

@@ -639,14 +639,12 @@ class CMS
 				{
 					if(Security::singleton()->can_edit($value))
 					{
-						if($_POST['new_type'] == 'newPage')
+						if(post::variable('new_type') === 'newPage')
 						{
-							die('new Page');
 							$this->create_new_page($value);
 						}
 						else
 						{
-							die('New Element');
 							$element = Element::type($_POST['new_type']);
 							$element->create($value);
 						}

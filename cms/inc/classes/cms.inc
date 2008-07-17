@@ -714,8 +714,6 @@ class CMS
 	
 	private function create_new_page($parent_id)
 	{
-		echo($parent_id);
-		
 		if($parent_id === '-1')
 		{
 			if(Security::Singleton()->is_admin())
@@ -729,6 +727,8 @@ class CMS
 			$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array($parent_id, time(), user::Singleton()->id()));
 		}
 		
+		
+		die($id);
 		common::redirect($id);
 		
 	}

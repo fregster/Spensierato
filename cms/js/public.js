@@ -88,14 +88,14 @@ var notes;
 var initalised;
 function init()
 { 
-	if(initalised != true)
-	{
+	//if(initalised != true)
+	//{
 		new Fx.Scroll({duration: 1200}); //Load the smooth scroller
 		notes = new Fx.Style('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
 		document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
 		stepFontSize(readCookie('fontSize')); //Set the font size
 		initalised = true;
-	}
+	//}
 };
 
 function notification(text)

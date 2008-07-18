@@ -17,13 +17,13 @@
 	$plugins = explode(',', getParam("plugins", ""));
 	$languages = explode(',', getParam("languages", ""));
 	$themes = explode(',', getParam("themes", ""));
-	$diskCache = getParam("diskcache", "") == "true";
+	$diskCache = getParam("diskcache", "") == "false";
 	$isJS = getParam("js", "") == "true";
 	$compress = getParam("compress", "true") == "true";
 	$core = getParam("core", "true") == "true";
 	$suffix = getParam("suffix", "_src") == "_src" ? "_src" : "";
 	$cachePath = realpath(Settings::singleton()->get_setting('cms_root') . '/writeable/cache'); // Cache path, this is where the .gz files will be stored
-	$expiresOffset = 3600 * 24 * 21; // Cache for 21 days in browser cache
+	$expiresOffset = 3600 * 24 * 31; // Cache for 31 days in browser cache
 	$content = "";
 	$encodings = array();
 	$supportsGzip = false;
@@ -43,7 +43,7 @@
 
 	// Is called directly then auto init with default settings
 	if (!$isJS) {
-		echo getFileContents("tiny_mce_gzip.js");
+		readfile(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/tiny_mce_gzip.js');
 		echo "tinyMCE_GZ.init({});";
 		die();
 	}
@@ -76,17 +76,18 @@
 	}
 
 	// Use cached file disk cache
-	if ($diskCache && $supportsGzip && file_exists($cacheFile)) {
-		if ($compress)
-			header("Content-Encoding: " . $enc);
-
-		echo getFileContents($cacheFile);
-		die();
-	}
+//	if ($diskCache && $supportsGzip && file_exists($cacheFile)) {
+//		if ($compress)
+//			header("Content-Encoding: " . $enc);
+//
+////		readfile(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/tiny_mce_gzip.js');
+//		echo getFileContents($cacheFile);
+//		die();
+//	}
 
 	// Add core
 	if ($core == "true") {
-		$content .= getFileContents("tiny_mce" . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/tiny_mce' . $suffix . ".js");
 
 		// Patch loading functions
 		$content .= "tinyMCE_GZ.start();";
@@ -94,32 +95,32 @@
 
 	// Add core languages
 	foreach ($languages as $lang)
-		$content .= getFileContents("langs/" . $lang . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/langs/' . $lang . ".js");
 
 	// Add themes
 	foreach ($themes as $theme) {
-		$content .= getFileContents( "themes/" . $theme . "/editor_template" . $suffix . ".js");
+		$content .= getFileContents( Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/themes/' . $theme . "/editor_template" . $suffix . ".js");
 
 		foreach ($languages as $lang)
-			$content .= getFileContents("themes/" . $theme . "/langs/" . $lang . ".js");
+			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/themes/' . $theme . "/langs/" . $lang . ".js");
 	}
 
 	// Add plugins
 	foreach ($plugins as $plugin) {
-		$content .= getFileContents("plugins/" . $plugin . "/editor_plugin" . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/plugins/' . $plugin . "/editor_plugin" . $suffix . ".js");
 
 		foreach ($languages as $lang)
-			$content .= getFileContents("plugins/" . $plugin . "/langs/" . $lang . ".js");
+			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/plugins/' . $plugin . "/langs/" . $lang . ".js");
 	}
 
 	// Add custom files
 	foreach ($custom as $file)
-		$content .= getFileContents($file);
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/'.$file);
 
 	// Restore loading functions
 	if ($core == "true")
 		$content .= "tinyMCE_GZ.end();";
-
+		die($content);
 	// Generate GZIP'd content
 	if ($supportsGzip) {
 		if ($compress) {

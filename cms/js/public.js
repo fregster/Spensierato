@@ -89,8 +89,8 @@ var initalised;
 var SmoothScroll;
 function init()
 { 
-	//if(initalised != true)
-	//{
+	if(initalised != true)
+	{
 		SmoothScroll = new SmoothScroll({duration: 1200});	//Load the smooth scroller
 		//document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
 		//notes = new Fx.Tween('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
@@ -100,7 +100,7 @@ function init()
 		notes.fade.bind(notes, [0]);
 	
 		initalised = true;		
-	//}
+	}
 };
 
 function notification(text)

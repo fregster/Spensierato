@@ -106,7 +106,7 @@ function init()
 function notification(text, colour)
 {
 	var timer;
-	document.getElementById('notifications').style.background-color = colour;
+	document.getElementById('notifications').style.backgroundColor = colour;
 	document.getElementById('notifications').innerHTML = text;
 	
 	notes.fade(-0, 0.8);

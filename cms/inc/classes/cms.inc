@@ -655,8 +655,8 @@ class CMS
 						if($element->save(false))
 						{
 							//Save worked bounce to main page for element
-							Common::redirect($element->main());
 							$this->saved($element->main());
+//							Common::redirect($element->main());
 						}
 						else
 						{

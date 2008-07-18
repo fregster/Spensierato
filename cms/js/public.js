@@ -95,6 +95,7 @@ function init()
 		document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
 		stepFontSize(readCookie('fontSize')); //Set the font size
 		initalised = true;
+		alert(notes);
 	//}
 };
 

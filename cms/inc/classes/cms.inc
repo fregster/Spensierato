@@ -803,6 +803,7 @@ class CMS
 		</head>
 		<body>
 			<p>
+			<img src="'.$this->document_root.'/pre-load-images/z-loading.gif" alt="" />
 			Now loading...please wait
 			</p>
 		</body>

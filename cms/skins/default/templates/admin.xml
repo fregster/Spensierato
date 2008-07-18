@@ -50,6 +50,7 @@
 			<xsl:choose>
 				<xsl:when test="/page/@id != ''">
 				<xsl:if test="/page/@type = 'HTML'">
+					<xsl:if test="/page/security/can_approve =1">
 						<xsl:element name="form">
 							<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/up/<xsl:value-of select="/page/@id" /></xsl:attribute>
 							<xsl:attribute name="method">POST</xsl:attribute>
@@ -103,6 +104,7 @@
 							</xsl:element>
 							</xsl:element>
 						</xsl:element>
+						</xsl:if>
 						<xsl:element name="div">
 							
 							<xsl:element name="form">
@@ -132,7 +134,7 @@
 		
 		<xsl:template name="new_element">
 			<select name="new_type">
-				<option value="newPage">Child Page</option>
+			<xsl:if test="/page/security/can_approve = 1"><option value="newPage">Child Page</option></xsl:if>
 				<xsl:for-each select="/page/settings/elementTypes/setting">
 					<xsl:element name="option">
 						<xsl:attribute name="value"><xsl:value-of select="./class" /></xsl:attribute>
@@ -171,10 +173,40 @@
 						<xsl:attribute name="class">sprite sprite-<xsl:value-of select="./@image_edit" /></xsl:attribute>
 					</xsl:element>
 							
-				</xsl:element>
-				 | 
-					<xsl:element name="a">
-					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/te/<xsl:value-of select="./@id" />/visibility</xsl:attribute>
+				</xsl:element> | 
+				 <xsl:choose>
+					 <xsl:when test="/page/security/can_approve = 1">
+						<xsl:element name="a">
+						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/te/<xsl:value-of select="./@id" />/visibility</xsl:attribute>
+							<xsl:element name="img">
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+								<xsl:if test="./@visible = 1">
+									<xsl:attribute name="class">sprite sprite-lightbulb</xsl:attribute>
+									<xsl:attribute name="alt">Visibile</xsl:attribute>
+								</xsl:if>
+								<xsl:if test="./@visible != 1">
+									<xsl:attribute name="class">sprite sprite-lightbulb_off</xsl:attribute>
+									<xsl:attribute name="alt">Hidden</xsl:attribute>
+								</xsl:if>
+							</xsl:element>
+						</xsl:element> | 
+						<xsl:element name="a">
+						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/te/<xsl:value-of select="./@id" />/delete</xsl:attribute>
+							<xsl:element name="img">
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+								<xsl:if test="./@deleted = 0">
+									<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
+									<xsl:attribute name="alt">Delete</xsl:attribute>
+								</xsl:if>
+								<xsl:if test="./@deleted != 0">
+									<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
+									<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
+								</xsl:if>
+							</xsl:element>
+						</xsl:element>
+					</xsl:when>
+
+					<xsl:otherwise>
 						<xsl:element name="img">
 							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 							<xsl:if test="./@visible = 1">
@@ -185,10 +217,7 @@
 								<xsl:attribute name="class">sprite sprite-lightbulb_off</xsl:attribute>
 								<xsl:attribute name="alt">Hidden</xsl:attribute>
 							</xsl:if>
-						</xsl:element>
-					</xsl:element> | 
-					<xsl:element name="a">
-					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/te/<xsl:value-of select="./@id" />/delete</xsl:attribute>
+						</xsl:element> | 
 						<xsl:element name="img">
 							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 							<xsl:if test="./@deleted = 0">
@@ -200,7 +229,8 @@
 								<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
 							</xsl:if>
 						</xsl:element>
-					</xsl:element>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:element>			
 		</xsl:if>
 		</xsl:if>

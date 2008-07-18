@@ -17,6 +17,10 @@ h3
 	color: #7D775C;
 }
 
+ins { color: green; }
+
+del { color: red; }
+
 a.tooltip
 {
 	position:relative; 

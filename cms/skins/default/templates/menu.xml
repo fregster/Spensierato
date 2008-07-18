@@ -3,7 +3,8 @@
 		<xsl:element name="a">
 			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="./id" /></xsl:attribute>
 			<xsl:attribute name="class">link</xsl:attribute>
-			<xsl:if test="/page/options/admin_mode = 1">
+			<xsl:choose>
+			<xsl:when test="/page/options/admin_mode = 1">
 				<xsl:if test="visible != '1'">
 				<em>
 					<xsl:if test="./deleted = '1'">
@@ -28,11 +29,12 @@
 						<xsl:value-of select="title" />
 					</xsl:if>
 				</xsl:if>
-			</xsl:if>
+			</xsl:when>
 			
-			<xsl:if test="/page/options/admin_mode != 1">
+			<xsl:otherwise>
 				<xsl:value-of select="title" />
-			</xsl:if>
+			</xsl:otherwise>
+			</xsl:choose>
 		</xsl:element>
 	</xsl:template>
 

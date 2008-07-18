@@ -222,11 +222,12 @@ class Database
 		else
 		{
 			$i = 0;
-			while($i <= (count($fields) - 1))
+			$count_fields = count($fields);
+			while($i <= ($count_fields - 1))
 			{
 				$sql_temp_select = $sql_temp_select . $this->sql_clean_input($fields[$i]);
 				
-				if($i < (count($fields) - 1))
+				if($i < ($count_fields - 1))
 				{
 					$sql_temp_select = $sql_temp_select . ', ';
 				}
@@ -243,7 +244,8 @@ class Database
 		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
 		{
 			$i = 0;
-			while($i <= (count($where_values) - 1))
+			$count_where = count($where_values);
+			while($i <= ($count_where - 1))
 			{
 				$sql_temp_where_or =' (';
 				//Check if this is an or statment
@@ -256,8 +258,8 @@ class Database
 					}
 					
 					$j = 0;
-					
-					while($j <= (count($or_values) - 1))
+					$count_or = count($or_values);
+					while($j <= ($count_or - 1))
 					{
 						$t=$j+1;
 						if($or_values[$j] != NULL)
@@ -265,12 +267,12 @@ class Database
 							$sql_temp_where_or .= $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
 							//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
 							
-							if($j < (count($or_values) - 1) and ($or_values[$t] != NULL))
+							if($j < ($count_or - 1) and ($or_values[$t] != NULL))
 							{
 								$sql_temp_where_or .= ' OR ';
 							}
 						}
-						if($j >= (count($or_values) - 1))
+						if($j >= ($count_or - 1))
 						{
 							$sql_temp_where_or .= ' )';
 						}
@@ -286,7 +288,7 @@ class Database
 				}
 				
 				
-				if($i < (count($where_values) - 1))
+				if($i < ($count_where - 1))
 				{
 					$sql_temp_where = $sql_temp_where . ' AND ';
 				}
@@ -301,7 +303,8 @@ class Database
 		if($order_fields != NULL)
 		{
 			$i = 0;
-			while($i <= (count($order_fields) - 1))
+			$count_order = count($order_fields);
+			while($i <= ($count_order - 1))
 			{
 				if($order_directions[$i] != 'DESC')
 				{
@@ -314,7 +317,7 @@ class Database
 				
 				$sql_temp_order = $sql_temp_order . ' `' . $this->sql_clean_input($order_fields[$i]) .'` '. $order .' ';
 				
-				if($i < (count($order_fields) - 1))
+				if($i < ($count_order - 1))
 				{
 					$sql_temp_order = $sql_temp_order . ' , ';
 				}

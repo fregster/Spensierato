@@ -565,7 +565,7 @@ class CMS
 				break;
 				
 			case 'EDIT_TOGGLE_PAGE':
-				if(Security::singleton()->can_edit($value[1]))
+				if(Security::singleton()->can_approve($value[1]))
 				{	
 					//TODO update from laptop as required classes have not been comited
 					//Bodge until I update from laptop, sorry
@@ -587,7 +587,7 @@ class CMS
 				break;
 				
 			case 'EDIT_UPDATE_PAGE':			
-				if(Security::singleton()->can_edit($value[1]))
+				if(Security::singleton()->can_approve($value[1]))
 				{	
 					//TODO update from laptop as required classes have not been comited
 					if(isset($_POST['title']))
@@ -603,7 +603,7 @@ class CMS
 				break;
 				
 			case 'EDIT_TOGGLE_ELEMENT':
-				if(Security::singleton()->can_edit_element($value[1]))
+				if(Security::singleton()->can_approve_element($value[1]))
 				{	
 					$element = Element::type($value[1]);
 					$element->build($value[1]);
@@ -633,7 +633,7 @@ class CMS
 				
 				if(isset($_POST['new_type']))
 				{
-					if(Security::singleton()->can_edit($value))
+					if(Security::singleton()->can_approve($value))
 					{
 						if(post::variable('new_type') === 'newPage')
 						{

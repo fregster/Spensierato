@@ -14,28 +14,8 @@ abstract class ContentEditor
 		
 		if(file_exists($value))
 		{
-			$ext = pathinfo($value);
-			switch($ext['extension'])
-			{
-				case 'css':
-					$mime = 'text/css';
-				break;
-				
-				case 'js':
-					$mime = 'text/javascript';
-				break;
-				
-				default:
-					filetransfer::singleton()->get_file($value, true);
-				break;
-			}
-						
-			Cache::headers_allow_cache($value, true, 36000, 36000);
-			header('Content-type: ' . $mime);
-			header('Content-Length: ' . filesize($value));
 			header('Content-Description: TinyMCE File ');
-			session_write_close();
-			echo(Common::remove_extra_lines(file_get_contents($value)));
+			filetransfer::singleton()->get_file($value, true);
 		}
 		else
 		{

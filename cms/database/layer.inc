@@ -538,6 +538,22 @@ class Database
 	
 	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false)
 	{
+		/**
+		 * This currently does not work in MySQL and so 2 transactions are required unfortunatly
+		 */
+		
+		$exsists = $this->sql_select_first(array($where_fields[0], 'id'), $table, $where_fields, $where_values);
+		if(isset($exsists))
+		{
+			return $this->sql_update_by_id($exsists['id'], $table, $fields, $values);
+		}
+		else
+		{
+			return $this->sql_insert($table, $fields, $values);
+		}
+		
+		/* This would be the ideal way I think it would work in MSSQL or others that support the IF statment  */
+		/*
 		$table = $this->prefix.$this->sql_clean_input($table);
 		if(	(count($where_fields)) != (count($where_values))	)
 		{
@@ -621,7 +637,7 @@ class Database
 //begin
 //  INSERT INTO AA_TestTable (ord_num, top_assy, ord_qty)
 //  VALUES('GGG', 'XYZ', 567)
-//end 
+//end */
 	}
 
 	public function sql_insert($table, $fields, $values)

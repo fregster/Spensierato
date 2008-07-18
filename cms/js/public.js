@@ -99,9 +99,7 @@ function init()
 		notes = $('notifications');
 		notes.fade.bind(notes, [0]);
 	
-		initalised = true;
-		alert(notes);
-		
+		initalised = true;		
 	//}
 };
 

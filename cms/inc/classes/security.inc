@@ -71,7 +71,9 @@ class Security
 	 */
 	public function can_view($page_id = NULL, $user_id = NULL)
 	{
-		return $this->can_do('view', $page_id, $user_id);
+		$permission = $this->can_do('view', $page_id, $user_id);
+		if(!$permission) { $permission = $this->can_edit($page_id, $user_id); }
+		return $permission;
 	}
 	
 	/**
@@ -79,7 +81,9 @@ class Security
 	 */
 	public function can_edit($page_id = NULL, $user_id = NULL)
 	{
-		return $this->can_do('edit', $page_id, $user_id);
+		$permission = $this->can_do('edit', $page_id, $user_id);
+		if(!$permission) { $permission = $this->can_approve($page_id, $user_id); }
+		return $permission;
 	}
 	
 	/**
@@ -107,7 +111,9 @@ class Security
 	public function can_edit_element($element_id, $user_id = NULL)
 	{
 		$page = Database::Singleton()->sql_select_first(array('page_id'), 'tbl_page_elements', array('element_id', 'main'), array($element_id, 1));
-		return $this->can_edit($page['page_id']);
+		$permission = $this->can_edit($page['page_id']);
+		if(!$permission) { $permission = $this->can_approve_element($element_id, $user_id); }
+		return $permission;
 	}
 	
 	protected function can_do($what, $page_ids = NULL, $user_id = NULL)

@@ -103,10 +103,15 @@ function init()
 	}
 };
 
-function notification(text, colour)
+function notification(text, colour, font)
 {
 	var timer;
+	if(!font) { 
+		var font = "black";
+	}
+	
 	document.getElementById('notifications').style.backgroundColor = colour;
+	document.getElementById('notifications').style.font = font;
 	document.getElementById('notifications').innerHTML = text;
 	
 	notes.fade(-0, 0.8);

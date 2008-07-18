@@ -204,6 +204,16 @@
 								</xsl:if>
 							</xsl:element>
 						</xsl:element>
+						<xsl:if test="./@new_v_available > 0"> New version awaiting approval 
+						<xsl:element name="a">
+						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/te/<xsl:value-of select="./@id" />/quickapprove</xsl:attribute>
+							<xsl:element name="img">
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+								<xsl:attribute name="class">sprite sprite-accept</xsl:attribute>
+								<xsl:attribute name="alt">Quick Approve</xsl:attribute>
+							</xsl:element>
+						</xsl:element>
+						</xsl:if>
 					</xsl:when>
 
 					<xsl:otherwise>
@@ -229,7 +239,9 @@
 								<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
 							</xsl:if>
 						</xsl:element>
+						<xsl:if test="./@new_v_available > 0"> New version awaiting approval </xsl:if>
 					</xsl:otherwise>
+					<xsl:if test="./@draft_available > 0"> You have a draft update saved </xsl:if>
 				</xsl:choose>
 			</xsl:element>			
 		</xsl:if>

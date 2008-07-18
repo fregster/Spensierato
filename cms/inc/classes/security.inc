@@ -52,11 +52,24 @@ class Security
 	}
 	
 	public function security_as_xml()
-	{		
+	{	
+		$page_details = currentPage::Singleton()->page_details();
+		if($page_details['type'] === 'EDIT')
+		{
+			$view = $this->can_view_element($page_details['value']);
+			$edit = $this->can_edit_element($page_details['value']);
+			$approve = $this->can_approve_element($page_details['value']);
+		}
+		else
+		{
+			$view = $this->can_view();
+			$edit = $this->can_edit();
+			$approve = $this->can_approve();
+		}
 		return '<security>
-				<can_view>'.$this->can_view().'</can_view>
-				<can_edit>'.$this->can_edit().'</can_edit>
-				<can_approve>'.$this->can_approve().'</can_approve>
+				<can_view>'.$view.'</can_view>
+				<can_edit>'.$edit.'</can_edit>
+				<can_approve>'.$approve.'</can_approve>
 				</security>';
 	}
 	
@@ -239,7 +252,7 @@ class Security
 	{
 		if(isnumeric($page))
 		{
-			return Databases::singleton()->database($GLOBALS['cms_db_name'])->table('tbl_pages')->get_record_by_id($page);
+//			return Database::singleton()->database($GLOBALS['cms_db_name'])->table('tbl_pages')->get_record_by_id($page);
 		}
 		else
 		{
@@ -249,7 +262,7 @@ class Security
 
 	public function can_view_element($element_id)
 	{
-		$page = Databases::singleton()->database($GLOBALS['cms_db_name'])->table('tbl_link_page_elements')->get_records_by_equalto_query(array('element_id', 'main'), array(array($element_id), array(1)), array('page_id'));
+//		$page = Database::singleton()->database($GLOBALS['cms_db_name'])->table('tbl_link_page_elements')->get_records_by_equalto_query(array('element_id', 'main'), array(array($element_id), array(1)), array('page_id'));
 		return $this->can_do('view', $page[0]['page_id']);
 	}
 	

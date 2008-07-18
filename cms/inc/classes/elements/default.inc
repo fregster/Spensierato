@@ -18,6 +18,8 @@ class elementDefault
 	protected $approved;
 	protected $approver;
 	protected $revision;
+	protected $draft;
+	protected $approve;
 	private $tags = array('title' => 'text');
 	private $element;
 	
@@ -135,9 +137,10 @@ class elementDefault
 		
 		if($draft)
 		{
-			database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array($this->id,user::Singleton()->id()), array('data', 'ts'), array(common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES))), CMS::Singleton()->time()));
+			//database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array($this->id,user::Singleton()->id()), array('data', 'ts'), array(common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES))), CMS::Singleton()->time()));
 			//database::Singleton()->sql_update_by_id($this->id, $table, $fields = array(), $values = array())
-			die('draft');
+			database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $built_xml, CMS::Singleton()->time(), $title));
+			die('SAVED');
 		}
 		else
 		{
@@ -280,6 +283,25 @@ class elementDefault
 				$built_xml = '<data>';
 				foreach($this->tags as $key => $value)
 				{
+					//If can approve then check if there outstanding approvals waiting or
+					//Check if the user has any outstanding approvals waiting
+					$user_awaiting_approval = Database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()), NULL, NULL, TRUE);
+					$user_draft = Database::Singleton()->sql_select_first(array('ts'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()), NULL, NULL, TRUE);
+					
+					if(Security::Singleton()->can_approve_element($this->id) )
+					{
+						$can_approve = Database::Singleton()->sql_select_first(array('ts'), 'tbl_elements_approve', array('element_id'), array($this->id), NULL, NULL, TRUE);
+					}
+					
+					if(isset($can_approve) or (isset($user_awaiting_approval)) )
+					{
+						$this->approve = true;
+					}
+					
+					if(isset($user_draft['ts']))
+					{
+						$this->draft = $user_draft['ts'];
+					}
 					if($key == 'title')
 					{
 						$data = Database::Singleton()->sql_select_first(array('title', 'visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);

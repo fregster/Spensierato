@@ -556,6 +556,10 @@ class CMS
 				}
 				else
 				{
+					if($value === 'style.css')
+					{
+						FileTransfer::singleton()->get_file(Settings::Singleton()->get_setting('cms_root').'/skins/default/style.css');
+					}
 					error::do403();
 				}
 				break;

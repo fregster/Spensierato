@@ -35,7 +35,10 @@ class FileTransfer
 				Cache::headers_no_cache($file);
 			}
 			
-			header('Content-type: ' . mime_content_type($file));
+			$mime = common::returnMIMEType($file);
+			
+			
+			header('Content-type: ' . $mime);
 			header('Content-Length: ' . filesize($file));
 			header('Content-Transfer-Encoding: binary');
 			

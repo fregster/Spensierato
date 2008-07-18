@@ -84,12 +84,19 @@ function pageReload(returnVal)
 }
 
 var notes;
-
-function initNotification()
-{
-	notes = new Fx.Style('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
-	document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
-}
+//Init scripts to auto load stuff
+var initalised;
+function init()
+{ 
+	if(initalised != true)
+	{
+		new Fx.Scroll({duration: 1200}); //Load the smooth scroller
+		notes = new Fx.Style('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
+		document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
+		stepFontSize(readCookie('fontSize')); //Set the font size
+		initalised = true;
+	}
+};
 
 function notification(text)
 {
@@ -103,19 +110,6 @@ function notification(text)
 	
 	return false;
 }
-
-//Init scripts to auto load stuff
-var init;
-function init()
-{ 
-	if(init !== true)
-	{
-		new Fx.Scroll({duration: 1200}); //Load the smooth scroller
-		initNotification(); //Load the notification bar
-		stepFontSize(readCookie('fontSize')); //Set the font size
-		init = true;
-	}
-};
 
 function increaseFontSize() {
    stepFontSize(1);

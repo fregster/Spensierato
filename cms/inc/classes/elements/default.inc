@@ -135,15 +135,25 @@ class elementDefault
 		
 		if($draft)
 		{
-			die('draft');
-			//database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array(1,1), array('data', 'ts'), array('html', 1234567));
+			database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array($this->id,user::Singleton()->id()), array('data', 'ts'), array(common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES))), CMS::Singleton()->time()));
 			//database::Singleton()->sql_update_by_id($this->id, $table, $fields = array(), $values = array())
+			die('draft');
 		}
 		else
 		{
-			if($this->process_save($built_xml, $title));
+			if(Security::Singleton()->can_approve_element())
 			{
-				return true;
+				if($this->process_save($built_xml, $title));
+				{
+					return true;
+				}
+			}
+			else
+			{
+				if($this->submit_save_for_approval($built_xml, $title));
+				{
+					return true;
+				}
 			}
 			return false;
 		}
@@ -187,15 +197,26 @@ class elementDefault
 		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('deleted'), array($this->deleted));
 	}
 	
+	protected function generate_search($input)
+	{
+		return strip_tags($input);
+	}
+	
 	protected function process_save($xml, $title)
 	{
 		//TODO call search code
-		$search = 'search text';
+		$search = $this->generate_search($xml);
 		//TODO Archiving
 		
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'title'), array(time(), User::Singleton()->id(), $title));
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'search'), array($xml, $search));
 		
+		return true;
+	}
+	
+	protected function submit_save_for_approval($xml, $title)
+	{
+		database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));	
 		return true;
 	}
 	
@@ -223,6 +244,8 @@ class elementDefault
 			}
 			
 			$this->element->setAttribute('revision', $this->revision);
+			$this->element->setAttribute('draft_available', $this->draft);
+			$this->element->setAttribute('new_v_available', $this->approve);
 			$this->element->setAttribute('image_edit', $this->image_edit);
 			$this->element->setAttribute('visible', $this->visible);
 			$this->element->setAttribute('deleted', $this->deleted);

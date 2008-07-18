@@ -566,9 +566,7 @@ class CMS
 				
 			case 'EDIT_TOGGLE_PAGE':
 				if(Security::singleton()->can_approve($value[1]))
-				{	
-					//TODO update from laptop as required classes have not been comited
-					//Bodge until I update from laptop, sorry
+				{
 					if($value[2] == 'visibility')
 					{
 						database::singleton()->sql_toggle_field_by_id($value[1], 'tbl_pages', 'visible');

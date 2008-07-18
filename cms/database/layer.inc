@@ -362,7 +362,8 @@ class Database
 		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
 		{
 			$i = 0;
-			while($i <= (count($where_values) - 1))
+			$count_where = count($where_values);
+			while($i <= ($count_where - 1))
 			{
 				
 				//Check if this is an or statment
@@ -375,12 +376,13 @@ class Database
 					}
 					
 					$j = 0;
-					while($j <= (count($or_values) - 1))
+					$count_or = count($or_values);
+					while($j <= ($count_or - 1))
 					{
 						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
 						//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
 						
-						if($j < (count($or_values) - 1))
+						if($j < ($count_or - 1))
 						{
 							$sql_temp_where_or = $sql_temp_where_or . ' OR ';
 						}
@@ -396,7 +398,7 @@ class Database
 				}
 				
 				
-				if($i < (count($where_values) - 1))
+				if($i < ($count_where - 1))
 				{
 					$sql_temp_where = $sql_temp_where . ' AND ';
 				}
@@ -418,7 +420,8 @@ class Database
 		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
 		{
 			$i = 0;
-			while($i <= (count($where_values) - 1))
+			$count_where = count($where_values);
+			while($i <= ($count_where - 1))
 			{
 				
 				//Check if this is an or statment
@@ -431,12 +434,13 @@ class Database
 					}
 					
 					$j = 0;
-					while($j <= (count($or_values) - 1))
+					$count_or = count($or_values);
+					while($j <= ($count_or - 1))
 					{
 						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
 						//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
 						
-						if($j < (count($or_values) - 1))
+						if($j < ($count_or - 1))
 						{
 							$sql_temp_where_or = $sql_temp_where_or . ' OR ';
 						}
@@ -452,7 +456,7 @@ class Database
 				}
 				
 				
-				if($i < (count($where_values) - 1))
+				if($i < ($count_where - 1))
 				{
 					$sql_temp_where = $sql_temp_where . ' AND ';
 				}
@@ -511,10 +515,11 @@ class Database
 		$sql_temp_fields = '';
 		$sql_temp_values = '';
 		
-		while($i <= (count($fields) - 1))
+		$count_fields = count($fields);
+		while($i <= ($count_fields - 1))
 		{
 			$sql_temp_fields .= '`'.$this->sql_clean_input($fields[$i]).'` = \''.$this->sql_clean_input($values[$i]) .'\' ';
-			if($i < (count($fields) -1))
+			if($i < ($count_fields -1))
 			{
 				//not the last one so add a ,
 				 $sql_temp_fields .=', ';
@@ -548,11 +553,12 @@ class Database
 		
 		
 		$i = 0;
-		while($i <= (count($where_values) - 1))
+		$count_where = count($where_values);
+		while($i <= ($count_where - 1))
 		{
 			$sql_temp_where = $sql_temp_where . '(`' . $this->sql_clean_input($where_fields[$i]) .'` = "'. $this->sql_clean_input($where_values[$i]) .'")';
 			
-			if($i < (count($where_values) - 1))
+			if($i < ($count_where - 1))
 			{
 				$sql_temp_where = $sql_temp_where . ' AND ';
 			}
@@ -569,27 +575,28 @@ class Database
 		$sql .= 'UPDATE '. $this->sql_clean_input($table) . ' SET ';
 		
 		$i = 0;
-		while($i <= (count($fields) - 1))
+		$count_fields = count($fields);
+		while($i <= ($count_fields - 1))
 		{
 			$sql .= ' `'.$this->sql_clean_input($fields[$i]) .'` = "'.$this->sql_clean_input($values[$i]) .'" ';
-			if($i < (count($fields) - 1)) { $sql .=', '; }
+			if($i < ($count_fields - 1)) { $sql .=', '; }
 			$i++;
 		}
 		
 		
 		$i = 0;
-		while($i <= (count($fields) - 1))
+		while($i <= ($count_fields - 1))
 		{
 			$sql_temp_fields = $sql_temp_fields . '`'.$this->sql_clean_input($fields[$i]) .'` ';
-			if($i < (count($fields) - 1)) { $sql_temp_fields .=', '; }
+			if($i < ($count_fields - 1)) { $sql_temp_fields .=', '; }
 			$i++;
 		}
 		
 		$i = 0;
-		while($i <= (count($values) - 1))
+		while($i <= ($count_fields - 1))
 		{
 			$sql_temp_values = $sql_temp_values . '"'.$this->sql_clean_input($values[$i]) .'" ';
-			if($i < (count($values) - 1)) { $sql_temp_values .=', '; }
+			if($i < ($count_fields - 1)) { $sql_temp_values .=', '; }
 			$i++;
 		}
 				
@@ -627,18 +634,20 @@ class Database
 		}
 		
 		$i = 0;
-		while($i <= (count($fields) - 1))
+		$count_fields = count($fields);
+		while($i <= ($count_fields - 1))
 		{
 			$sql_temp_fields = $sql_temp_fields . '`'.$this->sql_clean_input($fields[$i]) .'` ';
-			if($i < (count($fields) - 1)) { $sql_temp_fields .=', '; }
+			if($i < ($count_fields - 1)) { $sql_temp_fields .=', '; }
 			$i++;
 		}
 		
 		$i = 0;
-		while($i <= (count($values) - 1))
+		$count_values = count($values);
+		while($i <= ($count_values - 1))
 		{
 			$sql_temp_values = $sql_temp_values . '"'.$this->sql_clean_input($values[$i]) .'" ';
-			if($i < (count($values) - 1)) { $sql_temp_values .=', '; }
+			if($i < ($count_values - 1)) { $sql_temp_values .=', '; }
 			$i++;
 		}
 		
@@ -663,7 +672,8 @@ class Database
 		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
 		{
 			$i = 0;
-			while($i <= (count($where_values) - 1))
+			$count_where = count($where_values);
+			while($i <= ($count_where - 1))
 			{
 				
 				//Check if this is an or statment
@@ -676,12 +686,13 @@ class Database
 					}
 					
 					$j = 0;
-					while($j <= (count($or_values) - 1))
+					$count_or = count($or_values);
+					while($j <= ($count_or - 1))
 					{
 						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
 						//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
 						
-						if($j < (count($or_values) - 1))
+						if($j < ($count_or - 1))
 						{
 							$sql_temp_where_or .= ' OR ';
 						}
@@ -697,7 +708,7 @@ class Database
 				}
 				
 				
-				if($i < (count($where_values) - 1))
+				if($i < ($count_where - 1))
 				{
 					$sql_temp_where .= ' AND ';
 				}

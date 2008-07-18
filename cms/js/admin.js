@@ -33,9 +33,9 @@ function ajaxSave() {
         	if(http.readyState==4)
 			{
 				if(http.responseText == 'SAVED'){
-					notification('A draft copy of the text has been saved saved');
+					notification('A draft copy of the text has been saved saved', 'green');
 				} else {
-					notification(http.responseText);
+					notification(http.responseText, 'red');
 				}
 			}
 		}

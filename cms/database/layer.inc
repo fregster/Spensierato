@@ -14,7 +14,7 @@ class Database
 	
 	private $sql_cache_enabled = true;
 	private $sql_cache = array();
-	private $sql_cache_max_results = 20;
+	private $sql_cache_max_results = 50;
 	private $sql_cache_max_time = 30;
 	private $sql_cache_hit = false;
 	private $sql_cache_hits = 0;

@@ -15,6 +15,7 @@ class CMS
 	private static $site_root;
 		
 	//Private vars
+	private $time;
 	private $time_start;
 	private $time_finish;
 	private $memcached;
@@ -42,18 +43,12 @@ class CMS
 
 	private function __construct()
 	{
-		/*
-		$time = microtime();
-		print_r($time);
-		echo('mtime: '.($time[0] + $time[1]).'<br />');
-		die(microtime());
-		*/
 		//Start page timer
 		if(Settings::Singleton()->Setting['site_option_showpagetime'])
 		{
-			$time = Common::time_with_microseconds();
+			$this->time_start = Common::time_with_microseconds();
 		}
-		$this->time_start = time();
+		$this->time = time();
 		
 		//Get path vars
 		$this->path_vars = Common::get_path_vars();
@@ -75,7 +70,7 @@ class CMS
 	
 	public function time()
 	{
-		return $this->time_start;
+		return $this->time;
 	}
 	
 	/**
@@ -84,10 +79,7 @@ class CMS
 	* It sets up all the vars required to use the run_cms method
 	*/
 	public function start()
-	{
-		//Set time
-		$this->time_start = time();
-		
+	{		
 		//Is memcached supported
 		$this->memcached();
 		

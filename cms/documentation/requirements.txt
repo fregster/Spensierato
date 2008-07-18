@@ -3,8 +3,9 @@ This CMS currently requires
 //PHP related
 PHP 5.2 ish
 
-	SimpleXML (PHP Core 5.2+)
 	PECL / PEAR
+	SimpleXML (PHP Core 5.2+)
+	Tidy
 	MDB2
 	XML/Serializer.php
 	PHP xsltProcessor
@@ -12,6 +13,7 @@ PHP 5.2 ish
 	GD and FreeType libraries
 	
 	mcrypt //Pref
+	text_diff //Pref
 	Hash //Optional
 
 //Database related
@@ -24,3 +26,5 @@ apt-get install php-xml-serializer php-xml-parser php5-xsl php5-mysql
 
 pear install MDB2
 pear install pear/MDB2#MySQLi
+
+pear install text_diff etc

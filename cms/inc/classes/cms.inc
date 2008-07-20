@@ -16,6 +16,7 @@ class CMS
 		
 	//Private vars
 	private $time;
+	private $microtime;
 	private $time_start;
 	private $time_finish;
 	private $memcached;
@@ -49,6 +50,7 @@ class CMS
 			$this->time_start = Common::time_with_microseconds();
 		}
 		$this->time = time();
+		$this->microtime = microtime();
 		
 		//Get path vars
 		$this->path_vars = Common::get_path_vars();
@@ -71,6 +73,11 @@ class CMS
 	public function time()
 	{
 		return $this->time;
+	}
+	
+	public function microtime()
+	{
+		return $this->microtime;
 	}
 	
 	/**

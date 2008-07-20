@@ -21,6 +21,8 @@ class Security
 {
 	protected static $instance;
 	protected $levels;
+	protected $security_cache;
+	private $security_cache_time = 30;
 	
 	public static function Singleton()
 	{
@@ -44,6 +46,19 @@ class Security
 	function __construct()
 	{
 		$this->levels = array('block', 'view', 'edit', 'approve');
+		if(isset($_SESSION['security_cache']))
+		{
+			$this->security_cache = $_SESSION['security_cache'];
+		}
+		else
+		{
+			$this->security_cache = array();
+		}
+	}
+	
+	function __destruct()
+	{
+		$_SESSION['security_cache'] = $this->security_cache;
 	}
 	
 	public function __clone()
@@ -165,6 +180,12 @@ class Security
 			$page_ids = $pages;
 		}
 		
+		$cache = $this->check_cache($what, $page_ids, $user_id);
+		if($cache !== NULL)
+		{
+			return $cache;
+		}
+		
 		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
 
 		$security_array = Common::xml_to_array($this->default_security_xml());
@@ -188,7 +209,7 @@ class Security
 		{
 			if (in_array($user_id, $security_array['blocked']['user'])) 
 			{
-	    		return false;
+				return $this->save_cache($what, $page_ids, $user_id, false);
 			}
 		}
 		
@@ -198,7 +219,7 @@ class Security
 			{
 				if(count(array_intersect($lists, $security_array['group']['group'])) > 0)
 				{
-					return false; 
+					return $this->save_cache($what, $page_ids, $user_id, false);
 				}
 			}
 		}
@@ -212,7 +233,7 @@ class Security
 		{
 			if(!isset($security_array['view']['user'][0]) and !isset($security_array['view']['group'][0]))
 			{
-				return true;
+				return $this->save_cache($what, $page_ids, $user_id, true);
 			}
 		}
 
@@ -220,7 +241,7 @@ class Security
 		{
 			if(in_array($user_id, $security_array[$what]['user']))
 			{
-				return true; 
+				return $this->save_cache($what, $page_ids, $user_id, true);
 			}
 		}
 
@@ -228,7 +249,7 @@ class Security
 		{
 			if(count(array_intersect($lists, $security_array[$what]['group'])) > 0)
 			{
-				return true; 
+				return $this->save_cache($what, $page_ids, $user_id, true);
 			}
 		}
 		return false;
@@ -279,6 +300,36 @@ class Security
 //			error('xx', $what.' is not a supported security level');
 		}
 		return $what;
+	}
+	
+	private function check_cache($what, $page_ids, $user_id)
+	{
+		$result = false;
+		foreach($page_ids as $page_id)
+		{
+			if(isset($this->security_cache[$what][$page_id][$user_id]))
+			{
+				if($this->security_cache[$what][$page_id][$user_id]['time'] < CMS::time() + $this->security_cache_time)
+				{
+					$result = $this->security_cache[$what][$page_id][$user_id]['result'];
+				}
+			}
+			else
+			{
+				return null;
+			}
+		}
+		return $result;
+	}
+	
+	private function save_cache($what, $page_ids, $user_id, $result)
+	{
+		foreach($page_ids as $page_id)
+		{
+			$this->security_cache[$what][$page_id][$user_id]['result'] = $result;
+			$this->security_cache[$what][$page_id][$user_id]['time'] = cms::time();
+		}
+		return $result;
 	}
 }
 

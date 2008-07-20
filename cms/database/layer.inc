@@ -24,6 +24,11 @@ class Database
 	private $sql_log_array = array();
 	private $site_sql_count = 0;
 	private $sql_time = 0;
+	
+	/**
+	 * Privately cached vars
+	 */
+	private $time;
 
 	public static function Singleton()
 	{
@@ -47,6 +52,7 @@ class Database
 	 */
 	public function __construct()
 	{
+		$this->time = time();
 		$this->prefix = $GLOBALS['table_prefix'];
 
 		$this->dsn_default = array(
@@ -187,7 +193,7 @@ class Database
 		{
 			if($sql_start_time != 0)
 			{
-				$sql_exc_time = Common::micro_time() - $sql_start_time;
+				$sql_exc_time = microtime() - $sql_start_time;
 			}
 			else
 			{
@@ -473,9 +479,9 @@ class Database
 	//SQL Update time field query
 	public function sql_update_time($table, $id, $destroy_cache = false)
 	{
-		$sql_start_time = Common::micro_time();
+		$sql_start_time = microtime();
 		
-		$sql = 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = \'' . time() . '\' WHERE id = \'' . $this->sql_clean_input($id) . '\'';
+		$sql = 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = \'' . $this->time . '\' WHERE id = \'' . $this->sql_clean_input($id) . '\'';
 		
 		//Logging info
 		$this->site_sql_count ++;
@@ -843,7 +849,7 @@ class Database
 				if($values != NULL)
 				{
 					//This was a prepared statment return the correct cached result
-					if(	(isset($_SESSION['sql_cache'][$sql][$values])) and ($_SESSION['sql_cache'][$sql][$values]['time'] >= (time() - 30)))
+					if(	(isset($_SESSION['sql_cache'][$sql][$values])) and ($_SESSION['sql_cache'][$sql][$values]['time'] >= ($this->time - 30)))
 					{
 						return $_SESSION['sql_cache'][$sql][$values];
 					}
@@ -851,7 +857,7 @@ class Database
 					return false;
 				}
 				
-				if($_SESSION['sql_cache'][$sql]['time'] >= (time() - 30) )
+				if($_SESSION['sql_cache'][$sql]['time'] >= ($this->time - 30) )
 				{
 					//Result cached and current
 					$this->sql_cache_hit = true;
@@ -882,13 +888,13 @@ class Database
 		{
 			if($values == NULL)
 			{
-				$_SESSION['sql_cache'][$sql]['time'] = time();
+				$_SESSION['sql_cache'][$sql]['time'] = $this->time;
 				$_SESSION['sql_cache'][$sql]['result'] = $result;
 			}
 			else
 			{
 				//This was a prepared statment so its results are cached slightly diffrently
-				$_SESSION['sql_cache'][$sql][$values]['time'] = time();
+				$_SESSION['sql_cache'][$sql][$values]['time'] = $this->time;
 				$_SESSION['sql_cache'][$sql][$values] = $result;
 			}
 		}

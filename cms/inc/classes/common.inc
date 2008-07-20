@@ -58,14 +58,14 @@ abstract class Common
 	
 	public static function time_with_microseconds()
 	{
-		return CMS::time()+Common::micro_time();
+		return CMS::Singleton()->time()+Common::micro_time();
 	}
 	/**
 	 * Replaced with time and microtime in CMS
 	 */
 	public static function micro_time()
 	{
-		return CMS::microtime();
+		return CMS::Singleton()->microtime();
 	}
 	
 	public static function microtime_to_seconds($time, $round = 4)

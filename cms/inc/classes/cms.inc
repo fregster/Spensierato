@@ -121,7 +121,7 @@ class CMS
 		$this->admin();
 	
 		//Decide what to do with the current page
-		$this->get_page($this->page_details['type'], $this->page_details['value']);
+		$this->get_page();
 	}
 	
 	public function end_cms()
@@ -290,9 +290,10 @@ class CMS
 		}
 	}
 	
-	private function get_page($type, $value)
+	private function get_page()
 	{
-		switch ($type) 
+		$value = $this->page_details['value'];
+		switch ($this->page_details['type']) 
 		{
 			case 'HTML':
 				//Database file, call content singleton
@@ -306,22 +307,22 @@ class CMS
 				
 			case 'LOADING':
 				//Send a loading page and image;
-				$this->send_loading($value);
+				$this->send_loading($this->page_details['value']);
 				break;
 				
 			case 'JS':
 				//Get JS useing minify
-				$this->get_js($value);
+				$this->get_js($this->page_details['value']);
 				break;
 			
 			case 'JAVASCRIPT':
 				//Get JS useing minify
-				javascript::run($value);
+				javascript::run($this->page_details['value']);
 				die();
 				break;
 			
 			case 'CONTENTEDITOR':
-				ContentEditor::run($value);
+				ContentEditor::run($this->page_details['value']);
 				break;
 				
 			case 'HELP':
@@ -331,10 +332,10 @@ class CMS
 				break;
 				
 			case 'REGISTER':
-				//If not loged in load box else redirect to $value
+				//If not loged in load box else redirect to $this->page_details['value']
 				if(User::Singleton()->is_logged_in())
 				{
-					Common::redirect($value);
+					Common::redirect($this->page_details['value']);
 				}
 				else
 				{
@@ -353,7 +354,7 @@ class CMS
 							//Load CMS Registration box
 							$element = Element::type('elementRegister');
 							$element->build('Register');
-							$this->get_html($value);
+							$this->get_html($this->page_details['value']);
 						}
 					}
 					else
@@ -366,7 +367,7 @@ class CMS
 			case 'REGISTER_DETAILS':
 				if(User::Singleton()->is_logged_in())
 				{
-					Common::redirect($value);
+					Common::redirect($this->page_details['value']);
 				}
 				else
 				{
@@ -376,7 +377,7 @@ class CMS
 						register::singleton()->new_registration();
 						$element = Element::type('elementRegister');
 						$element->build('Register');
-						$this->get_html($value);
+						$this->get_html($this->page_details['value']);
 					}
 					else
 					{
@@ -410,37 +411,37 @@ class CMS
 				Common::cookie_check();
 				if($_SERVER['REQUEST_METHOD'] == 'GET' and !isset($_GET['username']))
 				{
-					//If not loged in load box else redirect to $value
+					//If not loged in load box else redirect to $this->page_details['value']
 					if(User::Singleton()->is_logged_in())
 					{
-						Common::redirect($value);
+						Common::redirect($this->page_details['value']);
 					}
 					else
 					{
 						//Load CMS Login box
 						$element = Element::type('elementLogin');
 						$element->build('login');
-						$this->get_html($value);
+						$this->get_html($this->page_details['value']);
 					}
 				}
 				else
 				{
 					//Do login function
 					User::Singleton()->login();
-					Common::redirect($value);
+					Common::redirect($this->page_details['value']);
 				}
 				break;
 			
 			case 'LOGOUT':
 				//CMS Logout
-				$this->destroy_session($value);
+				$this->destroy_session($this->page_details['value']);
 				break;
 						    
 			case 'ADMIN':
 				//Admin page check admin security
 				if(Security::singleton()->is_admin())
 				{
-					$this->get_admin($value);
+					$this->get_admin($this->page_details['value']);
 				}
 				else
 				{
@@ -450,7 +451,7 @@ class CMS
 			
 			case 'TOOL':
 				//CMS Included Functions no security checks
-				$file = $this->cms_root . '/tools/' . Common::clean_path($value) .'.inc';
+				$file = $this->cms_root . '/tools/' . Common::clean_path($this->page_details['value']) .'.inc';
 				if(file_exists($file))
 				{
 					include($file);
@@ -464,7 +465,7 @@ class CMS
 				
 			case 'CMS':
 				//CMS Included Files page specific security checks
-				$this->get_document($value);
+				$this->get_document($this->page_details['value']);
 				break;
 				
 			case 'DOWNLOAD':
@@ -473,11 +474,11 @@ class CMS
 				// Check the related page details
 				// call file transfer retrieve
 
-				$element_detail = Content::singleton()->get_element_main_page_where_valid($value);
+				$element_detail = Content::singleton()->get_element_main_page_where_valid($this->page_details['value']);
 				
 				if(Security::singleton()->can_view($element_detail['page_id']))
 				{
-					FileTransfer::singleton()->retrieve($value);
+					FileTransfer::singleton()->retrieve($this->page_details['value']);
 				}
 				else
 				{
@@ -494,11 +495,11 @@ class CMS
 				 * call file transfer retrieve
 				 */
 
-				$element_detail = Content::singleton()->get_element_main_page_where_valid($value);
+				$element_detail = Content::singleton()->get_element_main_page_where_valid($this->page_details['value']);
 				
 				if(Security::singleton()->can_view($element_detail['page_id']))
 				{
-					FileTransfer::singleton()->retrieve($value, 'scaled');
+					FileTransfer::singleton()->retrieve($this->page_details['value'], 'scaled');
 				}
 				else
 				{
@@ -516,15 +517,15 @@ class CMS
 				 */
 				
 				$pre_load=null;
-				if($value ==='pre-load-images')
+				if($this->page_details['value'] ==='pre-load-images')
 				{
 					$pre_load = '../pre-load-images/';
-					$value = $this->path_vars[2];
+					$this->page_details['value'] = $this->path_vars[2];
 				}
 					
 				$file_search = array(
-				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$pre_load.$value,
-				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$pre_load.$value
+				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$pre_load.$this->page_details['value'],
+				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$pre_load.$this->page_details['value']
 				);
 				
 				foreach($file_search as $file)
@@ -555,15 +556,15 @@ class CMS
 			
 			case 'EDIT':
 				//Edit render element
-				if(Security::singleton()->can_edit_element($value))
+				if(Security::singleton()->can_edit_element($this->page_details['value']))
 				{	
-					$element = Element::type($value);
-					$element->build($value);
+					$element = Element::type($this->page_details['value']);
+					$element->build($this->page_details['value']);
 					Render::Singleton()->render_edit(Content::Singleton()->build());
 				}
 				else
 				{
-					if($value === 'style.css')
+					if($this->page_details['value'] === 'style.css')
 					{
 						FileTransfer::singleton()->get_file(Settings::Singleton()->get_setting('cms_root').'/skins/default/style.css');
 					}
@@ -572,18 +573,18 @@ class CMS
 				break;
 				
 			case 'EDIT_TOGGLE_PAGE':
-				if(Security::singleton()->can_approve($value[1]))
+				if(Security::singleton()->can_approve($this->page_details['value'][1]))
 				{
-					if($value[2] == 'visibility')
+					if($this->page_details['value'][2] == 'visibility')
 					{
-						database::singleton()->sql_toggle_field_by_id($value[1], 'tbl_pages', 'visible');
+						database::singleton()->sql_toggle_field_by_id($this->page_details['value'][1], 'tbl_pages', 'visible');
 					}
 					
-					if($value[2] == 'delete')
+					if($this->page_details['value'][2] == 'delete')
 					{
-						database::singleton()->sql_toggle_field_by_id($value[1], 'tbl_pages', 'deleted');
+						database::singleton()->sql_toggle_field_by_id($this->page_details['value'][1], 'tbl_pages', 'deleted');
 					}
-					common::redirect($value[1]);
+					common::redirect($this->page_details['value'][1]);
 				}
 				else
 				{
@@ -592,14 +593,14 @@ class CMS
 				break;
 				
 			case 'EDIT_UPDATE_PAGE':			
-				if(Security::singleton()->can_approve($value[1]))
+				if(Security::singleton()->can_approve($this->page_details['value'][1]))
 				{	
 					//TODO update from laptop as required classes have not been comited
 					if(isset($_POST['title']))
 					{
-						database::singleton()->sql_update_by_id($value[1], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
+						database::singleton()->sql_update_by_id($this->page_details['value'][1], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
 					}
-					common::redirect($value[1]);
+					common::redirect($this->page_details['value'][1]);
 				}
 				else
 				{
@@ -608,12 +609,12 @@ class CMS
 				break;
 				
 			case 'EDIT_TOGGLE_ELEMENT':
-				if(Security::singleton()->can_approve_element($value[1]))
+				if(Security::singleton()->can_approve_element($this->page_details['value'][1]))
 				{	
-					$element = Element::type($value[1]);
-					$element->build($value[1]);
+					$element = Element::type($this->page_details['value'][1]);
+					$element->build($this->page_details['value'][1]);
 					
-					$element->toggle($value[2]);
+					$element->toggle($this->page_details['value'][2]);
 					common::redirect($element->main());
 				}
 				else
@@ -624,13 +625,13 @@ class CMS
 				
 			case 'AJAX':
 				//Pass directly to the AJAX class for processing
-				ajax::process($value);
+				ajax::process($this->page_details['value']);
 				break;
 				
 			case 'EDITSAVE':
 				//Is this an update or createing a new element
 				//TODO remove refrences to POST
-				if($value == 'account')
+				if($this->page_details['value'] == 'account')
 				{
 					User::Singleton()->update_from_post();
 					Common::redirect('account');
@@ -638,16 +639,16 @@ class CMS
 				
 				if(isset($_POST['new_type']))
 				{
-					if(Security::singleton()->can_approve($value))
+					if(Security::singleton()->can_approve($this->page_details['value']))
 					{
 						if(post::variable('new_type') === 'newPage')
 						{
-							$this->create_new_page($value);
+							$this->create_new_page($this->page_details['value']);
 						}
 						else
 						{
 							$element = Element::type($_POST['new_type']);
-							$element->create($value);
+							$element->create($this->page_details['value']);
 						}
 					}
 					else
@@ -657,10 +658,10 @@ class CMS
 				}
 				else
 				{
-					if(Security::singleton()->can_edit_element($value))
+					if(Security::singleton()->can_edit_element($this->page_details['value']))
 					{
-						$element = Element::type($value);
-						$element->build($value);
+						$element = Element::type($this->page_details['value']);
+						$element->build($this->page_details['value']);
 						if($element->save(false))
 						{
 							//Save worked bounce to main page for element
@@ -677,18 +678,18 @@ class CMS
 						error::do403();
 					}
 				}
-				common::redirect($value);
+				common::redirect($this->page_details['value']);
 				
 				break;
 	
 			case 'OPTIONTOGGLE':
 				// Toggle option value
-				options::Singleton()->toggle_option($value);
+				options::Singleton()->toggle_option($this->page_details['value']);
 				Common::bounce_to_referer();
 				break;
 				
 			case 'FILE':
-				FileTransfer::Singleton()->get_public_file($value);
+				FileTransfer::Singleton()->get_public_file($this->page_details['value']);
 				break;
 				
 			case 'CAPTHCA':
@@ -696,13 +697,13 @@ class CMS
 				break;
 			    
 			case 'REDIR':
-				$this->get_html($value);
+				$this->get_html($this->page_details['value']);
 			    break;
 			    
 			case 'FOLDER':
-				if(Security::singleton()->can_view_element($value))
+				if(Security::singleton()->can_view_element($this->page_details['value']))
 				{
-					$element_xml = Content::singleton()->render_element_xml($value);
+					$element_xml = Content::singleton()->render_element_xml($this->page_details['value']);
 					$output_xml = DocumentFolder::convert_xml_to_displayable($element_xml);
 					header('Content-Type: text/xml');
 					die($output_xml);
@@ -713,7 +714,7 @@ class CMS
 				}
 				
 			default:
-			    die('500 Unable in include any content because type (' . $type . ') unknown  (' . $value.')');
+			    die('500 Unable in include any content because type (' . $type . ') unknown  (' . $this->page_details['value'].')');
 		}
 	}
 	

@@ -304,22 +304,26 @@ class Security
 	
 	private function check_cache($what, $page_ids, $user_id)
 	{
-		$result = false;
 		foreach($page_ids as $page_id)
 		{
 			if(isset($this->security_cache[$what][$page_id][$user_id]))
 			{
 				if($this->security_cache[$what][$page_id][$user_id]['time'] < CMS::time() + $this->security_cache_time)
 				{
-					$result = $this->security_cache[$what][$page_id][$user_id]['result'];
+					if(!$this->security_cache[$what][$page_id][$user_id]['result'])
+					{
+						return false;
+					}
 				}
 			}
 			else
 			{
-				return null;
+				//Currently if 1 of the pages called is not in the cache the entire tree needs to be re-calculated
+				return NULL;
 			}
 		}
-		return $result;
+		//The result is only returned if all the values have been cached
+		return true;
 	}
 	
 	private function save_cache($what, $page_ids, $user_id, $result)

@@ -306,9 +306,13 @@ class Security
 	private function check_cache($what, $page_ids, $user_id)
 	{
 		$page_string = implode("_", $page_ids);
-			if(isset($this->security_cache[$what][$page_string][$user_id]['result']) and ($this->security_cache[$what][$page_string][$user_id]['time'] < CMS::time() + $this->security_cache_time))
+			if(isset($this->security_cache[$what][$page_string][$user_id]['result']))
 			{
-				return $this->security_cache[$what][$page_string][$user_id]['result'];
+				if($this->security_cache[$what][$page_string][$user_id]['time'] < CMS::time() + $this->security_cache_time)
+				{
+					return $this->security_cache[$what][$page_string][$user_id]['result'];
+				}
+				unset($this->security_cache[$what][$page_string]);
 			}
 			
 			return NULL;

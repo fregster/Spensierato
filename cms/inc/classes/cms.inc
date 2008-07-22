@@ -297,6 +297,7 @@ class CMS
 		{
 			case 'HTML':
 				//Database file, call content singleton
+				Options::singleton()->admin_check();
 				Render::Singleton()->render_html(Content::Singleton()->build(), true);
 			    break;
 			    

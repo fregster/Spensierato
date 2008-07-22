@@ -204,8 +204,9 @@ class Menu
 		}
 		else
 		{
-			$where = array('parent_id', 'visible', 'deleted');
-			$values = array($id, '1', '0');
+			$where = array('parent_id', 'deleted');
+			$values = array($id, '0');
+			$where['visible'] = user::singleton()->is_logged_in();
 		}
 		$details = Database::Singleton()->sql_select(array('id', 'title', 'parent_id', 'visible', 'deleted'), 'tbl_pages', $where, $values, array('sort'));
 

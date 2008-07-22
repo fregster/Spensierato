@@ -180,11 +180,11 @@ class Security
 			$page_ids = $pages;
 		}
 		
-		$cache = $this->check_cache($what, $page_ids, $user_id);
-		if($cache !== NULL)
-		{
-			return $cache;
-		}
+//		$cache = $this->check_cache($what, $page_ids, $user_id);
+//		if($cache !== NULL)
+//		{
+//			return $cache;
+//		}
 		
 		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
 

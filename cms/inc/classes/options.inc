@@ -42,7 +42,10 @@ class options
 			//Load saved options
 			$this->load_saved_options();
 		}
-		
+	}
+	
+	public function admin_check()
+	{
 		//Admin mode hack
 		if($this->get_option('admin_mode'))
 		{

@@ -180,11 +180,12 @@ class Security
 			$page_ids = $pages;
 		}
 		
-//		$cache = $this->check_cache($what, $page_ids, $user_id);
-//		if($cache !== NULL)
-//		{
-//			return $cache;
-//		}
+		$cache = $this->check_cache($what, $page_ids, $user_id);
+
+		if($cache !== NULL)
+		{
+			return $cache;
+		}
 		
 		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
 
@@ -304,35 +305,20 @@ class Security
 	
 	private function check_cache($what, $page_ids, $user_id)
 	{
-		foreach($page_ids as $page_id)
-		{
-			if(isset($this->security_cache[$what][$page_id][$user_id]))
+		$page_string = implode("_", $page_ids);
+			if(isset($this->security_cache[$what][$page_string][$user_id]['result']) and ($this->security_cache[$what][$page_string][$user_id]['time'] < CMS::time() + $this->security_cache_time))
 			{
-				if($this->security_cache[$what][$page_id][$user_id]['time'] < CMS::time() + $this->security_cache_time)
-				{
-					if(!$this->security_cache[$what][$page_id][$user_id]['result'])
-					{
-						return false;
-					}
-				}
+				return $this->security_cache[$what][$page_string][$user_id]['result'];
 			}
-			else
-			{
-				//Currently if 1 of the pages called is not in the cache the entire tree needs to be re-calculated
-				return NULL;
-			}
-		}
-		//The result is only returned if all the values have been cached
-		return true;
+			
+			return NULL;
 	}
 	
 	private function save_cache($what, $page_ids, $user_id, $result)
 	{
-		foreach($page_ids as $page_id)
-		{
-			$this->security_cache[$what][$page_id][$user_id]['result'] = $result;
-			$this->security_cache[$what][$page_id][$user_id]['time'] = cms::time();
-		}
+		$page_string = implode("_", $page_ids);
+		$this->security_cache[$what][$page_string][$user_id]['result'] = $result;
+		$this->security_cache[$what][$page_string][$user_id]['time'] = cms::time();
 		return $result;
 	}
 }

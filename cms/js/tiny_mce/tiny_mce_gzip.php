@@ -44,7 +44,7 @@
 
 	// Is called directly then auto init with default settings
 	if (!$isJS) {
-		echo getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tint_mce/tiny_mce_gzip.js');
+		echo getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/tiny_mce_gzip.js');
 		echo "tinyMCE_GZ.init({});";
 		die();
 	}
@@ -87,7 +87,7 @@
 
 	// Add core
 	if ($core == "true") {
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tint_mce/tiny_mce' . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/tiny_mce' . $suffix . ".js");
 
 		// Patch loading functions
 		$content .= "tinyMCE_GZ.start();";
@@ -95,22 +95,22 @@
 
 	// Add core languages
 	foreach ($languages as $lang)
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tint_mce/langs/' . $lang . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/langs/' . $lang . ".js");
 
 	// Add themes
 	foreach ($themes as $theme) {
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tint_mce/themes/' . $theme . "/editor_template" . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/themes/' . $theme . "/editor_template" . $suffix . ".js");
 
 		foreach ($languages as $lang)
-			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tint_mce/themes/' . $theme . "/langs/" . $lang . ".js");
+			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/themes/' . $theme . "/langs/" . $lang . ".js");
 	}
 
 	// Add plugins
 	foreach ($plugins as $plugin) {
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tint_mce/plugins/' . $plugin . "/editor_plugin" . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/plugins/' . $plugin . "/editor_plugin" . $suffix . ".js");
 
 		foreach ($languages as $lang)
-			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tint_mce/plugins/' . $plugin . "/langs/" . $lang . ".js");
+			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/plugins/' . $plugin . "/langs/" . $lang . ".js");
 	}
 
 	// Add custom files

@@ -3,7 +3,7 @@ var tinyMCE_GZ = {
 		themes : '',
 		plugins : '',
 		languages : '',
-		disk_cache : true,
+		disk_cache : false,
 		page_name : 'tiny_mce_gzip.php',
 		debug : false,
 		suffix : ''

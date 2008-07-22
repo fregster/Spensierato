@@ -208,7 +208,7 @@ class Menu
 			$values = array($id, '0');
 			
 			array_push($where, 'visible');
-			array_push($values, user::singleton()->is_logged_in());
+			array_push($values, user::singleton()->is_logged_in()*-1);
 		}
 		$details = Database::Singleton()->sql_select(array('id', 'title', 'parent_id', 'visible', 'deleted'), 'tbl_pages', $where, $values, array('sort'));
 

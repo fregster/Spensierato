@@ -6,8 +6,8 @@
 	<link rel="stylesheet" type="text/css" href="<? echo(CMS::Singleton()->document_root) ?>/skin/style.css" />
 </head>
 <body>
-<div style="container">
-	<div style="centered"><p>Now loading...<br/><br/><img src="<? echo(CMS::Singleton()->document_root) ?>/skin/z-loading.gif" alt=""/><br/><br/>please wait</p></div>
+<div class="container">
+	<div class="centered"><p>Now loading...<br/><br/><img src="<? echo(CMS::Singleton()->document_root) ?>/skin/z-loading.gif" alt=""/><br/><br/>please wait</p></div>
 </div>
 </body>
 </html>

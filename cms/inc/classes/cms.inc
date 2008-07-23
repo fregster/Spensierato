@@ -488,7 +488,6 @@ class CMS
 				break;
 			
 				case 'IMAGE':
-				//Site images NO security check
 				/**
 				 * Site images
 				 * Need to get document details
@@ -526,7 +525,8 @@ class CMS
 					
 				$file_search = array(
 				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$pre_load.$this->page_details['value'],
-				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$pre_load.$this->page_details['value']
+				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$pre_load.$this->page_details['value'],
+				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/pre-load-images/'.$this->page_details['value']
 				);
 				
 				foreach($file_search as $file)

@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<title>Loading Modal Content</title>
+	<link rel="stylesheet" type="text/css" href="<? echo(CMS::Singleton()->cms_root) ?>/skin/style.css" />
+</head>
+<body>
+	<div style="centered"><p>Now loading...<br/><img src="<? echo(CMS::Singleton()->cms_root) ?>/skin/z-loading.gif" alt="Loading Graphic"/><br/>please wait</p></div>
+</body>
+</html>

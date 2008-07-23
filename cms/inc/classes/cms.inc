@@ -69,17 +69,17 @@ class CMS
 		//Static includes folder
 		Settings::Singleton()->new_setting('site_folder_static_includes', ($this->cms_root . '/inc/static/'));
 		
-		if(!isset(Settings::singleton()->get_setting('static_host_ajax')))
+		if(!Settings::singleton()->get_setting('static_host_ajax'))
 		{
 			Settings::Singleton()->new_setting('static_host_ajax', $this->document_root);
 		}
 		
-		if(!isset(Settings::singleton()->get_setting('static_host_skin')))
+		if(!Settings::singleton()->get_setting('static_host_skin'))
 		{
 			Settings::Singleton()->new_setting('static_host_skin', $this->document_root);
 		}
 		
-		if(!isset(Settings::singleton()->get_setting('static_host_js')))
+		if(!Settings::singleton()->get_setting('static_host_js'))
 		{
 			Settings::Singleton()->new_setting('static_host_js', $this->document_root);
 		}

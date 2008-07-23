@@ -517,6 +517,7 @@ class CMS
 				 */
 					
 				$file_search = array(
+				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin').$this->page_details['valule'],
 				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$this->page_details['value'],
 				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/pre-load-images/'.$this->path_vars[2],
 				Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/'.$this->path_vars[2],

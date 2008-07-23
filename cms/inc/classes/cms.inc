@@ -517,7 +517,7 @@ class CMS
 				 */
 				
 				$pre_load=null;
-				if($this->page_details['value'] ==='pre-load-images')
+				if($this->page_details['value'] ==='pre-load-images' or $this->page_details['value'] ==='pre-load-image')
 				{
 					$pre_load = '../pre-load-images/';
 					$this->page_details['value'] = $this->path_vars[2];

@@ -2,7 +2,7 @@
 require_once('virusScan.inc');
 class clamav extends virusScan
 {
-	private function __constructor()
+	protected function __constructor()
 	{
 		parent::__constructor();
 		if(Settings::singleton()->get_setting('virus_scanner_path') == false)

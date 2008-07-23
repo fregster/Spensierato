@@ -539,6 +539,8 @@ class CMS
 					}
 				}
 				
+				error::do404();
+				
 				break;
 				
 			case 'CSS':

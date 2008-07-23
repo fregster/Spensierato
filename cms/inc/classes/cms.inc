@@ -526,8 +526,8 @@ class CMS
 				$file_search = array(
 				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$pre_load.$this->page_details['value'],
 				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$pre_load.$this->page_details['value'],
-				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/pre-load-images/'.$this->page_details['value'],
-				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$this->page_details['value'],
+				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/pre-load-images/'.$this->path_vars[2],
+				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$this->path_vars[1],
 				);
 				
 				foreach($file_search as $file)

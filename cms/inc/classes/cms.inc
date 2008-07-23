@@ -802,7 +802,7 @@ class CMS
 
 	private function send_loading($value)
 	{
-		readfile(Settings::Singleton()->get_setting('cms_root').'/js/submodal/loading.html');
+		include(Settings::Singleton()->get_setting('cms_root').'/js/submodal/loading.html');
 		die();
 	}
 

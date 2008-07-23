@@ -515,18 +515,11 @@ class CMS
 				 * Check the related page details
 				 * call file transfer retrieve
 				 */
-				
-				$pre_load=null;
-				if($this->page_details['value'] ==='pre-load-images' or $this->page_details['value'] ==='pre-load-image')
-				{
-					$pre_load = '../pre-load-images/';
-					$this->page_details['value'] = $this->path_vars[2];
-				}
 					
 				$file_search = array(
-				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$pre_load.$this->page_details['value'],
-				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$pre_load.$this->page_details['value'],
+				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$this->page_details['value'],
 				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/pre-load-images/'.$this->path_vars[2],
+				Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/'.$this->path_vars[2],
 				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$this->path_vars[1],
 				);
 				

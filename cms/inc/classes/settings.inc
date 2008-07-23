@@ -56,7 +56,7 @@ class Settings
 			return $this->settings[$name][0]['value'];
 		}
 		
-		return NULL;
+		return false;
 	}
 	
 	public function settings_as_xml()

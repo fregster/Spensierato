@@ -15,6 +15,11 @@ body, html, input {
 	font-size: 0.9em;
 	color: #666666;
 }
+.container {
+	position: absolute;
+	height:100%;
+	weidth:100%;
+}
 .centered {
 	position: absolute;
 	top: 0;

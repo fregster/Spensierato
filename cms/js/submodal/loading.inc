@@ -11,7 +11,7 @@
 		<tr>
 			<td align="center"><p>Now loading...</p></td>
 			<td align="center"><img src="<? echo(CMS::Singleton()->document_root) ?>/skin/z-loading.gif" alt=""/></td>
-			<td align="center"><p>please wait</p></td>
+			<td align="center"><p>...please wait</p></td>
 		</tr>
 	</table>
 	</div>

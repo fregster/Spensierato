@@ -534,6 +534,7 @@ class CMS
 					}
 				}
 
+				print_r($file_search);
 				error::do404();
 				
 				break;

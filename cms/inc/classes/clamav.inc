@@ -4,7 +4,7 @@ class clamav extends virusScan
 	private function __constructor()
 	{
 		parent::__constructor();
-		if(!isset(Settings::singleton()->get_setting('virus_scanner_path')))
+		if(Settings::singleton()->get_setting('virus_scanner_path') == false)
 		{
 			$this->command = '/usr/local/bin/clamdscan --no-summary ';
 		}	

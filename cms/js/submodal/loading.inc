@@ -6,6 +6,14 @@
 	<link rel="stylesheet" type="text/css" href="<? echo(CMS::Singleton()->document_root) ?>/skin/style.css" />
 </head>
 <body>
-	<div class="centered"><p>Now loading...<br/><br/><img src="<? echo(CMS::Singleton()->document_root) ?>/skin/z-loading.gif" alt=""/><br/><br/>please wait</p></div>
+	<div class="centered">
+	<table>
+		<tr>
+			<td align="center"><p>Now loading...</p></td>
+			<td align="center"><img src="<? echo(CMS::Singleton()->document_root) ?>/skin/z-loading.gif" alt=""/></td>
+			<td align="center"><p>please wait</p></td>
+		</tr>
+	</table>
+	</div>
 </body>
 </html>

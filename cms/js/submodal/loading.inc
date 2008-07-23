@@ -3,9 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 	<title>Loading Modal Content</title>
-	<link rel="stylesheet" type="text/css" href="<? echo(CMS::Singleton()->cms_root) ?>/skin/style.css" />
+	<link rel="stylesheet" type="text/css" href="<? echo(CMS::Singleton()->document_root) ?>/skin/style.css" />
 </head>
 <body>
-	<div style="centered"><p>Now loading...<br/><img src="<? echo(CMS::Singleton()->cms_root) ?>/skin/z-loading.gif" alt="Loading Graphic"/><br/>please wait</p></div>
+	<div style="centered"><p>Now loading...<br/><img src="<? echo(CMS::Singleton()->document_root) ?>/skin/z-loading.gif" alt="Loading Graphic"/><br/>please wait</p></div>
 </body>
 </html>

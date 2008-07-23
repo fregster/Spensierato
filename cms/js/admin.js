@@ -6,7 +6,7 @@ function ajaxLoad() {
 	
 	ed.setProgressState(1); // Show progress
 
-	ajaxGet(document_root+'/ajax/edit/', element_id);
+	ajaxGet(ajax_host+'/ajax/edit/', element_id);
 	
 	http.onreadystatechange=function()
     	{
@@ -26,7 +26,7 @@ function ajaxSave() {
 
 	ed.setProgressState(1); // Show progress
 	
-	ajaxPost(document_root+'/ajax/edit/'+element_id, '<html>'+ed.getContent()+'</html>');
+	ajaxPost(ajax_host+'/ajax/edit/'+element_id, '<html>'+ed.getContent()+'</html>');
 	
 	http.onreadystatechange=function()
     	{
@@ -104,7 +104,7 @@ function dhtmlLoadCSS(url)
 
 function dynamicjsloader()
 {
-	 dhtmlLoadCSS(document_root+"/css/submodal");
-	 dhtmlLoadScript(document_root+"/js/submodal/common.js");
-	 dhtmlLoadScript(document_root+"/js/submodal/subModal.js");
+	 dhtmlLoadCSS(js_host+"/css/submodal");
+	 dhtmlLoadScript(js_host+"/js/submodal/common.js");
+	 dhtmlLoadScript(js_host+"/js/submodal/subModal.js");
 }

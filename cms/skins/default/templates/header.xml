@@ -46,6 +46,8 @@
 				-->
 				<script type="text/javascript">
 					var document_root = '<xsl:value-of select="/page/settings/document_root" />';
+					var js_host = '<xsl:value-of select="/page/settings/static_host_js" />';
+					var ajax_host = '<xsl:value-of select="/page/settings/static_host_ajax" />';
 					var current_page = '<xsl:value-of select="/page/@id" />';
 					
 					<xsl:if test="count(/page/settings/pre_load_images/setting) > 0">

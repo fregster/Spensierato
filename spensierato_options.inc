@@ -150,6 +150,17 @@ Settings::Singleton()->new_setting('tidy', true, false, true);
 Settings::singleton()->new_setting('phpids', true, false, true);
 
 //Site file options
+
+//Static files hosts
+//If not set then the main document_root var is used
+//Ajax
+//Settings::Singleton()->new_setting('static_host_ajax', ('ajax.'.$GLOBALS['site_root']));
+//Skin and images
+//Settings::Singleton()->new_setting('static_host_skin', ('skin.'.$GLOBALS['site_root']));
+//JS host
+//Settings::Singleton()->new_setting('static_host_js', ('js.'.$GLOBALS['site_root']));
+
+//Paths
 Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'));
 Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['site_root'] . '/graphics/'));
 Settings::Singleton()->new_setting('site_folder_uploads', ($GLOBALS['site_root'] . '/writeable/uploads/tmp/'), false, true);
@@ -182,6 +193,11 @@ Settings::Singleton()->new_setting('session_security_ip', false, false, true);
 //Requires the user to enter a security code when login in
 //true / false
 Settings::Singleton()->new_setting('login_capthca', true);
+
+//Setting login_javascript_secure
+//If the users webbrowser suports JS then the users login is encrptyed using the capthca as part of the key
+//true / false
+Settings::Singleton()->new_setting('login_secure', true);
 
 //Setting login_capthca_length
 //Sets the length of the image
@@ -252,4 +268,7 @@ Settings::Singleton()->new_setting('user_auto_email_password', true, false, true
 
 Settings::singleton()->new_setting('memcached_sql', false, false, true);
 Settings::singleton()->new_setting('memcached_session', false, false, true);
+
+Settings::singleton()->new_setting('virus_scanner', 'clamav', false, true);
+//Settings::singleton()->new_setting('virus_scanner_path', '/path/to/custom/scanner/install/', false, true);
 ?>

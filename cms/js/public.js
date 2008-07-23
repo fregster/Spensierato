@@ -57,7 +57,7 @@ function ajaxGetXML()
 
 function searchFunction()
 {		
-        ajaxGet(document_root+'/tools/search?s=', document.forms.searchform.elements.searchtext.value );
+        ajaxGet(ajax_host+'/tools/search?s=', document.forms.searchform.elements.searchtext.value );
         document.forms.searchform.elements.searchtext.value = '';
         
         http.onreadystatechange=function()
@@ -182,7 +182,7 @@ function eraseCookie(name) {
 
 function jsSecureLogin(username, password, code) {
 	var hash = SHA256(password+code);
-	location.href=document_root+'/login?username='+username+'&amp;key='+hash;
+	location.href=ajax_host+'/login?username='+username+'&amp;key='+hash;
 }
 
 /**

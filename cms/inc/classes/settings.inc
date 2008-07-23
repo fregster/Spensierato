@@ -51,7 +51,7 @@ class Settings
 	
 	public function get_setting($name)
 	{
-		if(isset($this->settings[$name]))
+		if(isset($this->settings[$name][0]['value']))
 		{
 			return $this->settings[$name][0]['value'];
 		}

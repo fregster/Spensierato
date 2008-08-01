@@ -94,12 +94,36 @@ class Render
 		
 		/* hack to clean html */
 		$this->clean_html();
-				
+		
 		/* output the html */
-		echo(html_entity_decode($this->html));
+		$this->send_html();
 		
 		/* ouput debug stuff */
 		//Debug::Singleton()->render();
+	}
+	
+	private function send_html()
+	{
+		/* If compression is requested and the level is numeric */
+		if(is_numeric(Settings::Singleton()->get_setting('output_compression_level')) and $this->acceptsGZIP())
+		{
+			$contents = gzencode(html_entity_decode($this->html), Settings::Singleton()->get_setting('output_compression_level'));
+			header ('Content-Encoding: gzip');
+			header ('Content-Length: ' . strlen($contents));
+			echo $contents;
+		}
+		else
+		{
+			/* output the html */
+			echo(html_entity_decode($this->html));
+		}
+	}
+	
+	private function acceptsGZip()
+	{
+		$accept = str_replace(" ","",strtolower($_SERVER['HTTP_ACCEPT_ENCODING']) );
+		$accept = explode(",",$accept);
+		return in_array("gzip",$accept);
 	}
 	
 	private function clean_html()

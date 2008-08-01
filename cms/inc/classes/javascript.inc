@@ -125,7 +125,7 @@ abstract class javascript
 				if ($fp = fopen($file, 'rb')) 
 				{
 					//2678400 = 31 days
-					Cache::headers_allow_cache($file, true, 2678400, 2678400, true);
+					Cache::headers_allow_cache($file, true, 2678400, 2678400);
 //					if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 					header ('Content-type: text/' . $type);
 					header ('Content-Length: ' . filesize($file));
@@ -152,6 +152,7 @@ abstract class javascript
 		$contents = str_replace('__CMS__DOCUMENT_ROOT', Settings::singleton()->get_setting('document_root'), $contents);
 		$contents = str_replace('__CMS__PAGE_ID', currentPage::singleton()->id(), $contents);
 		//Remove comments from the string
+		
 		switch (Settings::Singleton()->get_setting('js_minify')) 
 		{
 			case '1':
@@ -174,9 +175,22 @@ abstract class javascript
 				$contents = $contents;
 		}
 		
-		if($cached)
+		// Store cache
+		if ($cache) 
 		{
-			Cache::headers_allow_cache($cachedir . '/' . $cachefile);
+			$path = $cachedir . '/' . $cachefile;
+			if ($fp = fopen($path, 'wb')) 
+			{
+				$cached = fwrite($fp, $contents);
+				fclose($fp);
+				
+				if($cached)
+				{
+					Cache::headers_allow_cache($path);
+					echo $contents;
+					die();
+				}
+			}
 		}
 	
 		// Send Content-Type
@@ -185,6 +199,7 @@ abstract class javascript
 		if (isset($encoding) && $encoding != 'none') 
 		{
 			// Send compressed contents
+			Cache::headers_allow_cache(NULL, true, 26784000, 26784000);
 			$contents = gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE);
 			header ('Content-Encoding: ' . $encoding);
 			header ('Content-Length: ' . strlen($contents));
@@ -195,14 +210,6 @@ abstract class javascript
 			// Send regular contents
 			header ('Content-Length: ' . strlen($contents));
 			echo $contents;
-		}
-		
-		// Store cache
-		if ($cache) {
-			if ($fp = fopen($cachedir . '/' . $cachefile, 'wb')) {
-				$cached = fwrite($fp, $contents);
-				fclose($fp);
-			}
 		}
 	}
 }

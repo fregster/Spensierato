@@ -1,29 +1,15 @@
-/**
- * POPUP CONTAINER STYLES
- */
 #popupMask {
-	position: absolute;
-	z-index: 200;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	height: 100%;
-	opacity: .4;
-	filter: alpha(opacity=40);
-	/* this hack is so it works in IE
-	 * I find setting the color in the css gives me more flexibility 
-	 * than the PNG solution.
-	 */
-	background-color:transparent !important;
-	background-color: #333333;
-	/* this hack is for opera support
-	 * you can uncomment the background-image if you don't care about opera.
-	 * this gives you the flexibility to use any bg color that you want, instead of the png
-	 */
-	background-image/**/: url("../skin/maskBG.png") !important; // For browsers Moz, Opera, etc.
-	background-image:none;
-	background-repeat: repeat;
 	display:none;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	z-index:200;
+	background-color:#000;
+	-moz-opacity: 0.7;
+	opacity:.70;
+	filter: alpha(opacity=70);
 }
 #popupContainer {
 	position: absolute;
@@ -34,10 +20,9 @@
 	padding: 0px;
 }
 #popupInner {
-	border: 2px solid #000000;
-	background-color: #ffffff;
+	border: 1px solid #000000;
+	background-color: #FFFFFF;
 }
-
 #popupFrame {
 	margin: 0px;
 	width: 100%;
@@ -46,8 +31,8 @@
 	z-index: 202;
 }
 #popupTitleBar {
-	background-color: #486CAE;
-	color: #ffffff;
+	background-color: #333344;
+	color: #FFFFFF;
 	font-weight: bold;
 	height: 1.3em;
 	padding: 5px;
@@ -65,4 +50,12 @@
 #popupControls {
 	float: right;
 	cursor: pointer;
+	cursor: hand;
+}
+#popupControls a span {
+	display: block;
+	height: 15px;
+	width: 15px;
+	text-indent: -9000px;
+	background: url('../skin/close.gif') no-repeat;
 }

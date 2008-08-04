@@ -224,27 +224,31 @@ class user
 		$username = strtolower($username);
 		
 		//Get hash type for posted username
-		$hash_type_db = Database::Singleton()->sql_select_first(array('hash_type', 'id'), 'tbl_users', array('username'), array($username));
+		$userdetails = Database::Singleton()->sql_select_first(array('hash_type', 'id', 'password'), 'tbl_users', array('username'), array($username));
 		//Check hash type if count ! 1 then the username is not set
 		//Check hash type is default if not auth against it and update the db on sucsessful auth
-		if($hash_type_db['hash_type'] != 'sha256')
+		if($userdetails['hash_type'] != 'sha256')
 		{
 			//Username unknown or the password hash is not sha256
 			die('Username and password do not match 1');
 		}
+		
+		
+		$password = sha256($userdetails['password'].Capthca::get_code());
 
-		$id = Database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('username', 'password'), array($username, $hash));
-		if(count($id) == 1)
+		
+		if($hash == $password)
 		{
 			$this->userid = $id['id'];
 			die(1);
 		}
 		else
 		{
-			print_r('<br/>'.$id);
-			print_r('<br/>'.$hash);
-			print_r('<br/>'.$username);
-			print_r('<br/>'.$hash_type_db);
+			echo('<br/>'.$id);
+			echo('<br/>'.$hash);
+			echo('<br/>'.$username);
+			echo('<br/>'.$username);
+			echo('<br/>'.$hash_type_db);
 			die('Username and password do not match 2');
 		}
 		

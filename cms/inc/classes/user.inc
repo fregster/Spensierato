@@ -233,9 +233,7 @@ class user
 			die('Username and password do not match 1');
 		}
 		
-		
-		$password = sha256($userdetails['password'].Capthca::get_code());
-
+		$password = hash('sha256', ($userdetails['password'].Capthca::get_code()));
 		
 		if($hash == $password)
 		{

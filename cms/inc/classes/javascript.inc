@@ -201,6 +201,13 @@ abstract class javascript
 
 	private static function getcontentscompressed($contents, $encodeing)
 	{
+		// Determine supported compression method
+		$gzip = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip');
+		$deflate = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate');
+
+		// Determine used compression method
+		$encoding = $gzip ? 'gzip' : ($deflate ? 'deflate' : 'none');
+		
 		echo($encodeing);
 		if (isset($encoding) && $encoding != 'none') 
 		{

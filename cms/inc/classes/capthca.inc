@@ -95,6 +95,11 @@ class Capthca
 			return true;
 		}
 	}
+	
+	static function get_code()
+	{
+		return $_SESSION['capthca_security_code'];
+	}
 
 }
 ?>

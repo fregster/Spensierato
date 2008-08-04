@@ -105,6 +105,5 @@ function dhtmlLoadCSS(url)
 function dynamicjsloader()
 {
 	 dhtmlLoadCSS(js_host+"/css/submodal");
-	 dhtmlLoadScript(js_host+"/js/submodal/common.js");
-	 dhtmlLoadScript(js_host+"/js/submodal/subModal.js");
+	 dhtmlLoadScript(js_host+"/js/submodal/submodal.js");
 }

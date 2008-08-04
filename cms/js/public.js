@@ -180,7 +180,10 @@ function eraseCookie(name) {
 	createCookie(name,"",-1);
 }
 
-function jsSecureLogin(username, password, code) {
+function jsSecureLogin() {
+	var username;
+	var password;
+	var code;
 	var hash = SHA256(password+code);
 	location.href=ajax_host+'/login?username='+username+'&amp;key='+hash;
 }

@@ -164,7 +164,8 @@ abstract class javascript
 		else
 		{
 			//Send headers to allow temporay caching
-			header('Expires:' . http_date(time() + 3600));
+			$expires = gmdate('D, d M Y H:i:s', (time() + 3600)) . ' GMT';
+			header('Expires:' . $expires);
 			header('Cache-control: public');
 			header('Pragma:');		
 		}

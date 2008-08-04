@@ -108,7 +108,7 @@ abstract class javascript
 		$cachefile = 'cms-cache-' . $hash . '.' . $type;
 		$file = $cachedir . '/' . $cachefile;
 		
-	if($cache)
+		if($cache)
 		{
 			if (file_exists($file)) 
 			{
@@ -125,11 +125,14 @@ abstract class javascript
 						javascript::sendcontent($type, $encoding, $contents);
 					}
 				}
-				//The cached file is outdated so delete it
-				unset($file);
+				else
+				{
+					//The cached file is outdated so delete it
+					unset($file);
+				}
 			}
 		}
-	
+
 		
 		/*---------- First time visit or files were modified --------------*/
 
@@ -158,10 +161,16 @@ abstract class javascript
 			//If the file was sucsesfully cached then send the file through the cache class
 			Cache::headers_allow_cache($file);
 		}
+		else
+		{
+			//Send headers to allow temporay caching
+			header('Expires:' . http_date(time() + 3600));
+			header('Cache-control: public');
+			header('Pragma:');		
+		}
 		
-		$contents = javascript::getcontentscompressed($contents);
+		$contents = javascript::getcontentscompressed($contents, $encodeing);
 		javascript::sendcontent($type, $encoding, $contents);
-		die();
 	}
 		
 	private static function clean ($contents)
@@ -189,24 +198,22 @@ abstract class javascript
 		}
 	}
 
-	private static function getcontentscompressed($contents)
+	private static function getcontentscompressed($contents, $encodeing)
 	{
 		if (isset($encoding) && $encoding != 'none') 
 		{
 			// Send compressed contents
-			$contents = gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE);
-			return $contents;
+			return(gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE));
 		} 
 		
 		// Send regular contents
 		return $contents;
-
 	}
 	
 	private static function sendcontent($type, $encoding, $contents)
 	{
 		header ('Content-Type: text/' . $type);
-		//if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
+		if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 		header ('Content-Length: ' . strlen($contents));
 		
 		die($contents);

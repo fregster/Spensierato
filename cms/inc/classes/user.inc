@@ -218,8 +218,6 @@ class user
 
 	private function site_auth_hash($username, $hash)
 	{
-		echo($username);
-		echo($hash);
 		//Make username case insensative by forcing lowercase
 		$username = strtolower($username);
 		
@@ -246,13 +244,11 @@ class user
 			echo('<br/>inputed hash: '.$hash);
 			echo('<br/>username: '.$username);
 			echo('<br/>password: '.$password);
+			echo('<br/>password: '.$userdetails['password']);
 			echo('<br/>code: '.Capthca::get_code());
 			echo('<br/>'.$hash_type_db);
 			die('Username and password do not match 2');
 		}
-		
-		
-		
 	}
 	
 	//Returns true on sucsess or false on fail

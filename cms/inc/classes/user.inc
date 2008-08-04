@@ -226,18 +226,11 @@ class user
 		$hash_type_db = Database::Singleton()->sql_select_first(array('hash_type', 'id'), 'tbl_users', array('username'), array($username));
 		//Check hash type if count ! 1 then the username is not set
 		//Check hash type is default if not auth against it and update the db on sucsessful auth
-		if(!isset($hash_type_db['hash_type']))
+		if($hash_type_db['hash_type'] != 'SHA256')
 		{
 			//Username unknown
 			//Return username and password error else it gives away the username is valid
 			die('Username and password do not match 1');
-		}
-		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
-		$pwd = $password;
-
-		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_encryption'))
-		{
-			$this->update_password($hash);
 		}
 
 		$id = Database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('username', 'password'), array($username, $hash));
@@ -248,6 +241,10 @@ class user
 		}
 		else
 		{
+			echo('<br/>'.$id);
+			echo('<br/>'.$hash);
+			echo('<br/>'.$username);
+			echo('<br/>'.$hash_type_db);
 			die('Username and password do not match 2');
 		}
 		

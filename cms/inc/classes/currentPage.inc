@@ -122,6 +122,11 @@ class currentPage
 										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
 							break;
 					
+					case 'loading.html':
+							return array('type' => 'LOADING',
+										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
+							break;
+					
 					case 'ajax':
 							return array('type' => 'AJAX',
 										'value' => CMS::Singleton()->path_vars);

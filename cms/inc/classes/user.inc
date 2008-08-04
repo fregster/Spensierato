@@ -91,7 +91,7 @@ class user
 	{
 		if($_SERVER['REQUEST_METHOD'] == 'GET')
 		{
-			$auth = $this->site_auth_hash(get::variable('username'), get::variable('hash'));
+			$auth = $this->site_auth_hash(get::variable('username'), get::variable('key'));
 		}
 		else
 		{

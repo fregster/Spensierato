@@ -237,23 +237,12 @@ class user
 
 		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_encryption'))
 		{
-			$hash_outdated = true;
+			$this->update_password($hash);
 		}
-		if($hash_outdated == true)
-		{
-			$sql_password = hash($hash_type_db['hash_type'], $pwd);
-		}
-		else
-		{
-			$sql_password = Common::return_hash($pwd, false);
-		}
-		$id = Database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('username', 'password'), array($username, $sql_password));
+
+		$id = Database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('username', 'password'), array($username, $hash));
 		if(count($id) == 1)
 		{
-			if($hash_outdated == true)
-			{
-				$this->update_password($hash);
-			}
 			$this->userid = $id['id'];
 			die(1);
 		}

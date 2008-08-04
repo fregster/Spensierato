@@ -208,7 +208,6 @@ abstract class javascript
 		// Determine used compression method
 		$encoding = $gzip ? 'gzip' : ($deflate ? 'deflate' : 'none');
 		
-		echo($encodeing);
 		if (isset($encoding) && $encoding != 'none') 
 		{
 			// Send compressed contents
@@ -216,8 +215,7 @@ abstract class javascript
 		} 
 		
 		// Send regular contents
-		echo $contents;
-		die();
+		return $contents;
 	}
 	
 	private static function sendcontent($type, $encoding, $contents)

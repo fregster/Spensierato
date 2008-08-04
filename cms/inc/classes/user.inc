@@ -218,7 +218,6 @@ class user
 
 	private function site_auth_hash($username, $hash)
 	{
-		echo('hash'.$hash);
 		//Make username case insensative by forcing lowercase
 		$username = strtolower($username);
 		

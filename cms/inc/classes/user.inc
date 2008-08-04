@@ -240,10 +240,10 @@ class user
 		}
 		else
 		{
-			echo('<br/>'.$id);
-			echo('<br/>'.$hash);
-			echo('<br/>'.$username);
-			echo('<br/>'.$hash_type_db);
+			print_r('<br/>'.$id);
+			print_r('<br/>'.$hash);
+			print_r('<br/>'.$username);
+			print_r('<br/>'.$hash_type_db);
 			die('Username and password do not match 2');
 		}
 		

@@ -83,21 +83,8 @@ abstract class javascript
 			
 			$lastmodified = max($lastmodified, filemtime($path));
 		}
-		
-		//$cachefile = 'cache-' . $hash . '.' . $type . ($encoding != 'none' ? '.' . $encoding : '');	
-		$cachefile = 'cms-cache-'.$type.'-'.$hash.'.txt';
-		$file = $cachedir . '/' . $cachefile;
-		
-		if (file_exists($file)) 
-		{
-			$cached = filemtime($file);
-			if($lastmodified < $cached)
-			{
-				//JS files not moded since cached
-				Cache::headers_check_304($file);
-				header('Cached-Updated: '.$cached.'-'.$lastmodified);
-			}
-		}
+		$mtime = filemtime($path);
+		$gmdate_mod = gmdate('D, d M Y H:i:s', $mtime) . ' GMT';
 		
 		// Determine supported compression method
 		$gzip = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip');
@@ -118,28 +105,33 @@ abstract class javascript
 				$encoding = 'none';
 		}
 		
-		// First time visit or files were modified
-		if ($cache) 
+		$cachefile = 'cms-cache-' . $hash . '.' . $type;
+		$file = $cachedir . '/' . $cachefile;
+		
+	if($cache)
 		{
-			if (file_exists($file)) {
-				if ($fp = fopen($file, 'rb')) 
+			if (file_exists($file)) 
+			{
+				if($lastmodified < filemtime($file))
 				{
-					//2678400 = 31 days
-					Cache::headers_allow_cache($file, true, 2678400, 2678400);
-//					if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
-					header ('Content-type: text/' . $type);
-					header ('Content-Length: ' . filesize($file));
-
-					fpassthru($fp);
-					fclose($fp);
-					exit;
+					/*---------- JS files not moded since cached --------------*/
+					Cache::headers_check_304($file);				
+					
+					if ($fp = fopen($file, 'rb')) 
+					{
+						fclose($fp);
+						Cache::headers_allow_cache($file, true, 2678400, 2678400, true);					
+						$contents = gzencode(file_get_contents($file), 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE);
+						javascript::sendcontent($type, $encoding, $contents);
+					}
 				}
-				else
-				{
-					die('file not opened');
-				}
+				//The cached file is outdated so delete it
+				unset($file);
 			}
 		}
+	
+		
+		/*---------- First time visit or files were modified --------------*/
 
 		// Get contents of the files
 		$contents = '';
@@ -148,11 +140,36 @@ abstract class javascript
 			$path = realpath($base . '/' . $element);
 			$contents .= "\n\n" . file_get_contents($path);
 		}
+		//Clean contents
+		$contents = javascript::clean($contents);
 		
+		// Store cache
+		if ($cache) 
+		{
+			if ($fp = fopen($file, 'wb')) 
+			{
+				$cached = fwrite($fp, $contents);
+				fclose($fp);
+			}
+		}
+
+		if($cached)
+		{
+			//If the file was sucsesfully cached then send the file through the cache class
+			Cache::headers_allow_cache($file);
+		}
+		
+		$contents = javascript::getcontentscompressed($contents);
+		javascript::sendcontent($type, $encoding, $contents);
+		die();
+	}
+		
+	private static function clean ($contents)
+	{
 		$contents = str_replace('__CMS__DOCUMENT_ROOT', Settings::singleton()->get_setting('document_root'), $contents);
 		$contents = str_replace('__CMS__PAGE_ID', currentPage::singleton()->id(), $contents);
-		//Remove comments from the string
 		
+		//Remove comments from the string
 		switch (Settings::Singleton()->get_setting('js_minify')) 
 		{
 			case '1':
@@ -162,55 +179,37 @@ abstract class javascript
 			
 			case '2':
 				//Use external minification
-				
 				$contents = JSMin::minify(file_get_contents($contents));
-     			
-     			echo($contents);
-     			
-     			die();
-     			
 			    break;
 			
 			default:
 				$contents = $contents;
-		}
-		
-		// Store cache
-		if ($cache) 
-		{
-			$path = $cachedir . '/' . $cachefile;
-			if ($fp = fopen($path, 'wb')) 
-			{
-				$cached = fwrite($fp, $contents);
-				fclose($fp);
 				
-				if($cached)
-				{
-					Cache::headers_allow_cache($path);
-					echo $contents;
-					die();
-				}
-			}
+			return($contents);
 		}
-	
-		// Send Content-Type
-		header ("Content-Type: text/" . $type);
-		
+	}
+
+	private static function getcontentscompressed($contents)
+	{
 		if (isset($encoding) && $encoding != 'none') 
 		{
 			// Send compressed contents
-			Cache::headers_allow_cache(NULL, true, 26784000, 26784000);
 			$contents = gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE);
-			header ('Content-Encoding: ' . $encoding);
-			header ('Content-Length: ' . strlen($contents));
-			echo $contents;
+			return $contents;
 		} 
-		else 
-		{
-			// Send regular contents
-			header ('Content-Length: ' . strlen($contents));
-			echo $contents;
-		}
+		
+		// Send regular contents
+		return $contents;
+
+	}
+	
+	private static function sendcontent($type, $encoding, $contents)
+	{
+		header ('Content-Type: text/' . $type);
+		if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
+		header ('Content-Length: ' . strlen($contents));
+		
+		die($contents);
 	}
 }
 ?>

@@ -292,7 +292,8 @@ class user
 			return 'Username and password do not match';
 		}
 		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
-		$pwd = $hash_type_db['id'].$password;
+		//Removed because I need it to be able to be worked out on the client side for the JS sha256 login stuff
+		$pwd = $password;
 
 		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_encryption'))
 		{

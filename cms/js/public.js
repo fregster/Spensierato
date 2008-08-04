@@ -184,8 +184,20 @@ function jsSecureLogin() {
 	var username = document.forms.login.elements.username.value;
 	var password = document.forms.login.elements.password.value;
 	var code = document.forms.login.elements.security_code.value;
-	var hash = SHA256(password+code);
-	alert(ajax_host+'/login?username='+username+'&amp;key='+hash);
+	var hash = SHA256(password+code);	
+	
+	ajaxPost(ajax_host+'/login?username='+username+'&amp;key='+hash);
+    document.forms.searchform.elements.searchtext.value = '';
+       
+    http.onreadystatechange=function()
+   	{
+       	if(http.readyState==4)
+		{
+			alert(http.responseText);
+		    //document.getElementById('page_section_main').innerHTML = http.responseText;
+		}
+	};
+	
 };
 
 /**

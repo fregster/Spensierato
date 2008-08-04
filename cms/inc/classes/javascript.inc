@@ -206,7 +206,7 @@ abstract class javascript
 	private static function sendcontent($type, $encoding, $contents)
 	{
 		header ('Content-Type: text/' . $type);
-		if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
+		//if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 		header ('Content-Length: ' . strlen($contents));
 		
 		die($contents);

@@ -226,11 +226,9 @@ class user
 		$hash_type_db = Database::Singleton()->sql_select_first(array('hash_type', 'id'), 'tbl_users', array('username'), array($username));
 		//Check hash type if count ! 1 then the username is not set
 		//Check hash type is default if not auth against it and update the db on sucsessful auth
-		if($hash_type_db['hash_type'] != 'SHA256')
+		if($hash_type_db['hash_type'] != 'sha256')
 		{
-			//Username unknown
-			//Return username and password error else it gives away the username is valid
-			print_r($hash_type_db['hash_type']);
+			//Username unknown or the password hash is not sha256
 			die('Username and password do not match 1');
 		}
 

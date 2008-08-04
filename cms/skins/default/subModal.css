@@ -7,9 +7,9 @@
 	height:100%;
 	z-index:200;
 	background-color:#000;
-	-moz-opacity: 0.85;
-	opacity:.85;
-	filter: alpha(opacity=85);
+	-moz-opacity: 0.55;
+	opacity:.55;
+	filter: alpha(opacity=55);
 }
 #popupContainer {
 	position: absolute;

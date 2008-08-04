@@ -230,6 +230,7 @@ class user
 		{
 			//Username unknown
 			//Return username and password error else it gives away the username is valid
+			print_r($hash_type_db['hash_type']);
 			die('Username and password do not match 1');
 		}
 

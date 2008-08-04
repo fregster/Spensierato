@@ -121,7 +121,7 @@ abstract class javascript
 					{
 						fclose($fp);
 						Cache::headers_allow_cache($file, true, 2678400, 2678400, true);
-						$contents = getcontentscompressed(file_get_contents($file), $encoding);
+						$contents = javascript::getcontentscompressed(file_get_contents($file), $encoding);
 						javascript::sendcontent($type, $encoding, $contents);
 					}
 				}

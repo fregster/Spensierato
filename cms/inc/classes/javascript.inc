@@ -120,8 +120,8 @@ abstract class javascript
 					if ($fp = fopen($file, 'rb')) 
 					{
 						fclose($fp);
-						Cache::headers_allow_cache($file, true, 2678400, 2678400, true);					
-						$contents = gzencode(file_get_contents($file), 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE);
+						Cache::headers_allow_cache($file, true, 2678400, 2678400, true);
+						$contents = getcontentscompressed(file_get_contents($file), $encodeing);
 						javascript::sendcontent($type, $encoding, $contents);
 					}
 				}

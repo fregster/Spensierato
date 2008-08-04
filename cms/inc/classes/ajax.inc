@@ -15,7 +15,11 @@ class ajax
 					register::username_check($_POST['username']);
 				}
 			break;
-				
+
+			case 'login':
+				user::Singleton()->login();
+			break;
+			
 			default:
 				print_r($vars);
 				die();
@@ -56,5 +60,6 @@ class ajax
 		$element->build($id);
 		echo($element->ajax_edit());		
 	}
+	
 }
 ?>

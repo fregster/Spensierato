@@ -234,7 +234,7 @@ class user
 			return 'Username and password do not match';
 		}
 		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
-		$pwd = $hash_type_db['id'].$password;
+		$pwd = $password;
 
 		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_encryption'))
 		{
@@ -256,11 +256,11 @@ class user
 				$this->update_password($hash);
 			}
 			$this->userid = $id['id'];
-			return true;
+			die(1);
 		}
 		else
 		{
-			return 'Username and password do not match';
+			die('Username and password do not match');
 		}
 		
 		

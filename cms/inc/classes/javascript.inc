@@ -201,7 +201,7 @@ abstract class javascript
 
 	private static function getcontentscompressed($contents, $encodeing)
 	{
-		echo($contents.' '.$encodeing);
+		echo($encodeing);
 		if (isset($encoding) && $encoding != 'none') 
 		{
 			// Send compressed contents

@@ -186,6 +186,7 @@ function jsSecureLogin() {
 	var code = document.forms.login.elements.security_code.value;
 	var hash = SHA256(password+code);	
 	
+	alert('secure login');
 	ajaxPost(ajax_host+'/login?username='+username+'&amp;key='+hash);
     document.forms.searchform.elements.searchtext.value = '';
        

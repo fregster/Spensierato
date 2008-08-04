@@ -237,15 +237,16 @@ class user
 		
 		if($hash == $password)
 		{
-			$this->userid = $id['id'];
+			$this->userid = $userdetails['id'];
 			die(1);
 		}
 		else
 		{
-			echo('<br/>id: '.$id);
+			echo('<br/>id: '.$userdetails['id']);
 			echo('<br/>inputed hash: '.$hash);
 			echo('<br/>username: '.$username);
 			echo('<br/>password: '.$password);
+			echo('<br/>code: '.Capthca::get_code());
 			echo('<br/>'.$hash_type_db);
 			die('Username and password do not match 2');
 		}

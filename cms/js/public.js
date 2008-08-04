@@ -17,7 +17,7 @@ function ajaxObject()
 	}
 	
 	return http;
-}
+};
 
 var http = ajaxObject();
 
@@ -25,7 +25,7 @@ function ajaxGet(url, parameters)
 {
 	http.open('GET', url + parameters, true);
 	http.send(null);
-}
+};
 
 function ajaxPost(url, parameters)
 {
@@ -35,7 +35,7 @@ function ajaxPost(url, parameters)
 		http.setRequestHeader("Content-length", parameters.length);
 		http.setRequestHeader("Connection", "close");
 		http.send(parameters);
-}
+};
 
 function ajaxGetXML()
 {
@@ -53,7 +53,7 @@ function ajaxGetXML()
 	}
 	
 	return xmldoc;
-}
+};
 
 function searchFunction()
 {		
@@ -67,7 +67,7 @@ function searchFunction()
 			        document.getElementById('page_section_main').innerHTML = http.responseText;
 			}
 		};
-}
+};
 
 
 var ToolTips = new Tips($$('.ToolTip'), {
@@ -81,7 +81,7 @@ var SpriteTips = new Tips($$('.sprite'), {
 function pageReload(returnVal) 
 {
 	setTimeout('window.top.location.reload(true)',100);
-}
+};
 
 var notes;
 //Init scripts to auto load stuff
@@ -120,14 +120,14 @@ function notification(text, colour, font)
 	timer=setTimeout('notes.fade(0.8, 0)',3000);
 	
 	return false;
-}
+};
 
 function increaseFontSize() {
    stepFontSize(1);
-}
+};
 function decreaseFontSize() {
 	stepFontSize(-1);  
-}
+};
 
 function stepFontSize(increment) {
 	var p = document.getElementsByTagName('p');
@@ -153,7 +153,7 @@ function stepFontSize(increment) {
 		//Save the font size in a cookie
 		createCookie('fontSize',s-Math.floor(fontSizes.length / 2),'365');
    }
-}
+};
 
 function createCookie(name,value,days) {
 	if (days) {
@@ -163,7 +163,7 @@ function createCookie(name,value,days) {
 	}
 	else var expires = "";
 	document.cookie = name+"="+value+expires+"; path="+document_root;
-}
+};
 
 function readCookie(name) {
 	var nameEQ = name + "=";
@@ -174,19 +174,19 @@ function readCookie(name) {
 		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
 	}
 	return null;
-}
+};
 
 function eraseCookie(name) {
 	createCookie(name,"",-1);
-}
+};
 
 function jsSecureLogin() {
-	var username;
-	var password;
-	var code;
+	var username = document.forms.login.elements.username.value;
+	var password = document.forms.login.elements.password.value;
+	var code = document.forms.login.elements.security_code.value;
 	var hash = SHA256(password+code);
-	location.href=ajax_host+'/login?username='+username+'&amp;key='+hash;
-}
+	alert(ajax_host+'/login?username='+username+'&amp;key='+hash);
+};
 
 /**
 *

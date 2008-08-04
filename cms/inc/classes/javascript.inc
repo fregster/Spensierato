@@ -201,14 +201,16 @@ abstract class javascript
 
 	private static function getcontentscompressed($contents, $encodeing)
 	{
+		echo($contents.' '.$encodeing);
 		if (isset($encoding) && $encoding != 'none') 
 		{
 			// Send compressed contents
-			return(gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE));
+			$contents=(gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE));
 		} 
 		
 		// Send regular contents
-		return $contents;
+		echo $contents;
+		die();
 	}
 	
 	private static function sendcontent($type, $encoding, $contents)

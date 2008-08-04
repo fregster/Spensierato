@@ -231,7 +231,7 @@ class user
 			//Username unknown
 			//Return username and password error else it gives away the username is valid
 			warnings::singleton()->register('Username and password do not match');
-			return 'Username and password do not match';
+			die('Username and password do not match');
 		}
 		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
 		$pwd = $password;

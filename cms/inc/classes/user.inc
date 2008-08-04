@@ -241,10 +241,10 @@ class user
 		else
 		{
 			echo('<br/>id: '.$userdetails['id']);
-			echo('<br/>inputed hash: '.$hash);
 			echo('<br/>username: '.$username);
-			echo('<br/>password: '.$password);
-			echo('<br/>password: '.$userdetails['password']);
+			echo('<br/>password db: '.$userdetails['password']);
+			echo('<br/>inputed hash: '.$hash);
+			echo('<br/>password calced: '.$password);
 			echo('<br/>code: '.Capthca::get_code());
 			echo('<br/>'.$hash_type_db);
 			die('Username and password do not match 2');

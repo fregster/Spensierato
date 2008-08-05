@@ -1,0 +1,12 @@
+
+<xsl:template name="mediaplayer">
+<!-- This is the default media template for flowplayer -->
+	<xsl:element name="a">
+		<xsl:attribute name="class">flowplayer</xsl:attribute>
+		<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="./@id" /></xsl:attribute>		
+		<xsl:element name="img">
+			<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/preview/<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:attribute name="alt">Video Preview</xsl:attribute>
+		</xsl:element>
+	</xsl:element>
+</xsl:template>

@@ -186,7 +186,6 @@ function jsSecureLogin() {
 	var code = document.forms.login.elements.security_code.value;
 	var hash = SHA256(SHA256(password)+code);	
 	
-	alert('secure login');
 	ajaxGet(ajax_host+'/ajax/login?', 'username='+username+'&key='+hash);
     document.forms.searchform.elements.searchtext.value = '';
        
@@ -194,11 +193,22 @@ function jsSecureLogin() {
    	{
        	if(http.readyState==4)
 		{
-			alert(http.responseText);
-		    //document.getElementById('page_section_main').innerHTML = http.responseText;
+			if(http.responseText=='true')
+			{
+				window.location = document_root+'/'+current_page;
+			}
+			else
+			{
+				pageReload()
+			}
 		}
 	};
 	
+};
+
+function pageReload()
+{
+	window.location.href = unescape(window.location.pathname);
 };
 
 /**

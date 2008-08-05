@@ -21,6 +21,16 @@ ins { color: green; }
 
 del { color: red; }
 
+a:link 
+{ 
+	color: dark-blue;
+}
+
+a:visited 
+{ 
+	color: dark-blue;
+}
+
 a.tooltip
 {
 	position:relative; 
@@ -382,6 +392,15 @@ a.tooltip:hover span
 	padding: 4px 8px 8px;
 	background: #CFDFA7;
 }
+
+.download {
+	cursor: pointer;
+}
+
+.image {
+	border: 0px;
+}
+
 /* Sprite information */
 .sprite {height:16px; width:18px; background: url(skin/csg-47fc8b141e478.png) no-repeat center center; border:0px; cursor:pointer; position: relative; top:3px; left:1px;}
 .sprite-accept { background-position: 0 -30px; } 

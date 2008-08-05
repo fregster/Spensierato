@@ -3,11 +3,11 @@ class elementLogin extends elementDefault
 {
 	function __construct()
 	{
+		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Login Box Element';
 		$this->image = 'login.png';
 		$this->image_edit = '';
-		$this->edit_height = 600;
 	}
 	
 	protected function get_data()
@@ -20,7 +20,14 @@ class elementLogin extends elementDefault
 			}
 			else
 			{
-				$template = 'templates/login_with_capthca.html';
+				if(enhanced_login::singleton()->suported())
+				{
+					$template = 'templates/login_enhanced.html';
+				}
+				else
+				{
+					$template = 'templates/login_with_capthca.html';
+				}
 			}
 		}
 		else

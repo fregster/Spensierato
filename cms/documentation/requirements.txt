@@ -15,6 +15,7 @@ PHP 5.2 ish
 	mcrypt //Pref
 	text_diff //Pref
 	Hash //Optional
+	php-ffmpeg and ffmpeg //Optional, Pref if you want to suport multiple video codec types and createing video thumbnails 
 
 //Database related
 MySQL (or SQL server that supports the LIMIT call)
@@ -22,7 +23,7 @@ MySQL (or SQL server that supports the LIMIT call)
 
 
 In Debian
-apt-get install php-xml-serializer php-xml-parser php5-xsl php5-mysql
+apt-get install php-xml-serializer php-xml-parser php5-xsl php5-mysql php5-ffmpeg
 
 pear install MDB2
 pear install pear/MDB2#MySQLi

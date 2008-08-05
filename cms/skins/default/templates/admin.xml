@@ -19,7 +19,7 @@
 						<xsl:if test="/page/user/administrator = 1">
 							<xsl:if test="/page/warnings/warning">
 							| <xsl:element name="img">
-								<xsl:attribute name="src"><xsl:value-of select="page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 								<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
 								<xsl:attribute name="alt">Icon</xsl:attribute>
 							</xsl:element>
@@ -53,7 +53,7 @@
 					<xsl:if test="/page/security/can_approve =1">
 						<xsl:element name="form">
 							<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/up/<xsl:value-of select="/page/@id" /></xsl:attribute>
-							<xsl:attribute name="method">POST</xsl:attribute>
+							<xsl:attribute name="method">post</xsl:attribute>
 							<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
 							<xsl:element name="div">	
 								<xsl:attribute name="class">element_header</xsl:attribute>
@@ -63,8 +63,7 @@
 									<xsl:attribute name="value"><xsl:value-of select="/page/@title" /></xsl:attribute>
 									<xsl:attribute name="name">title</xsl:attribute>
 									<xsl:attribute name="id">title</xsl:attribute>
-									<input type="Submit" value="Update" />
-								</xsl:element> | 
+								</xsl:element><input type="submit" value="Update" /> | 
 								<xsl:element name="a">
 								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tp/<xsl:value-of select="/page/@id" />/visibility</xsl:attribute>
 									<xsl:element name="img">
@@ -109,7 +108,7 @@
 							
 							<xsl:element name="form">
 								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
-								<xsl:attribute name="method">POST</xsl:attribute>
+								<xsl:attribute name="method">post</xsl:attribute>
 								<xsl:attribute name="id">new_<xsl:value-of select="/page/@id" /></xsl:attribute>
 								<p>Create New <xsl:call-template name="new_element" /> 
 								<input type="submit" value="Create" />
@@ -123,7 +122,7 @@
 			<xsl:otherwise>
 				<xsl:element name="form">
 					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/-1</xsl:attribute>
-					<xsl:attribute name="method">POST</xsl:attribute>
+					<xsl:attribute name="method">post</xsl:attribute>
 					<div><input type="hidden" name="new_type" value="newPage" /><input type="submit" value="Create Homepage" /></div>
 					
 				</xsl:element>

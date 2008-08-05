@@ -1,9 +1,9 @@
 <?php
-
 /**
  * The warnings class is where non critical problems are registered
  * These warnings are then displayed when an Administrator logs in.
  *
+ * Level 4 - null
  * Level 3 - log
  * Level 2 - Show warning to Admins (information)
  * Level 1 - Show warning to Editors (posible probelms that might stop something working, ie uploads dir not wrtiable)
@@ -35,35 +35,35 @@ class warnings
 		$this->warnings = array();
 		//Do standard warning checks here for easy of code finding.
 		
+		//Check paths are writable
+		$paths = array( Settings::singleton()->get_setting('cms_folder_uploads'),
+						Settings::singleton()->get_setting('cms_folder_downloads'),
+						Settings::singleton()->get_setting('cms_folder_orig_images')
+					);
+		
+		foreach($paths as $path)
+		{
+			if (!is_dir($path)) 
+			{
+    			$this->register('Folder does not exsist', 'Please create the folder '.$path.' as uploads, downloads and local caching may be disabled');
+			}
+			
+			if (!is_readable($path)) 
+			{
+    			$this->register('Folder is not readable', 'The folder '.$path.' does not have read permissions, downloads are disabled', 1);
+			}
+			
+			if (!is_writable($path)) 
+			{
+    			$this->register('Folder is not writable', 'The folder '.$path.' does not have write permissions uploads are disabled', 1);
+    			Settings::Singleton()->overwrite_setting('uploads_enabled', false);
+			}
+		}
+		
 		//Checks only to be done if in admin mode
 		if(Options::Singleton()->get_option('admin_mode'))
 		{
-			//Check paths are writable
-			$paths = array( Settings::singleton()->get_setting('cms_root') . '/writeable',
-							Settings::singleton()->get_setting('cms_folder_uploads'),
-							Settings::singleton()->get_setting('cms_folder_downloads'),
-							Settings::singleton()->get_setting('cms_folder_orig_images')
-						);
-			
-			foreach($paths as $path)
-			{
-				if (!is_dir($path)) 
-				{
-    				$this->register('Folder does not exsist', 'Please create the folder '.$path.' as uploads, downloads and local caching will be disabled');
-				}
-				
-				if (!is_readable($path)) 
-				{
-    				$this->register('Folder is not readable', 'The folder '.$path.' does not have read permissions, downloads are disabled', 1);
-				}
-				
-				if (!is_writable($path)) 
-				{
-    				$this->register('Folder is not writable', 'The folder '.$path.' does not have write permissions uploads are disabled', 1);
-    				Settings::Singleton()->overwrite_setting('uploads_enabled', false);
-				}
-			}
-			$log_folder = Settings::singleton()->get_setting('cms_root') . '/writeable/logs';
+			$log_folder = Settings::singleton()->get_setting('cms_folder_logs');
 			if(!is_writable($log_folder))
 			{
 				$this->register('Logs are not writable', 'The folder '.$log_folder.' does not have write permissions logging and autoupdates are now disabled', 1);
@@ -73,7 +73,7 @@ class warnings
 			{
 				$update_log = Settings::singleton()->get_setting('cms_root') . '/writeable/logs/update.log';
 				
-				if(!is_file($update_log))
+				if(is_file($update_log))
 				{
 					if(fopen($update_log, 'w'))
 					{

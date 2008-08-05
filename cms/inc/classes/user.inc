@@ -7,7 +7,7 @@ class user
 {
 
 	private static $instance;
-	private $userid;
+	protected $userid;
 	private $lists;
 	private $user_details;
 	
@@ -89,25 +89,10 @@ class user
 	
 	public function login()
 	{
-		if($_SERVER['REQUEST_METHOD'] == 'GET')
-		{
-			$auth = $this->site_auth_hash(get::variable('username'), get::variable('key'));
-		}
-		else
-		{
-			$auth = $this->site_auth(post::variable('username'), post::variable('password'), post::variable('security_code'));
-		}
+		$auth = $this->site_auth();
 		
 		if($auth = true)
 		{
-			if(post::variable('login_rememberme') == 'true')
-			{
-				cookie::Singleton()->set_cookie('username', post::variable('username'));
-			}
-			else
-			{
-				cookie::Singleton()->remove_cookie('login_rememberme');
-			}
 			$this->do_login();
 		}
 		else
@@ -215,41 +200,15 @@ class user
 		
 		$this->lists = Lists::Singleton()->get_lists_for_user($this->userid);
 	}
-
-	private function site_auth_hash($username, $hash)
-	{
-		//Make username case insensative by forcing lowercase
-		$username = strtolower($username);
-		
-		//Get hash type for posted username
-		$userdetails = Database::Singleton()->sql_select_first(array('hash_type', 'id', 'password'), 'tbl_users', array('username'), array($username));
-		//Check hash type if count ! 1 then the username is not set
-		//Check hash type is default if not auth against it and update the db on sucsessful auth
-		if($userdetails['hash_type'] != 'sha256')
-		{
-			//Username unknown or the password hash is not sha256
-			die('Username and password do not match 1');
-		}
-		
-		$password = hash('sha256', ($userdetails['password'].Capthca::get_code()));
-		
-		if($hash == $password)
-		{
-			$this->userid = $userdetails['id'];
-			$this->do_login();
-			die('Login');
-		}
-		else
-		{
-			die('Username and password do not match 2');
-		}
-	}
 	
 	//Returns true on sucsess or false on fail
-	private function site_auth($username, $password, $security_code)
+	private function site_auth()
 	{
+		$username = post::variable('username');
+		$password = post::variable('password');
+
 		//Check security code first
-		if(!Capthca::Code_check($security_code))
+		if(!Capthca::Code_check(post::variable('security_code')))
 		{
 			return 'Security Code was incorect';
 			warnings::singleton()->register('Security Code was incorect');
@@ -306,8 +265,21 @@ class user
 		return Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('password', 'hash_type'), array($hash, Settings::Singleton()->get_setting('site_option_encryption')));
 	}
 	
-	private function do_login()
+	protected function do_login()
 	{
+		if(post::variable('login_rememberme') == 'true')
+		{
+			cookie::Singleton()->set_cookie('username', post::variable('username'));
+		}
+		else if (get::variable('login_rememberme') == 'true')
+		{
+			cookie::Singleton()->set_cookie('username', get::variable('username'));
+		}
+		else
+		{
+			cookie::Singleton()->remove_cookie('login_rememberme');
+		}
+		
 		Database::Singleton()->force_write_user();
 		
 		//Regenerate the session ID

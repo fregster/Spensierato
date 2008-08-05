@@ -23,7 +23,7 @@ class virusScan
 	   return self::$instance;
 	}
 	
-	protected function __constructor()
+	protected function __construct()
 	{
 		
 	}

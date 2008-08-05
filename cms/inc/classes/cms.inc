@@ -44,6 +44,16 @@ class CMS
 
 	private function __construct()
 	{
+		//Is memcached supported
+		$this->memcached();
+		
+		//Start the session
+		$this->start_session();
+		
+		//Update the settings with those from the DB
+		Settings::Singleton()->get_database_settings();
+		warnings::Singleton()->register('Options Loaded', '', 4);
+		
 		//Start page timer
 		if(Settings::Singleton()->Setting['site_option_showpagetime'])
 		{
@@ -61,13 +71,13 @@ class CMS
 		
 		//Work out the CMS file system root
 		$this->cms_root = cms_root();
-		Settings::Singleton()->new_setting('cms_root', $this->cms_root, true);
+		Settings::Singleton()->new_setting('cms_root', $this->cms_root, true, true);
 		
 		//Work out the Site file system root
 		$this->site_root = Common::site_root();
 
 		//Static includes folder
-		Settings::Singleton()->new_setting('site_folder_static_includes', ($this->cms_root . '/inc/static/'));
+		Settings::Singleton()->new_setting('site_folder_static_includes', ($this->cms_root . '/inc/static/'), false, true);
 		
 		if(!Settings::singleton()->get_setting('static_host_ajax'))
 		{
@@ -83,6 +93,9 @@ class CMS
 		{
 			Settings::Singleton()->new_setting('static_host_js', $this->document_root);
 		}
+
+		//Include the Elements
+		require_once('elements/include.inc');
 	}
 	
 	public function time()
@@ -101,12 +114,14 @@ class CMS
 	* It sets up all the vars required to use the run_cms method
 	*/
 	public function start()
-	{		
-		//Is memcached supported
-		$this->memcached();
+	{
+		//If required include PHPIDS
+		if(Settings::singleton()->get_setting('phpids'))
+		{
+			require_once('./phpids/phpids.inc');
+		}
 		
-		//Start the session
-		$this->start_session();
+		ob_start();
 		
 		//Call the methods to set all the required vars
 		//These should all be simple functions that do not require any external functions outside of CMS or Common and should not hit the DB
@@ -115,9 +130,6 @@ class CMS
 		{
 			Database::Singleton()->sql_cache_disable();
 		}
-		
-		//Update the settings with those from the DB
-		Settings::Singleton()->get_database_settings();
 		
 		//Update settings which require moding
 		$this->settings_update();
@@ -179,26 +191,23 @@ class CMS
 	
 	private function start_session()
 	{
-		if($this->memcached == true)
-		{
-			$session_save_path = "tcp://localhost:11211?persistent=1&weight=2&timeout=2&retry_interval=10,  ,tcp://$host:$port  ";
-			ini_set('session.save_handler', 'memcache');
-			ini_set('session.save_path', $session_save_path);
-		}
+//		if($this->memcached == true)
+//		{
+//			$session_save_path = "tcp://localhost:11211?persistent=1&weight=2&timeout=2&retry_interval=10,  ,tcp://$host:$port  ";
+//			ini_set('session.save_handler', 'memcache');
+//			ini_set('session.save_path', $session_save_path);
+//		}
 //			Setting the domain seems to sometimes stop the browser from saving the cookie
 //		session_set_cookie_params(0, Settings::Singleton()->get_setting('document_root'), $_SERVER['SERVER_NAME'], NULL, TRUE);
-		if(Settings::Singleton()->get_setting('document_root') != '/')
-		{
-//			session_set_cookie_params(0, NULL, NULL, NULL, TRUE);
-		}
+//		if(Settings::Singleton()->get_setting('document_root') != '/')
+//		{
+////			session_set_cookie_params(0, NULL, NULL, NULL, TRUE);
+//		}
 		
 		session_start();
-		
 		$this->session_user_agent_check();
 		$this->session_ip_check();
 		cookie::Singleton()->load();
-		
-		ob_start();
 	}
 	
 	private function session_user_agent_check()
@@ -490,11 +499,10 @@ class CMS
 				// Check the related page details
 				// call file transfer retrieve
 
-				$element_detail = Content::singleton()->get_element_main_page_where_valid($this->page_details['value']);
 				
-				if(Security::singleton()->can_view($element_detail['page_id']))
-				{
-					FileTransfer::singleton()->retrieve($this->page_details['value']);
+				if(Security::singleton()->can_view_element($this->page_details['value']))
+				{	
+					FileTransfer::singleton()->get_download($this->page_details['value']);
 				}
 				else
 				{
@@ -510,11 +518,27 @@ class CMS
 				 * call file transfer retrieve
 				 */
 
-				$element_detail = Content::singleton()->get_element_main_page_where_valid($this->page_details['value']);
-				
-				if(Security::singleton()->can_view($element_detail['page_id']))
+				if(Security::singleton()->can_view_element($this->page_details['value']))
+				{	
+					FileTransfer::singleton()->get_image($this->page_details['value']);
+				}
+				else
 				{
-					FileTransfer::singleton()->retrieve($this->page_details['value'], 'scaled');
+					error::do403();
+				}
+				break;
+				
+				case 'PREVIEW':
+				/**
+				 * Site images
+				 * Need to get document details
+				 * Check the related page details
+				 * call file transfer retrieve
+				 */
+
+				if(Security::singleton()->can_view_element($this->page_details['value']))
+				{	
+					FileTransfer::singleton()->get_preview($this->page_details['value']);
 				}
 				else
 				{
@@ -544,7 +568,7 @@ class CMS
 				{
 					if(is_file($file))
 					{
-						FileTransfer::singleton()->get_file($file, true);
+						FileTransfer::singleton()->get_file($file, true, false);
 						die();
 					}
 				}
@@ -871,7 +895,10 @@ class CMS
 		
 		
 		$update_log = Settings::singleton()->get_setting('cms_root') . '/writeable/logs/update.log';
-		$pervious_update_check = file_get_contents($update_log);
+		if(file_exists($update_log))
+		{
+			$pervious_update_check = file_get_contents($update_log);
+		}
 		$update_interval = Settings::Singleton()->get_setting('update_version_check_schedule')*24*60*60;
 		
 		if($pervious_update_check+$update_interval > time())

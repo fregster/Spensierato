@@ -18,7 +18,7 @@ abstract class Cache
 			}
 		}
 		
-		if($public == true)
+		if($public)
 		{
 			$cache_control = 'public, must-revalidate';
 		}

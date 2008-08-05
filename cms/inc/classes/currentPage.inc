@@ -163,6 +163,12 @@ class currentPage
 						return array('type' => 'DOWNLOAD',
 									'value' => CMS::Singleton()->path_vars[1]);
 						break;
+						
+					//Site video preview does a security check
+					case 'preview':
+						return array('type' => 'PREVIEW',
+									'value' => CMS::Singleton()->path_vars[1]);
+						break;
 					
 					//CMS files no security cached
 					case 'file':

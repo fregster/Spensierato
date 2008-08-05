@@ -3,6 +3,7 @@ class elementWarnings extends elementDefault
 {
 	function __construct()
 	{
+		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'CMS Warnings Element';
 		$this->image = '';

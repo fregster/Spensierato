@@ -17,6 +17,9 @@ require_once('inc/classes/include.inc');
 //Calculated vars
 //None
 
+//Include the Options file
+require_once('spensierato_options.inc');
+
 //Custom includes
 //None
 ?>

@@ -3,11 +3,11 @@ class elementAccess extends elementDefault
 {
 	function construct()
 	{
+		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Accessability Element';
 		$this->image = 'access.png';
 		$this->image_edit = '';
-		$this->edit_height = 600;
 	}
 	
 	protected function get_data()

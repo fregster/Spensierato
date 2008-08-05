@@ -33,15 +33,6 @@ try
 		die();
 	}
 	
-	//Include the Options file
-	require_once('./spensierato_options.inc');
-	
-	//If required include PHPIDS
-	if(Settings::singleton()->get_setting('phpids'))
-	{
-		require_once('./phpids/phpids.inc');
-	}
-	
 	//Start site
 	CMS::Singleton()->start();
 	

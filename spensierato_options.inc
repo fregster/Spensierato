@@ -96,8 +96,8 @@ Settings::Singleton()->new_setting('send_as_xml', false);
 
 //Setting max_file_size
 //Sets the maximum file upload size
-//100000
-Settings::Singleton()->new_setting('max_file_size', 100000);
+//10000000
+Settings::Singleton()->new_setting('max_file_size', 5000000);
 
 //Setting js_minify /* Currently breaks JS if not well formed */
 //clean the javascript to reduce the file size defaults to internal (1) just removes comments
@@ -163,11 +163,14 @@ Settings::singleton()->new_setting('phpids', true, false, true);
 //Paths
 Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'));
 Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['site_root'] . '/graphics/'));
-Settings::Singleton()->new_setting('site_folder_uploads', ($GLOBALS['site_root'] . '/writeable/uploads/tmp/'), false, true);
-Settings::Singleton()->new_setting('site_folder_downloads', ($GLOBALS['site_root'] . '/writeable/downloads/'), false, true);
+
 /* This has been changed from javascript to js-combine due to debians prototype package url rewriting */
 Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/js-combine/'));
 Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['site_root'] . '/js/'));
+
+//Uploads alowed, other options may disable this
+//true / false
+Settings::Singleton()->new_setting('uploads_enabled', true);
 
 //Temporay uploads folder
 Settings::Singleton()->new_setting('cms_folder_uploads', 'writeable/uploads/tmp/', false, true);
@@ -177,6 +180,13 @@ Settings::Singleton()->new_setting('cms_folder_downloads', 'writeable/uploads/',
 
 //Unscaled images
 Settings::Singleton()->new_setting('cms_folder_orig_images', 'writeable/uploads/original_images/', false, true);
+
+//Log files
+Settings::Singleton()->new_setting('cms_folder_logs', 'writeable/logs/', false, true);
+
+//download_rate
+//Maximum file download rate in kb/s
+Settings::Singleton()->new_setting('download_rate', NULL, false, true);
 
 /* Session security */
 //Setting session_security_enhanced

@@ -9,8 +9,8 @@ if(class_exists('elementDownload'))
 			parent::__construct();
 			$this->type = __CLASS__;
 			$this->name = 'Image';
-			$this->image = 'image.png';
-			$this->image_edit = '';
+			$this->image = 'image';
+			$this->image_edit = 'image_edit';
 			$this->allowed_tags(array('href' => 'href'));
 		}
 	

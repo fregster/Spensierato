@@ -30,12 +30,15 @@ class elementDefault
 		$this->image = 'accept';
 		$this->image_edit = 'page_edit';
 		$this->edit_height = 600;
+		
+		$this->add_header();
 	}
 	
 	protected function allowed_tags($tags)
 	{
 		foreach($tags as $key => $tag)
 		{
+			if(is_numeric($key)) { $key = $tag; $tag = 'auto'; }
 			$this->tags[$key] = $tag;
 		}
 	}
@@ -106,9 +109,18 @@ class elementDefault
 	
 	public function save($draft = true)
 	{
+		if($this->attach_upload() == false)
+		{
+			die('error comiting upload');
+			return false;
+		}
+		$extra = $this->attach_extra_data();
+		
+		$details = array_merge($_POST, $extra);
+		
 		//Build posted data as XML structure
 		$xml = '<xml>';
-		foreach($_POST as $key => $value)
+		foreach($details as $key => $value)
 		{
 			if($key == 'html') { $value = htmlentities($value, ENT_QUOTES); }
 			$value = common::sql_clean(strip_tags($value));
@@ -163,6 +175,32 @@ class elementDefault
 				
 	}
 	
+	protected function attach_upload()
+	{
+		if(isset($this->tags['file']) and isset($_FILES))
+		{
+			$file_size = (int)$_FILES['uploadedfile']['size'];
+			$max_size = (int)Settings::Singleton()->get_setting('max_file_size');
+			if($file_size <= $max_size)
+			{
+				$path = $_FILES['uploadedfile']['tmp_name'];
+				$target = Settings::singleton()->get_setting('cms_folder_uploads').$this->id.'-'.$this->revision;
+				return(filetransfer::move_file($path, $target));
+			}
+			return false;
+		}
+		return null;
+	}
+	
+	private function save_upload()
+	{
+		if(isset($this->tags['file']))
+		{
+			return filetransfer::singleton()->save_file($this->id, $this->revision);
+		}
+	}
+	
+	
 	public function toggle($what)
 	{
 		switch ($what)
@@ -207,6 +245,8 @@ class elementDefault
 	
 	protected function process_save($xml, $title)
 	{
+		$this->save_upload();
+		
 		//TODO call search code
 		$search = $this->generate_search($xml);
 		//TODO Archiving
@@ -351,5 +391,15 @@ class elementDefault
 		return $this->revision;
 	}
 
+	protected function add_header()
+	{
+			
+	}
+	
+	protected function attach_extra_data()
+	{
+		return array();
+	}
+		
 }
 ?>

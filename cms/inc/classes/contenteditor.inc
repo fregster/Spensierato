@@ -10,6 +10,7 @@ abstract class ContentEditor
 		{
 			//TinyMCE Compressor so just let it run
 			include($value);
+			die();
 		}
 		
 		if(file_exists($value))

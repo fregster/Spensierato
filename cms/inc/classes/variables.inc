@@ -6,6 +6,10 @@ abstract class variables
 {
 	public function variable($input, $type = NULL)
 	{	
+		if($input == NULL or $input == '')
+		{
+			return false;
+		}
 		$type .= '';
 		if(function_exists($type))
 		{

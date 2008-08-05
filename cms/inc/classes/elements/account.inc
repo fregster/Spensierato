@@ -3,6 +3,7 @@ class elementAccount extends elementDefault
 {
 	function __construct()
 	{
+		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Account Information Element';
 		$this->image = 'account.png';

@@ -29,6 +29,7 @@ class Database
 	 * Privately cached vars
 	 */
 	private $time;
+	private $microtime;
 
 	public static function Singleton()
 	{
@@ -53,6 +54,7 @@ class Database
 	public function __construct()
 	{
 		$this->time = time();
+		$this->microtime = microtime();
 		$this->prefix = $GLOBALS['table_prefix'];
 
 		$this->dsn_default = array(
@@ -753,7 +755,7 @@ class Database
 			session_unregister('sql_cache');
 		}
 		
-		$sql_start_time = Common::micro_time();
+		$sql_start_time = microtime();
 		
 		//Query the database Object
 		//if(	($writeuser == true) and ($this->write != NULL))

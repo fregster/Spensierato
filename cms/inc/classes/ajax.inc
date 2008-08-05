@@ -17,7 +17,7 @@ class ajax
 			break;
 
 			case 'login':
-				user::Singleton()->login();
+				enhanced_login::Singleton()->login();
 			break;
 			
 			default:

@@ -528,6 +528,9 @@ abstract class Common
 
             case "swf" :
                 return "application/x-shockwave-flash";
+                
+             case "flv" :
+                return "video/x-flv";   
 
             default :
             if(function_exists("mime_content_type"))
@@ -535,7 +538,8 @@ abstract class Common
                 $fileSuffix = mime_content_type($filename);
             }
 
-            return "unknown/" . trim($fileSuffix[0], ".");
+//            return "unknown/" . trim($fileSuffix[0], ".");
+			return false;
         }
     }
 }

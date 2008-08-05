@@ -42,7 +42,7 @@ class Debug
 	{
 		if($this->debug_level > 0)
 		{
-			$log = array(Common::micro_time(), $what, $details);
+			$log = array(CMS::time(), $what, $details);
 			array_push($this->debug_log, $log);
 			$this->log_to_file($log);
 		}

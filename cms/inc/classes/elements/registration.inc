@@ -3,11 +3,11 @@ class elementRegister extends elementDefault
 {
 	function __construct()
 	{
+		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Registration Box Element';
 		$this->image = 'login.png';
 		$this->image_edit = '';
-		$this->edit_height = 600;
 	}
 	
 	protected function get_data()

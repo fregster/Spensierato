@@ -89,10 +89,11 @@ class Settings
 		if($this->settings[$name][0]['protected'] != true)
 		{
 			//Remove old settings
+			$hidden = $this->settings[$name][0]['hidden'];
 			unset($this->settings[$name]);
 			
 			//Push the new setting
-			$this->new_setting($name, $value, $protected);
+			$this->new_setting($name, $value, $protected, $hidden);
 			
 			return true;
 		}

@@ -30,6 +30,9 @@ class Content
 	private $warnings;
 	private $warnings_data;
 	
+	private $head;
+	private $head_data;
+	
 	public static function Singleton()
 	{
 	   if (!isset(self::$instance)) {
@@ -90,6 +93,20 @@ class Content
 		$this->set_attribute('type', $page_details['type']);
 		
 	}
+
+	public function add_custom_head($tag, $attributes, $value = NULL)
+	{
+		if(!isset($this->head[0]))
+		{
+			$this->head = array();
+		}
+//		$atrib = array();
+//		foreach($attributes as $key => $value)
+//		{
+//			array_push($atrib, array('attrib' => $key, 'value' => $value));
+//		}
+		array_push($this->head, array('tag' => $tag, 'attributes' => $attributes, 'value'=>$value));
+	}
 	
 	public function build()
 	{
@@ -98,6 +115,7 @@ class Content
 		
 		$this->attach_menu();	
 		$this->load_elements();
+		$this->attach_head();
 		$this->attach_settings();
 		$this->attach_user();
 		$this->attach_debug();
@@ -133,6 +151,14 @@ class Content
 	private function attach_security()
 	{
 		$this->security_data->appendXML(Security::Singleton()->security_as_xml());
+	}
+	
+	private function attach_head()
+	{
+		if(isset($this->head[0]))
+		{	
+			Settings::Singleton()->new_setting('header_extra', $this->head);
+		}		
 	}
 	
 	private function attach_debug()
@@ -177,7 +203,12 @@ class Content
 		$this->page->appendChild($this->user_data);
 		$this->page->appendChild($this->security_data);
 		$this->page->appendChild($this->options_data);
+		if(isset($this->head_data))
+		{
+			$this->page->appendChild($this->head_data);
+		}
 		$this->page->appendChild($this->debug);
+		
 		$this->dom->appendChild($this->page);
 	}
 	

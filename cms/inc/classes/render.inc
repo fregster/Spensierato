@@ -100,12 +100,13 @@ class Render
 		
 		/* ouput debug stuff */
 		//Debug::Singleton()->render();
+		die();
 	}
 	
 	private function send_html()
 	{
 		/* If compression is requested and the level is numeric */
-		if(is_numeric(Settings::Singleton()->get_setting('output_compression_level')) and $this->acceptsGZIP())
+		if(is_numeric(Settings::Singleton()->get_setting('output_compression_level')) and $this->acceptsGZIP() and Settings::Singleton()->get_setting('output_compression_level') > 0)
 		{
 			$contents = gzencode(html_entity_decode($this->html), Settings::Singleton()->get_setting('output_compression_level'));
 			header ('Content-Encoding: gzip');

@@ -28,9 +28,8 @@ class enhanced_login extends user
 	
 	public function login()
 	{
-		$auth = $this->site_auth();
 		
-		if($auth = true)
+		if($this->site_auth())
 		{
 			$this->do_login();
 			die('true');

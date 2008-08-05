@@ -1,140 +1,155 @@
 function ajaxObject()
-{  var http = false;
-    //Use IE's ActiveX items to load the file.  if(typeof ActiveXObject != 'undefined')
-    {  try
-        {http = new ActiveXObject("Msxml2.XMLHTTP");
-        }  catch (e)
-        {   try
-            {http = new ActiveXObject("Microsoft.XMLHTTP");
-            }   catch (E)
-            {http = false;
-    }  }  //If ActiveX is not available, use the XMLHttpRequest of Firefox/Mozilla etc. to load the document.  } else if (XMLHttpRequest)
-    {  try
-        {http = new XMLHttpRequest();
-        }  catch (ee)
-        {http = false;
-    }  }    return http;
+{
+    var http = false;
+    //Use IE's ActiveX items to load the file.
+    if(typeof ActiveXObject != 'undefined')
+    {
+        try {http = new ActiveXObject("Msxml2.XMLHTTP");}
+        catch (e)
+        {
+            try {http = new ActiveXObject("Microsoft.XMLHTTP");}
+            catch (E) {http = false;}
+        }
+        //If ActiveX is not available, use the XMLHttpRequest of Firefox/Mozilla etc. to load the document.
+        } else if (XMLHttpRequest) {
+        try {http = new XMLHttpRequest();}
+        catch (ee) {http = false;}
+    }
+    return http;
 };
 var http = ajaxObject();
 function ajaxGet(url, parameters)
-{  http.open('GET', url + parameters, true);
+{
+    http.open('GET', url + parameters, true);
     http.send(null);
 };
 function ajaxPost(url, parameters)
-{  http.open('POST', url, true);
-    //Send the proper header information along with the request  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+{
+    http.open('POST', url, true);
+    //Send the proper header information along with the request
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     http.setRequestHeader("Content-length", parameters.length);
     http.setRequestHeader("Connection", "close");
     http.send(parameters);
 };
 function ajaxGetXML()
-{  //IE does not return responseXML  var xmldoc;
+{
+    //IE does not return responseXML
+    var xmldoc;
     if(window.ActiveXObject)
-    {  xmldoc = new ActiveXObject("Microsoft.XMLDOM");
+    {
+        xmldoc = new ActiveXObject("Microsoft.XMLDOM");
         xmldoc.async="false";
         xmldoc.loadXML(http.responseText);
-    }  else
-    {  xmldoc = http.responseXML;
-    }    return xmldoc;
+    }
+    else
+    {
+        xmldoc = http.responseXML;
+    }
+    return xmldoc;
 };
 function searchFunction()
-{   ajaxGet(ajax_host+'/tools/search?s=', document.forms.searchform.elements.searchtext.value );
+{
+    ajaxGet(ajax_host+'/tools/search?s=', document.forms.searchform.elements.searchtext.value );
     document.forms.searchform.elements.searchtext.value = '';
     http.onreadystatechange=function()
-    {  if(http.readyState==4)
-        {  document.getElementById('page_section_main').innerHTML = http.responseText;
-    }  };
+    {
+        if(http.readyState==4)
+        {
+            document.getElementById('page_section_main').innerHTML = http.responseText;
+        }
+    };
 };
-var ToolTips = new Tips($$('.ToolTip'),
-{  className: 'ToolTip' });
-var SpriteTips = new Tips($$('.sprite'),
-{  className: 'ToolTip' });
+var ToolTips = new Tips($$('.ToolTip'), {
+    className: 'ToolTip'
+});
+var SpriteTips = new Tips($$('.sprite'), {
+    className: 'ToolTip'
+});
 function pageReload(returnVal)
-{  setTimeout('window.top.location.reload(true)',100);
+{
+    setTimeout('window.top.location.reload(true)',100);
 };
 var notes;
-//Init scripts to auto load stuff var initalised;
+//Init scripts to auto load stuff
+var initalised;
 var SmoothScroll;
 function init()
-{   if(initalised != true)
-    {  
-    	SmoothScroll = new SmoothScroll({duration: 1200});  
-        stepFontSize(readCookie('fontSize'));
+{
+    if(initalised != true)
+    {
+        SmoothScroll = new SmoothScroll({duration: 1200}); //Load the smooth scroller
+        //document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
+        //notes = new Fx.Tween('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
+        stepFontSize(readCookie('fontSize')); //Set the font size
         notes = $('notifications');
         notes.fade.bind(notes, [0]);
         initalised = true;
-} };
+    }
+};
 function notification(text, colour, font)
-{  var timer;
-    if(!font)
-    {   var font = "black";
-    }    document.getElementById('notifications').style.backgroundColor = colour;
+{
+    var timer;
+    if(!font) {
+        var font = "black";
+    }
+    document.getElementById('notifications').style.backgroundColor = colour;
     document.getElementById('notifications').style.font = font;
     document.getElementById('notifications').innerHTML = text;
     notes.fade(-0, 0.8);
-    //After 3 seconds fade back out  timer=setTimeout('notes.fade(0.8, 0)',3000);
+    //After 3 seconds fade back out
+    timer=setTimeout('notes.fade(0.8, 0)',3000);
     return false;
 };
-function increaseFontSize()
-{   stepFontSize(1);
+function increaseFontSize() {
+    stepFontSize(1);
 };
-function decreaseFontSize()
-{  stepFontSize(-1);
+function decreaseFontSize() {
+    stepFontSize(-1);
 };
-function stepFontSize(increment)
-{  var p = document.getElementsByTagName('p');
+function stepFontSize(increment) {
+    var p = document.getElementsByTagName('p');
     var fontSizes = new Array("xx-small", "x-small", "small", "medium", "large", "x-large", "xx-large");
     var s = 3;
     var increment = parseInt(increment);
-    for(i=0;
-    i&lt;
-    p.length;
-    i++)
-    {   if(p[i].style.fontSize)
-        {    for(f=0;
-            f&lt;
-            fontSizes.length;
-            f++)
-            {   if(p[i].style.fontSize == fontSizes[f])
-                { var s = f;
-        }  }   }      var s = s + increment;
-        if(s &lt;
-        0)
-        { s = 0;
-        }   if(s &gt;
-        = fontSizes.length)
-        { s = fontSizes.length -1;
-        }   p[i].style.fontSize = fontSizes[s];
-        //Save the font size in a cookie  createCookie('fontSize',s-Math.floor(fontSizes.length / 2),'365');
-} };
-function createCookie(name,value,days)
-{  if (days)
-    {  var date = new Date();
-        date.setTime(date.getTime()+(days*24*60*60*1000));
-        var expires = ";
-        expires="+date.toGMTString();
-    }  else var expires = "";
-    document.cookie = name+"="+value+expires+";
-    path="+document_root;
+    for(i=0;i&lt;p.length;i++) {
+        if(p[i].style.fontSize) {
+            for(f=0;f&lt;fontSizes.length;f++) {
+                if(p[i].style.fontSize == fontSizes[f]) { var s = f; }
+            }
+        }
+        var s = s + increment;
+        if(s &lt; 0) { s = 0; }
+        if(s &gt;= fontSizes.length) { s = fontSizes.length -1; }
+        p[i].style.fontSize = fontSizes[s];
+        //Save the font size in a cookie
+        createCookie('fontSize',s-Math.floor(fontSizes.length / 2),'365');
+    }
 };
-function readCookie(name)
-{  var nameEQ = name + "=";
-    var ca = document.cookie.split(';
-    ');
-    for(var i=0;
-    i &lt;
-    ca.length;
-    i++)
-    {  var c = ca[i];
+function createCookie(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path="+document_root;
+};
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i &lt; ca.length;i++) {
+        var c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1,c.length);
         if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }  return null;
+    }
+    return null;
 };
-function eraseCookie(name)
-{  createCookie(name,"",-1);
+function eraseCookie(name) {
+    createCookie(name,"",-1);
 };
-function jsSecureLogin()
-{  var username = document.forms.login.elements.username.value;
+function jsSecureLogin() {
+    var username = document.forms.login.elements.username.value;
     var password = document.forms.login.elements.password.value;
     var code = document.forms.login.elements.security_code.value;
     var hash = SHA256(SHA256(password)+code);
@@ -142,10 +157,13 @@ function jsSecureLogin()
     ajaxGet(ajax_host+'/ajax/login?', 'username='+username+'&key='+hash);
     document.forms.searchform.elements.searchtext.value = '';
     http.onreadystatechange=function()
-    {  if(http.readyState==4)
-        {   alert(http.responseText);
+    {
+        if(http.readyState==4)
+        {
+            alert(http.responseText);
             //document.getElementById('page_section_main').innerHTML = http.responseText;
-    }  };
+        }
+    };
 };
 
 /**

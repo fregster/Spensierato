@@ -1,169 +1,204 @@
 function ajaxObject()
 {
-    var http = false;
-    //Use IE's ActiveX items to load the file.
-    if(typeof ActiveXObject != 'undefined')
-    {
-        try {http = new ActiveXObject("Msxml2.XMLHTTP");}
-        catch (e)
-        {
-            try {http = new ActiveXObject("Microsoft.XMLHTTP");}
-            catch (E) {http = false;}
-        }
-        //If ActiveX is not available, use the XMLHttpRequest of Firefox/Mozilla etc. to load the document.
-        } else if (XMLHttpRequest) {
-        try {http = new XMLHttpRequest();}
-        catch (ee) {http = false;}
-    }
-    return http;
+	var http = false;
+	//Use IE's ActiveX items to load the file.
+	if(typeof ActiveXObject != 'undefined') 
+	{
+		try {http = new ActiveXObject("Msxml2.XMLHTTP");}
+		catch (e) 
+		{
+			try {http = new ActiveXObject("Microsoft.XMLHTTP");}
+			catch (E) {http = false;}
+		}
+	//If ActiveX is not available, use the XMLHttpRequest of Firefox/Mozilla etc. to load the document.
+	} else if (XMLHttpRequest) {
+		try {http = new XMLHttpRequest();}
+		catch (ee) {http = false;}
+	}
+	
+	return http;
 };
+
 var http = ajaxObject();
+
 function ajaxGet(url, parameters)
 {
-    http.open('GET', url + parameters, true);
-    http.send(null);
+	http.open('GET', url + parameters, true);
+	http.send(null);
 };
+
 function ajaxPost(url, parameters)
 {
-    http.open('POST', url, true);
-    //Send the proper header information along with the request
-    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    http.setRequestHeader("Content-length", parameters.length);
-    http.setRequestHeader("Connection", "close");
-    http.send(parameters);
+		http.open('POST', url, true);
+		//Send the proper header information along with the request
+		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		http.setRequestHeader("Content-length", parameters.length);
+		http.setRequestHeader("Connection", "close");
+		http.send(parameters);
 };
+
 function ajaxGetXML()
 {
-    //IE does not return responseXML
-    var xmldoc;
-    if(window.ActiveXObject)
-    {
-        xmldoc = new ActiveXObject("Microsoft.XMLDOM");
-        xmldoc.async="false";
-        xmldoc.loadXML(http.responseText);
-    }
-    else
-    {
-        xmldoc = http.responseXML;
-    }
-    return xmldoc;
+	//IE does not return responseXML
+	var xmldoc;
+	if(window.ActiveXObject)
+	{
+		xmldoc = new ActiveXObject("Microsoft.XMLDOM");
+		xmldoc.async="false";
+		xmldoc.loadXML(http.responseText);
+	}
+	else
+	{
+		xmldoc = http.responseXML;
+	}
+	
+	return xmldoc;
 };
+
 function searchFunction()
-{
-    ajaxGet(ajax_host+'/tools/search?s=', document.forms.searchform.elements.searchtext.value );
-    document.forms.searchform.elements.searchtext.value = '';
-    http.onreadystatechange=function()
-    {
-        if(http.readyState==4)
-        {
-            document.getElementById('page_section_main').innerHTML = http.responseText;
-        }
-    };
+{		
+        ajaxGet(ajax_host+'/tools/search?s=', document.forms.searchform.elements.searchtext.value );
+        document.forms.searchform.elements.searchtext.value = '';
+        
+        http.onreadystatechange=function()
+    	{
+        	if(http.readyState==4)
+			{
+			        document.getElementById('page_section_main').innerHTML = http.responseText;
+			}
+		};
 };
+
+
 var ToolTips = new Tips($$('.ToolTip'), {
-    className: 'ToolTip'
+	className: 'ToolTip'
 });
+
 var SpriteTips = new Tips($$('.sprite'), {
-    className: 'ToolTip'
+	className: 'ToolTip'
 });
-function pageReload(returnVal)
+
+function pageReload(returnVal) 
 {
-    setTimeout('window.top.location.reload(true)',100);
+	setTimeout('window.top.location.reload(true)',100);
 };
+
 var notes;
 //Init scripts to auto load stuff
 var initalised;
 var SmoothScroll;
 function init()
-{
-    if(initalised != true)
-    {
-        SmoothScroll = new SmoothScroll({duration: 1200}); //Load the smooth scroller
-        //document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
-        //notes = new Fx.Tween('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
-        stepFontSize(readCookie('fontSize')); //Set the font size
-        notes = $('notifications');
-        notes.fade.bind(notes, [0]);
-        initalised = true;
-    }
+{ 
+	if(initalised != true)
+	{
+		SmoothScroll = new SmoothScroll({duration: 1200});	//Load the smooth scroller
+		//document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
+		//notes = new Fx.Tween('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
+		stepFontSize(readCookie('fontSize')); //Set the font size
+		
+		notes = $('notifications');
+		notes.fade.bind(notes, [0]);
+	
+		initalised = true;		
+	}
 };
+
 function notification(text, colour, font)
 {
-    var timer;
-    if(!font) {
-        var font = "black";
-    }
-    document.getElementById('notifications').style.backgroundColor = colour;
-    document.getElementById('notifications').style.font = font;
-    document.getElementById('notifications').innerHTML = text;
-    notes.fade(-0, 0.8);
-    //After 3 seconds fade back out
-    timer=setTimeout('notes.fade(0.8, 0)',3000);
-    return false;
+	var timer;
+	if(!font) { 
+		var font = "black";
+	}
+	
+	document.getElementById('notifications').style.backgroundColor = colour;
+	document.getElementById('notifications').style.font = font;
+	document.getElementById('notifications').innerHTML = text;
+	
+	notes.fade(-0, 0.8);
+	
+	//After 3 seconds fade back out
+	timer=setTimeout('notes.fade(0.8, 0)',3000);
+	
+	return false;
 };
+
 function increaseFontSize() {
-    stepFontSize(1);
+   stepFontSize(1);
 };
 function decreaseFontSize() {
-    stepFontSize(-1);
+	stepFontSize(-1);  
 };
+
 function stepFontSize(increment) {
-    var p = document.getElementsByTagName('p');
-    var fontSizes = new Array("xx-small", "x-small", "small", "medium", "large", "x-large", "xx-large");
-    var s = 3;
-    var increment = parseInt(increment);
-    for(i=0;i&lt;p.length;i++) {
-        if(p[i].style.fontSize) {
-            for(f=0;f&lt;fontSizes.length;f++) {
-                if(p[i].style.fontSize == fontSizes[f]) { var s = f; }
-            }
-        }
-        var s = s + increment;
-        if(s &lt; 0) { s = 0; }
-        if(s &gt;= fontSizes.length) { s = fontSizes.length -1; }
-        p[i].style.fontSize = fontSizes[s];
-        //Save the font size in a cookie
-        createCookie('fontSize',s-Math.floor(fontSizes.length / 2),'365');
-    }
+	var p = document.getElementsByTagName('p');
+	var fontSizes = new Array("xx-small", "x-small", "small", "medium", "large", "x-large", "xx-large");
+	var s = 3;
+	var increment = parseInt(increment);
+	
+	for(i=0;i<p.length;i++) {
+      if(p[i].style.fontSize) {
+        
+         for(f=0;f<fontSizes.length;f++) {
+         	if(p[i].style.fontSize == fontSizes[f]) { var s = f; }
+         }
+      }
+      
+      var s = s + increment;
+      
+      if(s < 0) { s = 0; }
+      if(s >= fontSizes.length) { s = fontSizes.length -1; } 
+
+		p[i].style.fontSize = fontSizes[s];
+          
+		//Save the font size in a cookie
+		createCookie('fontSize',s-Math.floor(fontSizes.length / 2),'365');
+   }
 };
+
 function createCookie(name,value,days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime()+(days*24*60*60*1000));
-        var expires = "; expires="+date.toGMTString();
-    }
-    else var expires = "";
-    document.cookie = name+"="+value+expires+"; path="+document_root;
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "; expires="+date.toGMTString();
+	}
+	else var expires = "";
+	document.cookie = name+"="+value+expires+"; path="+document_root;
 };
+
 function readCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i &lt; ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
 };
+
 function eraseCookie(name) {
-    createCookie(name,"",-1);
+	createCookie(name,"",-1);
 };
+
 function jsSecureLogin() {
-    var username = document.forms.login.elements.username.value;
-    var password = document.forms.login.elements.password.value;
-    var code = document.forms.login.elements.security_code.value;
-    var hash = SHA256(SHA256(password)+code);
-    alert('secure login');
-    ajaxGet(ajax_host+'/ajax/login?', 'username='+username+'&key='+hash);
+	var username = document.forms.login.elements.username.value;
+	var password = document.forms.login.elements.password.value;
+	var code = document.forms.login.elements.security_code.value;
+	var hash = SHA256(SHA256(password)+code);	
+	
+	alert('secure login');
+	ajaxGet(ajax_host+'/ajax/login?', 'username='+username+'&key='+hash);
     document.forms.searchform.elements.searchtext.value = '';
+       
     http.onreadystatechange=function()
-    {
-        if(http.readyState==4)
-        {
-            alert(http.responseText);
-            //document.getElementById('page_section_main').innerHTML = http.responseText;
-        }
-    };
+   	{
+       	if(http.readyState==4)
+		{
+			alert(http.responseText);
+		    //document.getElementById('page_section_main').innerHTML = http.responseText;
+		}
+	};
+	
 };
 
 /**
@@ -174,4 +209,122 @@ function jsSecureLogin() {
 *  Original code by Angel Marin, Paul Johnston.
 *
 **/
-function SHA256(s) { var chrsz = 8;  var hexcase = 0;  function safe_add (x, y)  { var lsw = (x & 0xFFFF) + (y & 0xFFFF);  var msw = (x &gt;  &gt;  16) + (y &gt;  &gt;  16) + (lsw &gt;  &gt;  16);  return (msw &lt;  &lt;  16) | (lsw & 0xFFFF);  } function S (X, n)  { return ( X &gt;  &gt;  &gt;  n ) | (X &lt;  &lt;  (32 - n));  } function R (X, n)  { return ( X &gt;  &gt;  &gt;  n );  } function Ch(x, y, z)  { return ((x & y) ^ ((~x) & z));  } function Maj(x, y, z)  { return ((x & y) ^ (x & z) ^ (y & z));  } function Sigma0256(x)  { return (S(x, 2) ^ S(x, 13) ^ S(x, 22));  } function Sigma1256(x)  { return (S(x, 6) ^ S(x, 11) ^ S(x, 25));  } function Gamma0256(x)  { return (S(x, 7) ^ S(x, 18) ^ R(x, 3));  } function Gamma1256(x)  { return (S(x, 17) ^ S(x, 19) ^ R(x, 10));  } function core_sha256 (m, l)  { var K = new Array(0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5, 0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5, 0xD807AA98, 0x12835B01, 0x243185BE, 0x550C7DC3, 0x72BE5D74, 0x80DEB1FE, 0x9BDC06A7, 0xC19BF174, 0xE49B69C1, 0xEFBE4786, 0xFC19DC6, 0x240CA1CC, 0x2DE92C6F, 0x4A7484AA, 0x5CB0A9DC, 0x76F988DA, 0x983E5152, 0xA831C66D, 0xB00327C8, 0xBF597FC7, 0xC6E00BF3, 0xD5A79147, 0x6CA6351, 0x14292967, 0x27B70A85, 0x2E1B2138, 0x4D2C6DFC, 0x53380D13, 0x650A7354, 0x766A0ABB, 0x81C2C92E, 0x92722C85, 0xA2BFE8A1, 0xA81A664B, 0xC24B8B70, 0xC76C51A3, 0xD192E819, 0xD6990624, 0xF40E3585, 0x106AA070, 0x19A4C116, 0x1E376C08, 0x2748774C, 0x34B0BCB5, 0x391C0CB3, 0x4ED8AA4A, 0x5B9CCA4F, 0x682E6FF3, 0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, 0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2);  var HASH = new Array(0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, 0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19);  var W = new Array(64);  var a, b, c, d, e, f, g, h, i, j;  var T1, T2;  m[l &gt;  &gt;  5] |= 0x80 &lt;  &lt;  (24 - l % 32);  m[((l + 64 &gt;  &gt;  9) &lt;  &lt;  4) + 15] = l;  for ( var i = 0;  i&lt;  m.length;  i+=16 )  { a = HASH[0];  b = HASH[1];  c = HASH[2];  d = HASH[3];  e = HASH[4];  f = HASH[5];  g = HASH[6];  h = HASH[7];  for ( var j = 0;  j&lt;  64;  j++)  { if (j &lt;  16) W[j] = m[j + i];  else W[j] = safe_add(safe_add(safe_add(Gamma1256(W[j - 2]), W[j - 7]), Gamma0256(W[j - 15])), W[j - 16]);  T1 = safe_add(safe_add(safe_add(safe_add(h, Sigma1256(e)), Ch(e, f, g)), K[j]), W[j]);  T2 = safe_add(Sigma0256(a), Maj(a, b, c));  h = g;  g = f;  f = e;  e = safe_add(d, T1);  d = c;  c = b;  b = a;  a = safe_add(T1, T2);  } HASH[0] = safe_add(a, HASH[0]);  HASH[1] = safe_add(b, HASH[1]);  HASH[2] = safe_add(c, HASH[2]);  HASH[3] = safe_add(d, HASH[3]);  HASH[4] = safe_add(e, HASH[4]);  HASH[5] = safe_add(f, HASH[5]);  HASH[6] = safe_add(g, HASH[6]);  HASH[7] = safe_add(h, HASH[7]);  } return HASH;  } function str2binb (str)  { var bin = Array();  var mask = (1 &lt;  &lt;  chrsz) - 1;  for(var i = 0;  i &lt;  str.length * chrsz;  i += chrsz)  { bin[i&gt;  &gt;  5] |= (str.charCodeAt(i / chrsz) & mask) &lt;  &lt;  (24 - i%32);  } return bin;  } function Utf8Encode(string)  { string = string.replace(/\r\n/g,"\n");  var utftext = "";  for (var n = 0;  n &lt;  string.length;  n++)  { var c = string.charCodeAt(n);  if (c &lt;  128)  { utftext += String.fromCharCode(c);  } else if((c &gt;  127) && (c &lt;  2048))  { utftext += String.fromCharCode((c &gt;  &gt;  6) | 192);  utftext += String.fromCharCode((c & 63) | 128);  } else  { utftext += String.fromCharCode((c &gt;  &gt;  12) | 224);  utftext += String.fromCharCode(((c &gt;  &gt;  6) & 63) | 128);  utftext += String.fromCharCode((c & 63) | 128);  } } return utftext;  } function binb2hex (binarray)  { var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";  var str = "";  for(var i = 0;  i &lt;  binarray.length * 4;  i++)  { str += hex_tab.charAt((binarray[i&gt;  &gt;  2] &gt;  &gt;  ((3 - i%4)*8+4)) & 0xF) + hex_tab.charAt((binarray[i&gt;  &gt;  2] &gt;  &gt;  ((3 - i%4)*8 )) & 0xF);  } return str;  } s = Utf8Encode(s);  return binb2hex(core_sha256(str2binb(s), s.length * chrsz)); }
+
+function SHA256(s){
+
+    var chrsz   = 8;
+    var hexcase = 0;
+
+    function safe_add (x, y) {
+        var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+        var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+        return (msw << 16) | (lsw & 0xFFFF);
+    }
+
+    function S (X, n) { return ( X >>> n ) | (X << (32 - n)); }
+    function R (X, n) { return ( X >>> n ); }
+    function Ch(x, y, z) { return ((x & y) ^ ((~x) & z)); }
+    function Maj(x, y, z) { return ((x & y) ^ (x & z) ^ (y & z)); }
+    function Sigma0256(x) { return (S(x, 2) ^ S(x, 13) ^ S(x, 22)); }
+    function Sigma1256(x) { return (S(x, 6) ^ S(x, 11) ^ S(x, 25)); }
+    function Gamma0256(x) { return (S(x, 7) ^ S(x, 18) ^ R(x, 3)); }
+    function Gamma1256(x) { return (S(x, 17) ^ S(x, 19) ^ R(x, 10)); }
+
+    function core_sha256 (m, l) {
+        var K = new Array(0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5, 0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5, 0xD807AA98, 0x12835B01, 0x243185BE, 0x550C7DC3, 0x72BE5D74, 0x80DEB1FE, 0x9BDC06A7, 0xC19BF174, 0xE49B69C1, 0xEFBE4786, 0xFC19DC6, 0x240CA1CC, 0x2DE92C6F, 0x4A7484AA, 0x5CB0A9DC, 0x76F988DA, 0x983E5152, 0xA831C66D, 0xB00327C8, 0xBF597FC7, 0xC6E00BF3, 0xD5A79147, 0x6CA6351, 0x14292967, 0x27B70A85, 0x2E1B2138, 0x4D2C6DFC, 0x53380D13, 0x650A7354, 0x766A0ABB, 0x81C2C92E, 0x92722C85, 0xA2BFE8A1, 0xA81A664B, 0xC24B8B70, 0xC76C51A3, 0xD192E819, 0xD6990624, 0xF40E3585, 0x106AA070, 0x19A4C116, 0x1E376C08, 0x2748774C, 0x34B0BCB5, 0x391C0CB3, 0x4ED8AA4A, 0x5B9CCA4F, 0x682E6FF3, 0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, 0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2);
+        var HASH = new Array(0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, 0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19);
+        var W = new Array(64);
+        var a, b, c, d, e, f, g, h, i, j;
+        var T1, T2;
+
+        m[l >> 5] |= 0x80 << (24 - l % 32);
+        m[((l + 64 >> 9) << 4) + 15] = l;
+
+        for ( var i = 0; i<m.length; i+=16 ) {
+            a = HASH[0];
+            b = HASH[1];
+            c = HASH[2];
+            d = HASH[3];
+            e = HASH[4];
+            f = HASH[5];
+            g = HASH[6];
+            h = HASH[7];
+
+            for ( var j = 0; j<64; j++) {
+                if (j < 16) W[j] = m[j + i];
+                else W[j] = safe_add(safe_add(safe_add(Gamma1256(W[j - 2]), W[j - 7]), Gamma0256(W[j - 15])), W[j - 16]);
+
+                T1 = safe_add(safe_add(safe_add(safe_add(h, Sigma1256(e)), Ch(e, f, g)), K[j]), W[j]);
+                T2 = safe_add(Sigma0256(a), Maj(a, b, c));
+
+                h = g;
+                g = f;
+                f = e;
+                e = safe_add(d, T1);
+                d = c;
+                c = b;
+                b = a;
+                a = safe_add(T1, T2);
+            }
+
+            HASH[0] = safe_add(a, HASH[0]);
+            HASH[1] = safe_add(b, HASH[1]);
+            HASH[2] = safe_add(c, HASH[2]);
+            HASH[3] = safe_add(d, HASH[3]);
+            HASH[4] = safe_add(e, HASH[4]);
+            HASH[5] = safe_add(f, HASH[5]);
+            HASH[6] = safe_add(g, HASH[6]);
+            HASH[7] = safe_add(h, HASH[7]);
+        }
+        return HASH;
+    }
+
+    function str2binb (str) {
+        var bin = Array();
+        var mask = (1 << chrsz) - 1;
+        for(var i = 0; i < str.length * chrsz; i += chrsz) {
+            bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (24 - i%32);
+        }
+        return bin;
+    }
+
+    function Utf8Encode(string) {
+        string = string.replace(/\r\n/g,"\n");
+        var utftext = "";
+
+        for (var n = 0; n < string.length; n++) {
+
+            var c = string.charCodeAt(n);
+
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            }
+            else if((c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+            else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+
+        }
+
+        return utftext;
+    }
+
+    function binb2hex (binarray) {
+        var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+        var str = "";
+        for(var i = 0; i < binarray.length * 4; i++) {
+            str += hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8+4)) & 0xF) +
+            hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8  )) & 0xF);
+        }
+        return str;
+    }
+
+    s = Utf8Encode(s);
+    return binb2hex(core_sha256(str2binb(s), s.length * chrsz));
+
+}

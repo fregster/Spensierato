@@ -28,18 +28,16 @@ class enhanced_login extends user
 	
 	public function login()
 	{
-		die($this->site_auth());
+		$auth = $this->site_auth();
 		
 		if($auth = true)
 		{
 			$this->do_login();
+			die('true');
 		}
-		else
-		{
-			warnings::Singleton()->register('Login Failed', 'Either your Username or Password was incorrect or you are not registered', 0);
-			Common::reload_with_vars(array('authfailed'), array($auth));
-		}
-		Common::bounce_to_referer();
+		
+		CMS::Singleton()->delete_session();
+		die('false');
 	}
 	
 	private function site_auth()
@@ -59,20 +57,16 @@ class enhanced_login extends user
 		if($userdetails['hash_type'] != $this->required_hash_type)
 		{
 			//Username unknown or the password hash is not sha256
-			die('Enhanced Login is not enabled for this user and or site');
+			return('Enhanced Login is not enabled for this user and or site');
 		}
 		
 		if(get::variable('key') == hash($this->required_hash_type, ($userdetails['password'].Capthca::get_code())))
 		{
 			$this->userid = $userdetails['id'];
 			$this->do_login();
-			die('true');
+			return true;
 		}
-		else
-		{
-			die('false');
-		}
-		
+		return false;
 	}
 }
 

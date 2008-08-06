@@ -20,49 +20,18 @@
 				</xsl:element>
 				</xsl:if>
 				
-				<xsl:element name="link">
-					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css</xsl:attribute>
-					<xsl:attribute name="type">text/css</xsl:attribute>
-					<xsl:attribute name="rel">stylesheet</xsl:attribute>
-				</xsl:element>
-				
-				<xsl:if test="/page/options/css_mobile = 1">
-				<xsl:element name="link">
-					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css/mobile</xsl:attribute>
-					<xsl:attribute name="type">text/css</xsl:attribute>
-					<xsl:attribute name="media">handheld</xsl:attribute>
-					<xsl:attribute name="rel">stylesheet</xsl:attribute>
-				</xsl:element>
-				</xsl:if>
-				
-				<!--
-				<xsl:if test="/page/options/admin_mode = 1">
-				<xsl:element name="link">
-					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css/submodal</xsl:attribute>
-					<xsl:attribute name="type">text/css</xsl:attribute>
-					<xsl:attribute name="rel">stylesheet</xsl:attribute>
-				</xsl:element>
-				</xsl:if>
-				-->
+				<xsl:call-template name="stylesheet"/>
+	
 				<xsl:call-template name="javascript"/>
-				<script type="text/javascript">
-					var document_root = '<xsl:value-of select="/page/settings/document_root" />';
-					var js_host = '<xsl:value-of select="/page/settings/static_host_js" />';
-					var ajax_host = '<xsl:value-of select="/page/settings/static_host_ajax" />';
-					var current_page = '<xsl:value-of select="/page/@id" />';
+				
+				<xsl:for-each select="/page/settings/header_extra/setting">
+					 <xsl:element name="{tag}">
 					
-					<xsl:if test="count(/page/settings/pre_load_images/setting) > 0">
-					// set pre-loading image list
-				       images = new Array();
-				       <xsl:for-each select="/page/settings/pre_load_images/setting">images[<xsl:value-of select="position() -1" />]="<xsl:value-of select="/page/settings/document_root" />/skin/pre-load-images/<xsl:value-of select="."/>"
-				     </xsl:for-each>
-					</xsl:if>
-					function returnRefresh(returnVal) 
-					{
-						window.top.document.body.innerHTML = '';
-					    window.top.location = document_root+'/'+current_page;
-					}
-
-				</script>
+						<xsl:for-each select="attributes/*">
+						<xsl:attribute name="{name()}"><xsl:value-of select="." /></xsl:attribute>
+					</xsl:for-each>
+				</xsl:element>
+				
+				</xsl:for-each>
 			</head>
 	</xsl:template>

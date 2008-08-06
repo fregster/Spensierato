@@ -91,13 +91,13 @@ function init()
 { 
 	if(initalised != true)
 	{
-		SmoothScroll = new SmoothScroll({duration: 1200});	//Load the smooth scroller
+		//SmoothScroll = new SmoothScroll({duration: 1200});	//Load the smooth scroller
 		//document.getElementById('notifications').style.display = 'visible'; //Removes the CSS display none, stops flickering
 		//notes = new Fx.Tween('notifications', 'opacity', {duration:500}).set(0); //will make it immediately transparent
 		stepFontSize(readCookie('fontSize')); //Set the font size
 		
-		notes = $('notifications');
-		notes.fade.bind(notes, [0]);
+		//notes = $('notifications');
+		//notes.fade.bind(notes, [0]);
 	
 		initalised = true;		
 	}

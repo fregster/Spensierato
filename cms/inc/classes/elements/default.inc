@@ -9,6 +9,7 @@ class elementDefault
 	protected $image;
 	protected $image_edit;
 	protected $edit_height;
+	protected $edit_width;
 	protected $visible;
 	protected $deleted;
 	protected $created;
@@ -30,6 +31,7 @@ class elementDefault
 		$this->image = 'accept';
 		$this->image_edit = 'page_edit';
 		$this->edit_height = 600;
+		$this->edit_width = 400;
 		
 		$this->add_header();
 	}
@@ -86,6 +88,7 @@ class elementDefault
 		$this->element->setAttribute('type', $this->type);
 		$this->element->setAttribute('etype', $this->name);
 		$this->element->setAttribute('eh', $this->edit_height);
+		$this->element->setAttribute('ew', $this->edit_width);
 		$this->element->setAttribute('image', $this->image);
 		
 		$this->admin();

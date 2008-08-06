@@ -192,7 +192,7 @@ class elementDefault
 			}
 			return false;
 		}
-		return null;
+		return true;
 	}
 	
 	private function save_upload()

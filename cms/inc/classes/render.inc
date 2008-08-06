@@ -78,7 +78,7 @@ class Render
 			$search = '<?xml version="1.0"?>';
 			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'"?>
 			<?xml-stylesheet href="'. Settings::singleton()->get_setting('document_root').'/xslt" type="text/xsl" ?>';
-//			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'"?>';
+/*			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'"?>';*/
 			
 			echo(str_replace($search, $replace, $xml));
 			exit;

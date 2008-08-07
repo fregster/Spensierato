@@ -49,7 +49,7 @@
 						<xsl:attribute name="class">sprite sprite-attach</xsl:attribute>
 						<xsl:attribute name="alt">Icon</xsl:attribute>
 					</xsl:element> Download:
-				<xsl:value-of select="./data/linktext" /><br />(<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)
+				<xsl:value-of select="./data/linktext" /> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)
 			</xsl:element>
 			
 		</xsl:element>

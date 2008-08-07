@@ -46,9 +46,9 @@
 				<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="./@id" /></xsl:attribute>
 					<xsl:element name="img">
 						<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
-						<xsl:attribute name="class">sprite sprite-attach download</xsl:attribute>
+						<xsl:attribute name="class">sprite sprite-attach</xsl:attribute>
 						<xsl:attribute name="alt">Icon</xsl:attribute>
-					</xsl:element>Download:
+					</xsl:element> Download:
 				<xsl:value-of select="./data/linktext" /><br />(<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)
 			</xsl:element>
 			

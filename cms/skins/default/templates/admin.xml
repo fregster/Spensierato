@@ -55,7 +55,7 @@
 							<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/up/<xsl:value-of select="/page/@id" /></xsl:attribute>
 							<xsl:attribute name="method">post</xsl:attribute>
 							<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
-							<xsl:element name="div" class="rounded-3-3-0-0">
+							<xsl:element name="div" class="rounded">
 								<xsl:attribute name="class">element_header</xsl:attribute>
 								Page Title 
 								<xsl:element name="input">

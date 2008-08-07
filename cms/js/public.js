@@ -234,6 +234,7 @@ function rounded() {
 		sizey = size.substr(size.indexOf(",")+1,size.length);
 		sizex_b = size.substr(size.indexOf(",")+2,size.length);
 		sizey_b = size.substr(size.indexOf(",")+3,size.length);
+		//if (typeof(sizey_b) == 'undefined') sizey_b = sizey;
 		color = get_current_style(v[i],"background-color","transparent");
 		bk = get_current_style(v[i].parentNode,"background-color","transparent");
 		AddRounded(v[i], bk, color, sizex, sizey, true);

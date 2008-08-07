@@ -83,6 +83,22 @@ function pageReload(returnVal)
 	setTimeout('window.top.location.reload(true)',100);
 };
 
+function addLoadEvent(func)
+{
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function')
+	{
+		window.onload = func;
+		} 
+		else 
+		{
+			window.onload = function(){
+			oldonload();
+			func();
+		}
+	}
+}
+
 var notes;
 //Init scripts to auto load stuff
 var initalised;
@@ -99,6 +115,9 @@ function init()
 		initalised = true;		
 	}
 };
+
+addLoadEvent(rounded);
+addLoadEvent(init);
 
 function notification(text, colour, font)
 {
@@ -199,6 +218,23 @@ function NiftyCheck() {
     return false;
   }
   return true;
+}
+
+function rounded() {
+	var bk;
+	if (!NiftyCheck()) return;
+	var v = getElements("rounded");
+	var l = v.length;
+	for (var i = 0; i < l; i++) 
+	{
+		size = v[i].getAttribute("rel");
+		sizex = size.substr(0,size.indexOf(","));
+		sizey = size.substr(size.indexOf(",")+1,size.length);
+		color = get_current_style(v[i],"background-color","transparent");
+		bk = get_current_style(v[i].parentNode,"background-color","transparent");
+		AddTop(v[i], bk, color, sizex, sizey);
+		AddBottom(v[i], bk, color, sizex, sizey);
+	}
 }
 
 function Rounded(className, sizex, sizey, sizex_b, sizey_b) {

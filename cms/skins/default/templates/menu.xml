@@ -39,7 +39,7 @@
 	</xsl:template>
 
 	<xsl:template name="menu">
-		<div id="page_section_left_menu">
+		<div id="page_section_left_menu" class="rounded">
 			<xsl:for-each select="/page/menu/menu/top/menu_item">
 				<xsl:choose>
 					<xsl:when test="selected = '1'">

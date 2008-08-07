@@ -81,10 +81,20 @@ stepFontSize(readCookie("fontSize"));
 notes=$("notifications");
 notes.fade.bind(notes,[0]);
 rounded();
+jsShow();
 initalised=true;
 }
 };
 addLoadEvent(init);
+function sjShow(){
+var e = document.getElementsByTagName('div');
+for (i = 0; i < e.length; i++) {
+if (e[i].className.indexOf("js-show") >= 0) { 
+elms[i].style.display = 'block';			
+}
+}
+}
+}
 function notification(_a,_b,_c){
 var _d;
 if(!_c){

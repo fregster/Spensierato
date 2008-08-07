@@ -232,11 +232,15 @@ function rounded() {
 		}
 		var clazz = v[i].className.substring(startIndex, endIndex);
 		params = clazz.split('-');
-		if (params.length == 3) {
+		
+		if(params.length > 1) {
 			sizex = parseInt(params[1]);
 			sizey = parseInt(params[2]);
-			sizex_b = parseInt(params[3]);
-			sizey_b = parseInt(params[4]);
+		
+			if (params.length >3) {
+				sizex_b = parseInt(params[3]);
+				sizey_b = parseInt(params[4]);
+			}
 		}
 
 		color = get_current_style(v[i],"background-color","transparent");

@@ -227,8 +227,8 @@ function rounded() {
 		sizey_b = 6;
 		
 		// Parse out optional width and height from className
-		var startIndex = v[i].indexOf("rounded");
-		var endIndex = v[i].indexOf(" ", startIndex);
+		var startIndex = v[i].className.indexOf("rounded");
+		var endIndex = v[i].className.indexOf(" ", startIndex);
 		if (endIndex < 0) {
 			endIndex = v[i].className.length;
 		}

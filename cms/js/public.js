@@ -96,7 +96,7 @@ function init()
 		
 		notes = $('notifications');
 		notes.fade.bind(notes, [0]);
-	
+		Rounded('rounded', 6, 6);
 		initalised = true;		
 	}
 };

@@ -299,7 +299,7 @@ function AddRounded(el, bk, color, sizex, sizey, top) {
         }
         else {
           // First in a run
-          arc2 = mathsquaret(1.0 - mathsquare((sizex - n_bg - j + 1) / sizex)) * sizey;
+          arc2 = Math.sqrt(1.0 - mathsquare((sizex - n_bg - j + 1) / sizex)) * sizey;
           coverage = (arc2 - (sizey - i)) * (arc - n_fg - n_aa + 1) * .5;
           // Coverage is incorrect. Why?
           coverage = 0;

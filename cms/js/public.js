@@ -221,12 +221,26 @@ function rounded() {
 	var l = v.length;
 	for (var i = 0; i < l; i++) 
 	{
-		size = v[i].getAttribute("rel");
-		sizex = size.substr(0,size.indexOf(","));
-		sizey = size.substr(size.indexOf(",")+1,size.length);
-		sizex_b = size.substr(size.indexOf(",")+2,size.length);
-		sizey_b = size.substr(size.indexOf(",")+3,size.length);
-		//if (typeof(sizey_b) == 'undefined') sizey_b = sizey;
+		sizex = 6;
+		sizey = 6;
+		sizex_b = 6;
+		sizey_b = 6;
+		
+		// Parse out optional width and height from className
+		var startIndex = this.className.indexOf("submodal");
+		var endIndex = this.className.indexOf(" ", startIndex);
+		if (endIndex < 0) {
+			endIndex = this.className.length;
+		}
+		var clazz = this.className.substring(startIndex, endIndex);
+		params = clazz.split('-');
+		if (params.length == 3) {
+			sizex = parseInt(params[1]);
+			sizey = parseInt(params[2]);
+			sizex_b = parseInt(params[3]);
+			sizey_b = parseInt(params[4]);
+		}
+
 		color = get_current_style(v[i],"background-color","transparent");
 		bk = get_current_style(v[i].parentNode,"background-color","transparent");
 		AddRounded(v[i], bk, color, sizex, sizey, true);

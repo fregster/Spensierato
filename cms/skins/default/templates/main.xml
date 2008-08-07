@@ -4,7 +4,7 @@
 			<xsl:call-template name="header"/>
 				
 			<xsl:element name="body">
-			<xsl:attribute name="onload"><xsl:if test="/page/options/admin_mode = 1"> dynamicjsloader(); </xsl:if><xsl:if test="/page/options/display_warnings = 1"><xsl:if test="/page/warnings/warning"> notification('The site has configuration problems');</xsl:if></xsl:if> return false;</xsl:attribute>
+			<xsl:attribute name="onload">init();<xsl:if test="/page/options/admin_mode = 1"> dynamicjsloader(); </xsl:if><xsl:if test="/page/options/display_warnings = 1"><xsl:if test="/page/warnings/warning"> notification('The site has configuration problems');</xsl:if></xsl:if> return false;</xsl:attribute>
 			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>
 			<div id="notifications" style="visibility: hidden; background-color: red;">Notifications</div>
 			<div id="site_frame">

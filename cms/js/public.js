@@ -203,14 +203,6 @@ function pageReload()
 	window.location.href = unescape(window.location.pathname);
 };
 
-
-
-// Contributors 
-// Ilkka Huotari at http://www.editsite.net
-// Mathieu 'p01' HENRI at http://www.p01.org/
-// http://seky.nahory.net/2005/04/rounded-corners/
-// Steven Wittens at http://www.acko.net/anti-aliased-nifty-corners
-// Original Nifty Corners by Alessandro Fulciniti at http://pro.html.it/esempio/nifty/
 function NiftyCheck() {
   if(!document.getElementById || !document.createElement) {
     return false;

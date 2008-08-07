@@ -393,10 +393,13 @@ a.tooltip:hover span
 	background: #CFDFA7;
 }
 
-.download {
-	cursor: pointer;
+.elementDownload {
 	background: #DDDDDD;
 	width: auto;
+}
+
+.download {
+	cursor: pointer;	
 }
 
 .image {

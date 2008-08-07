@@ -320,6 +320,7 @@ a.tooltip:hover span
 {
 	background-color:#CCCCCC;
 	width:100%;
+	padding:2px;
 }
 
 .element_footer

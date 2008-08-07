@@ -242,7 +242,7 @@ function rounded() {
 	}
 }
 
-function Math.sqr(x) {
+function mathsquarex) {
   return x*x;
 };
 
@@ -277,7 +277,7 @@ function AddRounded(el, bk, color, sizex, sizey, top) {
   for (i = 1; i <= sizey; i++) {
     var coverage, arc2, arc3;
     // Find intersection of arc with bottom of pixel row
-    arc = Math.sqrt(1.0 - Math.sqr(1.0 - i / sizey)) * sizex;
+    arc = Math.sqrt(1.0 - mathsquare1.0 - i / sizey)) * sizex;
     // Calculate how many pixels are bg, fg and blended.
     var n_bg = sizex - Math.ceil(arc);
     var n_fg = Math.floor(lastarc);
@@ -299,7 +299,7 @@ function AddRounded(el, bk, color, sizex, sizey, top) {
         }
         else {
           // First in a run
-          arc2 = Math.sqrt(1.0 - Math.sqr((sizex - n_bg - j + 1) / sizex)) * sizey;
+          arc2 = Math.sqrt(1.0 - mathsquare(sizex - n_bg - j + 1) / sizex)) * sizey;
           coverage = (arc2 - (sizey - i)) * (arc - n_fg - n_aa + 1) * .5;
           // Coverage is incorrect. Why?
           coverage = 0;
@@ -307,13 +307,13 @@ function AddRounded(el, bk, color, sizex, sizey, top) {
       }
       else if (j == n_aa) {
         // Last in a run
-        arc2 = Math.sqrt(1.0 - Math.sqr((sizex - n_bg - j + 1) / sizex)) * sizey;
+        arc2 = Math.sqrt(1.0 - mathsquare(sizex - n_bg - j + 1) / sizex)) * sizey;
         coverage = 1.0 - (1.0 - (arc2 - (sizey - i))) * (1.0 - (lastarc - n_fg)) * .5;
       }
       else {
         // Middle of a run
-        arc3 = Math.sqrt(1.0 - Math.sqr((sizex - n_bg - j) / sizex)) * sizey;
-        arc2 = Math.sqrt(1.0 - Math.sqr((sizex - n_bg - j + 1) / sizex)) * sizey;
+        arc3 = Math.sqrt(1.0 - mathsquare(sizex - n_bg - j) / sizex)) * sizey;
+        arc2 = Math.sqrt(1.0 - mathsquare(sizex - n_bg - j + 1) / sizex)) * sizey;
         coverage = ((arc2 + arc3) * .5) - (sizey - i);
       }
       

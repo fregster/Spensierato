@@ -115,10 +115,8 @@ function init()
 		rounded();
 		initalised = true;		
 	}
-	alert('init');
 };
 
-addLoadEvent(rounded);
 addLoadEvent(init);
 
 function notification(text, colour, font)

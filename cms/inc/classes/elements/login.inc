@@ -52,6 +52,12 @@ class elementLogin extends elementDefault
 		$this->search = NULL;
 	}
 
+	protected function add_header()
+		{
+			$js = Settings::singleton()->get_setting('site_folder_js_direct').'login.js';
+			content::singleton()->add_custom_head('script', array('type' => 'text/javascript', 'src'=> $js));
+		}
+
 }
 
 

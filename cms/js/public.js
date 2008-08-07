@@ -110,8 +110,8 @@ function init()
 		//SmoothScroll = new SmoothScroll({duration: 1200});	//Load the smooth scroller
 		stepFontSize(readCookie('fontSize')); //Set the font size
 		
-		notes = $('notifications');
-		notes.fade.bind(notes, [0]);
+		//notes = $('notifications');
+		//notes.fade.bind(notes, [0]);
 		initalised = true;		
 	}
 };

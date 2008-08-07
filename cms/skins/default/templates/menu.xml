@@ -43,7 +43,7 @@
 			<xsl:for-each select="/page/menu/menu/top/menu_item">
 				<xsl:choose>
 					<xsl:when test="selected = '1'">
-						<div id="menu_top_selected rounded"><xsl:call-template name="menu_link"/></div>
+						<div id="menu_top_selected" class="rounded"><xsl:call-template name="menu_link"/></div>
 						<xsl:call-template name="menu_parents"/>
 					</xsl:when>
 					<xsl:when test="selected != '1'">
@@ -79,7 +79,7 @@
 	
 	<xsl:template name="menu_current">
 		<xsl:for-each select="/page/menu/menu/current">
-			<div id="menu_current rounded"> - <xsl:call-template name="menu_link"/></div>
+			<div id="menu_current" class="rounded"> - <xsl:call-template name="menu_link"/></div>
 		</xsl:for-each>
 	</xsl:template>
 	

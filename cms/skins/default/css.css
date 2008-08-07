@@ -395,6 +395,7 @@ a.tooltip:hover span
 
 .download {
 	cursor: pointer;
+	background: #DDDDDD;
 }
 
 .image {

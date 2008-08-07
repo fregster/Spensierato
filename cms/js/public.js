@@ -277,7 +277,7 @@ function AddRounded(el, bk, color, sizex, sizey, top) {
   for (i = 1; i <= sizey; i++) {
     var coverage, arc2, arc3;
     // Find intersection of arc with bottom of pixel row
-    arc = mathsquaret(1.0 - mathsquare(1.0 - i / sizey)) * sizex;
+    arc = Math.sqrt(1.0 - mathsquare(1.0 - i / sizey)) * sizex;
     // Calculate how many pixels are bg, fg and blended.
     var n_bg = sizex - Math.ceil(arc);
     var n_fg = Math.floor(lastarc);
@@ -307,7 +307,7 @@ function AddRounded(el, bk, color, sizex, sizey, top) {
       }
       else if (j == n_aa) {
         // Last in a run
-        arc2 = mathsquaret(1.0 - mathsquare((sizex - n_bg - j + 1) / sizex)) * sizey;
+        arc2 = Math.sqrt(1.0 - mathsquare((sizex - n_bg - j + 1) / sizex)) * sizey;
         coverage = 1.0 - (1.0 - (arc2 - (sizey - i))) * (1.0 - (lastarc - n_fg)) * .5;
       }
       else {

@@ -312,8 +312,8 @@ function AddRounded(el, bk, color, sizex, sizey, top) {
       }
       else {
         // Middle of a run
-        arc3 = mathsquaret(1.0 - mathsquare((sizex - n_bg - j) / sizex)) * sizey;
-        arc2 = mathsquaret(1.0 - mathsquare((sizex - n_bg - j + 1) / sizex)) * sizey;
+        arc3 = Math.sqrt(1.0 - mathsquare((sizex - n_bg - j) / sizex)) * sizey;
+        arc2 = Math.sqrt(1.0 - mathsquare((sizex - n_bg - j + 1) / sizex)) * sizey;
         coverage = ((arc2 + arc3) * .5) - (sizey - i);
       }
       

@@ -242,7 +242,7 @@ function rounded() {
 	}
 }
 
-function mathsquarex) {
+function mathsquare(x) {
   return x*x;
 };
 

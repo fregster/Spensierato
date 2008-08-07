@@ -1,7 +1,7 @@
 
 		<xsl:template name="admin_bar">
 			<xsl:if test="/page/user/id != 0">
-				<div id="page_section_admin_bar" class="rounded">
+				<div id="page_section_admin_bar" rel="6,6" class="rounded">
 					<xsl:if test="/page/security/can_edit = 1">
 						<!-- can edit this page -->
 						<xsl:choose>
@@ -55,7 +55,7 @@
 							<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/up/<xsl:value-of select="/page/@id" /></xsl:attribute>
 							<xsl:attribute name="method">post</xsl:attribute>
 							<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
-							<xsl:element name="div" class="rounded">	
+							<xsl:element name="div" rel="6,6" class="rounded">	
 								<xsl:attribute name="class">element_header</xsl:attribute>
 								Page Title 
 								<xsl:element name="input">
@@ -104,7 +104,7 @@
 							</xsl:element>
 						</xsl:element>
 						</xsl:if>
-						<xsl:element name="div" class="rounded">
+						<xsl:element name="div" rel="6,6" class="rounded">
 							
 							<xsl:element name="form">
 								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
@@ -153,6 +153,7 @@
 			<xsl:element name="div">
 				<xsl:attribute name="id">eid_admin_<xsl:value-of select="./@id" /></xsl:attribute>
 				<xsl:attribute name="title"><xsl:value-of select="./data/title" /></xsl:attribute>
+				<xsl:attribute name="rel">6,6</xsl:attribute>
 				<xsl:attribute name="class">element_header rounded</xsl:attribute>
 				
 				<xsl:element name="img">

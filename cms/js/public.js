@@ -227,10 +227,10 @@ function rounded() {
 		sizey_b = 6;
 		
 		// Parse out optional width and height from className
-		var startIndex = this.className.indexOf("submodal");
-		var endIndex = this.className.indexOf(" ", startIndex);
+		var startIndex = v[i].indexOf("rounded");
+		var endIndex = v[i].indexOf(" ", startIndex);
 		if (endIndex < 0) {
-			endIndex = this.className.length;
+			endIndex = v[i].className.length;
 		}
 		var clazz = this.className.substring(startIndex, endIndex);
 		params = clazz.split('-');

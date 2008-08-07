@@ -112,7 +112,7 @@ function init()
 		
 		notes = $('notifications');
 		notes.fade.bind(notes, [0]);
-		Rounded();
+		rounded();
 		initalised = true;		
 	}
 	alert('init');

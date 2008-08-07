@@ -232,7 +232,7 @@ function rounded() {
 		if (endIndex < 0) {
 			endIndex = v[i].className.length;
 		}
-		var clazz = this.className.substring(startIndex, endIndex);
+		var clazz = v[i].className.substring(startIndex, endIndex);
 		params = clazz.split('-');
 		if (params.length == 3) {
 			sizex = parseInt(params[1]);

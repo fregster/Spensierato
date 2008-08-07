@@ -10,7 +10,7 @@ a.flowplayer, a.flowplayer img {
 
 /* play button on top of splash screenn */
 div.playButton {
-	background:url(skin/play.png) no-repeat;
+	background:url(../skin/play.png) no-repeat;
 	width:50px;
 	height:50px;
 	position:relative;

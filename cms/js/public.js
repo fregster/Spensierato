@@ -221,10 +221,10 @@ function rounded() {
 	var l = v.length;
 	for (var i = 0; i < l; i++) 
 	{
-		sizex = 6;
-		sizey = 6;
-		sizex_b = 6;
-		sizey_b = 6;
+		sizex = 4;
+		sizey = 4;
+		sizex_b = 4;
+		sizey_b = 4;
 		
 		// Parse out optional width and height from className
 		var startIndex = v[i].className.indexOf("rounded");

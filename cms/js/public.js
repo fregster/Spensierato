@@ -90,7 +90,7 @@ function jsShow(){
 var e = document.getElementsByTagName('div');
 for (i = 0; i < e.length; i++) {
 if (e[i].className.indexOf("js-show") >= 0) { 
-elms[i].style.display = 'block';			
+e[i].style.display = 'block';			
 }
 }
 };

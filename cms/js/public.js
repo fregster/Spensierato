@@ -93,8 +93,7 @@ if (e[i].className.indexOf("js-show") >= 0) {
 elms[i].style.display = 'block';			
 }
 }
-}
-}
+};
 function notification(_a,_b,_c){
 var _d;
 if(!_c){

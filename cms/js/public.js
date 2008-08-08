@@ -86,7 +86,7 @@ initalised=true;
 }
 };
 addLoadEvent(init);
-function sjShow(){
+function jsShow(){
 var e = document.getElementsByTagName('div');
 for (i = 0; i < e.length; i++) {
 if (e[i].className.indexOf("js-show") >= 0) { 

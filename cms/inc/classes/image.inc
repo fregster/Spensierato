@@ -46,7 +46,7 @@ class image
 				//Tries to open the image as a jpeg for conversion returns false on fail.
 				//This means there is no need to do MIME checking.
 				
-				$uploadasjpeg = ($this->open_image_as_jpeg($unscaled_image));
+				$uploadasjpeg = (image::open_image_as_jpeg($unscaled_image));
 				
 				if( $uploadasjpeg != false )
 				{	

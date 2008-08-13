@@ -26,7 +26,7 @@ if(class_exists('elementDownload'))
 		
 		protected function save_preview()
 		{
-			return image::singleton()->generate_thumb($this->id);
+			return image::generate_thumb($this->id);
 		}
 	}
 }

@@ -20,7 +20,7 @@ class image
 		$error_msg = array();
 		$ok = true;
 		
-		if($this->check_path(Settings::Singleton()->get_setting('cms_folder_orig_images')) != true)
+		if(filetransfer::Singleton()->check_path(Settings::Singleton()->get_setting('cms_folder_orig_images')) != true)
 		{
 			$error =1;
 			array_push($error_msg, 'Unable to create or write to the archive directory');

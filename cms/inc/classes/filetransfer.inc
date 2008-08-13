@@ -150,5 +150,22 @@ class FileTransfer
 		
 		return false;
 	}
+
+	//TODO fix for possible security only allow from within the writeable dir.
+	public function check_path($path = NULL)
+	{
+		if($path == NULL)
+		{
+			$path = Settings::singleton()->get_setting('cms_folder_downloads');
+		}
+		if(!is_dir($path))
+		{
+			return(mkdir($path, 0770));
+		}
+		else
+		{
+			return true;
+		}
+	}
 }
 ?>

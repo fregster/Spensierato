@@ -91,11 +91,10 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			//Execute the command
 			exec(escapeshellcmd($command), $output, $result);
 		
-			if($result != false)
+			if($result != false and file_exists($temp_file))
 			{			
 				unlink($file);
-				$rename = rename($temp_file, $file);
-				if($rename)
+				if(rename($temp_file, $file))
 				{
 					return $file;
 				}

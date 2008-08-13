@@ -15,9 +15,15 @@ class image
 	 */
 	public function generate_thumb($elementid, $th_max_width = NULL, $th_max_height = NULL, $quality = 80) 
 	{
+		echo($elementid);
 		$pos = strpos($elementid, '-');
 		$elementid = substr($elementid, 0, $pos);
 		$revision = substr($elementid, strlen($elementid)+1);
+		
+		echo('<br/>Pos:'.$pos);
+		echo('<br/>ID:'.$elementid);
+		echo('<br/>Rev:'.$revision);
+		die();
 		//Check if an unscaled image exsists to use as the origonal file
 		//If not move the current file to ../unscaled_images
 		$error_msg = array();

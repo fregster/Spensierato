@@ -15,10 +15,10 @@ class image
 	 */
 	public function generate_thumb($elementid, $th_max_width = NULL, $th_max_height = NULL, $quality = 80) 
 	{
-		echo($elementid);
+		$length = substr($elementid);
 		$pos = strpos($elementid, '-');
 		$elementid = substr($elementid, 0, $pos);
-		$revision = substr($elementid, strlen($elementid)+1);
+		$revision = substr($elementid, strlen($elementid)+1, $length);
 		
 		echo('<br/>Pos:'.$pos);
 		echo('<br/>ID:'.$elementid);

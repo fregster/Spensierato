@@ -20,6 +20,7 @@ class image
 		$elementid = substr($elementid, 0, $pos);
 		$revision = substr($elementid, strlen($elementid)+1, $length);
 		
+		echo('Length:'.$length);
 		echo('<br/>Pos:'.$pos);
 		echo('<br/>ID:'.$elementid);
 		echo('<br/>Rev:'.$revision);

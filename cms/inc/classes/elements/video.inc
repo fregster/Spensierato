@@ -36,6 +36,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		{
 			if(parent::attach_upload())
 			{
+				die('hello');
 				if(class_exists('ffmpeg_movie'))
 				{
 					$path = $this->convert_upload();

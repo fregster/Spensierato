@@ -18,13 +18,8 @@ class image
 		$length = strlen($element);
 		$pos = strpos($element, '-');
 		$elementid = substr($element, 0, $pos);
-		$revision = substr($element, strlen($elementid), $length);
+		$revision = substr($element, strlen($elementid)+1, $length);
 		
-		echo('Length:'.$length);
-		echo('<br/>Pos:'.$pos);
-		echo('<br/>ID:'.$elementid);
-		echo('<br/>Rev:'.$revision);
-		die();
 		//Check if an unscaled image exsists to use as the origonal file
 		//If not move the current file to ../unscaled_images
 		$error_msg = array();

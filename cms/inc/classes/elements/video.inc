@@ -94,8 +94,10 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			if($result != false)
 			{			
 				unlink($file);
-				rename($temp_file, $file);
-				return $file;
+				if(rename($temp_file, $file))
+				{
+					return $file;
+				}
 			}
 		
 			return false;

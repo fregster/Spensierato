@@ -79,7 +79,7 @@ function init(){
 if(initalised!=true){
 stepFontSize(readCookie("fontSize"));
 notes=$("notifications");
-notes.fade.bind(notes,[0]);
+//notes.fade.bind(notes,[0]);
 rounded();
 jsShow();
 initalised=true;
@@ -93,9 +93,7 @@ if (e[i].className.indexOf("js-show") >= 0) {
 e[i].style.display = 'block';
 }
 }
-alert('test 1');
 if(typeof window.adminInit == 'function'){
-alert('test 2');
 adminInit();
 }
 };

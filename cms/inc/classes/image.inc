@@ -13,12 +13,12 @@ class image
 	 * It works on JPEG, PNG and BMP files
 	 * GIF files might not work with latter versions of GD due to copyright
 	 */
-	public function generate_thumb($elementid, $th_max_width = NULL, $th_max_height = NULL, $quality = 80) 
+	public function generate_thumb($element, $th_max_width = NULL, $th_max_height = NULL, $quality = 80) 
 	{
-		$length = strlen($elementid);
-		$pos = strpos($elementid, '-');
-		$elementid = substr($elementid, 0, $pos);
-		$revision = substr($elementid, strlen($elementid)+1, $length);
+		$length = strlen($element);
+		$pos = strpos($element, '-');
+		$elementid = substr($element, 0, $pos);
+		$revision = substr($element, strlen($elementid), $length);
 		
 		echo('Length:'.$length);
 		echo('<br/>Pos:'.$pos);

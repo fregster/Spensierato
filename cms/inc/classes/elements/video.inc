@@ -64,6 +64,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		
 		protected function save_preview()
 		{
+			die('save preview');
 			return true;
 			//return parent::save_preview();
 		}

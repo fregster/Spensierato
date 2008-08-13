@@ -36,7 +36,6 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		{
 			if(parent::attach_upload())
 			{
-				die('hello');
 				if(class_exists('ffmpeg_movie'))
 				{
 					$path = $this->convert_upload();
@@ -58,6 +57,10 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 							return true;
 						}				
 					}
+				}
+				else
+				{
+					return true;
 				}
 			}
 			return false;
@@ -103,7 +106,6 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		
 		private function create_preview()
 		{
-			die('create preview');
 			if ($this->preview) 
 			{
 				$image = $this->preview->toGDImage();

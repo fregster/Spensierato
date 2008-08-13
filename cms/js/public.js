@@ -90,8 +90,11 @@ function jsShow(){
 var e = document.getElementsByTagName('div');
 for (i = 0; i < e.length; i++) {
 if (e[i].className.indexOf("js-show") >= 0) { 
-e[i].style.display = 'block';			
+e[i].style.display = 'block';
 }
+}
+if(typeof window.adminInit == 'function'){
+adminInit();
 }
 };
 function notification(_a,_b,_c){

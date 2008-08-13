@@ -73,4 +73,6 @@ function dynamicjsloader(){
 dhtmlLoadCSS(js_host+"/css/submodal");
 dhtmlLoadScript(js_host+"/js/submodal/submodal.js");
 };
-
+function adminInit(){
+dynamicjsloader();
+};

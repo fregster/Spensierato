@@ -15,6 +15,9 @@ class image
 	 */
 	public function generate_thumb($elementid, $th_max_width = NULL, $th_max_height = NULL, $quality = 80) 
 	{
+		$pos = strpos($elementid, '-');
+		$elementid = substr($elementid, 0, $pos);
+		$revision = substr($elementid, strlen($elementid)+1);
 		//Check if an unscaled image exsists to use as the origonal file
 		//If not move the current file to ../unscaled_images
 		$error_msg = array();
@@ -29,7 +32,7 @@ class image
 		{
 		
 		$unscaled_image = Settings::Singleton()->get_setting('cms_folder_orig_images').$elementid;
-		$old_path = Settings::Singleton()->get_setting('cms_folder_uploads').$elementid;
+		$old_path = Settings::Singleton()->get_setting('cms_folder_uploads').$elementid.'-'.$revision;
 		if(!is_file($unscaled_image)) 
 		{ 
 			$ok = copy($old_path, $unscaled_image);

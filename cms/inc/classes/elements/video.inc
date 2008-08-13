@@ -45,7 +45,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 						if($movie != false)
 						{
 							$this->preview = $movie->getFrame(1);
-							$this->save_preview();
+							$this->create_preview();
 							
 							$this->video_extended_details['movietitle'] = $movie->getTitle();
 							$this->video_extended_details['rate'] = $movie->getBitRate();
@@ -64,7 +64,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		
 		protected function save_preview()
 		{
-			return $this->create_preview();
+			return true;
 			//return parent::save_preview();
 		}
 		

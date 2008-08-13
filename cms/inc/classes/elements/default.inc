@@ -21,6 +21,9 @@ class elementDefault
 	protected $revision;
 	protected $draft;
 	protected $approve;
+	
+	protected $error = 'There was an error comitting your save';
+	
 	private $tags = array('title' => 'text');
 	private $element;
 	
@@ -114,7 +117,7 @@ class elementDefault
 	{
 		if($this->attach_upload() == false)
 		{
-			die('error comiting upload');
+			die($this->error);
 			return false;
 		}
 		$extra = $this->attach_extra_data();

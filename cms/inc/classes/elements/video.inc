@@ -99,6 +99,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 					return $file;
 				}
 			}
+			$this->error = 'File conversion failed the video type might not be supported';
 			return false;
 		}
 		

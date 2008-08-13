@@ -64,7 +64,6 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		
 		protected function save_preview()
 		{
-			die('save preview');
 			return true;
 			//return parent::save_preview();
 		}
@@ -103,6 +102,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		
 		private function create_preview()
 		{
+			die('create preview');
 			if ($this->preview) 
 			{
 				$image = $this->preview->toGDImage();

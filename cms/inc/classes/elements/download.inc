@@ -8,7 +8,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		{
 			parent::__construct();
 			$this->type = __CLASS__;
-			$this->allowed_tags(array('filename' => 'auto', 'file' => 'file', 'filesize' => 'auto', 'mime' => 'auto', 'description' => 'html', 'linktext' => 'auto'));
+			$this->allowed_tags(array('file' => 'file', 'filename' => 'auto', 'filesize' => 'auto', 'mime' => 'auto', 'description' => 'html', 'linktext' => 'auto'));
 			$this->type = __CLASS__;
 			$this->name = 'File Download';
 			$this->image = 'disk';

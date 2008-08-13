@@ -32,7 +32,7 @@
 		<xsl:element name="textarea">
 		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
 		<xsl:attribute name="style">width:100%</xsl:attribute>
-		<xsl:attribute name="cols">80</xsl:attribute>
+		<xsl:attribute name="cols">20</xsl:attribute>
 		<xsl:attribute name="rows">15</xsl:attribute>
 		<xsl:attribute name="id">content</xsl:attribute>
 		<xsl:choose>

@@ -2,11 +2,12 @@
 
 if(Settings::Singleton()->get_setting('uploads_enabled'))
 {
-	require_once('download.inc');
+	require_once('image.inc');
 	element::register('Video', 'elementVideo');
-	class elementVideo extends elementDownload
+	class elementVideo extends elementImage
 	{
 		private $video_extended_details;
+		private $preview;
 		
 		function __construct()
 		{
@@ -43,8 +44,8 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 						$movie = new ffmpeg_movie($path);
 						if($movie != false)
 						{
-							$frame = $movie->getFrame(5);
-							$this->save_preview($frame);
+							$this->preview = $movie->getFrame(1);
+							$this->save_preview();
 							
 							$this->video_extended_details['movietitle'] = $movie->getTitle();
 							$this->video_extended_details['rate'] = $movie->getBitRate();
@@ -61,9 +62,10 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			return false;
 		}
 		
-		private function save_preview($image_ob)
+		protected function save_preview()
 		{
-			
+			$this->create_preview();
+			return parent::save_preview();
 		}
 		
 		protected function add_extra_info()
@@ -96,6 +98,22 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		protected function convert_file_command($file, $temp_file)
 		{
 			return 'ffmpeg -i '.$file.' -vcodec flv '.$temp_file;
+		}
+		
+		private function create_preview()
+		{
+			if ($this->preview) 
+			{
+				$image = $this->preview->toGDImage();
+				if ($image) 
+				{
+					$file = Settings::singleton()->get_setting('cms_folder_downloads').$id.'-preview';
+					$preview = imagepng($image,$file,9);
+					imagedestroy($image);
+					return $preview;
+				}
+			}
+			return false;
 		}
 	}
 }

@@ -99,9 +99,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 					return $file;
 				}
 			}
-		
 			return false;
-			
 		}
 		
 		protected function convert_file_command($file, $temp_file)

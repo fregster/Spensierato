@@ -95,9 +95,9 @@ Settings::Singleton()->new_setting('send_as_xml', false);
 
 
 //Setting max_file_size
-//Sets the maximum file upload size
-//10000000
-Settings::Singleton()->new_setting('max_file_size', 5000000);
+//Sets the maximum file upload size this might also need to be set in the php.ini
+//25000000
+Settings::Singleton()->new_setting('max_file_size', 25000000);
 
 //Setting js_minify /* Currently breaks JS if not well formed */
 //clean the javascript to reduce the file size defaults to internal (1) just removes comments
@@ -187,6 +187,11 @@ Settings::Singleton()->new_setting('cms_folder_logs', 'writeable/logs/', false, 
 //download_rate
 //Maximum file download rate in kb/s
 Settings::Singleton()->new_setting('download_rate', NULL, false, true);
+
+//stream
+//Set the path for the streaming server, 
+//use /download/ for simple downloads or '/video/' for php based streaming
+Settings::Singleton()->new_setting('stream', '/video/');
 
 /* Session security */
 //Setting session_security_enhanced

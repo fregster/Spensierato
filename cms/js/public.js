@@ -82,6 +82,9 @@ notes=$("notifications");
 //notes.fade.bind(notes,[0]);
 rounded();
 jsShow();
+if(typeof window.adminInit == 'function'){
+adminInit();
+}
 initalised=true;
 }
 };
@@ -92,9 +95,6 @@ for (i = 0; i < e.length; i++) {
 if (e[i].className.indexOf("js-show") >= 0) { 
 e[i].style.display = 'block';
 }
-}
-if(typeof window.adminInit == 'function'){
-adminInit();
 }
 };
 function notification(_a,_b,_c){

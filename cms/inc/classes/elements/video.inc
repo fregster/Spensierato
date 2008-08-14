@@ -37,33 +37,29 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			if(parent::attach_upload())
 			{
 				$path = $this->convert_upload();
-				if($path)
+				if($path!== false)
 				{
-					if(class_exists('ffmpeg_movie'))
+					if(!class_exists('ffmpeg_movie'))
 					{
-						if($path !== false)
-						{
-							$movie = new ffmpeg_movie($path);
-							if($movie != false)
-							{
-								$this->preview = $movie->getFrame(1);
-								$this->create_preview();
-								
-								$this->video_extended_details['movietitle'] = $movie->getTitle();
-								$this->video_extended_details['rate'] = $movie->getBitRate();
-								$this->video_extended_details['height'] = $movie->getFrameHeight();
-								$this->video_extended_details['width'] = $movie->getFrameWidth();
-								$this->video_extended_details['duration'] = $movie->getDuration();
-								$this->video_extended_details['author'] = $movie->getAuthor();
-								$this->video_extended_details['author'] = $movie->getCopyright();
-								return true;
-							}				
-						}
+						CMS::load_optional_class('ffmpeg_movie.inc');
 					}
-					else
+					
+					$movie = new ffmpeg_movie($path);
+					if($movie != false)
 					{
+						$this->preview = $movie->getFrame(1);
+						$this->create_preview();
+						
+						$this->video_extended_details['movietitle'] = $movie->getTitle();
+						$this->video_extended_details['rate'] = $movie->getBitRate();
+						$this->video_extended_details['height'] = $movie->getFrameHeight();
+						$this->video_extended_details['width'] = $movie->getFrameWidth();
+						$this->video_extended_details['duration'] = $movie->getDuration();
+						$this->video_extended_details['author'] = $movie->getAuthor();
+						$this->video_extended_details['author'] = $movie->getCopyright();
 						return true;
 					}
+					
 				}
 			}
 			return false;

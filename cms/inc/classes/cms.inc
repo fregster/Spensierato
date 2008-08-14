@@ -170,6 +170,11 @@ class CMS
 		*/
 	}
 	
+	public static function load_optional_class($filename)
+	{
+		require_once($this->cms_root.'/cms/inc/optional/'.$filename);
+	}
+	
 	public function page_exists()
 	{
 		return true;

@@ -82,7 +82,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		
 		private function convert_upload()
 		{
-			$result = true;
+			$result = 0;
 			$output = array();
 			$temp_file = Settings::singleton()->get_setting('cms_folder_uploads').$this->id.'-'.CMS::Singleton()->time().'-'.User::Singleton()->id().'.flv';
 			$file = Settings::singleton()->get_setting('cms_folder_uploads').$this->id.'-'.$this->revision;
@@ -91,7 +91,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			//Execute the command
 			exec(escapeshellcmd($command), $output, $result);
 		
-			if($result != false and file_exists($temp_file))
+			if($result == 0 and file_exists($temp_file))
 			{			
 				unlink($file);
 				if(rename($temp_file, $file))

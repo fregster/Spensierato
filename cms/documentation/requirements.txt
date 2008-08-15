@@ -15,7 +15,8 @@ PHP 5.2 ish
 	mcrypt //Pref
 	text_diff //Pref
 	Hash //Optional
-	php-ffmpeg and ffmpeg //Optional, Pref if you want to suport multiple video codec types and createing video thumbnails 
+	php-ffmpeg and ffmpeg //Optional, Pref if you want to suport multiple video codec types and createing video thumbnails
+	//An included proxy class is included to ffmpeg but it is much less efficent than installing php-ffmpeg as a PHP extension 
 
 //Database related
 MySQL (or SQL server that supports the LIMIT call)

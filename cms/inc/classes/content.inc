@@ -96,7 +96,7 @@ class Content
 
 	public function add_custom_head($tag, $attributes, $value = NULL)
 	{
-		if(!isset($this->head[0]))
+		if(!is_array($this->head))
 		{
 			$this->head = array();
 		}
@@ -105,7 +105,10 @@ class Content
 //		{
 //			array_push($atrib, array('attrib' => $key, 'value' => $value));
 //		}
-		array_push($this->head, array('tag' => $tag, 'attributes' => $attributes, 'value'=>$value));
+		$values = array('tag' => $tag, 'attributes' => $attributes, 'value'=>$value);
+
+		//FIXME Dirty hack to prevent values been entered multiple time, such as  2 video elements on 1 page
+		$this->head[md5(serialize($values))] = $values;
 	}
 	
 	public function build()
@@ -155,8 +158,8 @@ class Content
 	
 	private function attach_head()
 	{
-		if(isset($this->head[0]))
-		{	
+		if(isset($this->head))
+		{
 			Settings::Singleton()->new_setting('header_extra', $this->head);
 		}		
 	}

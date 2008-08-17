@@ -164,6 +164,12 @@ class currentPage
 									'value' => CMS::Singleton()->path_vars[1]);
 						break;
 						
+					//Streaming video
+					case 'video':
+						return array('type' => 'STREAM',
+									'value' => CMS::Singleton()->path_vars[1]);
+						break;
+						
 					//Site video preview does a security check
 					case 'preview':
 						return array('type' => 'PREVIEW',

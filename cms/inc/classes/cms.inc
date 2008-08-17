@@ -119,9 +119,14 @@ class CMS
 		if(Settings::singleton()->get_setting('phpids'))
 		{
 			require_once('./phpids/phpids.inc');
-		}
-		
+		}	
 		ob_start();
+		
+		if($_SERVER['HTTPS'])
+		{
+			Settings::singleton()->new_setting('https',$_SERVER['HTTPS'] ,false,false);
+		}
+		Settings::singleton()->new_setting('host',$_SERVER['SERVER_NAME'] ,false,false);
 		
 		//Call the methods to set all the required vars
 		//These should all be simple functions that do not require any external functions outside of CMS or Common and should not hit the DB
@@ -170,11 +175,6 @@ class CMS
 		*/
 	}
 	
-	public static function load_optional_class($filename)
-	{
-		require_once($this->cms_root.'/cms/inc/optional/'.$filename);
-	}
-	
 	public function page_exists()
 	{
 		return true;
@@ -187,10 +187,22 @@ class CMS
 		User::Singleton()->update_user_session_id();
 	}
 	
+	public function delete_session()
+	{
+		$_SESSION = array();
+		
+		if (isset($_COOKIE[session_name()])) {
+		    setcookie(session_name(), '', time()-42000, '/');
+		}
+
+		session_destroy();
+	}
+	
 	private function destroy_session($url = NULL)
 	{
+		$this->delete_session();
+		
 		if($url == NULL) { $url = 'home'; }
-		session_destroy();
 		Common::redirect($url);
 	}
 	
@@ -531,6 +543,11 @@ class CMS
 				{
 					error::do403();
 				}
+				break;
+				
+				case 'STREAM':
+					Stream::stream($this->page_details['value']);
+					die();
 				break;
 				
 				case 'PREVIEW':

@@ -1,23 +1,32 @@
 
 <xsl:template name="mediaplayer">
 <!-- This is the default media template for flowplayer -->
+	<p>
 	<xsl:element name="a">
-		<xsl:attribute name="style">
-			<xsl:choose>
-				<xsl:when test="./height != 375">height:<xsl:value-of select="./height"/>px</xsl:when>
-				<xsl:otherwise>height:375px</xsl:otherwise>		
-			</xsl:choose>; 
-
-			<xsl:choose>
-				<xsl:when test="./width != 375">width:<xsl:value-of select="./width"/>px</xsl:when>
-				<xsl:otherwise>width:375px</xsl:otherwise>		
-			</xsl:choose>
-		</xsl:attribute>
 		<xsl:attribute name="class">flowplayer</xsl:attribute>
 		<xsl:attribute name="href">http<xsl:if test="/page/settings/https">s</xsl:if>://<xsl:value-of select="/page/settings/host" /><xsl:value-of select="/page/settings/document_root" /><xsl:value-of select="/page/settings/stream" /><xsl:value-of select="./@id" /></xsl:attribute>		
 		<xsl:element name="img">
 			<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/preview/<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:attribute name="height">
+			<xsl:choose>
+				<xsl:when test="./height != 375">
+					<xsl:value-of select="./height"/>
+				</xsl:when>
+				<xsl:otherwise>375</xsl:otherwise>		
+			</xsl:choose>
+			</xsl:attribute>
+			
+			<xsl:attribute name="width">
+			<xsl:choose>
+				<xsl:when test="./width != 375">
+					<xsl:value-of select="./width"/>
+				</xsl:when>
+				<xsl:otherwise>375</xsl:otherwise>		
+			</xsl:choose>
+			</xsl:attribute>
+			
 			<xsl:attribute name="alt">Video Preview</xsl:attribute>
 		</xsl:element>
 	</xsl:element>
+	</p>
 </xsl:template>

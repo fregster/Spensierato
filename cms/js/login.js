@@ -4,7 +4,7 @@ function jsSecureLogin() {
 	var code = document.forms.login.elements.security_code.value;
 	var hash = SHA256(SHA256(password)+code);	
 	
-	ajaxGet(ajax_host+'/ajax/login?', 'username='+username+'&key='+hash);
+	ajaxPost(ajax_host+'/ajax/login?', 'username='+username+'&key='+hash);
     document.forms.searchform.elements.searchtext.value = '';
        
     http.onreadystatechange=function()

@@ -160,7 +160,13 @@ class Content
 	{
 		if(isset($this->head))
 		{
-			Settings::Singleton()->new_setting('header_extra', $this->head);
+			$head = array();
+			foreach($this->head as $value)
+			{
+				array_push($head, $value);
+			}
+
+			Settings::Singleton()->new_setting('header_extra', $head);
 		}		
 	}
 	

@@ -23,12 +23,12 @@ del { color: red; }
 
 a:link 
 { 
-	color: dark-blue;
+	color: MediumBlue ;
 }
 
 a:visited 
 { 
-	color: dark-blue;
+	color: MediumBlue ;
 }
 
 a.tooltip
@@ -397,12 +397,25 @@ a.tooltip:hover span
 	background: #DDDDDD;
 }
 
+.elementVideo {
+	position:relative;
+	display:block;
+}
+
 .download {
 	cursor: pointer;	
 }
 
 .image {
 	border: 0px;
+}
+
+.js-show {
+	display: none;
+}
+
+.js-hide {
+	
 }
 
 /* Sprite information */

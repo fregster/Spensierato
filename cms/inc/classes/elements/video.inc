@@ -101,14 +101,19 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		
 		protected function convert_file_command($file, $temp_file)
 		{
-			return 'ffmpeg -i '.$file.' -vcodec flv '.$temp_file;
+			$audio_rate = 96; /*in kbs*/
+			$sample_rate = 22050;
+			$fps = 24;
+			return 'ffmpeg -i '.$file.' -ab '.$audio_rate.'k -ar '.$sample_rate.' -r '.$fps.' -vcodec flv '.$temp_file;
 		}
 		
 		private function create_preview()
 		{
 			if ($this->preview) 
 			{
-				$image = $this->preview->toGDImage();
+				//$image = $this->preview->toGDImage();
+				print_r($this->preview);
+				die();
 				if ($image) 
 				{
 					$file = Settings::singleton()->get_setting('cms_folder_downloads').$id.'-preview';

@@ -9,8 +9,6 @@
 		<xsl:element name="img">
 			<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/z-loading.gif</xsl:attribute>
 			<xsl:attribute name="alt">Loading</xsl:attribute>
-			<xsl:attribute name="width">208</xsl:attribute>
-			<xsl:attribute name="height">13</xsl:attribute>
 		</xsl:element>
 	</div>
 	<div id="imageflow-images">

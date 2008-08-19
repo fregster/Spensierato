@@ -281,8 +281,8 @@ function hide(id)
 }
 
 /* Hide loading bar, show content and initialize mouse event listening after loading */
-window.onload = function()
-{
+//window.onload = function()
+//{
 	if(document.getElementById(conf_imageflow))
 	{
 		hide(conf_loading);
@@ -292,7 +292,7 @@ window.onload = function()
 		initMouseWheel();
 		initMouseDrag();
 	}
-}
+//}
 
 /* Refresh ImageFlow on window resize */
 window.onresize = function()

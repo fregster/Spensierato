@@ -115,6 +115,9 @@ abstract class javascript
 				if($lastmodified < filemtime($file))
 				{
 					/*---------- JS files not moded since cached --------------*/
+					//Try looking for packed or cleaned content
+					if(file_exists($file.'cleaned')) { $file = $file.'cleaned'; }
+					if(file_exists($file.'packed')) { $file = $file.'packed'; }
 					Cache::headers_check_304($file);				
 					
 					if ($fp = fopen($file, 'rb')) 

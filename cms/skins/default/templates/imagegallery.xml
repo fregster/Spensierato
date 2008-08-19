@@ -5,7 +5,6 @@
 </div>
 <div id="imageflow"> 
 	<div id="imageflow-loading">
-		<b>Loading images</b><br/>
 		<xsl:element name="img">
 			<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/z-loading.gif</xsl:attribute>
 			<xsl:attribute name="alt">Loading</xsl:attribute>

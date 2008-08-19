@@ -58,7 +58,7 @@ document.getElementById("page_section_main").innerHTML=http.responseText;
 };
 var ToolTips=new Tips($$(".ToolTip"),{className:"ToolTip"});
 var SpriteTips=new Tips($$(".sprite"),{className:"ToolTip"});
-function pageReload(_7){
+function topPageReload(_7){
 setTimeout("window.top.location.reload(true)",100);
 };
 function addLoadEvent(_8){

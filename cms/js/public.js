@@ -83,6 +83,9 @@ notes=$("notifications");
 rounded();
 jsShow();
 jsHide();
+if(typeof window.imageFlowLoad == 'function'){
+imageFlowLoad();
+}
 if(typeof window.adminInit == 'function'){
 adminInit();
 }

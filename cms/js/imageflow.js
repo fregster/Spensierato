@@ -281,7 +281,7 @@ function hide(id)
 }
 
 /* Hide loading bar, show content and initialize mouse event listening after loading */
-window.onload = function()
+function imageFlowLoad()
 {
 	if(document.getElementById(conf_imageflow))
 	{
@@ -295,13 +295,13 @@ window.onload = function()
 }
 
 /* Refresh ImageFlow on window resize */
-window.onresize = function()
+function imageFlowResize()
 {
 	if(document.getElementById(conf_imageflow)) refresh();
 }
 
 /* Fixes the back button issue */
-window.onunload = function()
+function imageFlowUnload()
 {
   document = null;
 }

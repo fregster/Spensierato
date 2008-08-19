@@ -7,6 +7,7 @@
 	</div>
 	<div id="imageflow-images">
 		<xsl:element name="img">
+			<xsl:attribute name="class">imageflow-img</xsl:attribute>
 			<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="./data/elementid" /></xsl:attribute>
 			<xsl:attribute name="longdesc"><xsl:value-of select="./@title" /></xsl:attribute>
 			<xsl:attribute name="alt">Image id <xsl:value-of select="./@id" /></xsl:attribute>

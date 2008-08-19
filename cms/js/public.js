@@ -109,7 +109,7 @@ e[i].style.display = 'none';
 function notification(_a,_b,_c){
 var _d;
 if(!_c){
-var _c="black";
+_c="black";
 }
 document.getElementById("notifications").style.backgroundColor=_b;
 document.getElementById("notifications").style.font=_c;
@@ -128,7 +128,7 @@ function stepFontSize(_e){
 var p=document.getElementsByTagName("p");
 var _10=new Array("xx-small","x-small","small","medium","large","x-large","xx-large");
 var s=3;
-var _e=parseInt(_e);
+_e=parseInt(_e);
 for(i=0;i<p.length;i++){
 if(p[i].style.fontSize){
 for(f=0;f<_10.length;f++){

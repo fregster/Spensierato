@@ -82,6 +82,7 @@ notes=$("notifications");
 //notes.fade.bind(notes,[0]);
 rounded();
 jsShow();
+jsHide();
 if(typeof window.adminInit == 'function'){
 adminInit();
 }
@@ -94,6 +95,14 @@ var e = document.getElementsByTagName('div');
 for (i = 0; i < e.length; i++) {
 if (e[i].className.indexOf("js-show") >= 0) { 
 e[i].style.display = 'block';
+}
+}
+};
+function jsHide(){
+var e = document.getElementsByTagName('div');
+for (i = 0; i < e.length; i++) {
+if (e[i].className.indexOf("js-hide") >= 0) { 
+e[i].style.display = 'none';
 }
 }
 };

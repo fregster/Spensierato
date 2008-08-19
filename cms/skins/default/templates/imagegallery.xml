@@ -21,9 +21,9 @@
 			</xsl:element>
 		</xsl:for-each>
 	</div>
+	<div id="imageflow-captions"></div>
 	<div id="imageflow-scrollbar">
 		<div id="imageflow-slider"></div>
 	</div>
-	<div id="imageflow-captions"></div>
 </div>
 </xsl:template>

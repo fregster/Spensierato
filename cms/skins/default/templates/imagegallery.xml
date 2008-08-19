@@ -15,8 +15,8 @@
 		
 		<xsl:for-each select="./data/elementid">
 			<xsl:element name="img">
-				<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="." /></xsl:attribute>
-				<xsl:attribute name="longdesc">Description: <xsl:value-of select="./@title" /></xsl:attribute>
+				<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/preview/<xsl:value-of select="." /></xsl:attribute>
+				<xsl:attribute name="longdesc"><xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="." /></xsl:attribute>
 				<xsl:attribute name="alt">Image id <xsl:value-of select="./@id" /></xsl:attribute>
 			</xsl:element>
 		</xsl:for-each>

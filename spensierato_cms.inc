@@ -11,7 +11,7 @@ function exception_handler($exception)
  */
 function __autoload($class_name)
 {
-	if($class_name != '' and $class_name != null)
+	if($class_name != '' and $class_name != null and !class_exists($class_name))
 	{
 		$class_name = strtolower($class_name);
 		$path = dirname(__FILE__);

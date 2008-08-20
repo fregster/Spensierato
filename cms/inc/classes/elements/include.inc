@@ -12,7 +12,7 @@ if(Options::Singleton()->get_option('admin_mode'))
 	
 	foreach (glob($path.'*.inc') as $filename) 
 	{
-	   require_once($filename);
+	   require_once($path.$filename);
 	}
 }
 ?>

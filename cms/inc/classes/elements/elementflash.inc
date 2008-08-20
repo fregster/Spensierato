@@ -1,5 +1,5 @@
 <?php
-if(class_exists('download'))
+if(class_exists('elementDownload'))
 {
 	element::register('Flash', 'elementFlash');
 	class elementFlash extends elementDownload

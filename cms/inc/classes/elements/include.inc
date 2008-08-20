@@ -12,7 +12,10 @@ if(Options::Singleton()->get_option('admin_mode'))
 	
 	foreach (glob($path.'*.inc') as $filename) 
 	{
-	   require_once($filename);
+		if(!class_exists($class_name))
+		{
+	  	 	require_once($filename);
+		}
 	}
 }
 ?>

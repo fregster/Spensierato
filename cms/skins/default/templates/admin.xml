@@ -251,9 +251,8 @@
 		<!-- If in admin show admin header -->
 		<xsl:if test="/page/options/admin_mode = 1">
 			<xsl:element name="div">
-				<xsl:attribute name="class">element_footer</xsl:attribute>
-				Admin Element Footer
+				<xsl:attribute name="class">element_footer rounded-0-0-4-4</xsl:attribute>
 			</xsl:element>
-			<br />
+			<br /><br />
 		</xsl:if>		
 	</xsl:template>

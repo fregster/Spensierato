@@ -12,21 +12,20 @@ function exception_handler($exception)
 function __autoload($class_name)
 {
 	$path = dirname(__FILE__);
-	if(file_exists($path.'/cms/classes/'.$class_name.'.inc'))
+	if(file_exists($path.'/cms/inc/classes/'.$class_name.'.inc'))
 	{
-		require_once $path.'/cms/classes/'.$class_name.'.inc';
+		require_once $path.'/cms/inc/classes/'.$class_name.'.inc';
 	}
-	else if (file_exists($path.'/cms/classes/elements/'.$class_name.'.inc'))
+	else if (file_exists($path.'/cms/inc/classes/elements/'.$class_name.'.inc'))
 	{
-		require_once $path.'/cms/classes/elements/'.$class_name.'.inc';
+		require_once $path.'/cms/inc/classes/elements/'.$class_name.'.inc';
 	}
-	else if (file_exists($path.'/cms/classes/optional/'.$class_name.'.inc'))
+	else if (file_exists($path.'/cms/inc/classes/optional/'.$class_name.'.inc'))
 	{
-		require_once $path.'/cms/classes/optional/'.$class_name.'.inc';
+		require_once $path.'/cms/inc/classes/optional/'.$class_name.'.inc';
 	}
 	else
 	{
-		echo($path.'/cms/classes/elements/'.$class_name.'.inc');
 		 die('Class "'.$class_name.'" not defined');
 	}
 }

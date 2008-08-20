@@ -13,6 +13,7 @@ function __autoload($class_name)
 {
 	if($class_name != '' and $class_name != null)
 	{
+		$class_name = strtolower($class_name);
 		$path = dirname(__FILE__);
 		if(file_exists($path.'/cms/inc/classes/'.$class_name.'.inc'))
 		{

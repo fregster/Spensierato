@@ -4,6 +4,31 @@ function exception_handler($exception)
   echo 'Uncaught exception: ' , $exception->getMessage(), "\n";
 }
 
+/**
+ * Auto class loading function
+ *
+ * @param string $class_name
+ */
+function __autoload($class_name)
+{
+	if(file_exists('./cms/classes/'.$class_name.'.inc'))
+	{
+		require_once './cms/classes/'.$class_name.'.inc';
+	}
+	else if (file_exists('./cms/classes/elements/'.$class_name.'.inc'))
+	{
+		require_once './cms/classes/elements/'.$class_name.'.inc';
+	}
+	else if (file_exists('./cms/classes/optional/'.$class_name.'.inc'))
+	{
+		require_once './cms/classes/optional/'.$class_name.'.inc';
+	}
+	else
+	{
+		 die('Class not defined');
+	}
+}
+
 set_exception_handler('exception_handler');
 try 
 {

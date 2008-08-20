@@ -7,8 +7,8 @@ class elementText extends elementDefault
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Text Article';
-		$this->image = 'page_white';
-		$this->image_edit = 'page_edit';
+		$this->image = 'book_white';
+		$this->image_edit = 'book_edit';
 		$this->allowed_tags(array('html' => 'html'));
 	}
 	

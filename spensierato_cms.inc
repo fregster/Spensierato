@@ -26,6 +26,7 @@ function __autoload($class_name)
 	}
 	else
 	{
+		echo($path.'/cms/classes/elements/'.$class_name.'.inc');
 		 die('Class "'.$class_name.'" not defined');
 	}
 }

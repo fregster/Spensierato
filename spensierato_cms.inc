@@ -11,17 +11,17 @@ function exception_handler($exception)
  */
 function __autoload($class_name)
 {
-	if(file_exists('./cms/classes/'.$class_name.'.inc'))
+	if(file_exists('cms/classes/'.$class_name.'.inc'))
 	{
-		require_once './cms/classes/'.$class_name.'.inc';
+		require_once 'cms/classes/'.$class_name.'.inc';
 	}
-	else if (file_exists('./cms/classes/elements/'.$class_name.'.inc'))
+	else if (file_exists('cms/classes/elements/'.$class_name.'.inc'))
 	{
-		require_once './cms/classes/elements/'.$class_name.'.inc';
+		require_once 'cms/classes/elements/'.$class_name.'.inc';
 	}
-	else if (file_exists('./cms/classes/optional/'.$class_name.'.inc'))
+	else if (file_exists('cms/classes/optional/'.$class_name.'.inc'))
 	{
-		require_once './cms/classes/optional/'.$class_name.'.inc';
+		require_once 'cms/classes/optional/'.$class_name.'.inc';
 	}
 	else
 	{

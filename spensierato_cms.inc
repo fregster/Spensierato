@@ -25,7 +25,7 @@ function __autoload($class_name)
 	}
 	else
 	{
-		 die('Class not defined');
+		 die('Class "'.$class_name.'" not defined');
 	}
 }
 

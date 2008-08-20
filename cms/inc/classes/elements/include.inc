@@ -12,10 +12,26 @@ if(Options::Singleton()->get_option('admin_mode'))
 	
 	foreach (glob($path.'*.inc') as $filename) 
 	{
-		if(!class_exists($class_name))
+		$class = splitFilename($filename);
+		if(!class_exists($class[0]))
 		{
 	  	 	require_once($filename);
 		}
 	}
 }
+
+function splitFilename($filename)
+{
+    $pos = strrpos($filename, '.');
+    if ($pos === false)
+    { // dot is not found in the filename
+        return array($filename, ''); // no extension
+    }
+    else
+    {
+        $basename = substr($filename, 0, $pos);
+        $extension = substr($filename, $pos+1);
+        return array($basename, $extension);
+    }
+} 
 ?>

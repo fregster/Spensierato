@@ -1,8 +1,6 @@
 <?php
-
 if(Settings::Singleton()->get_setting('uploads_enabled'))
 {
-	require_once('image.inc');
 	element::register('Gallery', 'elementGallery');
 	class elementGallery extends elementImage
 	{

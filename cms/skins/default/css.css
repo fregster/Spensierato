@@ -402,6 +402,11 @@ a.tooltip:hover span
 	display:block;
 }
 
+.elementAdmin {
+	border-left: medium solid #FFFFFF;
+	border-right: medium solid #FFFFFF;
+}
+
 .download {
 	cursor: pointer;	
 }

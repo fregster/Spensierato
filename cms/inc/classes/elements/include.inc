@@ -8,7 +8,7 @@ if(Options::Singleton()->get_option('admin_mode'))
 {
 	$path = substr(__FILE__, 0, -11);  
 	
-	require_once($path.'default.inc');
+	require_once($path.'elementdefault.inc');
 	
 	foreach (glob($path.'*.inc') as $filename) 
 	{

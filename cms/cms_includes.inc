@@ -12,7 +12,8 @@ function cms_root()
 }
 
 //Classes files
-require_once('inc/classes/include.inc');
+/* Test to see if __autoloader works */
+//require_once('inc/classes/include.inc');
 
 //Calculated vars
 //None

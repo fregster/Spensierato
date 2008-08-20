@@ -405,6 +405,7 @@ a.tooltip:hover span
 .elementadmin {
 	border-left: medium solid #FFFFFF;
 	border-right: medium solid #FFFFFF;
+	background: #FFFFFF;
 }
 
 .download {

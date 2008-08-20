@@ -22,6 +22,7 @@ if(Options::Singleton()->get_option('admin_mode'))
 
 function splitFilename($filename)
 {
+	$filename = basename($filename);
     $pos = strrpos($filename, '.');
     if ($pos === false)
     { // dot is not found in the filename

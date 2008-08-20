@@ -1,5 +1,4 @@
 <?php
-require_once('user.inc');
 /**
  * Enhanced Secure Login class
  * This is an extension of the user class login functions

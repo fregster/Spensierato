@@ -146,7 +146,7 @@ a.tooltip:hover span
 #page_section_main
 {
 	position:relative;
-	max-width:775px;
+	margin-left:220px;
 	top:3px;
 	left:205px;
 	right:5px;

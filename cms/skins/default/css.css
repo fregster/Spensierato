@@ -107,14 +107,16 @@ a.tooltip:hover span
 
 #page_section_banner_submenu
 {
-	position:relative;
+	bottom:0px;
+	position:absolute;
 	right:3px;
 }
 
 #page_section_middle
 {
 	background-color:#FFFFFF;
-	position:relative;
+	position:absolute;
+	top:105px;
 	height:100%;
 	width:100%;
 }

@@ -79,6 +79,7 @@ a.tooltip:hover span
 	position:relative;
 	/* width:900px; 
 	min-height:620px; */
+	max-width:600px;
 	height:100%;
 	left: 10px;
 	right: 10px;

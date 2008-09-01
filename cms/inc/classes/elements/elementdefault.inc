@@ -183,11 +183,11 @@ class elementDefault
 	
 	protected function attach_upload()
 	{
-		if(isset($this->tags['file']) and isset($_FILES))
+		if(isset($this->tags['file']) && $_FILES['uploadedfile']['size'] > 0)
 		{
 			$file_size = (int)$_FILES['uploadedfile']['size'];
 			$max_size = (int)Settings::Singleton()->get_setting('max_file_size');
-			if($file_size <= $max_size && $file_size > 0)
+			if($file_size <= $max_size)
 			{
 				$path = $_FILES['uploadedfile']['tmp_name'];
 				$target = Settings::singleton()->get_setting('cms_folder_uploads').$this->id.'-'.$this->revision;

@@ -1,6 +1,6 @@
 <xsl:template name="imagegallery">
 <!-- This is the default media template for imageflow -->
-<xsl:if test="count(./data/elementid) > 0">
+<xsl:if test="count(./data/elementid/*) > 0">
 <div class="js-hide">
 	<p>Javascript is required to view the gallery with scrolling</p>
 </div>

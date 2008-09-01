@@ -145,7 +145,7 @@ a.tooltip:hover span
 
 #page_section_main
 {
-	position:absolute;
+	position:relative;
 	top:3px;
 	left:205px;
 	right:5px;

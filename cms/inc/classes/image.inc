@@ -72,7 +72,7 @@ class image
 						
 						$im_new = imagecreatetruecolor($th_width,$th_height);
 						
-						imageAntiAlias($im_new,true); 
+						if(function_exists(imageantialias)) { imageantialias($im_new,true); }
 						imageCopyResampled($im_new,$uploadasjpeg,0,0,0,0,$th_width,$th_height, $image_attribs[0], $image_attribs[1]);
 	
 						//Copy the new image to the original file location with the quality

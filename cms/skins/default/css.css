@@ -124,7 +124,8 @@ a.tooltip:hover span
 #page_section_left_col
 {
 	width:200px;
-	position:absolute;
+	height:100%;
+	position:relative;
 	top:0px;
 	left:0px;
 }

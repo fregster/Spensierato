@@ -1,5 +1,4 @@
 <?php
-require_once('virusScan.inc');
 class clamav extends virusScan
 {
 	function __construct()

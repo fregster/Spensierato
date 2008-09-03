@@ -123,8 +123,7 @@ a.tooltip:hover span
 {
 	width:200px;
 	position: relative;
-	top:0px;
-	left:0px;
+	float: left;
 }
 
 #page_section_left_menu
@@ -145,6 +144,7 @@ a.tooltip:hover span
 	height:100%;
 	margin-left:205px;
 	margin-right:5px;
+	float: left;
 }
 
 #page_section_body

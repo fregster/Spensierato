@@ -87,6 +87,11 @@ Settings::Singleton()->new_setting('show_access', true);
 //Folder name from cms/skins/
 Settings::Singleton()->new_setting('skin', 'default', false, true);
 
+//Setting skin_alternative_css
+//Set this to the css file if not css.css in the skins folder
+//Folder name from cms/skins/
+//Settings::Singleton()->new_setting('skin_alternative_css', 'alternative.css', false, true);
+
 //Setting send_as_xml
 //Set this to send the page as un-rendered XML (sends link to the stylesheet with XML)
 //Defaults to false and uses PHP XSLT parser to generate the HTML

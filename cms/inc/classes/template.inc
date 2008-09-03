@@ -80,7 +80,15 @@ class Template
 			break;
 			
 			default:
-				$path = $this->template_path .'/css.css';
+				if(Settings::Singleton()->get_setting('skin_alternative_css'))
+				{
+					$css_file = Settings::Singleton()->get_setting('skin_alternative_css');
+				}
+				else
+				{
+					$css_file = 'css.css';
+				}
+				$path = $this->template_path .'/'.$css_file;
 		}
 		
 		if(is_file($path))

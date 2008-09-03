@@ -63,6 +63,7 @@ a.tooltip:hover span
 #site_frame
 {
 	width: 100%;
+	height: 100%;
 	max-width:996px;
 	height:100%;
 	top:0px;
@@ -114,12 +115,14 @@ a.tooltip:hover span
 	background-color:#FFFFFF;
 	/* min-height:600px; */
 	width:100%;
+	height: 100%;
 }
 
 #page_section_left_col
 {
 	width:200px;
 	float: left;
+	height: 100%;
 }
 
 #page_section_left_menu

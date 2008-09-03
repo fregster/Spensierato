@@ -83,6 +83,7 @@ a.tooltip:hover span
 {
 	/* width:900px; 
 	min-height:620px; */
+	position: relative;
 	margin-left: 10px;
 	margin-right: 10px;
 	height: 100%;

@@ -80,6 +80,7 @@ a.tooltip:hover span
 	min-height:620px; */
 	margin-left: 10px;
 	margin-right: 10px;
+	height: 100%;
 	border: 1px solid #ddd;
 	background-color:#CCCCCC;
 }

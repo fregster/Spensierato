@@ -8,6 +8,7 @@
 			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>
 			<div id="notifications" style="visibility: hidden; background-color: red;">Notifications</div>
 			<div id="site_frame">
+				<div id="border">
 				<div id="page_main">
 					<xsl:call-template name="banner"/>
 					<div id="page_section_middle">
@@ -27,6 +28,7 @@
 					</div>
 				</div>
 				***FOOTER_TEXT***
+				</div>
 			</div>
 			</xsl:element>
         </html>

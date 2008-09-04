@@ -75,7 +75,7 @@ a.tooltip:hover span
 	border: 1px solid black;
 }
 
-#page_main
+#border
 {
 	position: relative;
 	margin-left:10px;
@@ -83,7 +83,13 @@ a.tooltip:hover span
 	height: 100%;
 	border-left: 1px solid #ddd;
 	border-right: 1px solid #ddd;
-	background-color:#CCCCCC;
+	background-color:#CCCCCC;	
+}
+
+#page_main
+{
+	position: relative;
+	height: 100%;
 }
 
 #page_edit
@@ -97,11 +103,11 @@ a.tooltip:hover span
 
 #page_section_banner
 {
+	position: relative;
 	height:104px;
 	width:100%;
 	background-color:#ff7c7e;
 	top:0px;
-	position: relative;
 	background-repeat:repeat-x;
 }
 

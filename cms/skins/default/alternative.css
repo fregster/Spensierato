@@ -167,9 +167,10 @@ a.tooltip:hover span
 
 #page_section_footer
 {
-	position:absolute;
-	bottom:0px;
-	width:100%;
+	position: relative;
+	width: 100%;
+	max-width:996px;
+	margin: auto;
 	text-align:center;
 }
 

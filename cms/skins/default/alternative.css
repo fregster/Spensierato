@@ -64,6 +64,7 @@ a.tooltip:hover span
 
 #site_frame
 {
+	position: relative;
 	width: 100%;
 	max-width:996px;
 	height:100%;

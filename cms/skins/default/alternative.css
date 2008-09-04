@@ -68,6 +68,7 @@ a.tooltip:hover span
 	width: 100%;
 	max-width:996px;
 	height:100%;
+	min-height:100%;
 	margin: auto;
 	margin-bottom: 20px;
 	top:0px;

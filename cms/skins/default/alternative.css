@@ -142,6 +142,7 @@ a.tooltip:hover span
 
 #page_section_left_menu
 {
+	position: relative;
 	width:100%;
 	background-color:#EFEFEF;
 	border-right:thin;
@@ -155,6 +156,7 @@ a.tooltip:hover span
 
 #page_section_main
 {
+	position: relative;
 	padding:0;
 	margin-left: 203px;
 	margin-right: 3px;
@@ -163,6 +165,7 @@ a.tooltip:hover span
 
 #page_section_body
 {
+	position: relative;
 	width: 100%;
 }
 

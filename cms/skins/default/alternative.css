@@ -64,11 +64,9 @@ a.tooltip:hover span
 
 #site_frame
 {
-	position: relative;
 	width: 100%;
 	max-width:996px;
-	height:auto;
-	min-height:100%;
+	height:100%;
 	margin: auto;
 	margin-bottom: 20px;
 	top:0px;
@@ -78,15 +76,16 @@ a.tooltip:hover span
 
 #page_main
 {
-	margin-left: 10px;
-	margin-right: 10px;
+	margin-left:10px;
+	margin-right:10px;
 	height: 100%;
-	border: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
 	background-color:#CCCCCC;
 }
 
 #page_edit
-{
+{ 
 	position:absolute;
 	width:640px;
 	left: 10px;

@@ -103,9 +103,8 @@ a.tooltip:hover span
 
 #page_section_banner
 {
-	display: hidden;
 	position: relative;
-	height:104px;
+	height:1px;
 	width:100%;
 	background-color:#ff7c7e;
 	top:0px;

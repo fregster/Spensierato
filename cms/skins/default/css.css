@@ -64,10 +64,10 @@ a.tooltip:hover span
 
 #site_frame
 {
-	position:relative;
+	position:absolute;
 	width: 100%;
 	max-width:996px;
-	min-height:100%;
+	height:100%;
 	top:0px;
 	background-color:#FFFFFF;
 	/* margin-left:auto;
@@ -76,10 +76,9 @@ a.tooltip:hover span
 
 #page_main
 {
-	position:relative;
+	position:absolute;
 	/* width:900px; 
 	min-height:620px; */
-	height:100%;
 	left: 10px;
 	right: 10px;
 	border: 1px solid #ddd;
@@ -115,16 +114,15 @@ a.tooltip:hover span
 #page_section_middle
 {
 	background-color:#FFFFFF;
-	position:relative;
+	position:absolute;
 	top:105px;
+	/* min-height:600px; */
 	width:100%;
-	height:100%
 }
 
 #page_section_left_col
 {
 	width:200px;
-	height:100%;
 	position:absolute;
 	top:0px;
 	left:0px;
@@ -145,8 +143,7 @@ a.tooltip:hover span
 
 #page_section_main
 {
-	position:relative;
-	margin-left:220px;
+	position:absolute;
 	top:3px;
 	left:205px;
 	right:5px;

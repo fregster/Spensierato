@@ -77,6 +77,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
+	$install_folder = dirname(__FILE__);
 	/*
 	 * check the file
 	 * load the settings
@@ -141,17 +142,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	//Include the file which processes the SQL code
 	//Load aproprate sql file
 
-	if(!is_file('/mnt/www/workspace/Spensierato/cms/install/'.$driver.'.txt'))
+	if(!is_file($install_folder.'/'.$driver.'.inc'))
 	{
-		die('<br/>Unable to load install sql file '.$driver.'.txt');
+		die('<br/>Unable to load install sql file '.$install_folder.'/'.$driver.'.inc');
 	}
 	
 	debug('Loading setup file');
-	include($driver.'.inc');	
+	include($install_folder.'/'.$driver.'.inc');	
 	
 	//Execute sql
 	debug('Running...');
 	
+	$i = 0;	
 	foreach($sql as $sql_str)
 	{
 		//Process sql
@@ -160,9 +162,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		
 		if(PEAR::isError($resultset)) 
 		{
-			$error = 'Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
+			$error = 'Failed to issue query '.$i.', error message : ' . $resultset->getMessage().'<br />From :'. $sql_str;
 			debug($error);
 		}
+		++$i;
 	}
 	
 	//Create the DB users and give permissions over the database

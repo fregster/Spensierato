@@ -147,30 +147,22 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	}
 	
 	debug('Loading setup file');
-	$sql = file_get_contents('/mnt/www/workspace/Spensierato/cms/install/'.$driver.'.txt');
-	
-	//Process sql
-	$sql = str_replace('cms_', $prefix.'_', $sql);
-	
+	include($driver.'.inc');	
 	
 	//Execute sql
 	debug('Running...');
 	
-//	$link = mysql_connect($host.':3307', $username, $password);
-//	if (!$link) {
-//	    die('Could not connect: ' . mysql_error());
-//	}
-//	echo 'Connected successfully';
-//	$result = mysql_query($sql);
-//	mysql_close($link);
-	
-	
-	$resultset = $db->query($sql);
-	
-	if(PEAR::isError($resultset)) 
+	foreach($sql as $sql_str)
 	{
-		$error = 'Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
-		debug($error);
+		//Process sql
+		$sql_str = str_replace('cms_', $prefix.'_', $sql_str);
+		$resultset = $db->query($sql_str);
+		
+		if(PEAR::isError($resultset)) 
+		{
+			$error = 'Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
+			debug($error);
+		}
 	}
 	
 	//Create the DB users and give permissions over the database

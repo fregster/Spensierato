@@ -1,7 +1,7 @@
 <?php
 $sql = array();
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_commands`;
+$sql_str = '
 CREATE TABLE `cms_tbl_commands` (
   `command` varchar(32) NOT NULL,
   `type` varchar(32) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE `cms_tbl_commands` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_element_data_archive`;
+$sql_str = '
 CREATE TABLE `cms_tbl_element_data_archive` (
   `id` int(10) unsigned NOT NULL,
   `data` longtext,
@@ -22,7 +22,7 @@ CREATE TABLE `cms_tbl_element_data_archive` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
-$sql_str = "DROP TABLE IF EXISTS `cms_tbl_elements`;
+$sql_str = "
 CREATE TABLE `cms_tbl_elements` (
   `id` int(11) NOT NULL auto_increment,
   `type` varchar(32) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `cms_tbl_elements` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;";
 array_push($sql, $sql_str);
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_elements_approve`;
+$sql_str = '
 CREATE TABLE `cms_tbl_elements_approve` (
   `id` int(11) NOT NULL auto_increment,
   `element_id` int(11) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE `cms_tbl_elements_approve` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;';
 array_push($sql, $sql_str);
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_elements_data`;
+$sql_str = '
 CREATE TABLE `cms_tbl_elements_data` (
   `id` int(11) NOT NULL,
   `data` longtext NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE `cms_tbl_elements_data` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_elements_draft`;
+$sql_str = '
 CREATE TABLE `cms_tbl_elements_draft` (
   `id` int(11) NOT NULL auto_increment,
   `element_id` int(11) NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE `cms_tbl_elements_draft` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;';
 array_push($sql, $sql_str);
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_list_data`;
+$sql_str = '
 CREATE TABLE `cms_tbl_list_data` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(128) NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE `cms_tbl_list_data` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;';
 array_push($sql, $sql_str);
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_list_membership`;
+$sql_str = '
 CREATE TABLE `cms_tbl_list_membership` (
   `user_id` int(11) NOT NULL,
   `list_id` int(11) NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE `cms_tbl_list_membership` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
-$sql_str = "DROP TABLE IF EXISTS `cms_tbl_page_elements`;
+$sql_str = "
 CREATE TABLE `cms_tbl_page_elements` (
   `id` int(11) NOT NULL auto_increment,
   `page_id` int(11) NOT NULL,
@@ -110,7 +110,7 @@ CREATE TABLE `cms_tbl_page_elements` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;";
 array_push($sql, $sql_str);
 
-$sql_str = "DROP TABLE IF EXISTS `cms_tbl_pages`;
+$sql_str = "
 CREATE TABLE `cms_tbl_pages` (
   `id` int(11) NOT NULL auto_increment,
   `parent_id` int(11) NOT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE `cms_tbl_pages` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;";
 array_push($sql, $sql_str);
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_security`;
+$sql_str = '
 CREATE TABLE `cms_tbl_security` (
   `page_id` int(11) NOT NULL,
   `data` longtext NOT NULL,
@@ -135,7 +135,7 @@ CREATE TABLE `cms_tbl_security` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_settings`;
+$sql_str = '
 CREATE TABLE `cms_tbl_settings` (
   `setting` varchar(32) NOT NULL,
   `value` varchar(128) NOT NULL,
@@ -143,7 +143,7 @@ CREATE TABLE `cms_tbl_settings` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_temp`;
+$sql_str = '
 CREATE TABLE `cms_tbl_temp` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `data` text NOT NULL,
@@ -152,7 +152,7 @@ CREATE TABLE `cms_tbl_temp` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;';
 array_push($sql, $sql_str);
 
-$sql_str = "DROP TABLE IF EXISTS `cms_tbl_users`;
+$sql_str = "
 CREATE TABLE `cms_tbl_users` (
   `id` int(11) NOT NULL auto_increment,
   `username` varchar(32) NOT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE `cms_tbl_users` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;";
 array_push($sql, $sql_str);
 
-$sql_str = 'DROP TABLE IF EXISTS `cms_tbl_users_data`;
+$sql_str = '
 CREATE TABLE `cms_tbl_users_data` (
   `id` int(11) NOT NULL auto_increment,
   `user_id` int(11) NOT NULL,

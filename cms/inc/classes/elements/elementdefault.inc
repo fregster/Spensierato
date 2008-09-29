@@ -128,7 +128,7 @@ class elementDefault
 		$xml = '<xml>';
 		foreach($details as $key => $value)
 		{
-			if($key == 'html') { $value = htmlentities($value, ENT_QUOTES); }
+			if($key == 'html') { $value = Common::html($html); }
 			$value = common::sql_clean(strip_tags($value));
 			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
 		}
@@ -149,7 +149,7 @@ class elementDefault
 			else
 			{
 				$data = common::node_from_xml($xml, '/xml/'.$key);
-				$built_xml .= '<'.$key.'>'.utf8_encode(common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES)))).'</'.$key.'>';
+				$built_xml .= '<'.$key.'>'.utf8_encode(common::sql_clean(strip_tags(Common::html($html)))).'</'.$key.'>';
 			}
 		}
 		
@@ -368,7 +368,7 @@ class elementDefault
 						$data = common::node_from_xml($dbxml, '/data/'.$key);
 					}
 					
-					if($value == 'html') { $data = htmlentities($data); }
+					if($value == 'html') { $data = Common::html($html); }
 					$data = utf8_decode(strip_tags($data));
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 				}

@@ -13,7 +13,7 @@ class elementHelp extends elementDefault
 	protected function get_data()
 	{
 			$html = 'Help information';
-			$this->data = '<data>'. htmlentities($html, ENT_QUOTES, Settings::Singleton()->get_setting('char_set')) .'</data>';
+			$this->data = '<data>'. Common::html($html) .'</data>';
 			$this->search = NULL;
 	}
 

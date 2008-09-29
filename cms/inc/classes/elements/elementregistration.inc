@@ -14,7 +14,7 @@ class elementRegister extends elementDefault
 	{
 		$template = 'templates/register.html';
 		
-		$this->data = '<data>'. htmlentities(Template::Singleton()->get_file_content($template), ENT_QUOTES, Settings::Singleton()->get_setting('char_set')) .'</data>';
+		$this->data = '<data>'. Common::html($html) .'</data>';
 		$this->search = NULL;
 	}
 

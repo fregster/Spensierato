@@ -28,7 +28,7 @@ abstract class variables
 	
 	protected function html($input)
 	{
-		return htmlentities($input, ENT_QUOTES, Settings::singleton()->get_setting('char_set'));
+		return Common::html($html);
 	}
 	
 	protected function string($input)

@@ -48,7 +48,7 @@ class elementLogin extends elementDefault
 
 		$html = str_replace('**CMS**remembered', $checked, $html);
 		
-		$this->data = '<data>'. htmlentities($html, ENT_QUOTES, Settings::Singleton()->get_setting('char_set')) .'</data>';
+		$this->data = '<data>'. Common::html($html) .'</data>';
 		$this->search = NULL;
 	}
 

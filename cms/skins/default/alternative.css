@@ -151,6 +151,7 @@ a.tooltip:hover span
 
 #page_section_left_utilities
 {
+	position: relative;
 	width:100%;
 }
 
@@ -410,6 +411,7 @@ a.tooltip:hover span
 }
 
 .elementDownload {
+	margin-top; margin-bottom: 3px;
 	background: #DDDDDD;
 }
 

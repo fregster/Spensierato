@@ -394,6 +394,7 @@ a.tooltip:hover span
 }
 
 .elementDownload {
+	margin-top; margin-bottom: 3px;
 	background: #DDDDDD;
 }
 

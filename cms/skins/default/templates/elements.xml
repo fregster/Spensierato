@@ -10,6 +10,16 @@
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
 	
+	<xsl:template match="element[@type = 'elementContact']">
+		<xsl:call-template name="element_admin_header"/>	
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+			<xsl:value-of select="./data/name" />
+		</xsl:element>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+	
 	<xsl:template match="element[@type = 'elementVideo']">
 		<xsl:call-template name="element_admin_header"/>
 		<xsl:if test="./data/filesize > 0">

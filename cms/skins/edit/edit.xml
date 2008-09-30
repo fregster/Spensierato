@@ -52,15 +52,15 @@
 </xsl:template>
 	
 <xsl:template match="*[@type = 'text']">
-	<!-- make sure that if this is the title of a contact not to display it-->
-	<xsl:if test="../@type != 'elementContact'">
+	<!-- make sure that if this is the title of a contact not to display it
+	<xsl:if test="../@type != 'elementContact'">-->
 		<div>
 			<xsl:value-of select="name()" />: <xsl:element name="input">
 			<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
 			<xsl:attribute name="value"><xsl:value-of select="." /></xsl:attribute>
 			</xsl:element>
 		</div>
-	</xsl:if>
+	<!--</xsl:if>-->
 </xsl:template>
 	
 <xsl:template match="*[@type = 'file']">	

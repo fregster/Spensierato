@@ -7,8 +7,8 @@ class elementContact extends elementDefault
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Page Contact';
-		$this->image = 'contact.png';
-		$this->image_edit = '';
+		$this->image = 'user';
+		$this->image_edit = 'user-edit';
 		$this->allowed_tags(array('name' => 'text', 'email' => 'email', 'userid' => 'numeric'));
 	}
 

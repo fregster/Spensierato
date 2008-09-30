@@ -4,6 +4,7 @@
 
 			<xsl:element name="body">
 			<xsl:attribute name="onload">init();</xsl:attribute>
+			<xsl:attribute name="style">background: white;</xsl:attribute>
 			<div id="notifications" style="visibility: hidden;">Notifications</div>
 					<div id="page_edit">
 					<xsl:element name="form">

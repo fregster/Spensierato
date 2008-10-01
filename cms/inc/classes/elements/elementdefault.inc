@@ -183,18 +183,67 @@ class elementDefault
 	
 	protected function attach_upload()
 	{
-		if(isset($this->tags['file']) && $_FILES['uploadedfile']['size'] > 0)
+		//Does this element type possibly have files
+		if(isset($this->tags['file']))
 		{
-			$file_size = (int)$_FILES['uploadedfile']['size'];
-			$max_size = (int)Settings::Singleton()->get_setting('max_file_size');
-			if($file_size <= $max_size)
+			//PHP reports no error uploading the file
+			if($_FILES['uploadedfile']['error'] == 0)
 			{
-				$path = $_FILES['uploadedfile']['tmp_name'];
-				$target = Settings::singleton()->get_setting('cms_folder_uploads').$this->id.'-'.$this->revision;
-				return(filetransfer::move_file($path, $target));
+				$file_size = (int)$_FILES['uploadedfile']['size'];
+				$max_size = (int)Settings::Singleton()->get_setting('max_file_size');
+				if($file_size <= $max_size)
+				{
+					$path = $_FILES['uploadedfile']['tmp_name'];
+					$target = Settings::singleton()->get_setting('cms_folder_uploads').$this->id.'-'.$this->revision;
+					return(filetransfer::move_file($path, $target));
+				}
 			}
+			else
+			{
+				//Set the error message
+				switch ($_FILES['uploadedfile']['error']) 
+				{
+					case 1:
+						$this->error = 'The uploaded file exceeds the upload_max_filesize directive in php.ini. ';
+					break;
+					
+					case 2:
+						$this->error = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. ';
+					break;
+					
+					case 3:
+						$this->error = 'The uploaded file was only partially uploaded. ';
+					break;
+					
+					case 4:
+						//This is not an error so return true and escape
+						$this->error = 'No file was uploaded';
+						return true;
+					break;
+					
+					case 6:
+						$this->error = 'Missing a temporary upload folder.';
+					break;
+					
+					case 7:
+						$this->error = 'Failed to write file to disk.';
+					break;
+					
+					case 8:
+						$this->error = 'File upload stopped by extension.';
+					break;
+					
+					default:
+						$this->error = 'Unknow upload error';
+					break;
+				}
+			}
+			
+			//Upload failed return false
 			return false;
-		}
+		}	
+		
+		//no uploads return true to allow outer function to continue.
 		return true;
 	}
 	

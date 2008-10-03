@@ -96,7 +96,7 @@ class user
 			$this->set_user_details();
 			if($username == 'admin')
 			{
-				$this->create_password();
+				return $this->create_password();
 			}
 			else
 			{

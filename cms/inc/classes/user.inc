@@ -74,13 +74,34 @@ class user
 		}
 	}
 	
-	public function create($username, $email)
+	public function create($username, $email = NULL)
 	{
+		if($email == NULL)
+		{
+			$email = 'root@localhost';
+		}
 		database::Singleton()->force_write_user();
 			$this->userid = database::singleton()->sql_insert('tbl_users', array('username'), array($username));
-			database::singleton()->sql_insert('tbl_users_data', array('data', 'user_id'), array('<email>'.$email.'</email>', $this->userid));
+			
+			$cols = array('data', 'user_id');
+			$data = array('<email>'.$email.'</email>', $this->userid);
+			
+			if($username == 'admin')
+			{
+				array_push($cols, 'admin');
+				array_push($data, 1);
+			}
+			
+			database::singleton()->sql_insert('tbl_users_data', $cols, $data);
 			$this->set_user_details();
-			$this->reset_password();
+			if($username == 'admin')
+			{
+				$this->create_password();
+			}
+			else
+			{
+				$this->reset_password();
+			}
 		database::Singleton()->destroy_write_user();
 		
 		$this->do_login();
@@ -133,7 +154,7 @@ class user
 		return $this->user_details['administrator'];
 	}
 	
-	public function reset_password()
+	private function create_password()
 	{
 		//Create a password
 		$password = common::generate_random_string(6);
@@ -142,6 +163,13 @@ class user
 		
 		//Save the password in the DB
 		$this->update_password($hash);
+		
+		return $password;
+	}
+	
+	public function reset_password()
+	{
+		$password = $this->create_password();
 		
 		//Email the password out
 		$message = 'Your password for your account on '. Settings::singleton()->get_setting('site_name_long').' has been reset<br />Your password is '.$password;

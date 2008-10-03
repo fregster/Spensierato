@@ -195,8 +195,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	/*
 	 * Build the settings file string
 	 */
-	$settings_file_string = '
-<?
+	$settings_file_string = '<?
 //This file contains the CMS settings required before we include the CMS code.
 
 //Database vars
@@ -210,8 +209,7 @@ $GLOBALS[\'database_user_read\'] = \''. $user_r .'\';
 $GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\';
 $GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
 $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
-?>
-	';
+?>';
 	
 	/*
 	 * Close and write the settings file

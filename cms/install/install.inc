@@ -78,12 +78,17 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	$install_folder = dirname(__FILE__);
+	$settings_file = $install_folder.'/../../spensierato_setup.inc';
 	/*
 	 * check the file
 	 * load the settings
 	 */
 //	$settings_file_handle = fopen($settings_file, 'w+') or die('can\'t open file you may need to give the webserver temporay permissions over the install folder or create the setup file manual with write permissions for the webserver');
 	$settings_file_handle = fopen($settings_file, 'w+');
+	if(!$settings_file_handle)
+	{
+		die('Unable to create settings file ('.$settings_file.'), instalation aborted.<br/>Make sure the root dir is writeable or the file spensierato_setup.inc is created and writeable');
+	}
 	
 	//SQL connection settings
 	$username = post::variable('username');
@@ -213,7 +218,7 @@ $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 	 */
 	fwrite($settings_file_handle, $settings_file_string);
 	fclose($settings_file_handle);
-	debug('Settings file created');
+	debug('Settings file created '.$settings_file);
 	
 	debug('Createing Homepage');
 	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible'), array(0, time(), 0, 1));

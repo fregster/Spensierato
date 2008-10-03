@@ -13,7 +13,7 @@ class elementRegister extends elementDefault
 	protected function get_data()
 	{
 		$template = 'templates/register.html';
-		
+		$html = Template::Singleton()->get_file_content($template);
 		$this->data = '<data>'. Common::html($html) .'</data>';
 		$this->search = NULL;
 	}

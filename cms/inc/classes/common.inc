@@ -313,10 +313,14 @@ abstract class Common
 	return $output;  
 }  
 	
-	public static function generate_random_string($length)
+	public static function generate_random_string($length, $allow_numbers = false)
 	{
 		/* list all possible characters, similar looking characters and vowels have been removed */
-		$possible = '23456789bcdfghjkmnpqrstvwxyz';
+		$possible = 'abcdfghjkmnpqrstvwxyz';
+		if($allow_numbers)
+		{
+			$possible .= '23456789';
+		}
 		$code = '';
 		$i = 0;
 		while ($i < $length)

@@ -54,7 +54,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 
 	<div id="prefix">
 		If your connecting to an exsisting database this must match the origonal table prefix
-		<div>Table Prefix name: <input type="text" name="prefix" value="<? echo(Common::generate_random_string(3)); ?>" /></div>
+		<div>Table Prefix name: <input type="text" name="prefix" value="<? echo(Common::generate_random_string(3, false)); ?>" /></div>
 	</div>
 	
 	<div id="randomkey">
@@ -225,6 +225,8 @@ $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 	$element = Element::type('elementText');
 	$element->create($id);
 	
+	debug('Adding site administrator');
+	user::Singleton()->create('admin');
 	
 	echo('The site is now setup');
 }

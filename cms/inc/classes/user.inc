@@ -81,18 +81,17 @@ class user
 			$email = 'root@localhost';
 		}
 		database::Singleton()->force_write_user();
-			$this->userid = database::singleton()->sql_insert('tbl_users', array('username'), array($username));
-			
-			$cols = array('data', 'user_id');
-			$data = array('<email>'.$email.'</email>', $this->userid);
+			$cols = array('username');
+			$data = array($username);
 			
 			if($username == 'admin')
 			{
 				array_push($cols, 'admin');
 				array_push($data, 1);
 			}
+			$this->userid = database::singleton()->sql_insert('tbl_users', $cols, $data);
 			
-			database::singleton()->sql_insert('tbl_users_data', $cols, $data);
+			database::singleton()->sql_insert('tbl_users_data', array('data', 'user_id'), array('<email>'.$email.'</email>', $this->userid));
 			$this->set_user_details();
 			if($username == 'admin')
 			{

@@ -42,7 +42,15 @@ class page
 			else
 			{
 				$value = database::singleton()->sql_select_first(array('id'), 'tbl_pages', NULL, NULL, array('id'), 'ASC');
-				$this->id = $value['id'];
+				if(is_numeric($value['id']))
+				{
+					$this->id = $value['id'];
+				}
+				else
+				{
+					//FIXME currently wont work with an empty DB
+					$this->id = 0;
+				}
 			}
 		}
 		else

@@ -216,19 +216,20 @@ $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 	 */
 	fwrite($settings_file_handle, $settings_file_string);
 	fclose($settings_file_handle);
-	debug('Settings file created '.$settings_file);
+	debug('Settings file created');
 	
 	debug('Createing Homepage');
-	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible'), array(0, time(), 0, 1));
+	database::Singleton()->force_write_user();
+	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible', 'title'), array(0, time(), 0, 1, 'Homepage'));
 	
 	debug('Adding starting element');
 	$element = Element::type('elementText');
-	$element->create($id);
+	$element->create($id, false);
 	
 	debug('Adding site administrator');
-	user::Singleton()->create('admin');
+	$password = user::Singleton()->create('admin');
 	
-	echo('The site is now setup');
+	debug('The site is now setup reload this page to see your new site<br />You can log in with the user admin and the password '.$password);
 }
 
 function debug($text)

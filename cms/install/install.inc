@@ -170,10 +170,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	
 	//Create the DB users and give permissions over the database
 	//TODO allow connections from specified places
-	$user_create_sql = array('CREATE USER \''.$user_rw.'\'@\'localhost\' [IDENTIFIED BY [PASSWORD] '.$user_db_password.']',
-	'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$database.' TO '. $user_rw,
-	'CREATE USER \''.$user_r.'\'@\'localhost\' [IDENTIFIED BY [PASSWORD] '.$user_db_password.']',
-	'GRANT SELECT ON '.$database.' TO '. $user_r);
+	$user_create_sql = array('CREATE USER \''.$user_rw.'\'@\'localhost\' IDENTIFIED BY \''.$user_db_password.'\'',
+	'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$database.'.* TO \''.$user_rw. '\'@\'localhost\'',
+	'CREATE USER \''.$user_r.'\'@\'localhost\' IDENTIFIED BY \''.$user_db_password.'\'',
+	'GRANT SELECT ON '.$database.'.* TO \''. $user_r. '\'@\'localhost\'');
 	
 	debug('Createing users and permissions');
 	foreach($user_create_sql as $sql)

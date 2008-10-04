@@ -101,7 +101,14 @@ abstract class Common
     			$proto = 'https://';
     		}
     		$document_root = $proto . $_SERVER['SERVER_NAME'];
+    		
     	}
+    	
+    	if(!Common::rewrite_enabled())
+    	{
+    		$document_root .= '/index.php';
+    	}
+    	
 		return $document_root;
     }
 	
@@ -546,6 +553,16 @@ abstract class Common
 ////            return "unknown/" . trim($fileSuffix[0], ".");
 //			return false;
 //        }
+    }
+    
+    public function rewrite_enabled()
+    {
+    	if ( in_array("mod_rewrite", apache_get_modules()) ) 
+    	{ 
+    		return true;
+    	} 
+
+    	return false;
     }
 }
 ?>

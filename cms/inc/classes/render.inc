@@ -141,8 +141,13 @@ class Render
 	
 		$this->tidy();
 		
-		/* call end CMS CMS::Singleton()->end_cms() to work out page generation times and replace the footer text */
-		$this->html = str_replace('***FOOTER_TEXT***', CMS::Singleton()->end_cms(), $this->html);
+		$footer = '';
+		if(Settings::Singleton()->get_setting('show_footer'))
+		{
+			/* call end CMS CMS::Singleton()->end_cms() to work out page generation times and replace the footer text */
+			$footer = CMS::Singleton()->end_cms();
+		}
+		$this->html = str_replace('***FOOTER_TEXT***', $footer, $this->html);
 	}
 	
 	private function tidy()

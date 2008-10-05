@@ -54,6 +54,10 @@ Settings::Singleton()->new_setting('content_require_approval', true, false, true
 //If you can aprove your own content on saving it will be automaticaly published
 Settings::Singleton()->new_setting('content_auto_publish', true, false, true);
 
+//Setting show_footer
+//false / true
+Settings::Singleton()->new_setting('show_footer', true);
+
 //Setting menu_level
 //int default 0
 Settings::Singleton()->new_setting('menu_level', 0);

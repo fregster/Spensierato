@@ -31,6 +31,7 @@
 						<xsl:attribute name="{name()}"><xsl:value-of select="." /></xsl:attribute>
 					</xsl:for-each>
 					<xsl:value-of select="value" />
+					//auto added custom header for element specific content
 				</xsl:element>
 				
 				</xsl:for-each>

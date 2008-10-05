@@ -4,22 +4,19 @@
 
 			<xsl:element name="body">
 			<xsl:attribute name="onload">init();</xsl:attribute>
-			<xsl:attribute name="style">background: white;</xsl:attribute>
+			<xsl:attribute name="style">background: #FFFFFF;</xsl:attribute>
 			<div id="notifications" style="visibility: hidden;">Notifications</div>
 					<div id="page_edit">
 					<xsl:element name="form">
 						<xsl:attribute name="action"></xsl:attribute>
-						<xsl:attribute name="method">POST</xsl:attribute>
+						<xsl:attribute name="method">post</xsl:attribute>
 						
 						<!-- test if we might upload a file and if so add the multipart attribute -->
 						<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 						
 						<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
-						<xsl:call-template name="edit_header"/><p>
-						
+						<xsl:call-template name="edit_header"/>						
 						<xsl:apply-templates select="/page/body/element/data"/>
-						
-						</p>
 						<xsl:call-template name="edit_footer"/>
 					</xsl:element>
 					</div>
@@ -46,21 +43,19 @@
 		</xsl:choose>
 		
 		<xsl:value-of select="." />
+		<xsl:if test="string-length(.) = 0">Enter your text here</xsl:if>
 		</xsl:element>
 	</div>
 	
 </xsl:template>
 	
 <xsl:template match="*[@type = 'text']">
-	<!-- make sure that if this is the title of a contact not to display it
-	<xsl:if test="../@type != 'elementContact'">-->
-		<div>
-			<xsl:value-of select="name()" />: <xsl:element name="input">
-			<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
-			<xsl:attribute name="value"><xsl:value-of select="." /></xsl:attribute>
-			</xsl:element>
-		</div>
-	<!--</xsl:if>-->
+	<div>
+		<xsl:value-of select="name()" />: <xsl:element name="input">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="." /></xsl:attribute>
+		</xsl:element>
+	</div>
 </xsl:template>
 	
 <xsl:template match="*[@type = 'file']">	
@@ -146,13 +141,13 @@
 				</script>
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
-					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js</xsl:attribute>//load
 				</xsl:element>
 				
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
 					<!-- <xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>-->
-					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce_gzip.js</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce_gzip.js</xsl:attribute>//load
 				</xsl:element>
 				
 				

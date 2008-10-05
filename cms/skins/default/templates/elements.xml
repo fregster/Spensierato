@@ -123,7 +123,7 @@
 			<div id="account_personal_details_title">Personal Details for <xsl:value-of select="/page/user/username" /></div>
 			<xsl:element name="form">
 				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/account</xsl:attribute>
-				<xsl:attribute name="method">POST</xsl:attribute>
+				<xsl:attribute name="method">post</xsl:attribute>
 				<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
 			<div>
 				<div class="account_title">Nickname: </div>

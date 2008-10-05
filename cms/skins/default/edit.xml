@@ -10,7 +10,7 @@
 					<div id="page_edit">
 					<xsl:element name="form">
 						<xsl:attribute name="action"></xsl:attribute>
-						<xsl:attribute name="method">POST</xsl:attribute>
+						<xsl:attribute name="method">post</xsl:attribute>
 						
 						<!-- test if we might upload a file and if so add the multipart attribute -->
 						<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>

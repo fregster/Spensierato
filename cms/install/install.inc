@@ -192,7 +192,7 @@ $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 	$element->create($id, false);
 	
 	debug('Adding site administrator');
-	$password = user::Singleton()->create('admin');
+	$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true);
 	
 	debug('The site is now setup reload this page to see your new site<br />You can log in with the user admin and the password '.$password);
 }

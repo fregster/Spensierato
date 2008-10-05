@@ -74,17 +74,13 @@ class user
 		}
 	}
 	
-	public function create($username, $email = NULL)
+	public function create($username, $email, $password = NULL, $admin = false)
 	{
-		if($email == NULL)
-		{
-			$email = 'root@localhost';
-		}
 		database::Singleton()->force_write_user();
 			$cols = array('username');
 			$data = array($username);
 			
-			if($username == 'admin')
+			if($admin)
 			{
 				array_push($cols, 'admin');
 				array_push($data, 1);
@@ -93,9 +89,9 @@ class user
 			
 			database::singleton()->sql_insert('tbl_users_data', array('data', 'user_id'), array('<email>'.$email.'</email>', $this->userid));
 			$this->set_user_details();
-			if($username == 'admin')
+			if($admin)
 			{
-				return $this->create_password();
+				return $this->create_password($password);
 			}
 			else
 			{
@@ -153,10 +149,13 @@ class user
 		return $this->user_details['administrator'];
 	}
 	
-	private function create_password()
+	private function create_password($password = NULL)
 	{
 		//Create a password
-		$password = common::generate_random_string(6);
+		if($password == NULL)
+		{
+			$password = common::generate_random_string(8);
+		}
 		
 		$hash = hash(Settings::Singleton()->get_setting('site_option_encryption'), $userid.$password);
 		

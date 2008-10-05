@@ -5,8 +5,8 @@
 		
 		<title>Spensierato Install Page</title>	
 	</head>
-<body>
-
+<body style="background-color: transparent;">
+<img src="<? echo(Common::document_root()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -1; position: absolute; top: 0; left: 0;" />
 <form method="post" action="">
 	<div id="dbinfo">
 	Please specify the connection information to your SQL server, this user needs to be able to create users and databases, as well as give permissions (Usally root or sa)

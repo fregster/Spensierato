@@ -6,12 +6,12 @@
 		<title>Spensierato Install Page</title>	
 	</head>
 <body style="background-color: transparent;">
-<img src="<? echo(Common::document_root()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -1; position: absolute; top: 0; left: 0;" />
+<div><img src="<? echo(Common::document_root()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -1; position: absolute; top: 0; left: 0;" alt="" /></div>
 <form method="post" action="">
 	<div id="dbinfo">
 	Please specify the connection information to your SQL server, this user needs to be able to create users and databases, as well as give permissions (Usally root or sa)
 		<div>Host: <input type="text" name="host" value="localhost" /></div>
-		<div>MDB2 Host type: <select name="type"><option value="mysqli">MySQL</select></div>
+		<div>MDB2 Host type: <select name="type"><option value="mysqli">MySQL</option></select></div>
 		<div>Username: <input type="text" name="username" value="root" /></div>
 		<div>Password: <input type="password" name="password" /></div>
 	</div>

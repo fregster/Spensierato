@@ -183,6 +183,9 @@ $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 	fclose($settings_file_handle);
 	debug('Settings file created');
 	
+	require($settings_file);
+	debug('Settings file re-loaded');
+	
 	debug('Createing Homepage');
 	database::Singleton()->force_write_user();
 	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible', 'title'), array(0, time(), 0, 1, 'Homepage'));

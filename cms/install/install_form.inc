@@ -22,12 +22,16 @@ if(isset($req_missing[0]) or isset($opt_missing[0]))
 		echo'The PHP package '.$opt.' is recomended to be installed<br/>';
 	}
 	
-	if(!Common::rewrite_enabled())
-	{
-		echo'URL re-writing is not enabled on your webserver, clean URL\'s are unavailable<br/>';
-	}
-	
 	echo'You may continue to install but it might not work and even if it does the is little chance the site will<br/>';
+}
+else
+{
+	echo'All required and optional PHP extensions are installed<br/>';
+}
+
+if(!Common::rewrite_enabled())
+{
+	echo'URL re-writing is not enabled on your webserver, clean URL\'s are unavailable<br/>';
 }
 
 ?>

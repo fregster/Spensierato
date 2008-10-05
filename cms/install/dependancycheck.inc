@@ -1,7 +1,4 @@
 <?php
-
-$modules = new moduleCheck();
-
 $required = array('session', 'SimpleXML', 'mysqli', 'hash', 'xml', 'xmlreader', 'xmlwriter', 'xsl');
 $optional = array('ffmpeg', 'gd', 'mcrypt', 'tidy');
 

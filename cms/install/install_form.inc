@@ -7,6 +7,30 @@
 	</head>
 <body style="background-color: transparent;">
 <div><img src="<? echo(Common::document_root()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -1; position: absolute; top: 0; left: 0;" alt="" /></div>
+<?
+if(isset($req_missing[0]) or isset($opt_missing[0]))
+{
+	echo'Please note the following problems<br/>';
+	
+	foreach($req_missing as $req)
+	{
+		echo'The PHP package '.$req.' is required<br/>';
+	}
+	
+	foreach($opt_missing as $opt)
+	{
+		echo'The PHP package '.$opt.' is recomended to be installed<br/>';
+	}
+	
+	if(!Common::rewrite_enabled())
+	{
+		echo'URL re-writing is not enabled on your webserver, clean URL\'s are unavailable<br/>';
+	}
+	
+	echo'You may continue to install but it might not work and even if it does the is little chance the site will<br/>';
+}
+
+?>
 <form method="post" action="">
 	<div id="dbinfo">
 	Please specify the connection information to your SQL server, this user needs to be able to create users and databases, as well as give permissions (Usally root or sa)

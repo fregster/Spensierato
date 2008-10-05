@@ -36,7 +36,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 //	{
 //		die('The site has been setup delete the settings file to start again');
 //	}
-
+	require_once('dependancycheck.inc');
 	require_once('install_form.inc');
 }
 

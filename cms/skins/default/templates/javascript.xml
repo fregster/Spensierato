@@ -27,7 +27,7 @@
 						<!-- User logged in and in admin mode-->
 							<xsl:element name="script">
 								<xsl:attribute name="type">text/javascript</xsl:attribute>
-								<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js,admin.js</xsl:attribute>
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js,admin.js</xsl:attribute>//load
 							</xsl:element>
 						</xsl:when>
 					
@@ -35,7 +35,7 @@
 						<!-- User logged in and NOT in admin mode-->
 							<xsl:element name="script">
 								<xsl:attribute name="type">text/javascript</xsl:attribute>
-								<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js</xsl:attribute>
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js</xsl:attribute>//load
 							</xsl:element>
 					</xsl:otherwise>
 					</xsl:choose>
@@ -43,9 +43,10 @@
 				
 				<xsl:otherwise>
 				<!-- User Not logged in -->
+				
 					<xsl:element name="script">
 						<xsl:attribute name="type">text/javascript</xsl:attribute>
-						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js</xsl:attribute>
+						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js</xsl:attribute>//load
 					</xsl:element>
 				</xsl:otherwise>
 				

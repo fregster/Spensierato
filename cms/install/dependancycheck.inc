@@ -14,4 +14,9 @@ foreach($optional as $opt)
 {
 	if(!extension_loaded($opt)) { array_push($opt_missing, $opt); }
 }
+
+if(!version_compare(phpversion(), '5.2', '>=')) 
+{
+	if(!extension_loaded($req)) { array_push($req_missing, 'PHP5 or greater is required'); }
+}
 ?>

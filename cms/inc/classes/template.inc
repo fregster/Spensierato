@@ -135,17 +135,29 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 	{
 		$path = $this->defailt_path .'/templates/*.xml';
 		$xslt = '';
+		$files = array();
 		
 		foreach (glob($path) as $filepath) 
 		{
 			$filename = basename($filepath);
-			if(file_exists($this->defailt_path .'/templates/'.$filename))
+			if(file_exists($this->template_path .'/templates/'.$filename))
 			{
-				 $xslt .= file_get_contents($this->defailt_path .'/templates/'.$filename);
+				$filepath = $this->template_path .'/templates/'.$filename;
+				
 			}
-			else
+			$files[$filepath] = true;
+			$xslt .= file_get_contents($filepath);
+
+		}
+		
+		if($this->default_path != $this->template_path)
+		{
+			foreach (glob($this->template_path.'/templates/*.xml') as $filepath) 
 			{
-				$xslt .= file_get_contents($filepath);
+				if(!isset($files[$filepath]))
+				{
+					$xslt .= file_get_contents($filepath);
+				}
 			}
 		}
 		return $xslt;

@@ -133,12 +133,20 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 	
 	private function load_xslt_template()
 	{
-		$path = $this->template_path .'/templates/*.xml';
+		$path = $this->defailt_path .'/templates/*.xml';
 		$xslt = '';
 		
-		foreach (glob($path) as $filename) 
+		foreach (glob($path) as $filepath) 
 		{
-		   $xslt = $xslt . file_get_contents($filename);
+			$filename = basename($filepath);
+			if(file_exists($this->defailt_path .'/templates/'.$filename))
+			{
+				 $xslt .= file_get_contents($this->defailt_path .'/templates/'.$filename);
+			}
+			else
+			{
+				$xslt .= file_get_contents($filepath);
+			}
 		}
 		return $xslt;
 	}

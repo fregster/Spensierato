@@ -746,12 +746,6 @@ class Database
 		return $result[0]['count(*)'];
 	}
 	
-	public function direct_sql($sql)
-	{
-		//TODO check and clean SQL
-		$this->sql_exe($sql);
-	}
-	
 	//$Values is for when I get around to implimenting MDB2 properly!
 	private function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{

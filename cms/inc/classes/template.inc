@@ -4,6 +4,7 @@ class Template
 	protected static $instance;
 	
 	private $template_path;
+	private $preload = array();
 	
 	public static function Singleton()
 	{
@@ -182,6 +183,11 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 //			die();
 			
 			
+		}
+		
+		if(isset($this->preload[0]))
+		{
+			Settings::Singleton()->new_setting('pre_load_images', $this->preload);
 		}
 	}
 }

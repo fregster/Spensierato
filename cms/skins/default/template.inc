@@ -9,14 +9,10 @@ Settings::Singleton()->new_setting('template_header_graphic', array('headerfill.
  * Any skin specific images that you want to use javascript to preload
  * All files in the pre-load-images folder are always included with the code below
  */
-$preload = array();
 
 foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/pre-load-images/*') as $filename) 
 {
-	array_push($preload, basename($filename));
+	array_push($this->preload, basename($filename));
 }
-if(isset($preload[0]))
-{
-	Settings::Singleton()->new_setting('pre_load_images', $preload);
-}
+
 ?>

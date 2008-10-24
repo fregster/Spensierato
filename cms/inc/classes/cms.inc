@@ -93,9 +93,6 @@ class CMS
 		{
 			Settings::Singleton()->new_setting('static_host_js', $this->document_root);
 		}
-
-		//Include the Elements
-		require_once('elements/include.inc');
 	}
 	
 	public function time()

@@ -125,6 +125,7 @@ abstract class javascript
 						fclose($fp);
 						Cache::headers_allow_cache($file, true, 31536000, 31536000, true);
 						$contents = javascript::getcontentscompressed(file_get_contents($file), $encoding);
+						header('X-JSCache: Loaded');
 						javascript::sendcontent($type, $encoding, $contents);
 					}
 				}
@@ -162,12 +163,14 @@ abstract class javascript
 		if($cached)
 		{
 			//If the file was sucsesfully cached then send the file through the cache class
+			header('X-JSCache: Updated');
 			Cache::headers_allow_cache($file);
 		}
 		else
 		{
 			//Send headers to allow temporay caching
 			$expires = gmdate('D, d M Y H:i:s', (time() + 36000)) . ' GMT';
+			header('X-JSCache: Failed');
 			header('Expires:' . $expires);
 			header('Cache-control: public');
 			header('Pragma:');		

@@ -123,7 +123,7 @@ abstract class javascript
 					if ($fp = fopen($file, 'rb')) 
 					{
 						fclose($fp);
-						Cache::headers_allow_cache($file, true, 2678400, 2678400, true);
+						Cache::headers_allow_cache($file, true, 31536000, 31536000, true);
 						$contents = javascript::getcontentscompressed(file_get_contents($file), $encoding);
 						javascript::sendcontent($type, $encoding, $contents);
 					}
@@ -167,7 +167,7 @@ abstract class javascript
 		else
 		{
 			//Send headers to allow temporay caching
-			$expires = gmdate('D, d M Y H:i:s', (time() + 3600)) . ' GMT';
+			$expires = gmdate('D, d M Y H:i:s', (time() + 36000)) . ' GMT';
 			header('Expires:' . $expires);
 			header('Cache-control: public');
 			header('Pragma:');		

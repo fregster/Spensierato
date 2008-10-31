@@ -95,16 +95,16 @@ class Template
 		if(is_file($path))
 		{
 			// send the requisite header information and character set
-			Cache::headers_allow_cache($file, true, 2678400, 2678400);
+			Cache::headers_allow_cache($path, true);
 			header ('Content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
 
 			if(Settings::singleton()->get_setting('css_minify'))
 			{
-		    	echo(Common::remove_extra_lines(Common::remove_css_comments(file_get_contents($path))));
+		    	die(Common::remove_extra_lines(Common::remove_css_comments(file_get_contents($path))));
 			}
 			else
 			{
-				echo(file_get_contents($path));
+				die(file_get_contents($path));
 			}
 		}
 		else

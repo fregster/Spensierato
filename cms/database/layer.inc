@@ -155,6 +155,10 @@ class Database
 	
 	private function sql_clean_input($var)
 	{
+		//If the input is just a number just return it
+		if(is_numeric($var)) { return $var; }
+		
+		//Remove any quotes
 		$sql_replace = array("'", '"');
 		$clean = trim(str_replace($sql_replace, '', (stripslashes($var))));
 		

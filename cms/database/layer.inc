@@ -218,66 +218,7 @@ class Database
 		}
 		
 		
-		$sql = "SELECT $sql_temp_select FROM `".$this->prefix.$this->sql_clean_input($table).'`';
-		
-		
-		//Include Where clause into sql if set
-		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
-		{
-			$i = 0;
-			$count_where = count($where_values);
-			while($i <= ($count_where - 1))
-			{
-				$sql_temp_where_or =' (';
-				//Check if this is an or statment
-				if(is_array($where_values[$i]))
-				{
-					$or_values = array();
-					foreach($where_values[$i] as $or)
-					{
-						array_push($or_values, $or);
-					}
-					
-					$j = 0;
-					$count_or = count($or_values);
-					while($j <= ($count_or - 1))
-					{
-						$t=$j+1;
-						if($or_values[$j] != NULL)
-						{
-							$sql_temp_where_or .= $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
-							//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
-							
-							if($j < ($count_or - 1) and ($or_values[$t] != NULL))
-							{
-								$sql_temp_where_or .= ' OR ';
-							}
-						}
-						if($j >= ($count_or - 1))
-						{
-							$sql_temp_where_or .= ' )';
-						}
-						$j++;
-					}
-					
-					$sql_temp_where .= ' ( ' . $sql_temp_where_or . ' ) ';
-				}
-				else
-				{
-					$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($where_values[$i]) .'")';
-					//$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = ?';
-				}
-				
-				
-				if($i < ($count_where - 1))
-				{
-					$sql_temp_where = $sql_temp_where . ' AND ';
-				}
-				
-				$i++;
-			}
-			$sql .= ' WHERE (' . $sql_temp_where.')';
-		}
+		$sql = "SELECT $sql_temp_select FROM `".$this->prefix.$this->sql_clean_input($table).'`'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
 		
 		
 		//Include Order By if required
@@ -337,57 +278,7 @@ class Database
 	
 	public function sql_max_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
-		$sql = 'SELECT max( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`';
-		
-		//Include Where clause into sql if set
-		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
-		{
-			$i = 0;
-			$count_where = count($where_values);
-			while($i <= ($count_where - 1))
-			{
-				
-				//Check if this is an or statment
-				if(is_array($where_values[$i]))
-				{
-					$or_values = array();
-					foreach($where_values[$i] as $or)
-					{
-						array_push($or_values, $or);
-					}
-					
-					$j = 0;
-					$count_or = count($or_values);
-					while($j <= ($count_or - 1))
-					{
-						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
-						//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
-						
-						if($j < ($count_or - 1))
-						{
-							$sql_temp_where_or = $sql_temp_where_or . ' OR ';
-						}
-						$j++;
-					}
-					
-					$sql_temp_where = ' (' . $sql_temp_where_or . ') ';
-				}
-				else
-				{
-					$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($where_values[$i]) .'")';
-					//$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = ?';
-				}
-				
-				
-				if($i < ($count_where - 1))
-				{
-					$sql_temp_where = $sql_temp_where . ' AND ';
-				}
-				
-				$i++;
-			}
-			$sql = $sql	. ' WHERE ' . $sql_temp_where;
-		}
+		$sql = 'SELECT max( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);;
 		
 		$result = $this->sql_select_exe($sql, NULL, TRUE);
 		return $result[0]['max( sort )'];
@@ -395,57 +286,7 @@ class Database
 	
 	public function sql_min_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
-		$sql = 'SELECT min( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`';
-		
-		//Include Where clause into sql if set
-		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
-		{
-			$i = 0;
-			$count_where = count($where_values);
-			while($i <= ($count_where - 1))
-			{
-				
-				//Check if this is an or statment
-				if(is_array($where_values[$i]))
-				{
-					$or_values = array();
-					foreach($where_values[$i] as $or)
-					{
-						array_push($or_values, $or);
-					}
-					
-					$j = 0;
-					$count_or = count($or_values);
-					while($j <= ($count_or - 1))
-					{
-						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
-						//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
-						
-						if($j < ($count_or - 1))
-						{
-							$sql_temp_where_or = $sql_temp_where_or . ' OR ';
-						}
-						$j++;
-					}
-					
-					$sql_temp_where = ' (' . $sql_temp_where_or . ') ';
-				}
-				else
-				{
-					$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($where_values[$i]) .'")';
-					//$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = ?';
-				}
-				
-				
-				if($i < ($count_where - 1))
-				{
-					$sql_temp_where = $sql_temp_where . ' AND ';
-				}
-				
-				$i++;
-			}
-			$sql = $sql	. ' WHERE ' . $sql_temp_where;
-		}
+		$sql = 'SELECT min( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
 		
 		$result = $this->sql_select_exe($sql, NULL, TRUE);
 		return $result[0]['min( sort )'];
@@ -607,18 +448,18 @@ class Database
 		
 		die($sql);
 		//Goal = 
-//		IF (EXISTS (SELECT * FROM AA_TestTable AS t1
-//  WHERE t1.ord_num = 'FFF'))
-//begin
-//  UPDATE AA_TestTable
-//  SET ord_qty = 999
-//  WHERE ord_num = 'FFF'
-//end
-//else
-//begin
-//  INSERT INTO AA_TestTable (ord_num, top_assy, ord_qty)
-//  VALUES('GGG', 'XYZ', 567)
-//end */
+		//		IF (EXISTS (SELECT * FROM AA_TestTable AS t1
+		//  WHERE t1.ord_num = 'FFF'))
+		//begin
+		//  UPDATE AA_TestTable
+		//  SET ord_qty = 999
+		//  WHERE ord_num = 'FFF'
+		//end
+		//else
+		//begin
+		//  INSERT INTO AA_TestTable (ord_num, top_assy, ord_qty)
+		//  VALUES('GGG', 'XYZ', 567)
+		//end */
 	}
 
 	public function sql_insert($table, $fields, $values)
@@ -666,6 +507,16 @@ class Database
 		$sql = 'SELECT count(*) FROM `'.$this->prefix. $this->sql_clean_input($table).'`';
 		
 		//Include Where clause into sql if set
+		
+		$sql .= $this->sql_build_where_string($where_fields, $where_values);
+		
+		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+		return $result[0]['count(*)'];
+	}
+	
+	private function sql_build_where_string($where_fields, $where_values)
+	{
+		//Include Where clause into sql if set
 		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
 		{
 			$i = 0;
@@ -712,11 +563,9 @@ class Database
 				
 				$i++;
 			}
-			$sql .= ' WHERE (' . $sql_temp_where.')';
-		}
-		
-		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
-		return $result[0]['count(*)'];
+			
+			return ' WHERE (' . $sql_temp_where.')';
+		}	
 	}
 	
 	private function sql_connect()

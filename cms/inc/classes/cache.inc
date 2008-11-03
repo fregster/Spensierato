@@ -18,7 +18,8 @@ abstract class Cache
 			}
 		}
 		
-		if($public)
+		//If file is marked as a public file or the user is downloading is not logged in default to public cache
+		if($public or $_SESSION['userid'] == 0)
 		{
 			$cache_control = 'public, must-revalidate';
 		}

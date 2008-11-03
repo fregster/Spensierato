@@ -504,11 +504,7 @@ class Database
 	
 	public function sql_count_where($table, $fields, $values, $FORCE_NO_CACHE = FALSE)
 	{
-		$sql = 'SELECT count(*) FROM `'.$this->prefix. $this->sql_clean_input($table).'`';
-		
-		//Include Where clause into sql if set
-		
-		$sql .= $this->sql_build_where_string($where_fields, $where_values);
+		$sql = 'SELECT count(*) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
 		
 		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 		return $result[0]['count(*)'];
@@ -551,8 +547,17 @@ class Database
 				}
 				else
 				{
-					$sql_temp_where .= '(' . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($where_values[$i]) .'")';
-					//$sql_temp_where = $sql_temp_where . '(' . $this->sql_clean_input($where_fields[$i]) .' = ?';
+					$sql_temp_where .= '(' . $this->sql_clean_input($where_fields[$i]) .' = ';
+					
+					//Quote non numeric values
+					if(is_numeric($where_values[$i]))
+					{
+						$sql_temp_where .= $where_values[$i].')';
+					}
+					else
+					{
+						$sql_temp_where .= '"'. $this->sql_clean_input($where_values[$i]) .'")';
+					}
 				}
 				
 				

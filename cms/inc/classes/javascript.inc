@@ -123,7 +123,7 @@ abstract class javascript
 					if ($fp = fopen($file, 'rb')) 
 					{
 						fclose($fp);
-						Cache::headers_allow_cache($file, true, 31536000, 31536000, true);
+						Cache::headers_allow_cache($file, true, 31536000, 31536000, true, false);
 						$contents = javascript::getcontentscompressed(file_get_contents($file), $encoding);
 						header('X-JSCache: Loaded');
 						javascript::sendcontent($type, $encoding, $contents);
@@ -164,7 +164,7 @@ abstract class javascript
 		{
 			//If the file was sucsesfully cached then send the file through the cache class
 			header('X-JSCache: Updated');
-			Cache::headers_allow_cache($file);
+			Cache::headers_allow_cache($file, true, 31536000, 31536000, true, false);
 		}
 		else
 		{

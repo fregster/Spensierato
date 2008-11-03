@@ -1,7 +1,7 @@
 <?
 abstract class Cache
 {
-	public static function headers_allow_cache($path = NULL, $public = true, $expires = 31536000, $maxage = 31536000, $force_resend = false)
+	public static function headers_allow_cache($path = NULL, $public = true, $expires = 31536000, $maxage = 31536000, $force_resend = false, $force_revalidate = true)
 	{
 		if($path != NULL) 
 		{ 
@@ -21,11 +21,19 @@ abstract class Cache
 		//If file is marked as a public file or the user is downloading is not logged in default to public cache
 		if($public or $_SESSION['userid'] == 0)
 		{
-			$cache_control = 'public, must-revalidate';
+			$cache_control = 'public';
+			if($force_revalidate)
+			{
+				$cache_control .= ', must-revalidate';
+			}
 		}
 		else
 		{
-			$cache_control = 'private, no-cache, must-revalidate';
+			$cache_control = 'private, no-cache';
+			if($force_revalidate)
+			{
+				$cache_control .= ', must-revalidate';
+			}
 		}
 		
 		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';

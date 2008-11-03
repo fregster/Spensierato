@@ -218,7 +218,7 @@ class Database
 		}
 		
 		
-		$sql = "SELECT $sql_temp_select FROM `".$this->prefix.$this->sql_clean_input($table).'`'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
+		$sql = "SELECT $sql_temp_select FROM `".$this->prefix.$this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
 		
 		
 		//Include Order By if required
@@ -278,7 +278,7 @@ class Database
 	
 	public function sql_max_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
-		$sql = 'SELECT max( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);;
+		$sql = 'SELECT max( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);;
 		
 		$result = $this->sql_select_exe($sql, NULL, TRUE);
 		return $result[0]['max( sort )'];

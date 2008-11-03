@@ -15,6 +15,13 @@ function __autoload($class_name)
 	{
 		$class_name = strtolower($class_name);
 		$path = dirname(__FILE__);
+		
+		if($class_name == 'database')
+		{
+			//Database files
+			require_once($path.'/cms/database/database.inc');
+		}
+		
 		if(file_exists($path.'/cms/inc/classes/'.$class_name.'.inc'))
 		{
 			require_once $path.'/cms/inc/classes/'.$class_name.'.inc';

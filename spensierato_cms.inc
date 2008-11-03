@@ -20,19 +20,23 @@ function __autoload($class_name)
 		{
 			//Database files
 			require_once($path.'/cms/database/database.inc');
+			return true;
 		}
 		
 		if(file_exists($path.'/cms/inc/classes/'.$class_name.'.inc'))
 		{
 			require_once $path.'/cms/inc/classes/'.$class_name.'.inc';
+			return true;
 		}
 		else if (file_exists($path.'/cms/inc/classes/elements/'.$class_name.'.inc'))
 		{
 			require_once $path.'/cms/inc/classes/elements/'.$class_name.'.inc';
+			return true;
 		}
 		else if (file_exists($path.'/cms/inc/classes/optional/'.$class_name.'.inc'))
 		{
 			require_once $path.'/cms/inc/classes/optional/'.$class_name.'.inc';
+			return true;
 		}
 		else
 		{

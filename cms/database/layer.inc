@@ -6,6 +6,7 @@ class Database
 	private static $instance;
 	private $read;
 	private $write = NULL;
+	private $connected = false;
 	
 	private $prefix;
 	private $sql_db_type;
@@ -56,34 +57,6 @@ class Database
 		$this->time = time();
 		$this->microtime = microtime();
 		$this->prefix = $GLOBALS['table_prefix'];
-
-		$this->dsn_default = array(
-		    'phptype'  => $GLOBALS['database_driver'],
-		    'username' => $GLOBALS['database_user_read'],
-		    'password' => $GLOBALS['database_password'],
-		    'hostspec' => $GLOBALS['database_host'],
-		    'database' => $GLOBALS['database_name'],
-		);
-	
-		$this->read = $this->connect($this->dsn_default);
-	
-		//If logged in create db write user this should help prevent against SQL injection
-		//As only logged in can use the db writeable user
-//		if(user::Singleton()->is_logged_in())
-		if($_SESSION['userid'] != 0)
-		{
-			//Create write user
-			$dsn = array(
-			    'phptype'  => $GLOBALS['database_driver'],
-			    'username' => $GLOBALS['database_user_readwrite'],
-			    'password' => $GLOBALS['database_password'],
-			    'hostspec' => $GLOBALS['database_host'],
-			    'database' => $GLOBALS['database_name'],
-			);
-			$this->write = $this->connect($dsn);
-		}
-
-		$this->dsn = $dsn;
 	}
 	
 	public static function custom_db_object($dsn, $options = NULL, $mods = NULL)
@@ -746,9 +719,49 @@ class Database
 		return $result[0]['count(*)'];
 	}
 	
+	private function sql_connect()
+	{
+		if(!$this->connected)
+		{
+			//Load the MDB2 code
+			//Doing this here only loads the code if a DB query is actually going to be done
+			require_once 'MDB2.php';
+			
+			$this->dsn_default = array(
+		    'phptype'  => $GLOBALS['database_driver'],
+		    'username' => $GLOBALS['database_user_read'],
+		    'password' => $GLOBALS['database_password'],
+		    'hostspec' => $GLOBALS['database_host'],
+		    'database' => $GLOBALS['database_name'],
+			);
+		
+			$this->read = $this->connect($this->dsn_default);
+		
+			//If logged in create db write user this should help prevent against SQL injection
+			//As only logged in can use the db writeable user
+			if($_SESSION['userid'] != 0)
+			{
+				//Create write user
+				$dsn = array(
+				    'phptype'  => $GLOBALS['database_driver'],
+				    'username' => $GLOBALS['database_user_readwrite'],
+				    'password' => $GLOBALS['database_password'],
+				    'hostspec' => $GLOBALS['database_host'],
+				    'database' => $GLOBALS['database_name'],
+				);
+				$this->write = $this->connect($dsn);
+			}
+	
+			$this->dsn = $dsn;
+			$this->connected = true;
+		}
+	}
+	
 	//$Values is for when I get around to implimenting MDB2 properly!
 	private function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{
+		$this->sql_connect();
+		
 		if($destroy_cache)
 		{
 			session_unregister('sql_cache');

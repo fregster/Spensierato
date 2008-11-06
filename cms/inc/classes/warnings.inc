@@ -96,7 +96,7 @@ class warnings
 	
 	public function register($warning_title, $description, $level = 2)
 	{
-		if(!is_array($this->warnings[$level]))
+		if(!isset($this->warnings[$level][0]))
 		{
 			$this->warnings[$level] = array();
 		}
@@ -104,7 +104,7 @@ class warnings
 		options::singleton()->set_option('display_warnings', true);
 	}
 	
-	public function get($level = 2)
+	public function get($level = 0)
 	{
 		$warnings = array();
 		
@@ -125,8 +125,10 @@ class warnings
 		return null;
 	}
 	
-	public function get_as_xml($level = 2)
+	public function get_as_xml($level = 0)
 	{
+		if(Security::Singleton()->can_edit()) { $level = 1; }
+		if(User::is_admin()) { $level = 2;}
 		$serializer_options = array ( 
 			   'addDecl' => FALSE, 
 			   'encoding' => Settings::Singleton()->get_setting('char_set'), 

@@ -80,7 +80,8 @@ class Settings
 			}
 			$i++;
 		}
-		return Common::array_to_xml($settings, $serializer_options);
+//		return Common::array_to_xml($settings, $serializer_options);
+		return '<settings>'.Common::array_to_xml_simple($settings).'</settings>';
 	}
 	
 	public function overwrite_setting($name, $value, $protected = false)

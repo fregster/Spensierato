@@ -236,6 +236,25 @@ abstract class Common
 			return $serializer->getSerializedData(); 
 		} 
 	}
+	
+	public static function array_to_xml_simple($array, $options = NULL)
+	{
+		$xml = '';
+		
+		foreach($array as $tag => $value)
+		{
+			if(is_array($tag))
+			{
+				$xml .= common::array_to_xml_simple($tag);
+			}
+			else
+			{
+				$xml .= "<$tag>$value</$tag>";
+			}
+		}
+		
+		return $xml;
+	}
 
 	public static function random_number($start = 0, $count = 10)
 	{

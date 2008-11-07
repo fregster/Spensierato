@@ -129,14 +129,6 @@ class warnings
 	{
 		if(Security::Singleton()->can_edit()) { $level = 1; }
 		if(User::is_admin()) { $level = 2;}
-//		$serializer_options = array ( 
-//			   'addDecl' => FALSE, 
-//			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
-//			   'indent' => '  ',
-//			   'rootName'  => 'warnings',
-//			   'defaultTagName'  => 'warning'
-//			);
-//		return common::array_to_xml($this->get($level), $serializer_options);
 
 		return Common::array_to_xml_simple($this->get($level), 'warnings', 'warning');
 	}

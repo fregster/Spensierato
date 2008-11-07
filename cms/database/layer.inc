@@ -517,41 +517,41 @@ class Database
 	private function sql_build_where_string($where_fields, $where_values)
 	{
 		//Include Where clause into sql if set
-		if($where_fields != NULL and $where_values != NULL and (count($where_values) == count($where_fields)) )
+		$count_where = count($where_values) - 1;
+		$count_where_fields = count($where_fields) - 1;
+		
+		if($where_fields != NULL and $where_values != NULL and ($count_where == $count_where_fields) )
 		{
+//			print_r($where_fields); print_r($where_values);
 			$i = 0;
-			$count_where = count($where_values);
-			while($i <= ($count_where - 1))
+			
+			while($i <= ($count_where))
 			{
-				
 				//Check if this is an or statment
 				if(is_array($where_values[$i]))
-				{
-					$or_values = array();
-					foreach($where_values[$i] as $or)
-					{
-						array_push($or_values, $or);
-					}
-					
+				{					
 					$j = 0;
-					$count_or = count($or_values);
-					while($j <= ($count_or - 1))
+					$count_or = count($where_values[$i]) -1;
+					while($j <= ($count_or))
 					{
-						$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = "'. $this->sql_clean_input($or_values[$j]) .'"';
-						//$sql_temp_where_or = $sql_temp_where_or . $this->sql_clean_input($where_fields[$i]) .' = ?';
+						$sql_temp_where_or = '`'.$this->sql_clean_input($where_fields[$i]) .'` = ';
 						
-						if($j < ($count_or - 1))
+						//Quote non numeric values
+						if(is_numeric($where_values[$i][$j])) { $sql_temp_where_or .= $where_values[$i][$j]; } else { $sql_temp_where_or .= '"'. $this->sql_clean_input($where_values[$i][$j]) .'"';} 
+						
+						$j++;
+						if(isset($where_values[$i][$j]))
 						{
 							$sql_temp_where_or .= ' OR ';
 						}
-						$j++;
+						
 					}
 					
-					$sql_temp_where = ' (' . $sql_temp_where_or . ') ';
+					$sql_temp_where .= ' (' . $sql_temp_where_or . ') ';
 				}
 				else
 				{
-					$sql_temp_where .= '(' . $this->sql_clean_input($where_fields[$i]) .' = ';
+					$sql_temp_where .= '(`' . $this->sql_clean_input($where_fields[$i]) .'` = ';
 					
 					//Quote non numeric values
 					if(is_numeric($where_values[$i]))
@@ -564,13 +564,11 @@ class Database
 					}
 				}
 				
-				
-				if($i < ($count_where - 1))
+				$i++;
+				if(isset($where_values[$i]))
 				{
 					$sql_temp_where .= ' AND ';
 				}
-				
-				$i++;
 			}
 			
 			return ' WHERE (' . $sql_temp_where.')';

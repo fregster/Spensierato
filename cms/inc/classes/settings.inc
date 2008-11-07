@@ -61,13 +61,13 @@ class Settings
 	
 	public function settings_as_xml()
 	{
-		$serializer_options = array ( 
-			   'addDecl' => FALSE, 
-			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
-			   'indent' => '  ',
-			   'rootName'  => 'settings',
-			   'defaultTagName'  => 'setting'
-			);
+//		$serializer_options = array ( 
+//			   'addDecl' => FALSE, 
+//			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
+//			   'indent' => '  ',
+//			   'rootName'  => 'settings',
+//			   'defaultTagName'  => 'setting'
+//			);
 		
 		$i = 0;
 		$settings = array();
@@ -81,7 +81,7 @@ class Settings
 			$i++;
 		}
 //		return Common::array_to_xml($settings, $serializer_options);
-		return '<settings>'.Common::array_to_xml_simple($settings).'</settings>';
+		return Common::array_to_xml_simple($settings, 'settings', 'setting');
 	}
 	
 	public function overwrite_setting($name, $value, $protected = false)

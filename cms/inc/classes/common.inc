@@ -237,23 +237,33 @@ abstract class Common
 		} 
 	}
 	
-	public static function array_to_xml_simple($array, $options = NULL)
+	public static function array_to_xml_simple($array, $root, $defaulttag = NULL)
 	{
-		$xml = '';
-		
-		foreach($array as $tag => $value)
+		return 	"<$root>".Common::array_to_xml_simple_recursion($array, $defaulttag)."</$root>";
+	}
+	
+	public static function array_to_xml_simple_recursion($array, $defaulttag = NULL)
+	{		
+		if(is_array($array))
 		{
-			if(is_array($tag))
+			$xml = '';
+			foreach($array as $tag => $value)
 			{
-				$xml .= common::array_to_xml_simple($tag);
+				if(is_array($tag))
+				{
+					$xml .= common::array_to_xml_simple_recursion($tag);
+				}
+				else
+				{
+					if(is_numeric($tag) and $defaulttag != NULL)
+					{
+						$tag = $defaulttag;
+					}
+					$xml .= "<$tag>$value</$tag>";
+				}
 			}
-			else
-			{
-				$xml .= "<$tag>$value</$tag>";
-			}
+			return $xml;
 		}
-		
-		return $xml;
 	}
 
 	public static function random_number($start = 0, $count = 10)

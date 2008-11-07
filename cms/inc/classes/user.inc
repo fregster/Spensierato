@@ -179,14 +179,15 @@ class user
 	
 	public function user_details_as_xml()
 	{
-		$serializer_options = array ( 
-			   'addDecl' => FALSE, 
-			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
-			   'indent' => '  ',
-			   'rootName'  => 'user',
-			   'defaultTagName'  => 'detail'
-			);
-		return Common::array_to_xml($this->user_details, $serializer_options);
+//		$serializer_options = array ( 
+//			   'addDecl' => FALSE, 
+//			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
+//			   'indent' => '  ',
+//			   'rootName'  => 'user',
+//			   'defaultTagName'  => 'detail'
+//			);
+//		return Common::array_to_xml($this->user_details, $serializer_options);
+		return Common::array_to_xml_simple($settings, 'user', 'detail');
 	}
 
 	/**
@@ -204,7 +205,7 @@ class user
 		
 		$user_data = Database::Singleton()->sql_select(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
 		
-		if(is_array($user_data))
+		if(isset($user_data[0]))
 		{
 			foreach($user_data as $data)
 			{

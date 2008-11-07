@@ -83,15 +83,16 @@ class Menu
 		}
 		$menu_array['children']= $this->children;
 		
-		$serializer_options = array ( 
-			   'addDecl' => FALSE, 
-			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
-			   'indent' => '  ',
-			   'rootName'  => 'menu',
-			   'defaultTagName'  => 'menu_item'
-			);
-
-		$this->menu_xml = Common::array_to_xml($menu_array, $serializer_options);
+//		$serializer_options = array ( 
+//			   'addDecl' => FALSE, 
+//			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
+//			   'indent' => '  ',
+//			   'rootName'  => 'menu',
+//			   'defaultTagName'  => 'menu_item'
+//			);
+//
+//		$this->menu_xml = Common::array_to_xml($menu_array, $serializer_options);
+		$this->menu_xml = Common::array_to_xml_simple($menu, 'menu', 'menu_item');
 		return $this->menu_xml;
 	}
 	

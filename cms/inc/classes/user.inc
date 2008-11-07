@@ -187,7 +187,7 @@ class user
 //			   'defaultTagName'  => 'detail'
 //			);
 //		return Common::array_to_xml($this->user_details, $serializer_options);
-		return Common::array_to_xml_simple($settings, 'user', 'detail');
+		return Common::array_to_xml_simple($this->user_details, 'user', 'detail');
 	}
 
 	/**

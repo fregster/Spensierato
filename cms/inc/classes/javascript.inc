@@ -124,7 +124,7 @@ abstract class javascript
 					{
 						fclose($fp);
 						header('X-Cache-JS: Quick');
-						Cache::headers_allow_cache($file, true, 2678400, 2678400, true);
+						Cache::headers_allow_cache($file);
 						$contents = javascript::getcontentscompressed(file_get_contents($file), $encoding);
 						javascript::sendcontent($type, $encoding, $contents);
 					}
@@ -170,7 +170,7 @@ abstract class javascript
 		{
 			//Send headers to allow temporay caching
 			header('X-Cache-JS: False');
-			$expires = gmdate('D, d M Y H:i:s', (time() + 3600)) . ' GMT';
+			$expires = gmdate('D, d M Y H:i:s', (time() + 360000)) . ' GMT';
 			header('Expires:' . $expires);
 			header('Cache-control: public');
 			header('Pragma:');

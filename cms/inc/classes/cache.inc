@@ -1,7 +1,7 @@
 <?
 abstract class Cache
 {
-	public static function headers_allow_cache($path = NULL, $public = true, $expires = 31536000, $maxage = 31536000, $force_resend = false, $force_revalidate = true)
+	public static function headers_allow_cache($path = NULL, $public = true, $expires = 3600, $maxage = 3600, $force_resend = false)
 	{
 		if($path != NULL) 
 		{ 
@@ -18,22 +18,13 @@ abstract class Cache
 			}
 		}
 		
-		//If file is marked as a public file or the user is downloading is not logged in default to public cache
-		if($public or $_SESSION['userid'] == 0)
+		if($public)
 		{
-			$cache_control = 'public';
-			if($force_revalidate)
-			{
-				$cache_control .= ', must-revalidate';
-			}
+			$cache_control = 'public, must-revalidate';
 		}
 		else
 		{
-			$cache_control = 'private, no-cache';
-			if($force_revalidate)
-			{
-				$cache_control .= ', must-revalidate';
-			}
+			$cache_control = 'private, no-cache, must-revalidate';
 		}
 		
 		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
@@ -150,7 +141,7 @@ abstract class Cache
 		}
 	}
 	
-	private static function send_304($ETag = NULL)
+	Public static function send_304($ETag = NULL)
 	{
 		// They already have an up to date copy so tell them
 		header('HTTP/1.1 304 Not Modified');

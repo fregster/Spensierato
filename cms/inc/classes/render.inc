@@ -104,21 +104,33 @@ class Render
 		die();
 	}
 	
-	private function send_html()
+	private function final_output($content)
 	{
+		ob_start ("ob_gzhandler");
+		ob_start ("compress");
 		/* If compression is requested and the level is numeric */
 		if(is_numeric(Settings::Singleton()->get_setting('output_compression_level')) and $this->acceptsGZIP() and Settings::Singleton()->get_setting('output_compression_level') > 0)
 		{
-			$contents = gzencode(html_entity_decode($this->html), Settings::Singleton()->get_setting('output_compression_level'));
+			$contents = gzencode(html_entity_decode($content), Settings::Singleton()->get_setting('output_compression_level'));
 			header ('Content-Encoding: gzip');
 			header ('Content-Length: ' . strlen($contents));
-			echo $contents;
+			die($contents);
 		}
 		else
 		{
 			/* output the html */
-			echo(html_entity_decode($this->html));
+			die(html_entity_decode($content));
 		}
+	}
+	
+	public function send_css()
+	{
+		$this->final_output(Template::Singleton()->send_css());
+	}
+	
+	private function send_html()
+	{
+		$this->final_output(Template::Singleton()->send_css($this->html));
 	}
 	
 	private function acceptsGZip()

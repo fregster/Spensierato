@@ -600,7 +600,7 @@ class CMS
 				/**
 				 * Calls the template class which compresses and sends the CSS file
 				 */
-				Template::Singleton()->send_css();
+				Render::Singleton()->send_css();
 				die();
 				
 				break;

@@ -83,8 +83,8 @@ abstract class javascript
 			
 			$lastmodified = max($lastmodified, filemtime($path));
 		}
-		$mtime = filemtime($path);
-		$gmdate_mod = gmdate('D, d M Y H:i:s', $mtime) . ' GMT';
+//		$mtime = filemtime($path);
+		$gmdate_mod = gmdate('D, d M Y H:i:s', $lastmodified) . ' GMT';
 		
 		// Determine supported compression method
 		$gzip = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip');
@@ -123,9 +123,9 @@ abstract class javascript
 					if ($fp = fopen($file, 'rb')) 
 					{
 						fclose($fp);
-						Cache::headers_allow_cache($file, true, 31536000, 31536000, true, false);
+						header('X-Cache-JS: Quick');
+						Cache::headers_allow_cache($file, true, 2678400, 2678400, true);
 						$contents = javascript::getcontentscompressed(file_get_contents($file), $encoding);
-						header('X-JSCache: Loaded');
 						javascript::sendcontent($type, $encoding, $contents);
 					}
 				}
@@ -163,17 +163,41 @@ abstract class javascript
 		if($cached)
 		{
 			//If the file was sucsesfully cached then send the file through the cache class
-			header('X-JSCache: Updated');
-			Cache::headers_allow_cache($file, true, 31536000, 31536000, true, false);
+			header('X-Cache-JS: True');
+			Cache::headers_allow_cache($file);
 		}
 		else
 		{
 			//Send headers to allow temporay caching
-			$expires = gmdate('D, d M Y H:i:s', (time() + 36000)) . ' GMT';
-			header('X-JSCache: Failed');
+			header('X-Cache-JS: False');
+			$expires = gmdate('D, d M Y H:i:s', (time() + 3600)) . ' GMT';
 			header('Expires:' . $expires);
 			header('Cache-control: public');
-			header('Pragma:');		
+			header('Pragma:');
+			
+			//Fake a re createable ETag and 304 if we can
+			$ETag = md5($contents);
+			$gmdate_mod = gmdate('D, d M Y H:i:s', $lastmodified) . ' GMT';
+			
+			header('Last-Modified: ' . $gmdate_mod);
+			header('ETag: "'.$ETag.'"'); 
+			
+			//Headers recieved from browser
+			$headers = apache_request_headers();
+			
+			if(isset($headers['If-None-Match']))
+			{
+				 if (strpos($headers['If-None-Match'], $ETag) != false)
+				 {
+					Cache::send_304($ETag);
+				}
+			}
+			
+			if ($gmdate_mod == $headers['If-Modified-Since']) 
+			{
+				Cache::send_304();
+			}
+			
 		}
 		
 		$contents = javascript::getcontentscompressed($contents, $encoding);

@@ -249,16 +249,16 @@ abstract class Common
 			$xml = '';
 			foreach($array as $tag => $value)
 			{
-				if(is_array($tag))
+				if(is_numeric($tag) and $defaulttag != NULL)
 				{
-					$xml .= common::array_to_xml_simple_recursion($tag);
+					$tag = $defaulttag;
+				}
+				if(is_array($value))
+				{
+					$xml .= "<$tag>".common::array_to_xml_simple_recursion($value, $defaulttag)."</$tag>";
 				}
 				else
 				{
-					if(is_numeric($tag) and $defaulttag != NULL)
-					{
-						$tag = $defaulttag;
-					}
 					$xml .= "<$tag>$value</$tag>";
 				}
 			}

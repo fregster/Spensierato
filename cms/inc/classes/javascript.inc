@@ -170,7 +170,7 @@ abstract class javascript
 		{
 			//Send headers to allow temporay caching
 			header('X-Cache-JS: False');
-			$expires = gmdate('D, d M Y H:i:s', (time() + 360000)) . ' GMT';
+			$expires = gmdate('D, d M Y H:i:s', (time() + 31536000)) . ' GMT';
 			header('Expires:' . $expires);
 			header('Cache-control: public');
 			header('Pragma:');

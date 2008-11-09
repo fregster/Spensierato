@@ -130,7 +130,7 @@ class Render
 	
 	private function send_html()
 	{
-		$this->final_output(Template::Singleton()->send_css($this->html));
+		$this->final_output($this->html);
 	}
 	
 	private function acceptsGZip()

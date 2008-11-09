@@ -63,13 +63,7 @@ class Template
 	}
 	
 	public function send_css()
-	{
-		// initialize ob_gzhandler function to send and compress data
-		ob_start ("ob_gzhandler");
-		ob_start ("compress");
-		//ob_start();
-		session_start();
-		
+	{		
 		switch (CMS::Singleton()->page_details['value']) 
 		{
 			case 'mobile':
@@ -100,11 +94,11 @@ class Template
 
 			if(Settings::singleton()->get_setting('css_minify'))
 			{
-		    	die(Common::remove_extra_lines(Common::remove_css_comments(file_get_contents($path))));
+		    	return(Common::remove_extra_lines(Common::remove_css_comments(file_get_contents($path))));
 			}
 			else
 			{
-				die(file_get_contents($path));
+				return(file_get_contents($path));
 			}
 		}
 		else
@@ -168,21 +162,8 @@ encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 	{		
 		//Does this template have a header graphic option?
 		if(Settings::Singleton()->get_setting('template_header_graphic') != NULL)
-		{
-//			echo('<br />');
-//			print_r(Settings::Singleton()->get_setting('template_header_graphic'));
-//			echo('<br />');
-//			print_r(Common::get_random_from_array(Settings::Singleton()->get_setting('template_header_graphic')));
-//			echo('<br />');
-			
+		{			
 			Settings::Singleton()->overwrite_setting('template_header_graphic', Common::get_random_from_array(Settings::Singleton()->get_setting('template_header_graphic')));
-			
-//			echo('<br />');
-//			print_r(Settings::Singleton()->get_setting('template_header_graphic'));
-//			
-//			die();
-			
-			
 		}
 		
 		if(isset($this->preload[0]))

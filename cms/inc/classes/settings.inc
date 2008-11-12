@@ -2,6 +2,7 @@
 class Settings
 {
 	private $settings = array();
+	private $db_loaded = false;
 	
 	protected static $instance;
 
@@ -16,13 +17,25 @@ class Settings
 	   return self::$instance;
 	}
 	
+	private function __construct()
+	{		
+		//Force some default settings
+		$this->new_setting('static_host_ajax', $this->document_root);
+
+		$this->new_setting('static_host_skin', $this->document_root);
+
+		$this->new_setting('static_host_js', $this->document_root);
+	}
+	
 	public function __clone()
 	{
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 	
+	//Update the settings with those from the DB
 	public function get_database_settings()
 	{
+		//TODO write if load from db do this else skip
 		$settings = Database::Singleton()->sql_select(array('setting', 'value'), 'tbl_settings');
 		
 		if(	($this->get_setting('protect_db_settings') != true) and ($this->get_setting('protect_db_settings') != false) )
@@ -37,6 +50,8 @@ class Settings
 				$this->overwrite_setting($setting['setting'], $setting['value'], $this->get_setting('protect_db_settings'));
 			}
 		}
+		
+		$this->db_loaded = true;
 	}
 
 	public function new_setting($name, $value, $protected = false, $hidden = false)
@@ -51,6 +66,10 @@ class Settings
 	
 	public function get_setting($name)
 	{
+		if(!$this->db_loaded)
+		{
+			$this->get_database_settings();
+		}
 		if(isset($this->settings[$name][0]['value']))
 		{
 			return $this->settings[$name][0]['value'];

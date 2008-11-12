@@ -50,8 +50,6 @@ class CMS
 		//Start the session
 		$this->start_session();
 		
-		//Update the settings with those from the DB
-		Settings::Singleton()->get_database_settings();
 		warnings::Singleton()->register('Options Loaded', '', 4);
 		
 		//Start page timer
@@ -78,21 +76,6 @@ class CMS
 
 		//Static includes folder
 		Settings::Singleton()->new_setting('site_folder_static_includes', ($this->cms_root . '/inc/static/'), false, true);
-		
-		if(!Settings::singleton()->get_setting('static_host_ajax'))
-		{
-			Settings::Singleton()->new_setting('static_host_ajax', $this->document_root);
-		}
-		
-		if(!Settings::singleton()->get_setting('static_host_skin'))
-		{
-			Settings::Singleton()->new_setting('static_host_skin', $this->document_root);
-		}
-		
-		if(!Settings::singleton()->get_setting('static_host_js'))
-		{
-			Settings::Singleton()->new_setting('static_host_js', $this->document_root);
-		}
 	}
 	
 	public function time()

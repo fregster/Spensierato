@@ -35,23 +35,25 @@ class Settings
 	//Update the settings with those from the DB
 	public function get_database_settings()
 	{
-		//TODO write if load from db do this else skip
-		$settings = Database::Singleton()->sql_select(array('setting', 'value'), 'tbl_settings');
-		
-		if(	($this->get_setting('protect_db_settings') != true) and ($this->get_setting('protect_db_settings') != false) )
+		if(!$this->db_loaded)
 		{
-			die('must be true or false');
-		}
-		
-		if(is_array($settings))
-		{
-			foreach($settings as $setting)
+			$this->db_loaded = true;
+			//TODO write if load from db do this else skip
+			$settings = Database::Singleton()->sql_select(array('setting', 'value'), 'tbl_settings');
+			
+			if(	($this->get_setting('protect_db_settings') != true) and ($this->get_setting('protect_db_settings') != false) )
 			{
-				$this->overwrite_setting($setting['setting'], $setting['value'], $this->get_setting('protect_db_settings'));
+				die('must be true or false');
+			}
+			
+			if(is_array($settings))
+			{
+				foreach($settings as $setting)
+				{
+					$this->overwrite_setting($setting['setting'], $setting['value'], $this->get_setting('protect_db_settings'));
+				}
 			}
 		}
-		
-		$this->db_loaded = true;
 	}
 
 	public function new_setting($name, $value, $protected = false, $hidden = false)

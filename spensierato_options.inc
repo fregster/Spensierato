@@ -156,7 +156,7 @@ Settings::Singleton()->new_setting('tidy', true, false, true);
 
 //Setting phpids
 //Use PHPIDS (Intrusion Detection System)
-Settings::singleton()->new_setting('phpids', true, false, true);
+Settings::singleton()->new_setting('phpids', false, false, true);
 
 //Site file options
 

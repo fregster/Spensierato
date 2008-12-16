@@ -200,7 +200,10 @@ class CMS
 //		{
 ////			session_set_cookie_params(0, NULL, NULL, NULL, TRUE);
 //		}
-		
+		//Use SHA1 as the Session ID type, reduces the possability of session stealing
+		//Increase the bits per Char so we can store it in a smaller DB field
+		ini_set('session.hash_bits_per_character',    5);
+		ini_set('session.hash_function',    1);
 		session_start();
 		$this->session_user_agent_check();
 		$this->session_ip_check();

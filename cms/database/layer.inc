@@ -205,7 +205,7 @@ class Database
 		{
 			$sql_temp_select = array('*');
 		}
-		else if (!isarray($fields) )
+		else if (!is_array($fields) )
 		{
 			$sql_temp_select = $this->sql_clean_input($fields);
 		}

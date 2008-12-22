@@ -511,16 +511,24 @@ class Database
 		return $this->sql_exe($sql, NULL, true);
 	}
 	
+	public function sql_delete_where($table, $where_fields, $where_values)
+	{
+		$this->prefix.$this->sql_clean_input($table);
+		$sql = 'DELETE FROM '.$table.' WHERE '.$this->sql_build_where_string($where_fields, $where_values);
+		return $this->sql_exe($sql, NULL, true);
+	}
+	
 	/**
 	 * sql_copy_from_insert_into($fields, $from, $to, $extra_insert = NULL)
 	 * $fields = array of field names
 	 * $from = table name
 	 * $to = table name
-	 * $where = array of where clauses array('id' => 6) 
+	 * $where_fields = array of where fields
+	 * $where_values = array of values
 	 * $extra_insert = keyed array of extra stuff to do on the insert
 	 * 					array('field' => value)
 	 */
-	public function sql_select_into($fields, $from, $to, $where, $extra_insert = NULL)
+	public function sql_select_into($fields, $from, $to, $where_fields, $where_values, $extra_insert = NULL)
 	{
 		$from = $this->prefix.$this->sql_clean_input($from);
 		$to = $this->prefix.$this->sql_clean_input($to);
@@ -553,6 +561,23 @@ class Database
 		$sql = "SELECT $sql_temp_select INTO `$to` FROM `$from` WHERE ".$this->sql_build_where_string($where_fields, $where_values);
 		$result = $this->sql_exe($sql, NULL, true);
 		return $result;
+	}
+	
+	/**
+	 * sql_move_into($fields, $from, $to, $extra_insert = NULL)
+	 * $fields = array of field names
+	 * $from = table name
+	 * $to = table name
+	 * $where = array of where clauses array('id' => 6) 
+	 * $extra_insert = keyed array of extra stuff to do on the insert
+	 * 					array('field' => value)
+	 * 
+	 * deletes the complete rows from the first table
+	 */
+	public function sql_move_into($fields, $from, $to, $where_fields, $where_values, $extra_insert = NULL)
+	{
+		$this->sql_select_into($fields, $values, $from, $to, $where, $extra_insert);
+		$this->sql_delete_where($from, $fields, $values);
 	}
 	
 	public function sql_count_where($table, $fields, $values, $FORCE_NO_CACHE = FALSE)

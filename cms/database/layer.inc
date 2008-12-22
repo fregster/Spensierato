@@ -2,6 +2,7 @@
 
 class Database
 {
+	private $options = array('allow_external_calls' => true);
 
 	private static $instance;
 	private $read;
@@ -168,7 +169,7 @@ class Database
 	//SQL Logging function
 	private function sql_log($sql_count, $sql_query, $sql_start_time, $sql_cache_hit)
 	{
-		if(Settings::Singleton()->get_setting('debug') > 0)
+		if(Settings::Singleton()->get_setting('debug') > 0 && $this->options['allow_external_calls'])
 		{
 			if($sql_start_time != 0)
 			{
@@ -202,7 +203,11 @@ class Database
 	{	
 		if($fields == NULL)
 		{
-			$select_fields = array('*');
+			$sql_temp_select = array('*');
+		}
+		else if (!isarray($fields) )
+		{
+			$sql_temp_select = $this->sql_clean_input($fields);
 		}
 		else
 		{
@@ -504,6 +509,50 @@ class Database
 		$table = $this->prefix.$this->sql_clean_input($table);
 		$sql = 'DELETE FROM '.$table.' WHERE `'.$this->sql_clean_input($col).'` = "'.$this->sql_clean_input($equals).'"';
 		return $this->sql_exe($sql, NULL, true);
+	}
+	
+	/**
+	 * sql_copy_from_insert_into($fields, $from, $to, $extra_insert = NULL)
+	 * $fields = array of field names
+	 * $from = table name
+	 * $to = table name
+	 * $where = array of where clauses array('id' => 6) 
+	 * $extra_insert = keyed array of extra stuff to do on the insert
+	 * 					array('field' => value)
+	 */
+	public function sql_select_into($fields, $from, $to, $where, $extra_insert = NULL)
+	{
+		$from = $this->prefix.$this->sql_clean_input($from);
+		$to = $this->prefix.$this->sql_clean_input($to);
+		
+		if($fields == NULL)
+		{
+			$select_fields = array('*');
+		}
+		else if (!isarray($fields) )
+		{
+			$select_fields = $this->sql_clean_input($fields);
+		}
+		else
+		{
+			$i = 0;
+			$count_fields = count($fields);
+			while($i <= ($count_fields - 1))
+			{
+				$sql_temp_select = $sql_temp_select . $this->sql_clean_input($fields[$i]);
+				
+				if($i < ($count_fields - 1))
+				{
+					$sql_temp_select = $sql_temp_select . ', ';
+				}
+				
+				$i++;
+			}
+		}
+		
+		$sql = "SELECT $sql_temp_select INTO `$to` FROM `$from` WHERE ".$this->sql_build_where_string($where_fields, $where_values);
+		$result = $this->sql_exe($sql, NULL, true);
+		return $result;
 	}
 	
 	public function sql_count_where($table, $fields, $values, $FORCE_NO_CACHE = FALSE)

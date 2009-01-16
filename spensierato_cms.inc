@@ -53,7 +53,14 @@ try
 	function get_site_host()
 	{
 		$a = substr($_SERVER['PHP_SELF'], 0 , strripos($_SERVER['PHP_SELF'], '.php'));
-		return substr($a, 0, strripos($a, '/'));
+		$document_root = substr($a, 0, strripos($a, '/'));
+		
+		if (!in_array("mod_rewrite", apache_get_modules()) ) 
+    	{ 
+    		$document_root .= '/index.php';
+    	} 
+    		
+		return $document_root;
 	}
 	$GLOBALS['site_root'] = get_site_host();
 	$install = true;

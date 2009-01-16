@@ -114,6 +114,10 @@ class Database
 	
 	private function connect($dsn, $options = NULL, $mods = NULL)
 	{	
+		//Load the MDB2 code
+		//Doing this here only loads the code if a DB query is actually going to be done
+		require_once 'MDB2.php';
+			
 		$mdb2 =& MDB2::singleton($dsn, $options);
 		if (PEAR::isError($mdb2) or (MDB2::isError($mdb2))) 
 		{
@@ -663,11 +667,7 @@ class Database
 	private function sql_connect()
 	{
 		if(!$this->connected)
-		{
-			//Load the MDB2 code
-			//Doing this here only loads the code if a DB query is actually going to be done
-			require_once 'MDB2.php';
-			
+		{			
 			$this->dsn_default = array(
 		    'phptype'  => $GLOBALS['database_driver'],
 		    'username' => $GLOBALS['database_user_read'],

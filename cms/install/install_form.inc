@@ -56,7 +56,7 @@ if(!Common::rewrite_enabled())
 		Database to connect to or create
 		<div>Database name: <input type="text" name="database" value="spensierato" /></div>
 		<div id="prefix">
-			If your connecting to an exsisting database this must match the origonal table prefix
+			If your connecting to an exsisting database this must match the origonal table prefix or new tables will be created
 			<div>Table Prefix name: <input type="text" name="prefix" value="<? echo(Common::generate_random_string(3, false)); ?>" /></div>
 		</div>
 	</div>

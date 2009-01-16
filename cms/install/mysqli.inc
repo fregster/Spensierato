@@ -10,7 +10,8 @@
  */
 $default_table_engine = 'MyISAM';
 //$default_table_engine = 'InnoDB';
-$archive_table_engine = 'ARCHIVE';
+//$archive_table_engine = 'ARCHIVE';
+$archive_table_engine = 'MyISAM';
 $full_text_search_table_engine = 'MyISAM';
 
 $cache_table_engine = 'MEMORY';
@@ -52,7 +53,7 @@ CREATE TABLE `cms_tbl_elements` (
   `approved` varchar(32) default NULL,
   `approver` int(10) unsigned default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;";
+) ENGINE=$default_table_engine DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;";
 array_push($sql, $sql_str);
 
 $sql_str = '
@@ -123,7 +124,7 @@ CREATE TABLE `cms_tbl_page_elements` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `elements_to_page_link` (`page_id`,`element_id`),
   UNIQUE KEY `only_one_main_element` (`element_id`,`main`)
-) ENGINE='.$default_table_engine.'  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;";
+) ENGINE=$default_table_engine  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;";
 array_push($sql, $sql_str);
 
 $sql_str = "
@@ -140,7 +141,7 @@ CREATE TABLE `cms_tbl_pages` (
   `editor` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `valid_child` (`visible`,`deleted`,`parent_id`)
-) ENGINE='.$default_table_engine.'  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;";
+) ENGINE=$default_table_engine DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;";
 array_push($sql, $sql_str);
 
 $sql_str = '
@@ -181,7 +182,7 @@ CREATE TABLE `cms_tbl_users` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `login` (`username`,`password`)
-) ENGINE='.$default_table_engine.'  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+) ENGINE=$default_table_engine DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
 array_push($sql, $sql_str);
 
 $sql_str = '

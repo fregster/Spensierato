@@ -1,4 +1,5 @@
 <?php
+require_once('MDB2.php');
 require_once('tables.inc');
 require_once('layer.inc');
 

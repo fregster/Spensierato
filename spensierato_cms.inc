@@ -40,7 +40,7 @@ function __autoload($class_name)
 		}
 		else
 		{
-			 die('Critical error: Class "'.$class_name.'" not defined');
+			 die('<p>Critical error: Class "'.$class_name.'" not defined</p>');
 		}
 	}
 }

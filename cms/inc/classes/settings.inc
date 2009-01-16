@@ -20,11 +20,12 @@ class Settings
 	private function __construct()
 	{		
 		//Force some default settings
-		$this->new_setting('static_host_ajax', $this->document_root);
+		$document_root = Common::document_root();
+		$this->new_setting('static_host_ajax', $document_root);
 
-		$this->new_setting('static_host_skin', $this->document_root);
+		$this->new_setting('static_host_skin', $document_root);
 
-		$this->new_setting('static_host_js', $this->document_root);
+		$this->new_setting('static_host_js', $document_root);
 	}
 	
 	public function __clone()

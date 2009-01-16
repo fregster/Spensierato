@@ -32,7 +32,7 @@ class enhanced_login extends user
 	
 	public function suported()
 	{
-		if( (Settings::Singleton()->get_setting('site_option_encryption') == $this->required_hash_type) and (Settings::Singleton()->get_setting('login_capthca')) )
+		if( (Settings::Singleton()->get_setting('site_option_encryption') == $this->required_hash_type) and (Settings::Singleton()->get_setting('login_capthca')) and (Settings::Singleton()->get_setting('login_secure')) )
 		{
 			return true;
 		}

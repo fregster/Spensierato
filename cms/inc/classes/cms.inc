@@ -125,12 +125,11 @@ class CMS
 	
 	public function run_cms()
 	{
+		//Do any admin checks
+		$this->admin();
 		
 		//Work out what sort of page we are running
 		$this->page_details = currentPage::Singleton()->page_details();
-		
-		//Do any admin checks
-		$this->admin();
 	
 		//Decide what to do with the current page
 		$this->get_page();
@@ -258,6 +257,10 @@ class CMS
 	{
 		if(Options::singleton()->get_option('admin_mode'))
 		{
+			//Force loading of all elements
+
+			require_once(dirname(__FILE__).'/../../cms_admin_includes.inc');
+			
 			//When in admin mode do extra code such as version checking
 			$this->version_check();
 			

@@ -3,8 +3,7 @@
 If in admin mode then load all elements as required for admin bar even if not currently in use
 Load all classes in admin includes as these are functions that require to be loaded before the XSLT etc
 */
-
-$path = substr(__FILE__, 0, -11);  
+$path = dirname(__FILE__).'/';  
 
 $path_elements = $path .'inc/classes/elements/';
 $path_admin = $path.'inc/classes/adminincludes/';

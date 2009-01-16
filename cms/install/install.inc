@@ -132,8 +132,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		
 		if(PEAR::isError($resultset)) 
 		{
-			$error = 'Failed to issue query '.$i.', error message : ' . $resultset->getMessage().'<br />From :'. $sql_str;
-			debug($error);
+			$error = '<br/>Failed to issue query '.$i.', error message : ' . $resultset->getMessage().'<br />From : '. $sql_str;
+			die($error);
 		}
 		++$i;
 	}
@@ -152,8 +152,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	
 		if(PEAR::isError($resultset)) 
 		{
-			$error = 'Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
-			debug($error);
+			$error = '<br/>Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
+			die($error);
 		}
 	}
 	

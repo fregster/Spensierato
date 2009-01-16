@@ -741,7 +741,7 @@ class Database
 		
 		if(isset($stmt))
 		{
-			if (PEAR::isError($stmt) or (MDB2::isError($stmt))) 
+			if (PEAR::isError($stmt)) 
 			{
 				$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />';
 				if($this->show_error_sql)
@@ -753,7 +753,7 @@ class Database
 			$resultset = $stmt->execute($values);
 		}
 		
-		if (PEAR::isError($resultset) or (MDB2::isError($resultset))) 
+		if (PEAR::isError($resultset)) 
 		{
 			$error = 'Failed to issue query, error message : ' . $resultset->getMessage().'<br />';
 			if($this->show_error_sql)

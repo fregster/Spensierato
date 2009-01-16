@@ -1,5 +1,15 @@
 <?php
-$default_table_engine = 'InnoDB';
+/**
+ * Default storage engine
+ * 
+ * Use MyISAM for a small performance improvment over InnoDB in light situations
+ * 
+ * Use InnoDB anywhere where you need clustering, caching data, higher concurrency, background flushes 
+ * 
+ * @var db type string
+ */
+$default_table_engine = 'MyISAM';
+//$default_table_engine = 'InnoDB';
 $archive_table_engine = 'ARCHIVE';
 $full_text_search_table_engine = 'MyISAM';
 

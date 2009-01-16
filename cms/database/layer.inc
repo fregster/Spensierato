@@ -13,6 +13,7 @@ class Database
 	private $sql_db_type;
 	private $dsn;
 	private $dsn_default;
+	private $error_file = false;
 	
 	private $sql_cache_enabled = true;
 	private $sql_cache = array();
@@ -29,6 +30,7 @@ class Database
 	
 	private $use_external_log = true;
 	private $show_error_sql = false;
+
 	
 	/**
 	 * Privately cached vars
@@ -61,6 +63,12 @@ class Database
 		$this->time = time();
 		$this->microtime = microtime();
 		$this->prefix = $GLOBALS['table_prefix'];
+		
+		if(!$this->error_file)
+		{
+			$this->error_file = dirname(__FILE__).'/dberror.html';
+		}
+		
 	}
 	
 	public static function custom_db_object($dsn, $options = NULL, $mods = NULL)
@@ -763,9 +771,8 @@ class Database
 	
 	private function sql_error($message, $line = NULL, $file = NULL)
 	{
-		$error_file = dirname(__FILE__).'/dberror.html';
-		$fh = fopen($error_file, 'r');
-		$theData = fread($fh, filesize($error_file));
+		$fh = fopen($this->error_file, 'r');
+		$theData = fread($fh, filesize($this->error_file));
 		fclose($fh);
 		
 	    die(str_replace('***ERROR***', $message, $theData));

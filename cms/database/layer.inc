@@ -27,6 +27,9 @@ class Database
 	private $site_sql_count = 0;
 	private $sql_time = 0;
 	
+	private $use_external_log = true;
+	private $show_error_sql = false;
+	
 	/**
 	 * Privately cached vars
 	 */
@@ -104,9 +107,9 @@ class Database
 	private function connect($dsn, $options = NULL, $mods = NULL)
 	{	
 		$mdb2 =& MDB2::singleton($dsn, $options);
-		if (PEAR::isError($mdb2)) 
+		if (PEAR::isError($mdb2) or (MDB2::isError($mdb2))) 
 		{
-		    die($mdb2->getMessage());
+			$this->sql_error($mdb2->getMessage());
 		}
 		
 		if(isset($mods[0]))
@@ -730,23 +733,42 @@ class Database
 		
 		if(isset($stmt))
 		{
-			if (PEAR::isError($stmt)) 
+			if (PEAR::isError($stmt) or (MDB2::isError($stmt))) 
 			{
-				$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />From :'. $sql .'<br />With: ' .$values;
-				die($error);
+				$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />';
+				if($this->show_error_sql)
+				{
+					$error .= 'From : '. $sql .'<br />With: ' .$values;
+				}
+				$this->sql_error($error);
 			}
 			$resultset = $stmt->execute($values);
 		}
 		
-		if(PEAR::isError($resultset)) 
+		if (PEAR::isError($resultset) or (MDB2::isError($resultset))) 
 		{
-			$error = 'Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
-			die($error);
+			$error = 'Failed to issue query, error message : ' . $resultset->getMessage().'<br />';
+			if($this->show_error_sql)
+			{
+					$error .= 'From : '. $sql;
+			}
+
+			$this->sql_error($error);
 		}
 		
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit);
 		
 		return $resultset;
+	}
+	
+	private function sql_error($message, $line = NULL, $file = NULL)
+	{
+		$error_file = dirname(__FILE__).'/dberror.html';
+		$fh = fopen($error_file, 'r');
+		$theData = fread($fh, filesize($error_file));
+		fclose($fh);
+		
+	    die(str_replace('***ERROR***', $message, $theData));
 	}
 	
 	private function sql_update_exe($sql, $values = NULL, $destroy_cache = false)

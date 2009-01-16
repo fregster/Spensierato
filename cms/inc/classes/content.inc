@@ -239,15 +239,16 @@ class Content
 				$data = Database::Singleton()->sql_select(array('*'), 'tbl_elements', array('id', 'visible', 'deleted'), array($ids, $this->visible, $this->deleted), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
 				$element_data = Database::Singleton()->sql_select(array('*'), 'tbl_elements_data', array('id'), array($ids), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
 				
-				$i=0;
-				foreach($data as $data)
+				if(isset($data[0]))
 				{
-					$element = Element::type($data['type']);
-					$element->build($elements[$i]['element_id'], $element_data[$i]['data']);
-					
-					$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $elements[$i]['ts']);
-					$this->e_string .=$elements[$i]['element_id'];
-					++$i;
+					foreach($data as $key => $data)
+					{
+						$element = Element::type($data['type']);
+						$element->build($elements[$key]['element_id'], $element_data[$key]['data']);
+						
+						$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $elements[$key]['ts']);
+						$this->e_string .=$elements[$key]['element_id'];
+					}
 				}
 			}
 			else

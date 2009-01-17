@@ -128,7 +128,7 @@ CREATE TABLE `cms_tbl_page_elements` (
 array_push($sql, $sql_str);
 
 $sql_str = "
-CREATE TABLE `cms_tbl_pages` (
+CREATE TABLE `cms_` (
   `id` int(11) NOT NULL auto_increment,
   `parent_id` int(11) NOT NULL,
   `title` varchar(64) NOT NULL default 'New Page',
@@ -137,7 +137,7 @@ CREATE TABLE `cms_tbl_pages` (
   `sort` int(11) default NULL,
   `created` varchar(45) NOT NULL,
   `creator` int(10) unsigned NOT NULL,
-  `edited` varchar(45) NOT NULL,
+  `edited` varchar(45) default NULL,
   `editor` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `valid_child` (`visible`,`deleted`,`parent_id`)

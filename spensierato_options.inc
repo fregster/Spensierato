@@ -161,21 +161,21 @@ Settings::singleton()->new_setting('phpids', false, false, true);
 //Site file options
 
 //Static files hosts
-//If not set then the main document_root var is used
+//If not set then the main document_root var / ajax is used
 //Ajax
-//Settings::Singleton()->new_setting('static_host_ajax', ('ajax.'.$GLOBALS['site_root']));
+//Settings::Singleton()->new_setting('static_host_ajax', ('ajax.'.$GLOBALS['document_root']));
 //Skin and images
-//Settings::Singleton()->new_setting('static_host_skin', ('skin.'.$GLOBALS['site_root']));
+//Settings::Singleton()->new_setting('static_host_skin', ('skin.'.$GLOBALS['document_root']));
 //JS host
-//Settings::Singleton()->new_setting('static_host_js', ('js.'.$GLOBALS['site_root']));
+//Settings::Singleton()->new_setting('static_host_js', ('js.'.$GLOBALS['document_root']));
 
 //Paths
-Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['site_root'] . '/css'));
-Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['site_root'] . '/graphics/'));
+Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['document_root'] . '/css'));
+Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['document_root'] . '/graphics/'));
 
 /* This has been changed from javascript to js-combine due to debians prototype package url rewriting */
-Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['site_root'] . '/js-combine/'));
-Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['site_root'] . '/js/'));
+Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['document_root'] . '/js-combine/'));
+Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['document_root'] . '/js/'));
 
 //Uploads alowed, other options may disable this
 //true / false
@@ -242,7 +242,7 @@ Settings::Singleton()->new_setting('login_capthca_remember', true);
 //			2 Log SQL (All)
 //			5 Force Displaying SQL
 //			10 Save debug to file
-Settings::Singleton()->new_setting('debug', 1, false, true);
+Settings::Singleton()->new_setting('debug', 0, false, true);
 
 //Setting debug_log_folder
 //string path to the debug log folder

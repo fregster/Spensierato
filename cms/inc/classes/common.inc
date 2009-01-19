@@ -110,7 +110,7 @@ abstract class Common
 //    	}
 //    	
 //		return $document_root;
-		return $GLOBALS['site_root'];
+		return $GLOBALS['document_root'];
     }
 	
 	public static function site_root()

@@ -47,7 +47,7 @@ function __autoload($class_name)
 
 set_exception_handler('exception_handler');
 try 
-{
+{	
 	//Include all the options for the CMS
 	//Functions requires by globals
 	function get_site_host()
@@ -62,8 +62,7 @@ try
     		
 		return $document_root;
 	}
-	$GLOBALS['site_root'] = get_site_host();
-	$install = true;
+	$GLOBALS['document_root'] = get_site_host();
 	
 	//Include the Site setup code
 	if(is_file('./spensierato_setup.inc'))
@@ -74,6 +73,8 @@ try
 	
 	//Include the CMS
 	require_once('./cms/cms_includes.inc');
+	
+//	$install = true;
 	
 	if($install)
 	{

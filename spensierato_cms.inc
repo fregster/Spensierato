@@ -50,19 +50,41 @@ try
 {	
 	//Include all the options for the CMS
 	//Functions requires by globals
-	function get_site_host()
+	function get_site_root()
 	{
 		$a = substr($_SERVER['PHP_SELF'], 0 , strripos($_SERVER['PHP_SELF'], '.php'));
-		$document_root = substr($a, 0, strripos($a, '/'));
-		
-		if (!in_array("mod_rewrite", apache_get_modules()) ) 
-    	{ 
-    		$document_root .= '/index.php';
-    	} 
+    	$document_root = substr($a, 0, strripos($a, '/'));
+    	if($document_root == '')
+    	{
+    		if( ($_SERVER['HTTPS'] == '') || ($_SERVER['HTTPS'] == 'off') )
+    		{
+    			$proto = 'http://';
+    		}
+    		else
+    		{
+    			$proto = 'https://';
+    		}
+    		$document_root = $proto . $_SERVER['SERVER_NAME'];
     		
+    	}
+    	
+    	if(!Common::rewrite_enabled())
+    	{
+    		$document_root .= '/index.php';
+    	}
+    	
 		return $document_root;
 	}
-	$GLOBALS['document_root'] = get_site_host();
+	
+	function get_file_root()
+	{
+		$ext = substr($_SERVER[SCRIPT_FILENAME], -4 , 4);
+		$a = substr($_SERVER[SCRIPT_FILENAME], 0 , strripos($_SERVER[SCRIPT_FILENAME], $ext));
+		return substr($a, 0, strripos($a, '/'));
+	}
+	
+	$GLOBALS['document_root'] = get_site_root();
+	$GLOBALS['site_root'] = get_file_root();
 	
 	//Include the Site setup code
 	if(is_file('./spensierato_setup.inc'))

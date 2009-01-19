@@ -116,9 +116,10 @@ abstract class Common
 	public static function site_root()
 	{
 		
-		$ext = substr($_SERVER[SCRIPT_FILENAME], -4 , 4);
-		$a = substr($_SERVER[SCRIPT_FILENAME], 0 , strripos($_SERVER[SCRIPT_FILENAME], $ext));
-		return substr($a, 0, strripos($a, '/'));
+//		$ext = substr($_SERVER[SCRIPT_FILENAME], -4 , 4);
+//		$a = substr($_SERVER[SCRIPT_FILENAME], 0 , strripos($_SERVER[SCRIPT_FILENAME], $ext));
+//		return substr($a, 0, strripos($a, '/'));
+		return $GLOBALS['site_root'];
 	}
 	
 	public static function post_sql_safe($var)

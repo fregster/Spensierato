@@ -128,7 +128,7 @@ CREATE TABLE `cms_tbl_page_elements` (
 array_push($sql, $sql_str);
 
 $sql_str = "
-CREATE TABLE `cms_` (
+CREATE TABLE `cms_tbl_pages` (
   `id` int(11) NOT NULL auto_increment,
   `parent_id` int(11) NOT NULL,
   `title` varchar(64) NOT NULL default 'New Page',

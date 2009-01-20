@@ -1,11 +1,11 @@
 <?php
 /**
  * Default storage engine
- * 
+ *
  * Use MyISAM for a small performance improvment over InnoDB in light situations
- * 
- * Use InnoDB anywhere where you need clustering, caching data, higher concurrency, background flushes 
- * 
+ *
+ * Use InnoDB anywhere where you need clustering, caching data, higher concurrency, background flushes
+ *
  * @var db type string
  */
 $default_table_engine = 'MyISAM';
@@ -53,7 +53,7 @@ CREATE TABLE `cms_tbl_elements` (
   `approved` varchar(32) default NULL,
   `approver` int(10) unsigned default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=$default_table_engine DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;";
+) ENGINE=$default_table_engine DEFAULT CHARSET=latin1;";
 array_push($sql, $sql_str);
 
 $sql_str = '
@@ -65,14 +65,14 @@ CREATE TABLE `cms_tbl_elements_approve` (
   `data` longtext NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `User to Element` (`element_id`,`user_id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;';
+) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
 $sql_str = '
 CREATE TABLE `cms_tbl_elements_data` (
   `id` int(11) NOT NULL,
   `data` longtext NOT NULL,
-  `search` longtext NOT NULL,
+  `search` longtext,
   PRIMARY KEY  (`id`)
 ) ENGINE='.$full_text_search_table_engine.' DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
@@ -86,7 +86,7 @@ CREATE TABLE `cms_tbl_elements_draft` (
   `data` longtext NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `User to Element` (`element_id`,`user_id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;';
+) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
 $sql_str = '
@@ -101,7 +101,7 @@ CREATE TABLE `cms_tbl_list_data` (
   `edited_by` int(11) default NULL,
   `visible` tinyint(4) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;';
+) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
 $sql_str = '
@@ -124,7 +124,7 @@ CREATE TABLE `cms_tbl_page_elements` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `elements_to_page_link` (`page_id`,`element_id`),
   UNIQUE KEY `only_one_main_element` (`element_id`,`main`)
-) ENGINE=$default_table_engine  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;";
+) ENGINE=$default_table_engine  DEFAULT CHARSET=latin1;";
 array_push($sql, $sql_str);
 
 $sql_str = "
@@ -138,10 +138,10 @@ CREATE TABLE `cms_tbl_pages` (
   `created` varchar(45) NOT NULL,
   `creator` int(10) unsigned NOT NULL,
   `edited` varchar(45) default NULL,
-  `editor` int(10) unsigned NOT NULL,
+  `editor` int(10) unsigned,
   PRIMARY KEY  (`id`),
   KEY `valid_child` (`visible`,`deleted`,`parent_id`)
-) ENGINE=$default_table_engine DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;";
+) ENGINE=$default_table_engine DEFAULT CHARSET=latin1;";
 array_push($sql, $sql_str);
 
 $sql_str = '
@@ -166,23 +166,23 @@ CREATE TABLE `cms_tbl_temp` (
   `data` text NOT NULL,
   `ts` varchar(45) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;';
+) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
 $sql_str = "
 CREATE TABLE `cms_tbl_users` (
   `id` int(11) NOT NULL auto_increment,
   `username` varchar(32) NOT NULL,
-  `password` varchar(64) NOT NULL,
-  `hash_type` varchar(8) NOT NULL,
-  `last_login` varchar(32) NOT NULL,
-  `session_id` varchar(64) NOT NULL,
+  `password` varchar(64),
+  `hash_type` varchar(8),
+  `last_login` varchar(32),
+  `session_id` varchar(64),
   `admin` tinyint(4) default NULL COMMENT 'Global site admin',
   `login_attempts` tinyint(4) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `login` (`username`,`password`)
-) ENGINE=$default_table_engine DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+) ENGINE=$default_table_engine DEFAULT CHARSET=latin1;";
 array_push($sql, $sql_str);
 
 $sql_str = '
@@ -192,7 +192,7 @@ CREATE TABLE `cms_tbl_users_data` (
   `data` longtext NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `id` (`user_id`)
-) ENGINE='.$default_table_engine.'  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;';
+) ENGINE='.$default_table_engine.'  DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
 unset($sql_str);

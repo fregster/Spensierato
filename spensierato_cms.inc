@@ -1,5 +1,5 @@
 <?php
-function exception_handler($exception) 
+function exception_handler($exception)
 {
   echo 'Uncaught exception: ' , $exception->getMessage(), "\n";
 }
@@ -15,14 +15,14 @@ function __autoload($class_name)
 	{
 		$class_name = strtolower($class_name);
 		$path = dirname(__FILE__);
-		
+
 		if($class_name == 'database')
 		{
 			//Database files
 			require_once($path.'/cms/database/database.inc');
 			return true;
 		}
-		
+
 		if(file_exists($path.'/cms/inc/classes/'.$class_name.'.inc'))
 		{
 			require_once $path.'/cms/inc/classes/'.$class_name.'.inc';
@@ -46,8 +46,8 @@ function __autoload($class_name)
 }
 
 set_exception_handler('exception_handler');
-try 
-{	
+try
+{
 	//Include all the options for the CMS
 	//Functions requires by globals
 	function get_site_root()
@@ -63,54 +63,59 @@ try
     	$document_root = $proto . $_SERVER['SERVER_NAME'];
     	$a = substr($_SERVER['PHP_SELF'], 0 , strripos($_SERVER['PHP_SELF'], '.php'));
     	$document_root .= substr($a, 0, strripos($a, '/'));
- 
-    	
+
+
     	if(!Common::rewrite_enabled())
     	{
     		$document_root .= '/index.php';
     	}
-    	
+
 		return $document_root;
 	}
-	
+
 	function get_file_root()
 	{
 		$ext = substr($_SERVER[SCRIPT_FILENAME], -4 , 4);
 		$a = substr($_SERVER[SCRIPT_FILENAME], 0 , strripos($_SERVER[SCRIPT_FILENAME], $ext));
 		return substr($a, 0, strripos($a, '/'));
 	}
-	
+
 	$GLOBALS['document_root'] = get_site_root();
 	$GLOBALS['site_root'] = get_file_root();
-	
+
+	//default is to install the cms
+	$install = true;
+
 	//Include the Site setup code
 	if(is_file('./spensierato_setup.inc'))
 	{
 		require_once('./spensierato_setup.inc');
-		$install = false;
+		$install = false; //cancel the install directive
 	}
-	
+
 	//Include the CMS
 	require_once('./cms/cms_includes.inc');
-	
-//	$install = true;
-	
+
+	//uncomment to force an install
+	//$install = true;
+
+	//run the installation
 	if($install)
 	{
 		include('./cms/install/install.inc');
 		die();
 	}
-	
+
 	//Start site
 	CMS::Singleton()->start();
-	
+
 	//Make any custom changes here after the CMS code has loaded but before the site is ran
 	if(is_file('custom.inc')) { include('custom.inc'); }
-	
+
 	//Run the CMS
 	CMS::Singleton()->run_cms();
-} 
-catch (Exception $e) 
+}
+catch (Exception $e)
 {
     echo 'Caught exception: ',  $e->getMessage(), "\n";
 }

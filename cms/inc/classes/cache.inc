@@ -1,4 +1,4 @@
-<?
+<?php
 abstract class Cache
 {
 	public static function headers_allow_cache($path = NULL, $public = true, $expires = 31536000, $maxage = 31536000, $force_resend = false)

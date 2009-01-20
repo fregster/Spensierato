@@ -1,4 +1,4 @@
-<?
+<?php
 class elementWarnings extends elementDefault
 {
 	function __construct()

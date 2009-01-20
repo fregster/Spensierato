@@ -1,4 +1,4 @@
-<?
+<?php
 element::register('Page Contact', 'elementContact');
 class elementContact extends elementDefault
 {

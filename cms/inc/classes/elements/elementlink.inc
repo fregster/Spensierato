@@ -1,4 +1,4 @@
-<?
+<?php
 element::register('Link', 'elementLink');
 class elementLink extends elementDefault
 {

@@ -1,4 +1,4 @@
-<?
+<?php
 class elementDefault
 {
 	protected $id;

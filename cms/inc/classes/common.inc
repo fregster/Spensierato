@@ -1,4 +1,4 @@
-<?
+<?php
 abstract class Common
 {
 	public static function get_path_vars()

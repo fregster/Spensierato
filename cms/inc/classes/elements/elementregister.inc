@@ -1,4 +1,4 @@
-<?
+<?php
 class elementRegister extends elementDefault
 {
 	function __construct()

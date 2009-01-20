@@ -1,4 +1,4 @@
-<?
+<?php
 element::register('Text Article', 'elementText');
 class elementText extends elementDefault
 {

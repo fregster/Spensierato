@@ -1,4 +1,4 @@
-<?
+<?php
 abstract class Element
 {
 	public static function type($type)

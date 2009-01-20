@@ -1,4 +1,4 @@
-<?
+<?php
 //Any functions required before classes are included
 function cms_root()
 {

@@ -1,4 +1,4 @@
-<?
+<?php
 class Template
 {
 	protected static $instance;

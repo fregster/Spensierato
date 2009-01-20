@@ -1,4 +1,4 @@
-<?
+<?php
 // return_hash($var)
 // Returns the has of an input based on the site global var
 

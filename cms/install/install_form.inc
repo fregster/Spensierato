@@ -14,8 +14,8 @@
 	</head>
 <body>
 <div id="frame" style="width:600px; margin-left:auto; margin-right:auto;">
-<div><img src="<? echo(Common::document_root()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0;" alt="" /></div>
-<div id="notices"><?
+<div><img src="<?php echo(Common::document_root()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0;" alt="" /></div>
+<div id="notices"><?php
 if(isset($req_missing[0]) or isset($opt_missing[0]))
 {
 	echo'Please note the following problems<br/>';
@@ -57,13 +57,13 @@ if(!Common::rewrite_enabled())
 		<div>Database name: <input type="text" name="database" value="spensierato" /></div>
 		<div id="prefix">
 			If your connecting to an exsisting database this must match the origonal table prefix or new tables will be created
-			<div>Table Prefix name: <input type="text" name="prefix" value="<? echo(Common::generate_random_string(3, false)); ?>" /></div>
+			<div>Table Prefix name: <input type="text" name="prefix" value="<?php echo(Common::generate_random_string(3, false)); ?>" /></div>
 		</div>
 	</div>
 	
 	<div id="randomkey" class="pad-div">
 		Create a random key. This is used when generating hashes to help preventing people work out the final hash it defaults to a sha1 hash of the server microtime when you install.
-		<div>Random Key: <input type="text" name="random_key" value="<? echo(sha1(microtime())); ?>" /></div>
+		<div>Random Key: <input type="text" name="random_key" value="<?php echo(sha1(microtime())); ?>" /></div>
 	</div>
 	
 	<div id="db_users" class="pad-div">
@@ -71,13 +71,13 @@ if(!Common::rewrite_enabled())
 		If the password set is does not meet the recomended length an random password will also be created
 		<div>Read only username: <input type="text" name="r_user" value="spensierato_read" /></div>
 		<div>Read Write username: <input type="text" name="rw_user" value="spensierato_writ" /></div>
-		<div>Users password: <input type="password" name="db_password" value="<? echo(Common::generate_random_string(16)); ?>" /></div>
+		<div>Users password: <input type="password" name="db_password" value="<?php echo(Common::generate_random_string(16)); ?>" /></div>
 	</div>
 	
 	<div id="users" class="pad-div">
 		Create a user for the site
 		<div>Username: <input type="text" name="user_username" value="admin" /></div>
-		<div>Password: <input type="text" name="user_password" value="<? echo(Common::generate_random_string(8)); ?>" /></div>
+		<div>Password: <input type="text" name="user_password" value="<?php echo(Common::generate_random_string(8)); ?>" /></div>
 		<div>Email: <input type="text" name="user_email" value="root@localhost" /></div>
 	</div>
 	

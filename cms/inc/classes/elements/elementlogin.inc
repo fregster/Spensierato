@@ -1,4 +1,4 @@
-<?
+<?php
 class elementLogin extends elementDefault
 {
 	function __construct()

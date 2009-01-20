@@ -1,4 +1,4 @@
-<?
+<?php
 class cookie
 {
 	private static $instance;	

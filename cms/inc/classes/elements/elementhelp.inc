@@ -1,4 +1,4 @@
-<?
+<?php
 class elementHelp extends elementDefault
 {
 	function __construct()

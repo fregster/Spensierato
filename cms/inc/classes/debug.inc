@@ -1,4 +1,4 @@
-<?
+<?php
 class Debug
 {
 	private static $instance;

@@ -1,4 +1,4 @@
-<?
+<?php
 class Search
 {
 	private static $instance;

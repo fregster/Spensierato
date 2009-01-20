@@ -1,4 +1,4 @@
-<?
+<?php
 class Content
 {
 	protected static $instance;

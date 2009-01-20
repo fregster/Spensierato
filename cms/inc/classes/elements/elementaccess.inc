@@ -1,4 +1,4 @@
-<?
+<?php
 class elementAccess extends elementDefault
 {
 	function construct()

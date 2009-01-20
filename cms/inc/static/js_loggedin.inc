@@ -1,1 +1,1 @@
-<script type="text/javascript" src="<? echo(Settings::Singleton()->get_setting('document_root')); ?>/file/tiny_mce/tiny_mce_gzip.js"></script>
+<script type="text/javascript" src="<?php echo(Settings::Singleton()->get_setting('document_root')); ?>/file/tiny_mce/tiny_mce_gzip.js"></script>

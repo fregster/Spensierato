@@ -1,4 +1,4 @@
-<?
+<?php
 class elementAccount extends elementDefault
 {
 	function __construct()

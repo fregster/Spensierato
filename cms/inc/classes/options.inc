@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 Where all the session options are stored
 */

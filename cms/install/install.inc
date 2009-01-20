@@ -43,17 +43,6 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	$install_folder = dirname(__FILE__);
-	$settings_file = $install_folder.'/../../spensierato_setup.inc';
-	/*
-	 * check the file
-	 * load the settings
-	 */
-//	$settings_file_handle = fopen($settings_file, 'w+') or die('can\'t open file you may need to give the webserver temporay permissions over the install folder or create the setup file manual with write permissions for the webserver');
-	$settings_file_handle = fopen($settings_file, 'w+');
-	if(!$settings_file_handle)
-	{
-		die('Unable to create settings file ('.$settings_file.'), instalation aborted.<br/>Make sure the root dir is writeable or the file spensierato_setup.inc is created and writeable');
-	}
 
 	//SQL connection settings
 	$username = post::variable('username');
@@ -157,34 +146,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		}
 	}
 
-	/*
-	 * Build the settings file string
-	 */
-	$settings_file_string = '<?php
-//This file contains the CMS settings required before we include the CMS code.
-
-//Database vars
-//The DB layer suports 2 users read and readwrite
-//readwrite is used once logged in to provide another layer of prtection against sql injection.
-
-$GLOBALS[\'database_host\'] = \''. $host .'\';
-$GLOBALS[\'database_driver\'] = \''. $driver .'\';
-$GLOBALS[\'database_name\'] = \''. $database .'\';
-$GLOBALS[\'database_user_read\'] = \''. $user_r .'\';
-$GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\';
-$GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
-$GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
-?>';
-
-	/*
-	 * Close and write the settings file
-	 */
-	fwrite($settings_file_handle, $settings_file_string);
-	fclose($settings_file_handle);
-	debug('Settings file created');
-
-	require($settings_file);
-	debug('Settings file re-loaded');
+	//define $GLOBALS required by the force_write_user(), sql_insert() methods
+	$GLOBALS['database_driver'] = $driver;
+	$GLOBALS['database_user_readwrite'] = $user_rw;
+	$GLOBALS['database_user_read'] = $user_r;
+	$GLOBALS['database_password'] = $user_db_password;
+	$GLOBALS['database_host'] = $host;
+	$GLOBALS['database_name'] = $database;
+	$GLOBALS['table_prefix'] = $prefix.'_';
 
 	debug('Createing Homepage');
 	database::Singleton()->force_write_user();
@@ -196,6 +165,39 @@ $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 
 	debug('Adding site administrator');
 	$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true);
+
+	//set the path for the settings file
+	$settings_file = $install_folder.'/../../spensierato_setup.inc';
+
+	/*
+	   * Build the settings file string
+	*/
+	$settings_file_string = '<?php
+		//This file contains the CMS settings required before we include the CMS code.
+
+		//Database vars
+		//The DB layer suports 2 users read and readwrite
+		//readwrite is used once logged in to provide another layer of prtection against sql injection.
+
+		$GLOBALS[\'database_host\'] = \''. $host .'\';
+		$GLOBALS[\'database_driver\'] = \''. $driver .'\';
+		$GLOBALS[\'database_name\'] = \''. $database .'\';
+		$GLOBALS[\'database_user_read\'] = \''. $user_r .'\';
+		$GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\';
+		$GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
+		$GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
+		?>';
+
+	/*
+	   * Write the settings file
+	*/
+	$write_result = file_put_contents($settings_file, $settings_file_string);
+
+	if(!$write_result)
+		die('Unable to create settings file ('.$settings_file.'), instalation aborted.<br/>
+				Make sure the root dir is writeable or the file spensierato_setup.inc is created and writeable');
+	else
+		debug('Settings file created');
 
 	debug('The site is now setup reload this page to see your new site<br />You can log in with the user admin and the password '.$password);
 }

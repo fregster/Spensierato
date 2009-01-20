@@ -1,1 +1,3 @@
 Introduction Readme
+
+delete the spensierato_setup.inc to force a new install or uncoment the the install = true line in spensierato_cms.inc

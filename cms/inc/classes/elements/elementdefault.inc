@@ -307,11 +307,11 @@ class elementDefault
 		$this->save_upload();
 		
 		//TODO call search code
-		$search = $this->generate_search($xml);
+//		$search = $this->generate_search($xml);
 		//TODO Archiving
 		
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'title'), array(time(), User::Singleton()->id(), $title));
-		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'search'), array($xml, $search));
+		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'search'), array($xml, $this->generate_search($xml)));
 		
 		return true;
 	}

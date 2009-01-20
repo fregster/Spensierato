@@ -184,23 +184,27 @@ class Database
 	//SQL Logging function
 	private function sql_log($sql_count, $sql_query, $sql_start_time, $sql_cache_hit)
 	{
-		if(Settings::Singleton()->get_setting('debug') > 0 && $this->options['allow_external_calls'])
+		if($this->options['allow_external_calls'])
 		{
-			if($sql_start_time != 0)
+			if(Settings::Singleton()->get_setting('debug') > 0)
 			{
-				$sql_exc_time = microtime() - $sql_start_time;
-			}
-			else
-			{
-				$sql_exc_time = 0;
-			}
-			
-			if ( ($sql_cache_hit == false) or (Settings::Singleton()->get_setting('debug') > 1)	)
-			{
-				$details = array('count' => $sql_count, 'query' => $sql_query, 'time' => $sql_exc_time, 'cached' => $sql_cache_hit);
-				array_push($this->sql_log_array, $details);
-				$this->sql_time = $this->sql_time + $sql_exc_time;
-				Debug::Singleton()->record('SQL', $details);
+				if($sql_start_time != 0)
+				{
+					$sql_exc_time = microtime() - $sql_start_time;
+				}
+				else
+				{
+					$sql_exc_time = 0;
+				}
+				
+				if ( ($sql_cache_hit == false) or (Settings::Singleton()->get_setting('debug') > 1)	)
+				{
+					$details = array('count' => $sql_count, 'query' => $sql_query, 'time' => $sql_exc_time, 'cached' => $sql_cache_hit);
+					array_push($this->sql_log_array, $details);
+					$this->sql_time = $this->sql_time + $sql_exc_time;
+					
+					Debug::Singleton()->record('SQL', $details);
+				}
 			}
 		}
 	}

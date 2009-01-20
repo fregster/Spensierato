@@ -1,14 +1,14 @@
-<?
+<?php
 /*	This file needs to setup a default database
-	
+
 	Method
 
 	Check the settings file does not exsist
 	Check that the settings file can be created
-	
+
 	Connect to DB
 		prompte for username, password and host (default localhost)
-	
+
 	Create the database
 		prompte for name
 
@@ -16,15 +16,15 @@
 		auto and ask for prompt to change
 
 	Create the tables
-		auto	
+		auto
 
 	Create a read only user
 		prompte for name creating a random password
-	
+
 	Create a read / write user
 		prompte for name creating a random password
-	
-	Write settings file out 
+
+	Write settings file out
 */
 
 //$settings_file = Settings::singleton()->get_setting('cms_root').'/../spensierato_setup.inc';
@@ -54,24 +54,24 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		die('Unable to create settings file ('.$settings_file.'), instalation aborted.<br/>Make sure the root dir is writeable or the file spensierato_setup.inc is created and writeable');
 	}
-	
+
 	//SQL connection settings
 	$username = post::variable('username');
 	$password = post::variable('password');
 	$host = post::variable('host');
 	$driver =  post::variable('type');
-	
+
 	//Database to create
 	$database = post::variable('database');
-	
+
 	//Tables
 	$prefix = post::variable('prefix');
-	
+
 	//Users
 	$user_r = post::variable('r_user');
 	$user_rw = post::variable('rw_user');
 	$user_db_password = post::variable('db_password');
-	
+
 	debug('Vars set');
 
 	/*
@@ -87,18 +87,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	/*
 	 * Create the database
 	 */
-
+	$db->dropDatabase($database);
 	$db->createDatabase($database);
-	
+
 	debug('DB created');
 	/**
 	 * Add the db users with the appropriate permissions
 	 * Read user select on all
 	 * Write user select, update, insert, delete on all
 	 */
-	
+
 	//TODO add grant sql
-	
+
 	//Replace the db object with a new one in the database
 	$db = database::custom_db_object(array('phptype'  => $driver,
 		    											'username' => $username,
@@ -107,7 +107,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 														'database' => $database),
 														NULL,
 														array('Manager'));
-	
+
 	debug('Connection replaced');
 	//Include the file which processes the SQL code
 	//Load aproprate sql file
@@ -116,51 +116,51 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		die('<br/>Unable to load install sql file '.$install_folder.'/'.$driver.'.inc');
 	}
-	
+
 	debug('Loading setup file');
-	include($install_folder.'/'.$driver.'.inc');	
-	
+	include($install_folder.'/'.$driver.'.inc');
+
 	//Execute sql
 	debug('Running...');
-	
-	$i = 0;	
+
+	$i = 0;
 	foreach($sql as $sql_str)
 	{
 		//Process sql
 		$sql_str = str_replace('cms_', $prefix.'_', $sql_str);
 		$resultset = $db->query($sql_str);
-		
-		if(PEAR::isError($resultset)) 
+
+		if(PEAR::isError($resultset))
 		{
 			$error = '<br/>Failed to issue query '.$i.', error message : ' . $resultset->getMessage().'<br />From : '. $sql_str;
 			die($error);
 		}
 		++$i;
 	}
-	
+
 	//Create the DB users and give permissions over the database
 	//TODO allow connections from specified places
-	$user_create_sql = array('CREATE USER \''.$user_rw.'\'@\'localhost\' IDENTIFIED BY \''.$user_db_password.'\'',
-	'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$database.'.* TO \''.$user_rw. '\'@\'localhost\'',
-	'CREATE USER \''.$user_r.'\'@\'localhost\' IDENTIFIED BY \''.$user_db_password.'\'',
-	'GRANT SELECT ON '.$database.'.* TO \''. $user_r. '\'@\'localhost\'');
-	
+	$user_create_sql = array('GRANT SELECT, INSERT, UPDATE, DELETE ON '.$database.'.*
+									TO \''.$user_rw. '\'@\'localhost\' IDENTIFIED BY \''.$user_db_password.'\'',
+							 'GRANT SELECT ON '.$database.'.*
+							 		TO \''. $user_r. '\'@\'localhost\' IDENTIFIED BY \''.$user_db_password.'\'');
+
 	debug('Createing users and permissions');
 	foreach($user_create_sql as $sql)
 	{
 		$resultset = $db->query($sql);
-	
-		if(PEAR::isError($resultset)) 
+
+		if(PEAR::isError($resultset))
 		{
 			$error = '<br/>Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
 			die($error);
 		}
 	}
-	
+
 	/*
 	 * Build the settings file string
 	 */
-	$settings_file_string = '<?
+	$settings_file_string = '<?php
 //This file contains the CMS settings required before we include the CMS code.
 
 //Database vars
@@ -175,28 +175,28 @@ $GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\';
 $GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
 $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 ?>';
-	
+
 	/*
 	 * Close and write the settings file
 	 */
 	fwrite($settings_file_handle, $settings_file_string);
 	fclose($settings_file_handle);
 	debug('Settings file created');
-	
+
 	require($settings_file);
 	debug('Settings file re-loaded');
-	
+
 	debug('Createing Homepage');
 	database::Singleton()->force_write_user();
 	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible', 'title'), array(0, time(), 0, 1, 'Homepage'));
-	
+
 	debug('Adding starting element');
 	$element = Element::type('elementText');
 	$element->create($id, false);
-	
+
 	debug('Adding site administrator');
 	$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true);
-	
+
 	debug('The site is now setup reload this page to see your new site<br />You can log in with the user admin and the password '.$password);
 }
 

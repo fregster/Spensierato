@@ -169,8 +169,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	//set the path for the settings file
 	$settings_file = $install_folder.'/../../spensierato_setup.inc';
 
-	/*
-	   * Build the settings file string
+	/**
+	* Build the settings file string
 	*/
 	$settings_file_string = '<?php
 		//This file contains the CMS settings required before we include the CMS code.
@@ -188,8 +188,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		$GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 		?>';
 
-	/*
-	   * Write the settings file
+	/**
+	* Write the settings file
 	*/
 	$write_result = file_put_contents($settings_file, $settings_file_string);
 
@@ -199,7 +199,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	else
 		debug('Settings file created');
 
-	debug('The site is now setup reload this page to see your new site<br />You can log in with the user admin and the password '.$password);
+	debug('The site is now setup<br />You can log in with the user admin and the password '.$password.'<br/>Click <a href="'.$GLOBALS['document_root'].'">here</a> to login');
 }
 
 function debug($text)

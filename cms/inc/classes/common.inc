@@ -110,7 +110,28 @@ abstract class Common
 //    	}
 //    	
 //		return $document_root;
+//		die($GLOBALS['document_root']);
 		return $GLOBALS['document_root'];
+    }
+    
+	public static function document_root_folder_only()
+    {
+    	$a = substr($_SERVER['PHP_SELF'], 0 , strripos($_SERVER['PHP_SELF'], '.php'));
+    	$document_root = substr($a, 0, strripos($a, '/'));
+    	if($document_root == '')
+    	{
+    		if( ($_SERVER['HTTPS'] == '') || ($_SERVER['HTTPS'] == 'off') )
+    		{
+    			$proto = 'http://';
+    		}
+    		else
+    		{
+    			$proto = 'https://';
+    		}
+    		$document_root = $proto . $_SERVER['SERVER_NAME'];
+    		
+    	}
+		return $document_root;
     }
 	
 	public static function site_root()

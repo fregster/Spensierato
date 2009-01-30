@@ -8,33 +8,47 @@
 		<style type="text/css">
 			body {background-color: transparent;}
 			.pad-div { margin-top:6px; margin-bottom: 6px; border:thin solid #000000; padding:5px; background:#DDDDDD;}
-			#notices {background:white; margin-left:100px; margin-right:100px; margin-top:5px; margin-bottom:5px; padding:5px;}
+			div#notices {background:white; margin-left:50px; margin-right:50px; margin-top:5px; margin-bottom:5px; padding:5px;}
+			div#notices_critical {background:red; border:thin solid darkred; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
+			div#notices_warning {background:LemonChiffon ; border:thin solid gold; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
+			div#create {text-align:right;}
 		</style>
 		
 	</head>
 <body>
 <div id="frame" style="width:600px; margin-left:auto; margin-right:auto;">
-<div><img src="<?php echo(Common::document_root()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0;" alt="" /></div>
+<div><img src="<?php echo(Common::document_root_folder_only()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0;" alt="" /></div>
 <div id="notices"><?php
+//die(Common::document_root());
 if(isset($req_missing[0]) or isset($opt_missing[0]))
 {
 	echo'Please note the following problems<br/>';
 	
-	foreach($req_missing as $req)
+	if(count($req_missing) > 0)
 	{
-		echo'The PHP package '.$req.' is required<br/>';
+		echo'<div id="notices_critical"><h3>The following packages are not install and are REQUIRED</h3>';
+		foreach($req_missing as $req)
+		{
+			echo $req.'<br/>';
+		}
+		echo'</div>';
 	}
 	
-	foreach($opt_missing as $opt)
+	if(count($req_missing) > 0)
 	{
-		echo'The PHP package '.$opt.' is recomended to be installed<br/>';
+		echo'<div id="notices_warning"><h3>The following packages are not install and are recomended</h3>';
+		foreach($opt_missing as $opt)
+		{
+			echo $opt.'<br/>';
+		}
+		echo'</div>';
 	}
 	
-	echo'You may continue to install but it might not work and even if it does the is little chance the site will<br/>';
+	echo'<p>You may continue to install but it might not work and even if it does the is little chance the site will</p><br/>';
 }
 else
 {
-	echo'All required and optional PHP extensions are installed<br/>';
+	echo'<p>All required and optional PHP extensions are installed</p><br/>';
 }
 
 if(!Common::rewrite_enabled())
@@ -81,7 +95,7 @@ if(!Common::rewrite_enabled())
 		<div>Email: <input type="text" name="user_email" value="root@localhost" /></div>
 	</div>
 	
-	<div><input type="submit" value="Create Site" /></div>
+	<div id="create"><input type="submit" value="Create Site" /></div>
 </form>
 </div>
 </div>

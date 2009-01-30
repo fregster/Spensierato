@@ -60,6 +60,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$user_r = post::variable('r_user');
 	$user_rw = post::variable('rw_user');
 	$user_db_password = post::variable('db_password');
+	
+	//Options
+	if(post::variable('rewrite')) { $rewrite = 'true'; }
 
 	debug('Vars set');
 
@@ -186,6 +189,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		$GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\';
 		$GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
 		$GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
+		$GLOBALS[\'allow_rewrite\'] = '. $rewrite.';
 		?>';
 
 	/**

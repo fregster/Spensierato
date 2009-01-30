@@ -11,6 +11,7 @@ $GLOBALS['database_name'] = 'spensierato';
 $GLOBALS['database_user_read'] = 'spensierato_read';
 $GLOBALS['database_user_readwrite'] = 'spensierato_writ';
 $GLOBALS['database_password'] = 'SBu8vPYdAm3F,c2e';
-$GLOBALS['table_prefix'] = 'cms_'
+$GLOBALS['table_prefix'] = 'cms_';
+$GLOBALS['allow_rewrite'] = false;
 
 ?>

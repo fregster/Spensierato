@@ -788,9 +788,8 @@ class CMS
 	
 	private function get_stylesheet()
 	{
-		header('content-type: text/xml');
-		echo(Template::Singleton()->load());
-		exit;
+		header('Content-Type: text/xml; charset=ISO-8859-1');
+		die(Template::Singleton()->load());
 	}
 	
 	private function get_js($path)
@@ -801,8 +800,6 @@ class CMS
 			$this->send_js_file($try);
 			exit;
 		}
-		
-//		die($try);
 		
 		$try = Settings::Singleton()->get_setting('cms_root') . '/publicfiles/'.Common::clean_path($path);
 		if(is_file($try))
@@ -819,8 +816,6 @@ class CMS
 
 			// javascript header
 			header('Content-type: text/javascript');
-
-//			die($file);
 			
 			switch (Settings::Singleton()->get_setting('js_minify')) 
 			{

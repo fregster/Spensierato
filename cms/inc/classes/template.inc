@@ -111,6 +111,14 @@ class Template
 	
 	private function build_xslt_template($xslt)
 	{
+//		'<?xml version='1.0'?>
+//<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsv="http://www.w3.org/2000/05/xsv" version="1.0" xmlns="http://www.w3.org/1999/xhtml" exclude-result-prefixes = "xsv">
+// <!-- $Id: xsv.xsl,v 1.12 2003/07/01 16:09:43 ht Exp $ -->
+// <!-- Stylesheet for XSV output:  this version tested with IE6 and 
+//Mozilla 1.3 -->
+// 
+// <xsl:output method="xml" indent="yes" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"/>
+//		
 		return '<?xml version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'"?>
 <xsl:stylesheet version="1.0" 
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

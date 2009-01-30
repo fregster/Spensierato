@@ -788,7 +788,7 @@ class CMS
 	
 	private function get_stylesheet()
 	{
-		header('Content-Type: text/xml; charset=ISO-8859-1');
+		header('Content-Type: text/xml; '.Settings::Singleton()->get_setting('char_set'));
 		die(Template::Singleton()->load());
 	}
 	

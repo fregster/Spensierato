@@ -121,16 +121,11 @@ class Template
 // 
 // <xsl:output method="xml" indent="yes" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"/>
 //
-*/		
+//
+*/
 		return '<?xml version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'"?>
-<xsl:stylesheet version="1.0" 
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:php="http://www.php.net/xsl"
-	xmlns:exslt="http://exslt.org/common"
-	lang="en" xml:lang="en"
-	xsl:extension-element-prefixes="php exslt">
-<xsl:output method="xml" version="1.0"
-encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
+<xsl:output method="html" version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 	'.$xslt.'
 </xsl:stylesheet>
 

@@ -76,9 +76,10 @@ class Render
 			//Just send the XML
 			header('content-type: text/xml');
 			$search = '<?xml version="1.0"?>';
+
 			
-			$replace .= '<?xml-stylesheet href="'. Settings::singleton()->get_setting('document_root').'/xslt" type="text/xsl" ?>';
-			if($_GET['xml'] == 1) { $replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'"?>'; }
+			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?><?xml-stylesheet type="text/xsl" href="'. Settings::singleton()->get_setting('document_root').'/xslt" ?>';
+			if($_GET['xml'] == 1) { $replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?>'; }
 /*			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'"?>';*/
 			
 			echo(str_replace($search, $replace, $xml));

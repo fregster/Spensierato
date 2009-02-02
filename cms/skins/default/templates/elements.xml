@@ -1,6 +1,6 @@
 
 	<xsl:template match="element[@type = 'elementText']">
-		<xsl:call-template name="element_admin_header"/>	
+		<xsl:call-template name="element_admin_header"/>
 		<xsl:element name="div">
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
 			<xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute>
@@ -9,9 +9,9 @@
 		</xsl:element>
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
-	
+
 	<xsl:template match="element[@type = 'elementContact']">
-		<xsl:call-template name="element_admin_header"/>	
+		<xsl:call-template name="element_admin_header"/>
 		<xsl:element name="div">
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
 			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
@@ -19,7 +19,7 @@
 		</xsl:element>
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
-	
+
 	<xsl:template match="element[@type = 'elementVideo']">
 		<xsl:call-template name="element_admin_header"/>
 		<xsl:if test="./data/filesize > 0">
@@ -32,7 +32,7 @@
 		</xsl:if>
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
-	
+
 	<xsl:template match="element[@type = 'elementGallery']">
 		<xsl:call-template name="element_admin_header"/>
 		<xsl:element name="div">
@@ -43,7 +43,7 @@
 		</xsl:element>
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
-	
+
 	<xsl:template match="element[@type = 'elementImage']">
 		<xsl:call-template name="element_admin_header"/>
 		<xsl:if test="./data/filesize > 0">
@@ -63,7 +63,7 @@
 		</xsl:if>
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
-	
+
 	<xsl:template match="element[@type = 'elementDownload']">
 		<xsl:call-template name="element_admin_header"/>
 		<xsl:if test="./data/filesize > 0">
@@ -79,19 +79,19 @@
 							<xsl:attribute name="alt">Icon</xsl:attribute>
 						</xsl:element> Download:
 					<xsl:value-of select="./data/linktext" /> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)
-				</xsl:element>			
+				</xsl:element>
 			</xsl:element>
 		</xsl:if>
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
-	
+
 	<xsl:template match="element[@type = 'elementFlash']">
 		<xsl:call-template name="element_admin_header"/>
 		<xsl:element name="div">
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
 			<xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute>
 			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
-			
+
 			<xsl:if test="./data/filesize > 0">
 				<div style="height: 500px; vertical-align: text-top;" id="flashcontent">You do not have Adobe Flash player installed.</div>
 				<script type="text/javascript">
@@ -101,11 +101,11 @@
 				    so.write("flashcontent");
 				</script>
 			</xsl:if>
-			
+
 		</xsl:element>
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
-	
+
 	<xsl:template match="element[@type = 'elementLink']">
 		<xsl:call-template name="element_admin_header"/>
 		<xsl:element name="div">
@@ -116,7 +116,7 @@
 		</xsl:element>
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
-	
+
 	<xsl:template match="element[@type = 'elementAccount']">
 		<div id="account_personal_details">
 		<xsl:if test="/user/administrator =1">You are set as a site Admin you have global edit permissions and have the ability to change site options</xsl:if>
@@ -143,7 +143,7 @@
 						<xsl:attribute name="name">forename</xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="/page/user/forename" /></xsl:attribute>
 					</xsl:element>
-				
+
 			</div>
 			</div>
 				<div class="account_title">Surname: </div>
@@ -153,7 +153,7 @@
 						<xsl:attribute name="name">surname</xsl:attribute>
 						<xsl:attribute name="value"><xsl:value-of select="/page/user/surname" /></xsl:attribute>
 					</xsl:element>
-				
+
 			</div>
 			<div>
 				<div class="account_title">E-Mail: </div>
@@ -169,7 +169,7 @@
 			</xsl:element>
 			<div id="account_change_password_link">
 			<xsl:element name="a"><xsl:attribute name="class">link tooltop</xsl:attribute><xsl:attribute name="href">
-			<xsl:value-of select="/page/settings/document_root" />/changepassword/<xsl:value-of select="page/@id" /></xsl:attribute>Change Password<span>Change Password</span></xsl:element>
+			<xsl:value-of select="/page/settings/document_root" />/changepassword/<xsl:value-of select="page/@id" /></xsl:attribute><span>Change Password</span></xsl:element>
 			</div>
 		</div>
 	</xsl:template>

@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
 		<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-		
+
 		<title>Spensierato Install Page</title>
-		
+
 		<style type="text/css">
 			body {background-color: transparent;}
 			.pad-div { margin-top:6px; margin-bottom: 6px; border:thin solid #000000; padding:5px; background:#DDDDDD;}
@@ -13,17 +13,17 @@
 			div#notices_warning {background:LemonChiffon ; border:thin solid gold; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
 			div#create {text-align:right;}
 		</style>
-		
+
 	</head>
 <body>
 <div id="frame" style="width:600px; margin-left:auto; margin-right:auto;">
-<div><img src="<?php echo(Common::document_root_folder_only()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0;" alt="" /></div>
+<div><img src="<?php echo(Common::document_root_folder_only()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0; position: fixed;" alt="" /></div>
 <div id="notices"><?php
 //die(Common::document_root());
 if(isset($req_missing[0]) or isset($opt_missing[0]))
 {
 	echo'Please note the following problems<br/>';
-	
+
 	if(count($req_missing) > 0)
 	{
 		echo'<div id="notices_critical"><h3>The following packages are not install and are REQUIRED</h3>';
@@ -33,7 +33,7 @@ if(isset($req_missing[0]) or isset($opt_missing[0]))
 		}
 		echo'</div>';
 	}
-	
+
 	if(count($req_missing) > 0)
 	{
 		echo'<div id="notices_warning"><h3>The following packages are not install and are recomended</h3>';
@@ -43,7 +43,7 @@ if(isset($req_missing[0]) or isset($opt_missing[0]))
 		}
 		echo'</div>';
 	}
-	
+
 	echo'<p>You may continue to install but it might not work and even if it does the is little chance the site will</p><br/>';
 }
 else
@@ -74,12 +74,12 @@ if(!Common::rewrite_enabled())
 			<div>Table Prefix name: <input type="text" name="prefix" value="<?php echo(Common::generate_random_string(3, false)); ?>" /></div>
 		</div>
 	</div>
-	
+
 	<div id="randomkey" class="pad-div">
 		Create a random key. This is used when generating hashes to help preventing people work out the final hash it defaults to a sha1 hash of the server microtime when you install.
 		<div>Random Key: <input type="text" name="random_key" value="<?php echo(sha1(microtime())); ?>" /></div>
 	</div>
-	
+
 	<div id="db_users" class="pad-div">
 		If no usernames are set then one will be created and a random password will be generated (Recomended)<br />
 		If the password set is does not meet the recomended length an random password will also be created
@@ -87,20 +87,20 @@ if(!Common::rewrite_enabled())
 		<div>Read Write username: <input type="text" name="rw_user" value="spensierato_writ" /></div>
 		<div>Users password: <input type="password" name="db_password" value="<?php echo(Common::generate_random_string(16)); ?>" /></div>
 	</div>
-	
+
 	<div id="users" class="pad-div">
 		Create a user for the site
 		<div>Username: <input type="text" name="user_username" value="admin" /></div>
 		<div>Password: <input type="text" name="user_password" value="<?php echo(Common::generate_random_string(8)); ?>" /></div>
 		<div>Email: <input type="text" name="user_email" value="root@localhost" /></div>
 	</div>
-	
+
 	<div id="options" class="pad-div">
 	<?php if(Common::rewrite_enabled()) {?>
 		<div>Enable URL re-writing, <input type="checkbox" name="rewrite" checked="checked" /><br/>Ensure your server has this enabled for this host either by AllowOverride all in the directory config to load the htaccess file or by defining the URL rewriting directly in the directory config</div>
 	<?php } ?>
 	</div>
-	
+
 	<div id="create"><input type="submit" value="Create Site" /></div>
 </form>
 </div>

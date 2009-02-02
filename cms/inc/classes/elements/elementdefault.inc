@@ -21,12 +21,12 @@ class elementDefault
 	protected $revision;
 	protected $draft;
 	protected $approve;
-	
+
 	protected $error = 'There was an error comitting your save';
-	
+
 	private $tags = array('title' => 'text');
 	private $element;
-	
+
 	function __construct()
 	{
 		$this->type = __CLASS__;
@@ -35,10 +35,10 @@ class elementDefault
 		$this->image_edit = 'page_edit';
 		$this->edit_height = 400;
 		$this->edit_width = 700;
-		
+
 		$this->add_header();
 	}
-	
+
 	protected function allowed_tags($tags)
 	{
 		foreach($tags as $key => $tag)
@@ -53,7 +53,7 @@ class elementDefault
 		$time = time();
 		$this->id = database::Singleton()->sql_insert('tbl_elements', array('type', 'created', 'creator'), array($this->type, $time, user::Singleton()->id()));
 		$sort = database::Singleton()->sql_max_field('tbl_page_elements', 'sort', array('page_id'), array($main_page));
-		
+
 		database::Singleton()->sql_insert('tbl_page_elements', array('page_id', 'element_id', 'main','ts', 'sort'), array($main_page, $this->id, 1, $time, $sort+1));
 		database::Singleton()->sql_insert('tbl_elements_data', array('id', 'data'), array($this->id, '<null />'));
 		if($redirect)
@@ -62,7 +62,7 @@ class elementDefault
 		}
 		return true;
 	}
-	
+
 	public function build($id, $data = NULL, $link = NULL)
 	{
 		$this->id = $id;
@@ -77,18 +77,18 @@ class elementDefault
 		$this->get_data($data);
 		Content::Singleton()->attach_content($this->render());
 	}
-	
+
 	public function main()
 	{
 		return $this->link['page_id'];
 	}
-	
+
 	public function render()
 	{
 		//Create DOM
 		$dom = new DOMDocument();
 		$dom->formatOutput = false;
-		
+
 		//Create element and set required attributes
 		$this->element = $dom->createElement('element');
 		$this->element->setAttribute('id', $this->id);
@@ -97,26 +97,26 @@ class elementDefault
 		$this->element->setAttribute('eh', $this->edit_height);
 		$this->element->setAttribute('ew', $this->edit_width);
 		$this->element->setAttribute('image', $this->image);
-		
+
 		$this->admin();
-		
+
 		//Transform the data field
 		$this->transform_data();
-		
+
 		//Create XML tag
 		$element_data = $dom->createDocumentFragment();
-		
+
 		//Attach the data
 		$element_data->appendXML($this->data);
 		$this->element->appendChild($element_data);
-		
+
 		//Attach the element to the root dom
 		$dom->appendChild($this->element);
-		
+
 		//Return the completed XML of the document
 		return $dom->saveXML();
 	}
-	
+
 	public function save($draft = true)
 	{
 		if($this->attach_upload() == false)
@@ -125,9 +125,9 @@ class elementDefault
 			return false;
 		}
 		$extra = $this->attach_extra_data();
-		
+
 		$details = array_merge($_POST, $extra);
-		
+
 		//Build posted data as XML structure
 		$xml = '<xml>';
 		foreach($details as $key => $value)
@@ -137,7 +137,7 @@ class elementDefault
 			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
 		}
 		$xml .= '</xml>';
-		
+
 		//Check data
 		foreach($this->tags as $key => $value)
 		{
@@ -156,7 +156,7 @@ class elementDefault
 				$built_xml .= '<'.$key.'>'.utf8_encode(common::sql_clean(strip_tags(Common::html($data)))).'</'.$key.'>';
 			}
 		}
-		
+
 		if($draft)
 		{
 			//database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array($this->id,user::Singleton()->id()), array('data', 'ts'), array(common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES))), CMS::Singleton()->time()));
@@ -182,9 +182,9 @@ class elementDefault
 			}
 			return false;
 		}
-				
+
 	}
-	
+
 	protected function attach_upload()
 	{
 		//Does this element type possibly have files
@@ -205,52 +205,52 @@ class elementDefault
 			else
 			{
 				//Set the error message
-				switch ($_FILES['uploadedfile']['error']) 
+				switch ($_FILES['uploadedfile']['error'])
 				{
 					case 1:
 						$this->error = 'The uploaded file exceeds the upload_max_filesize directive in php.ini. ';
 					break;
-					
+
 					case 2:
 						$this->error = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. ';
 					break;
-					
+
 					case 3:
 						$this->error = 'The uploaded file was only partially uploaded. ';
 					break;
-					
+
 					case 4:
 						//This is not an error so return true and escape
 						$this->error = 'No file was uploaded';
 						return true;
 					break;
-					
+
 					case 6:
 						$this->error = 'Missing a temporary upload folder.';
 					break;
-					
+
 					case 7:
 						$this->error = 'Failed to write file to disk.';
 					break;
-					
+
 					case 8:
 						$this->error = 'File upload stopped by extension.';
 					break;
-					
+
 					default:
 						$this->error = 'Unknow upload error';
 					break;
 				}
 			}
-			
+
 			//Upload failed return false
 			return false;
-		}	
-		
+		}
+
 		//no uploads return true to allow outer function to continue.
 		return true;
 	}
-	
+
 	private function save_upload()
 	{
 		if(isset($this->tags['file']))
@@ -258,8 +258,8 @@ class elementDefault
 			return filetransfer::singleton()->save_file($this->id, $this->revision);
 		}
 	}
-	
-	
+
+
 	public function toggle($what)
 	{
 		switch ($what)
@@ -271,19 +271,21 @@ class elementDefault
 			case 'delete':
 				return( $this->toggle_deleted());
 				break;
-			
+			case 'quickapprove':
+				return( $this->toggle_quickapprove());
+				break;
 		default:
 			return false;
 		}
-			
+
 	}
-	
+
 	protected function toggle_visibility()
 	{
 		$new_visibility = ($this->visible - 1)*(-1);
 		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('visible'), array($new_visibility));
 	}
-	
+
 	protected function toggle_deleted()
 	{
 		if($this->deleted == (NULL or 0))
@@ -296,32 +298,40 @@ class elementDefault
 		}
 		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('deleted'), array($this->deleted));
 	}
-	
+
+	protected function toggle_quickapprove(){
+		//TO FIX: currently this only approvs the most recent pending edit.
+		$approvalData = end(database::Singleton()->sql_select(array('user_id', 'ts', 'data'), 'tbl_elements_approve', array('element_id'), array($this->id)));
+		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'approved', 'approver'), array($approvalData['ts'], $approvalData['user_id'], time(), User::Singleton()->id()));
+		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'search'), array($approvalData['data'], $this->generate_search($approvalData['data'])));
+		return database::Singleton()->sql_delete_where('tbl_elements_approve', array('element_id'), $this->id);
+	}
+
 	protected function generate_search($input)
 	{
 		return strip_tags($input);
 	}
-	
+
 	protected function process_save($xml, $title)
 	{
 		$this->save_upload();
-		
+
 		//TODO call search code
 //		$search = $this->generate_search($xml);
 		//TODO Archiving
-		
+
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'title'), array(time(), User::Singleton()->id(), $title));
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'search'), array($xml, $this->generate_search($xml)));
-		
+
 		return true;
 	}
-	
+
 	protected function submit_save_for_approval($xml, $title)
 	{
-		database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));	
+		database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
 		return true;
 	}
-	
+
 	//add extra data when in admin mode
 	public function admin()
 	{
@@ -339,12 +349,12 @@ class elementDefault
 			{
 				$this->element->setAttribute('approved', $this->$approved);
 			}
-			
+
 			if(isset($this->$approver))
 			{
 				$this->element->setAttribute('approver', $this->$approver);
 			}
-			
+
 			$this->element->setAttribute('revision', $this->revision);
 			$this->element->setAttribute('draft_available', $this->draft);
 			$this->element->setAttribute('new_v_available', $this->approve);
@@ -353,18 +363,18 @@ class elementDefault
 			$this->element->setAttribute('deleted', $this->deleted);
 		}
 	}
-	
+
 	public function ajax_edit()
 	{
 		return common::node_from_xml($this->data, '/data/html');
 	}
-	
+
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor
 	protected function transform_data()
 	{
 		//$this->data = $this->data;
 	}
-	
+
 	protected function get_data($data = NULL)
 	{
 		if($this->id != 'blank')
@@ -376,7 +386,7 @@ class elementDefault
 			}
 
 			$dbxml = '<data>'.$data.'</data>';
-			
+
 			if(options::Singleton()->get_option('admin_mode'))
 			{
 				$built_xml = '<data>';
@@ -386,17 +396,17 @@ class elementDefault
 					//Check if the user has any outstanding approvals waiting
 					$user_awaiting_approval = Database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()), NULL, NULL, TRUE);
 					$user_draft = Database::Singleton()->sql_select_first(array('ts'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()), NULL, NULL, TRUE);
-					
+
 					if(Security::Singleton()->can_approve_element($this->id) )
 					{
 						$can_approve = Database::Singleton()->sql_select_first(array('ts'), 'tbl_elements_approve', array('element_id'), array($this->id), NULL, NULL, TRUE);
 					}
-					
+
 					if(isset($can_approve) or (isset($user_awaiting_approval)) )
 					{
 						$this->approve = true;
 					}
-					
+
 					if(isset($user_draft['ts']))
 					{
 						$this->draft = $user_draft['ts'];
@@ -404,7 +414,7 @@ class elementDefault
 					if($key == 'title')
 					{
 						$data = Database::Singleton()->sql_select_first(array('title', 'visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);
-						
+
 						$this->visible = $data['visible'];
 						$this->deleted = $data['deleted'];
 						$this->created = $data['created'];
@@ -420,7 +430,7 @@ class elementDefault
 					{
 						$data = common::node_from_xml($dbxml, '/data/'.$key);
 					}
-					
+
 					if($value == 'html') { $data = Common::html($data); }
 					$data = utf8_decode(strip_tags($data));
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
@@ -433,8 +443,8 @@ class elementDefault
 			{
 				$this->data = $dbxml;
 			}
-			
-			
+
+
 			$this->search = $db['search'];
 		}
 		else
@@ -443,7 +453,7 @@ class elementDefault
 			$this->search = NULL;
 		}
 	}
-	
+
 	protected function get_revision()
 	{
 		$this->revision = Database::Singleton()->sql_count_where('tbl_element_data_archive', 'element_id', $this->id, options::Singleton()->get_option('admin_mode'));
@@ -452,13 +462,13 @@ class elementDefault
 
 	protected function add_header()
 	{
-			
+
 	}
-	
+
 	protected function attach_extra_data()
 	{
 		return array();
 	}
-		
+
 }
 ?>

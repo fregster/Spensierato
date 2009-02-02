@@ -625,12 +625,11 @@ class Database
 				{					
 					$j = 0;
 					$count_or = count($where_values[$i]) -1;
+					$sql_temp_where_or = '`'.$this->sql_clean_input($where_fields[$i]) .'` = ';
 					while($j <= ($count_or))
-					{
-						$sql_temp_where_or = '`'.$this->sql_clean_input($where_fields[$i]) .'` = ';
-						
+					{						
 						//Quote non numeric values
-						if(is_numeric($where_values[$i][$j])) { $sql_temp_where_or .= $where_values[$i][$j]; } else { $sql_temp_where_or .= '"'. $this->sql_clean_input($where_values[$i][$j]) .'"';} 
+						if(is_numeric($where_values[$i][$j])) {	$sql_temp_where_or .= $where_values[$i][$j]; }else{ $sql_temp_where_or .= '"'. $this->sql_clean_input($where_values[$i][$j]) .'"'; } 
 						
 						$j++;
 						if(isset($where_values[$i][$j]))

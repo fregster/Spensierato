@@ -99,9 +99,6 @@ class Render
 		
 		/* output the html */
 		$this->send_html();
-		
-		/* ouput debug stuff */
-		//Debug::Singleton()->render();
 		die();
 	}
 	
@@ -115,12 +112,12 @@ class Render
 			$contents = gzencode(html_entity_decode($content), Settings::Singleton()->get_setting('output_compression_level'));
 			header ('Content-Encoding: gzip');
 			header ('Content-Length: ' . strlen($contents));
-			die($contents);
+			echo($contents);
 		}
 		else
 		{
 			/* output the html */
-			die(html_entity_decode($content));
+			echo(html_entity_decode($content));
 		}
 	}
 	

@@ -63,7 +63,7 @@ class Debug
 		
 		if($render)
 		{
-			return Common::array_to_xml($this->debug_log);
+			return Common::array_to_xml_simple($this->debug_log, 'xml', 'item');
 			// TODO cookie::Singleton()->debug();
 		}
 		else

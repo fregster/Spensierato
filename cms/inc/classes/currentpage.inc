@@ -12,6 +12,7 @@ class currentPage
 	private $page_type;
 	private $id;
 	private $path;
+	private $xslt = false;
 	
 	public static function Singleton()
 	{
@@ -35,6 +36,11 @@ class currentPage
 		
 		//Load the page class
 		$page = new page;
+		
+		if($_GET['xml'] == 2 or Settings::singleton()->get_setting('send_as_xml') == true)
+		{
+			$this->xslt = true;
+		}
 	}
 	
 	public function __clone()
@@ -196,6 +202,7 @@ class currentPage
 						break;
 						
 					case 'xslt':
+						$this->xslt = true;
 						return array('type' => 'STYLESHEET',
 									'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
 						break;
@@ -415,6 +422,11 @@ class currentPage
 		$page = Database::Singleton()->sql_select_first(NULL, 'tbl_pages', array('id'), array($id));
 		return $page;
 		
+	}
+	
+	public function xslt()
+	{
+		return $this->xslt;
 	}
 }
 ?>

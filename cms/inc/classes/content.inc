@@ -234,7 +234,7 @@ class Content
 				$ids = array();
 				foreach($elements as $id)
 				{
-					array_push($ids, $id['element_id']);
+					$ids[] = $id['element_id'];
 				}
 				$data = Database::Singleton()->sql_select(array('*'), 'tbl_elements', array('id', 'visible', 'deleted'), array($ids, $this->visible, $this->deleted), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
 				$element_data = Database::Singleton()->sql_select(array('*'), 'tbl_elements_data', array('id'), array($ids), array('id'), NULL, options::Singleton()->get_option('admin_mode'));

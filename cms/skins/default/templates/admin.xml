@@ -255,8 +255,8 @@
 						</xsl:element>
 						<xsl:if test="./@new_v_available > 0"> New version awaiting approval </xsl:if>
 					</xsl:otherwise>
-					<xsl:if test="./@draft_available > 0"> You have a draft update saved </xsl:if>
 				</xsl:choose>
+				<xsl:if test="./@draft_available > 0"> You have a draft update saved </xsl:if>
 			</xsl:element>
 		</xsl:if>
 		</xsl:if>

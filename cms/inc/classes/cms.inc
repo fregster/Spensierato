@@ -19,7 +19,7 @@ class CMS
 	private $microtime;
 	private $time_start;
 	private $time_finish;
-	private $memcached;
+	private $persistant_cache;
 	//Switch to turn on testing / debuging / logging
 	private $testing = true;
 	
@@ -44,8 +44,13 @@ class CMS
 
 	private function __construct()
 	{
-		//Is memcached supported
-		$this->memcached();
+		//Is a persistant_cache available ie memcached supported
+		$this->persistant_cache = persistantcache::Singleton()->load();
+		
+		if($this->persistant_cache == true)
+		{
+			Database::Singleton()->use_memcached();
+		}
 		
 		//Start the session
 		$this->start_session();
@@ -952,21 +957,9 @@ class CMS
 		return false;
 	}
 
-	private function memcached()
+	private function persistant_cache()
 	{
-
-//		$memcache = new Memcache;
-//		$memcache->connect('localhost', 11211) or die ("Could not connect");
-		$this->memcached = false;		
-		
-//		print_r($memcache);
-//		
-//		
-//		$version = $memcache->getVersion();
-//		echo "Server's version: ".$version."<br/>\n";
-		
-		
-		return $this->memcached;
+		return persistantcache::Singleton()->load();
 	}
 }
 ?>

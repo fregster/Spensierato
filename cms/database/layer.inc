@@ -820,33 +820,51 @@ class Database
 		{
 			//Set cache hit to false only set true if actually a hit
 			$this->sql_cache_hit = false;
-
-			if(isset($_SESSION['sql_cache'][$sql]))
+			$result = false;
+			if($this->memcached)
+			{
+				$result = persistantcache::Singleton()->get($sql, array('time' => $this->time, 'result' => $result));
+			}
+			else
+			{
+				if(isset($_SESSION['sql_cache'][$sql]))
+				{
+					$result = $_SESSION['sql_cache'][$sql];
+				}
+			}
+			if($result != false)
 			{
 				if($values != NULL)
 				{
 					//This was a prepared statment return the correct cached result
-					if(	(isset($_SESSION['sql_cache'][$sql][$values])) and ($_SESSION['sql_cache'][$sql][$values]['time'] >= ($this->time - 30)))
+					if(	(isset($result[$values])) and ($result[$values]['time'] >= ($this->time - 30)))
 					{
-						return $_SESSION['sql_cache'][$sql][$values];
+						return $result[$values];
 					}
 					//SQL Query has been done before but with diffrent values
 					return false;
 				}
 
-				if($_SESSION['sql_cache'][$sql]['time'] >= ($this->time - 30) )
+				if($result['time'] >= ($this->time - 30) )
 				{
 					//Result cached and current
 					$this->sql_cache_hit = true;
 					$this->sql_cache_hits++;
 					$this->sql_log($this->site_sql_count, $sql, 0, true);
 
-					return $_SESSION['sql_cache'][$sql]['result'];
+					return $result['result'];
 				}
 				else
 				{
 					//SQL Query is old so delete it and re-check the DB
-					unset($_SESSION['sql_cache'][$sql]);
+					if($this->memcached)
+					{
+						$result = persistantcache::Singleton()->drop($sql);
+					}
+					else
+					{
+						unset($_SESSION['sql_cache'][$sql]);
+					}
 					return false;
 				}
 			}
@@ -859,7 +877,7 @@ class Database
 	{
 		if($this->memcached)
 		{
-
+			persistantcache::Singleton()->save($sql, array('time' => $this->time, 'result' => $result));
 		}
 		else
 		{

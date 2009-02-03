@@ -1,25 +1,30 @@
 This CMS currently requires
 
 //PHP related
-PHP 5.2 ish
-
-	PECL / PEAR
-	SimpleXML (PHP Core 5.2+)
-	Tidy
-	MDB2
-	XML/Serializer.php
-	PHP xsltProcessor
 	
+	PHP 5.2 ish
+	PECL / PEAR
+	MDB2
+	
+	Strongly Recomended
+	XML/Serializer.php
+	PHP xsltProcessor	
 	GD and FreeType libraries
 	
-	mcrypt //Pref
-	text_diff //Pref
-	Hash //Optional
+	Recomeded
+	Tidy
+	mcrypt
+	text_diff
+	
+	Optional
+	Hash
 	php-ffmpeg and ffmpeg //Optional, Pref if you want to suport multiple video codec types and createing video thumbnails
-	//An included proxy class is included to ffmpeg but it is much less efficent than installing php-ffmpeg as a PHP extension 
+	
+	
+//An included proxy class is included to ffmpeg but it is much less efficent than installing php-ffmpeg as a PHP extension 
 
 //Database related
-MySQL (or SQL server that supports the LIMIT call)
+MySQL (or SQL server that supports the LIMIT call untill the DB layer can be updated)
 
 
 

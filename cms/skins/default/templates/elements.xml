@@ -168,8 +168,11 @@
 			</div>
 			</xsl:element>
 			<div id="account_change_password_link">
-			<xsl:element name="a"><xsl:attribute name="class">link tooltop</xsl:attribute><xsl:attribute name="href">
-			<xsl:value-of select="/page/settings/document_root" />/changepassword/<xsl:value-of select="page/@id" /></xsl:attribute><span>Change Password</span></xsl:element>
+			<xsl:element name="a">
+				<xsl:attribute name="class">submodal</xsl:attribute>
+				<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/changepassword</xsl:attribute>
+				<span>Change Password</span>
+			</xsl:element>
 			</div>
 		</div>
 	</xsl:template>

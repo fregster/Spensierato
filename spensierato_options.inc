@@ -8,7 +8,7 @@
 //Alows overwriting of the db settings with settings from this file
 //Must be GLOBAL as this var is called in the construct function
 //true / false
-Settings::Singleton()->new_setting('protect_db_settings', true, true, false);
+Settings::Singleton()->new_setting('protect_db_settings', true, true, true);
 
 //Setting Intro text
 //String

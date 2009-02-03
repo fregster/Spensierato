@@ -71,17 +71,15 @@ class Render
 	private function render($template, $xml)
 	{
 		// Load the site XML pass directly into Render
-		if($_GET['xml'] or Settings::singleton()->get_setting('send_as_xml'))
+		if(isset($_GET['xml']) or Settings::singleton()->get_setting('send_as_xml') or class_exists('xsltProcessor') === false)
 		{
 			//Just send the XML
 			header('content-type: text/xml');
-			$search = '<?xml version="1.0"?>';
-
 			
+			$search = '<?xml version="1.0"?>';
 			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?><?xml-stylesheet type="text/xsl" href="'. Settings::singleton()->get_setting('document_root').'/xslt" ?>';
 			if($_GET['xml'] == 1) { $replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?>'; }
-/*			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'"?>';*/
-			
+
 			echo(html_entity_decode(str_replace($search, $replace, $xml)));
 			exit;
 		}
@@ -147,8 +145,7 @@ class Render
 		
 		/*$remove = array('<?xml version="1.0" encoding="UTF-8"?>');*/
 						
-		$this->html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'.str_replace($remove, '', $this->html);
+		$this->html = template::singleton()->dtd().str_replace($remove, '', $this->html);
 	
 		$this->tidy();
 	}

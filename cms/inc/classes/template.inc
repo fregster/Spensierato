@@ -56,6 +56,23 @@ class Template
 		return $this->build_xslt_template($this->load_xslt_template());
 	}
 	
+	public function dtd()
+	{		
+		$dtd = array(
+		'xhtml' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">',
+		'transitional' => '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',
+		
+		);
+		
+		if(isset($dtd[Settings::singleton()->get_setting('template_dtd')]))
+		{
+			return $dtd[Settings::singleton()->get_setting('template_dtd')];
+		}
+		
+		return $dtd['xhtml'];
+	}
+	
 	public function edit()
 	{
 		$path = $this->template_path = Settings::Singleton()->get_setting('cms_root').'/skins/edit/edit.xml';
@@ -115,10 +132,8 @@ class Template
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
 <xsl:output method="html" version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 	'.$xslt.'
-</xsl:stylesheet>
+</xsl:stylesheet>';		
 
-';		
-//		print_r(currentpage::singleton()->xslt()); die();
 		if(currentpage::singleton()->xslt() === true)
 		{
 			$footer = '<div id="page_section_footer">Page rendered client side</div>';

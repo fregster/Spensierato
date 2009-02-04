@@ -6,7 +6,7 @@ class persistantcache
 	private $enabled = false;
 	private $prefix;
 	private $servers = array(array('host' => 'localhost', 'port'=>11211));
-	private $maxsession_cache_time = 30;
+	private $maxsession_cache_time = 30; //0 sets to never expire
 	private $retry_time = 30;
 	private $allow_session_cache = true;
 	
@@ -74,7 +74,16 @@ class persistantcache
 	
 	public function save($name, $value, $time = 0)
 	{
-		$value = array('value' => $value, 'time' => cms::time());
+		$expire_time = cms::time() + $this->maxsession_cache_time;
+		if($time != 0)
+		{
+			$expire_time = $expire_time + $time;
+		}
+		else
+		{
+			$expire_time = $expire_time + 999999999999999999999999;
+		}
+		$value = array('value' => $value, 'time' => $expire_time);
 		if($this->enabled)
 		{
 			$result = $this->store->replace($this->prefix.$name, $value, MEMCACHE_COMPRESSED, $time);
@@ -104,7 +113,7 @@ class persistantcache
 			$result = $_SESSION['cache'][$this->prefix.$name];
 		}
 		
-		if($result['time'] + $this->maxsession_cache_time > cms::time())
+		if($result['time'] > cms::time())
 		{
 			return $result['value'];
 		}

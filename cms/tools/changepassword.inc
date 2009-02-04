@@ -5,7 +5,8 @@ define('PASS_EMPTY_OLD', 1);
 define('PASS_EMPTY_NEW', 2);
 define('PASS_WRONG_OLD', 3);
 define('PASS_IDENTICAL', 4);
-define('PASS_SUCCESS', 5);
+define('PASS_CONFIRM', 5);
+define('PASS_SUCCESS', 6);
 
 //function to reload the page with the error code
 function send_msg($error){
@@ -16,9 +17,28 @@ function send_msg($error){
 $passwordForm = <<< HTMLBLOCK
 <div id="password_box">
 	<form method="post" action="" id="password">
-		<div>Old Password: <input type="password" id="oldPass" name="oldPass" /></div>
-		<div>New Password: <input type="password" id="newPass" name="newPass" /></div>
-		<div><input type="submit" name="savePass" value="Change Password" /></div>
+		<table>
+			<tr>
+				<td>Old Password:</td>
+				<td><input type="password" id="oldPass" name="oldPass" /></td>
+			</tr>
+			<tr>
+				<td>New Password:</td>
+				<td><input type="password" id="newPass" name="newPass" /></td>
+			</tr>
+			<tr>
+				<td>Confirm New Password:</td>
+				<td><input type="password" id="newPassConf" name="newPassConf" /></td>
+			<tr>
+				<td colspan="2">
+					<input type="checkbox" id="emailPass" name="emailPass" />
+					<label for="emailPass"> Email me my new password.</label>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><input type="submit" name="savePass" value="Change Password" /></td>
+			</tr>
+		</table>
 	</form>
 </div>
 HTMLBLOCK;
@@ -58,6 +78,9 @@ if (!$posted) {
 				$error .= 'The new password you entered is identical to the old one!';
 				break;
 			case 5:
+				$error .= 'The password confirmation is wrong!';
+				break;
+			case 6:
 				$passwordForm = $successHTML;
 				unset($error);
 				break;
@@ -73,6 +96,7 @@ if (!$posted) {
 //check for errors
 if (!$postVars->variable('oldPass')) send_msg(PASS_EMPTY_OLD);
 if (!$postVars->variable('newPass')) send_msg(PASS_EMPTY_NEW);
+if (strcmp($postVars->variable('newPass'), $postVars->variable('newPassConf'))) send_msg(PASS_CONFIRM);
 
 //get the user id and hash the old/new password values
 $userid = user::Singleton()->id();
@@ -90,6 +114,18 @@ if (!strcmp($postVars->variable('oldPass'), $postVars->variable('newPass'))) sen
 
 //if no errors occured, save the new password
 database::Singleton()->sql_update_by_id($userid, 'tbl_users', array('password'), array($hashedNewPass));
+
+//email the password to the user if requested
+if (!is_null($postVars->variable('emailPass'))) {
+	$to = user::Singleton()->email();
+	$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
+	$subject = 'New password at '.settings::singleton()->get_setting('site_name_long');
+	$message = '<p>Dear user. You have changed your password.<br />The new password is: '.$postVars->variable('newPass').'.
+				<br />Please keep your passwords safe and secret.
+				<br />Best regards, <br />'.Settings::singleton()->get_setting('site_name_long').' team.</p>';
+
+	common::email($to, $from, $subject, $message, true);
+}
 
 //display the success msg
 send_msg(PASS_SUCCESS);

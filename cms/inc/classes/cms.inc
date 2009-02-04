@@ -153,7 +153,7 @@ class CMS
 		
 		$sql_string = $sql_info[0].' SQL Querys ('.round($sql_info[1]).'% Cached in '.$cache.')';
 
-		$runtime=('<div class="footer_text">Page generated in ' . Common::microtime_to_seconds($totaltime) . ' seconds<br /> ' . round((100/$totaltime*$phptime), 0) . '% php time and with ' .$sql_string.'</div>');
+		$runtime=('<div class="footer_text">Page generated in ' . Common::microtime_to_seconds($totaltime) . ' seconds<br /> ' . round((100/$totaltime*$phptime), 0) . '% php time and with ' .$sql_string.' using '. round(memory_get_peak_usage() / 1024) .'KB</div>');
 		
 		return ('<div id="page_section_footer">'.$runtime.'</div>');
 
@@ -289,7 +289,7 @@ class CMS
 		{
 			if (isset($_SESSION['REMOTE_IP']))
 			{
-				if ($_SESSION['REMOTE_IP'] != md5($_SERVER['REMOTE_ADDR']))
+				if ($_SESSION['REMOTE_IP'] != $_SERVER['REMOTE_ADDR'])
 				{
 					/* The remote ip has changed from when the session was created the cookie might have been hijacked */
 					$this->destroy_session();
@@ -297,7 +297,7 @@ class CMS
 			}
 			else
 			{
-				$_SESSION['REMOTE_IP'] = md5($_SERVER['REMOTE_ADDR']);
+				$_SESSION['REMOTE_IP'] = $_SERVER['REMOTE_ADDR'];
 			}
 		}
 	}
@@ -585,6 +585,7 @@ class CMS
 				{
 					if(is_file($file))
 					{
+						Cache::headers_allow_cache($file, true);
 						FileTransfer::singleton()->get_file($file, true, false);
 						die();
 					}

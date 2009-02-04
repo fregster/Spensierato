@@ -166,7 +166,10 @@ class Database
 
 	public function use_memcached()
 	{
-		$this->memcached = true;
+		if($this->options['allow_external_calls'])
+		{
+			$this->memcached = true;
+		}
 	}
 
 	private function sql_clean_input($var)

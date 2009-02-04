@@ -122,6 +122,7 @@ class Render
 	
 	public function send_css()
 	{
+		Cache::headers_allow_cache(NULL);
 		$this->final_output(Template::Singleton()->send_css());
 	}
 	

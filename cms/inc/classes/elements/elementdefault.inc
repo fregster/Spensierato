@@ -259,7 +259,6 @@ class elementDefault
 		}
 	}
 
-
 	public function toggle($what)
 	{
 		switch ($what)
@@ -290,11 +289,11 @@ class elementDefault
 	{
 		if($this->deleted == (NULL or 0))
 		{
-			$this->deleted = CMS::time();
+			$this->deleted = CMS::Singleton()->time();
 		}
 		else
 		{
-			$this->deleted = NULL;
+			$this->deleted = 0;
 		}
 		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('deleted'), array($this->deleted));
 	}

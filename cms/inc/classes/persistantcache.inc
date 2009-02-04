@@ -7,6 +7,8 @@ class persistantcache
 	private $prefix;
 	private $servers = array(array('host' => 'localhost', 'port'=>11211));
 	private $maxsession_cache_time = 30; //0 sets to never expire
+	private $max_objects_in_session_cache = 50;
+	private $max_object_size = 2048;
 	private $retry_time = 30;
 	private $allow_session_cache = true;
 	
@@ -47,6 +49,7 @@ class persistantcache
 		if($this->enabled == false && $this->allow_session_cache)
 		{
 			$_SESSION['cache'] = array();
+			$_SESSION['cache_count'] = 0;
 		}
 	}
 	
@@ -83,22 +86,31 @@ class persistantcache
 		{
 			$expire_time = $expire_time + 999999999999999999999999;
 		}
-		$value = array('value' => $value, 'time' => $expire_time);
-		if($this->enabled)
+		$value = array('value' => serialize($value), 'time' => $expire_time);
+		if(strlen($value['value']) < $this->max_object_size)
 		{
-			$result = $this->store->replace($this->prefix.$name, $value, MEMCACHE_COMPRESSED, $time);
-			if( $result == false )
+			if($this->enabled)
 			{
-			    $result = $this->store->set($this->prefix.$name, $value, MEMCACHE_COMPRESSED, $time);
+				$result = $this->store->replace($this->prefix.$name, $value, MEMCACHE_COMPRESSED, $time);
+				if( $result == false )
+				{
+				    $result = $this->store->set($this->prefix.$name, $value, MEMCACHE_COMPRESSED, $time);
+				}
+				return result;
 			}
-			return result;
-		}
-		else if($this->allow_session_cache)
-		{
-			$_SESSION['cache'][$this->prefix.$name] = $value;
-			return true;
-		}
-		
+			else if($this->allow_session_cache)
+			{
+				if($_SESSION['cache_count'] > $max_objects_in_session_cache)
+				{
+					$_SESSION['cache'] = array_reverse($_SESSION['cache']);
+					array_pop($_SESSION['cache']);
+					$_SESSION['cache'] = array_reverse($_SESSION['cache']);
+				}
+				$_SESSION['cache'][$this->prefix.$name] = $value;
+				++$_SESSION['cache_count'];
+				return true;
+			}
+		}		
 		return false;
 	}
 	
@@ -115,7 +127,7 @@ class persistantcache
 		
 		if($result['time'] > cms::time())
 		{
-			return $result['value'];
+			return unserialize($result['value']);
 		}
 		
 		return false;
@@ -149,6 +161,7 @@ class persistantcache
 			if($this->allow_session_cache)
 			{
 				$_SESSION['cache'] = array();
+				$_SESSION['cache_count'] = 0;
 			}
 		}
 	}

@@ -877,7 +877,7 @@ class Database
 	{
 		if($this->memcached)
 		{
-			persistantcache::Singleton()->save($sql, array('time' => $this->time, 'result' => $result));
+			persistantcache::Singleton()->save($sql, array('time' => $this->time, 'result' => $result), 30);
 		}
 		else
 		{

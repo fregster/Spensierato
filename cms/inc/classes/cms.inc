@@ -44,10 +44,11 @@ class CMS
 
 	private function __construct()
 	{
-		//Is a persistant_cache available ie memcached supported
-		$this->persistant_cache = persistantcache::Singleton()->load();
+		$this->time = time();
+		$this->microtime = microtime();
 		
-		if($this->persistant_cache == true)
+		//Is a persistant_cache available ie memcached supported		
+		if(persistantcache::Singleton()->advanced() == true)
 		{
 			Database::Singleton()->use_memcached();
 		}
@@ -62,8 +63,6 @@ class CMS
 		{
 			$this->time_start = Common::time_with_microseconds();
 		}
-		$this->time = time();
-		$this->microtime = microtime();
 		
 		//Get path vars
 		$this->path_vars = Common::get_path_vars();
@@ -146,8 +145,13 @@ class CMS
 		$totaltime = ($this->time_finish - $this->time_start) ;
 		$phptime = $totaltime - Database::Singleton()->sql_time();
 		$sql_info = Database::Singleton()->sql_count();
+		$cache = 'SC';
+		if(persistantcache::Singleton()->advanced())
+		{
+			$cache = 'AC';
+		}
 		
-		$sql_string = $sql_info[0].' SQL Querys ('.round($sql_info[1]).'% Cached)';
+		$sql_string = $sql_info[0].' SQL Querys ('.round($sql_info[1]).'% Cached in '.$cache.')';
 
 		$runtime=('<div class="footer_text">Page generated in ' . Common::microtime_to_seconds($totaltime) . ' seconds<br /> ' . round((100/$totaltime*$phptime), 0) . '% php time and with ' .$sql_string.'</div>');
 		

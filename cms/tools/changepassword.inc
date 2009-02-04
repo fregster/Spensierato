@@ -1,4 +1,5 @@
 <?php
+if (!user::Singleton()->is_logged_in()) common::bounce_to_referer();
 
 //define all the error codes
 define('PASS_EMPTY_OLD', 1);

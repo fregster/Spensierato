@@ -32,8 +32,6 @@ class persistantcache
 
 	private function __construct()
 	{
-		$this->prefix = 'cms_'.$GLOBALS['table_prefix'].'_';
-
 		if(extension_loaded('memcache') && ($_SESSION['diable_memcached'] + $retry_time) < time())
 		{
 			$this->store = new Memcache;
@@ -75,8 +73,14 @@ class persistantcache
 		$_SESSION['disable_memcached'] = cms::time();
 	}
 	
+	private function build_key($name)
+	{
+		return sha1($this->prefix = 'cms_'.$GLOBALS['table_prefix'].'_'.$name);
+	}
+	
 	public function save($name, $value, $time = 0)
 	{
+		$name = build_key($name);
 		$expire_time = cms::time() + $this->maxsession_cache_time;
 		if($time != 0)
 		{
@@ -91,10 +95,10 @@ class persistantcache
 		{
 			if($this->enabled)
 			{
-				$result = $this->store->replace($this->prefix.$name, $value, MEMCACHE_COMPRESSED, $time);
+				$result = $this->store->replace($name, $value, MEMCACHE_COMPRESSED, $time);
 				if( $result == false )
 				{
-				    $result = $this->store->set($this->prefix.$name, $value, MEMCACHE_COMPRESSED, $time);
+				    $result = $this->store->set($name, $value, MEMCACHE_COMPRESSED, $time);
 				}
 				return result;
 			}
@@ -106,7 +110,7 @@ class persistantcache
 					array_pop($_SESSION['cache']);
 					$_SESSION['cache'] = array_reverse($_SESSION['cache']);
 				}
-				$_SESSION['cache'][$this->prefix.$name] = $value;
+				$_SESSION['cache'][$name] = $value;
 				++$_SESSION['cache_count'];
 				return true;
 			}
@@ -116,13 +120,14 @@ class persistantcache
 	
 	public function get($name)
 	{
+		$name = build_key($name);
 		if($this->enabled)
 		{
-			$result = $this->store->get($this->prefix.$name);
+			$result = $this->store->get($name);
 		}
 		else if($this->allow_session_cache)
 		{
-			$result = $_SESSION['cache'][$this->prefix.$name];
+			$result = $_SESSION['cache'][$name];
 		}
 		
 		if($result['time'] > cms::time())
@@ -135,13 +140,14 @@ class persistantcache
 	
 	public function drop($name)
 	{
+		$name = build_key($name);
 		if($this->enabled)
 		{
-			$this->store->delete($this->prefix.$name);
+			$this->store->delete($name);
 		}
 		else if($this->allow_session_cache)
 		{
-			unset($_SESSION['cache'][$this->prefix.$name]);
+			unset($_SESSION['cache'][$name]);
 		}
 	}
 	

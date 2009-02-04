@@ -80,7 +80,7 @@ class persistantcache
 	
 	public function save($name, $value, $time = 0)
 	{
-		$name = build_key($name);
+		$name = $this->build_key($name);
 		$expire_time = cms::time() + $this->maxsession_cache_time;
 		if($time != 0)
 		{
@@ -120,7 +120,7 @@ class persistantcache
 	
 	public function get($name)
 	{
-		$name = build_key($name);
+		$name = $this->build_key($name);
 		if($this->enabled)
 		{
 			$result = $this->store->get($name);
@@ -140,7 +140,7 @@ class persistantcache
 	
 	public function drop($name)
 	{
-		$name = build_key($name);
+		$name = $this->build_key($name);
 		if($this->enabled)
 		{
 			$this->store->delete($name);

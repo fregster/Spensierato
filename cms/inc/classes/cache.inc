@@ -20,7 +20,7 @@ abstract class Cache
 		
 		
 		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
-		cache::send_headers($ETag, $gmdate_mod, $expires, $public);
+		cache::send_headers($gmdate_mod, $expires, $public);
 		header('Cache-Control: max-age='.$maxage, false);
 		header('Content-Description: File serverd from a Spensierato site ');
 
@@ -48,13 +48,13 @@ abstract class Cache
 			}
 		}
 
-		cache::send_headers($ETag, $gmdate_mod, $expires, $public);
+		cache::send_headers($gmdate_mod, $expires, $public, $ETag);
 		header('Cache-Control: max-age='.$maxage, false);
 		header('Content-Description: File serverd from a Spensierato site ');
 		
 	}
 	
-	public static function send_headers($ETag, $gmdate_mod, $expires, $public = true)
+	public static function send_headers($gmdate_mod, $expires, $public = true, $ETag = null)
 	{
 		if($public == true)
 		{
@@ -65,7 +65,10 @@ abstract class Cache
 			$cache_control = 'private, no-cache, must-revalidate';
 		}
 		
-		header('ETag: "'.$ETag.'"');
+		if(Settings::Singleton()->get_setting('cache_use_ETags') && $ETag != null)
+		{
+			header('ETag: "'.$ETag.'"');
+		}
 		header('Last-Modified: ' . $gmdate_mod);
 		header('Expires: ' . $expires);
 		header('Cache-Control: post-check=0, pre-check=0');
@@ -95,7 +98,7 @@ abstract class Cache
 	private static function headers_send_etag($path)
 	{
 		$ETag = Cache::generate_etag($path);
-		if($ETag != false)
+		if($ETag != false && $ETag != '')
 		{
 			header('ETag: "'.$ETag.'"'); 
 		}

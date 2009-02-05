@@ -68,6 +68,12 @@ class Render
 		$this->render(Template::Singleton()->edit(), $xml);
 	}
 	
+	public function render_this($input, $htmldecode = false)
+	{
+		$this->final_output($input, $htmldecode);
+		exit;
+	}
+	
 	private function render($template, $xml)
 	{
 		// Load the site XML pass directly into Render
@@ -80,7 +86,7 @@ class Render
 			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?><?xml-stylesheet type="text/xsl" href="'. Settings::singleton()->get_setting('document_root').'/xslt" ?>';
 			if($_GET['xml'] == 1) { $replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?>'; }
 
-			echo(html_entity_decode(str_replace($search, $replace, $xml)));
+			$this->render_this(str_replace($search, $replace, $xml));
 			exit;
 		}
 		
@@ -98,17 +104,19 @@ class Render
 		
 		/* output the html */
 		$this->send_html();
-		die();
+		exit;
 	}
 	
-	private function final_output($content)
+	private function final_output($content, $htmldecode = true)
 	{
+		if($htmldecode) { $content = html_entity_decode($content); }
 		ob_start ("ob_gzhandler");
 		ob_start ("compress");
+		
 		/* If compression is requested and the level is numeric */
 		if(is_numeric(Settings::Singleton()->get_setting('output_compression_level')) and $this->acceptsGZIP() and Settings::Singleton()->get_setting('output_compression_level') > 0)
 		{
-			$contents = gzencode(html_entity_decode($content), Settings::Singleton()->get_setting('output_compression_level'));
+			$contents = gzencode($content, Settings::Singleton()->get_setting('output_compression_level'));
 			header ('Content-Encoding: gzip');
 			header ('Content-Length: ' . strlen($contents));
 			echo($contents);
@@ -116,7 +124,7 @@ class Render
 		else
 		{
 			/* output the html */
-			echo(html_entity_decode($content));
+			echo($content);
 		}
 	}
 	

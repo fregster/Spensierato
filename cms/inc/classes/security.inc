@@ -22,7 +22,7 @@ class Security
 	protected static $instance;
 	protected $levels;
 	protected $security_cache;
-	private $security_cache_time = 30;
+	private $security_cache_time = 60;
 
 	public static function Singleton()
 	{
@@ -144,9 +144,22 @@ class Security
 		return $permission;
 	}
 
+	/**
+	 * Security method can_do
+	 * 
+	 * This is the main body of the security class
+	 * $what is the what level of security you looking for:
+	 * 		view	edit	approve etc
+	 * 
+	 * $page_ids default is null, assumes you looking for the security relating to the current page
+	 * 		pass in an int to get the security relating to that page
+	 * 		pass in an array(int) to get the security relating to the specific pages only in order of inheritance
+	 * 
+	 * This is not for bulk security 
+	 */
 	protected function can_do($what, $page_ids = NULL, $user_id = NULL)
 	{
-		$this->is_level($what);
+		if(!$this->is_level($what)) { die('Security Exception'); }
 
 		if($user_id == NULL)
 		{
@@ -298,26 +311,14 @@ class Security
 		if(!in_array($what, $this->levels) )
 		{
 			return false;
-//			error('xx', $what.' is not a supported security level');
 		}
-		return $what;
+		return true;
 	}
 
 	private function check_cache($what, $page_ids, $user_id)
 	{
 		$key = 'security_'.$what.'_'.implode("_", $page_ids).'_'.$user_id;
 		return persistantcache::singleton()->get($key);
-//		$page_string = implode("_", $page_ids);
-//			if(isset($this->security_cache[$what][$page_string][$user_id]['result']))
-//			{
-//				if($this->security_cache[$what][$page_string][$user_id]['time'] < CMS::time() + $this->security_cache_time)
-//				{
-//					return $this->security_cache[$what][$page_string][$user_id]['result'];
-//				}
-//				unset($this->security_cache[$what][$page_string]);
-//			}
-//
-//			return NULL;
 	}
 
 	private function save_cache($what, $page_ids, $user_id, $result)

@@ -799,7 +799,7 @@ class CMS
 	private function get_stylesheet()
 	{
 		header('Content-Type: text/xml; charset='.Settings::Singleton()->get_setting('char_set'));
-		die(Template::Singleton()->load());
+		render::singleton()->render_this(Template::Singleton()->load());
 	}
 
 	private function get_js($path)
@@ -840,7 +840,7 @@ class CMS
 				    break;
 
 				default:
-				    echo file_get_contents($file);
+				    render::singleton()->render_this(file_get_contents($file));
 			}
 
 			exit;

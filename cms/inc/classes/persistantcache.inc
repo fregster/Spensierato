@@ -21,6 +21,8 @@
 * @author Paul Fryer <paul@fryer.org.uk>
 * @license http://www.opensource.org/licenses/lgpl-3.0.html LGPL
 * @link http://www.fryer.org.uk/
+* 
+* Version 1 Released Jan 2009
 */
 
 define('PREFIX', 'cache_kljliouo_'); //Prefix the key names to help prevent collisions

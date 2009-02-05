@@ -60,7 +60,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$user_r = post::variable('r_user');
 	$user_rw = post::variable('rw_user');
 	$user_db_password = post::variable('db_password');
-	
+
 	//Options
 	if(post::variable('rewrite')) { $rewrite = 'true'; }
 
@@ -161,6 +161,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	debug('Createing Homepage');
 	database::Singleton()->force_write_user();
 	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible', 'title'), array(0, time(), 0, 1, 'Homepage'));
+	database::Singleton()->sql_insert('tbl_security', array('page_id', 'data'), array(0, security::Singleton()->default_security_xml()));
 
 	debug('Adding starting element');
 	$element = Element::type('elementText');

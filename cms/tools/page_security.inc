@@ -31,9 +31,6 @@ $lists = database::Singleton()->sql_select(array('id', 'name'), 'tbl_list_data',
 //get permissions for this page
 $securityData = database::Singleton()->sql_select_first(array('data'), 'tbl_security', array('page_id'), $pageId);
 
-$securityXML = new SimpleXMLElement($securityData['data']);
-unset($securityData);
-
 $permissions = array(
 					'user' => array(),
 					'group' => array()
@@ -41,19 +38,25 @@ $permissions = array(
 
 $types = array();
 
-//populate $pemissions with the security data
-foreach ($securityXML->children() as $child){
-	array_push($types, $child->getName());
-	foreach ($child->children() as $element){
-		if (strip_tags($element->asXML()) != ''){
-			if ($element->getName() == 'user')
-				array_push($permissions['user'][$child->getName()], strip_tags($element->asXML()));
-			else if ($element->getName() == 'group')
-				array_push($permissions['group'][$child->getName()], strip_tags($element->asXML()));
+if($securityData != null)
+{
+	$securityXML = new SimpleXMLElement($securityData['data']);
+	unset($securityData);
+	
+	//populate $pemissions with the security data
+	foreach ($securityXML->children() as $child){
+		array_push($types, $child->getName());
+		foreach ($child->children() as $element){
+			if (strip_tags($element->asXML()) != ''){
+				if ($element->getName() == 'user')
+					array_push($permissions['user'][$child->getName()], strip_tags($element->asXML()));
+				else if ($element->getName() == 'group')
+					array_push($permissions['group'][$child->getName()], strip_tags($element->asXML()));
+			}
 		}
 	}
+	unset($child);
 }
-unset($child);
 
 
 ####################

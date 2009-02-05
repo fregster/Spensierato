@@ -182,7 +182,7 @@ class Security
 
 		$cache = $this->check_cache($what, $page_ids, $user_id);
 
-		if($cache !== NULL)
+		if($cache !== NULL and $cache !== false)
 		{
 			return $cache;
 		}
@@ -305,24 +305,25 @@ class Security
 
 	private function check_cache($what, $page_ids, $user_id)
 	{
-		$page_string = implode("_", $page_ids);
-			if(isset($this->security_cache[$what][$page_string][$user_id]['result']))
-			{
-				if($this->security_cache[$what][$page_string][$user_id]['time'] < CMS::time() + $this->security_cache_time)
-				{
-					return $this->security_cache[$what][$page_string][$user_id]['result'];
-				}
-				unset($this->security_cache[$what][$page_string]);
-			}
-
-			return NULL;
+		$key = 'security_'.$what.'_'.implode("_", $page_ids).'_'.$user_id;
+		return persistantcache::singleton()->get($key);
+//		$page_string = implode("_", $page_ids);
+//			if(isset($this->security_cache[$what][$page_string][$user_id]['result']))
+//			{
+//				if($this->security_cache[$what][$page_string][$user_id]['time'] < CMS::time() + $this->security_cache_time)
+//				{
+//					return $this->security_cache[$what][$page_string][$user_id]['result'];
+//				}
+//				unset($this->security_cache[$what][$page_string]);
+//			}
+//
+//			return NULL;
 	}
 
 	private function save_cache($what, $page_ids, $user_id, $result)
 	{
-		$page_string = implode("_", $page_ids);
-		$this->security_cache[$what][$page_string][$user_id]['result'] = $result;
-		$this->security_cache[$what][$page_string][$user_id]['time'] = cms::time();
+		$key = 'security_'.$what.'_'.implode("_", $page_ids).'_'.$user_id;
+		persistantcache::singleton()->save($key, $result, $this->security_cache_time);
 		return $result;
 	}
 }

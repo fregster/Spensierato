@@ -95,14 +95,14 @@ if (!$posted) {
 } //end if
 
 //check for errors
-if (!$postVars->string('oldPass')) send_msg(PASS_EMPTY_OLD);
-if (!$postVars->string('newPass')) send_msg(PASS_EMPTY_NEW);
-if (strcmp($postVars->string('newPass'), $postVars->string('newPassConf'))) send_msg(PASS_CONFIRM);
+if (!$postVars->variable('oldPass', 'string')) send_msg(PASS_EMPTY_OLD);
+if (!$postVars->variable('newPass', 'string')) send_msg(PASS_EMPTY_NEW);
+if (strcmp($postVars->variable('newPass', 'string'), $postVars->variable('newPassConf', 'string'))) send_msg(PASS_CONFIRM);
 
 //get the user id and hash the old/new password values
 $userid = user::Singleton()->id();
-$hashedNewPass = common::return_hash($postVars->string('newPass'), false);
-$hashedOldPass = common::return_hash($postVars->string('oldPass'), false);
+$hashedNewPass = common::return_hash($postVars->variable('newPass', 'string'), false);
+$hashedOldPass = common::return_hash($postVars->variable('oldPass', 'string'), false);
 
 //verify that the old password given is the correct one.
 $verifyInfo = database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('id', 'password'), array($userid, $hashedOldPass));
@@ -111,7 +111,7 @@ $verifyInfo = database::Singleton()->sql_select_first(array('id'), 'tbl_users', 
 if (is_null($verifyInfo)) send_msg(PASS_WRONG_OLD);
 
 //check for indentical passwords
-if (!strcmp($postVars->string('oldPass'), $postVars->string('newPass'))) send_msg(PASS_IDENTICAL);
+if (!strcmp($postVars->variable('oldPass', 'string'), $postVars->variable('newPass', 'string'))) send_msg(PASS_IDENTICAL);
 
 //if no errors occured, save the new password
 database::Singleton()->sql_update_by_id($userid, 'tbl_users', array('password'), array($hashedNewPass));
@@ -121,7 +121,7 @@ if (!is_null($postVars->variable('emailPass'))) {
 	$to = user::Singleton()->email();
 	$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
 	$subject = 'New password at '.settings::singleton()->get_setting('site_name_long');
-	$message = '<p>Dear user. You have changed your password.<br />The new password is: '.$postVars->variable('newPass').'.
+	$message = '<p>Dear user. You have changed your password.<br />The new password is: '.$postVars->variable('newPass', 'string').'.
 				<br />Please keep your passwords safe and secret.
 				<br />Best regards, <br />'.Settings::singleton()->get_setting('site_name_long').' team.</p>';
 

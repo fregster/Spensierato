@@ -18,22 +18,10 @@ abstract class Cache
 			}
 		}
 		
-		if($public)
-		{
-			$cache_control = 'public, must-revalidate';
-		}
-		else
-		{
-			$cache_control = 'private, no-cache, must-revalidate';
-		}
 		
 		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
-		
-		header('Expires: ' . $expires);
-		header('Cache-Control: post-check=0, pre-check=0');
-		header('Cache-Control: '.$cache_control, false);
+		$this->send_headers($ETag, $gmdate_mod, $expires, $public);
 		header('Cache-Control: max-age='.$maxage, false);
-		header('Pragma: '.$cache_control);
 		header('Content-Description: File serverd from a Spensierato site ');
 
 	}
@@ -60,6 +48,14 @@ abstract class Cache
 			}
 		}
 
+		$this->send_headers($ETag, $gmdate_mod, $expires, $public);
+		header('Cache-Control: max-age='.$maxage, false);
+		header('Content-Description: File serverd from a Spensierato site ');
+		
+	}
+	
+	public static function send_headers($ETag, $gmdate_mod, $expires, $public = true)
+	{
 		if($public == true)
 		{
 			$cache_control = 'public, no-cache, must-revalidate';
@@ -69,14 +65,12 @@ abstract class Cache
 			$cache_control = 'private, no-cache, must-revalidate';
 		}
 		
-		header('ETag: "'.$ETag.'"'); 
+		header('ETag: "'.$ETag.'"');
 		header('Last-Modified: ' . $gmdate_mod);
 		header('Expires: ' . $expires);
 		header('Cache-Control: post-check=0, pre-check=0');
 		header('Cache-Control: '.$cache_control, false);
-		header('Cache-Control: max-age='.$maxage, false);
 		header('Pragma: '.$cache_control);
-		header('Content-Description: File serverd from a Spensierato site ');
 		
 	}
 	
@@ -124,6 +118,25 @@ abstract class Cache
 		//File ETag
 		$ETag = Cache::generate_etag($path);
 		
+		//Headers recieved from browser
+		$headers = apache_request_headers();
+		
+		if(isset($headers['If-None-Match']))
+		{
+			 if (strpos($headers['If-None-Match'], $ETag) != false)
+			 {
+				Cache::send_304($ETag);
+			}
+		}
+		
+		if ($gmdate_mod == $headers['If-Modified-Since']) 
+		{
+			Cache::send_304();
+		}
+	}
+	
+	public static function headers_check_custom_etag($ETag, $gmdate_mod = NULL)
+	{		
 		//Headers recieved from browser
 		$headers = apache_request_headers();
 		

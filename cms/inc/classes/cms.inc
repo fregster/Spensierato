@@ -798,8 +798,17 @@ class CMS
 
 	private function get_stylesheet()
 	{
+		$contents = Template::Singleton()->load();
+		
+		$ETag = md5($contents);
+		$expires = gmdate('D, d M Y H:i:s', ($this->time + 36000)) . ' GMT';
+		$lastmoded = gmdate('D, d M Y H:i:s', Template::Singleton()->lastmodified()) . ' GMT';
+		
+		cache::headers_check_custom_etag($ETag, $lastmoded);
+		
 		header('Content-Type: text/xml; charset='.Settings::Singleton()->get_setting('char_set'));
-		render::singleton()->render_this(Template::Singleton()->load());
+		cache::send_headers($ETag, $lastmoded, $expires);		
+		render::singleton()->render_this($contents);
 	}
 
 	private function get_js($path)

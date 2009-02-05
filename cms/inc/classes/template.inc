@@ -5,6 +5,8 @@ class Template
 	
 	private $template_path;
 	private $preload = array();
+	private $lastmodified = 0;
+	private $xslt;
 	
 	public static function Singleton()
 	{
@@ -33,6 +35,7 @@ class Template
 			include($templateinc);
 			$this->load_template_options();
 		}
+		$this->xslt = $this->build_xslt_template($this->load_xslt_template());
 	}
 	
 	public function get_file_content($file)
@@ -53,7 +56,12 @@ class Template
 	
 	public function load()
 	{
-		return $this->build_xslt_template($this->load_xslt_template());
+		return $this->xslt;
+	}
+	
+	public function lastmodified()
+	{
+		return $this->lastmodified;
 	}
 	
 	public function dtd()
@@ -164,7 +172,7 @@ class Template
 			}
 			$files[$filepath] = true;
 			$xslt .= file_get_contents($filepath);
-
+			$this->lastmodified = max($this->lastmodified, filemtime($filepath));
 		}
 		
 		if($this->default_path != $this->template_path)
@@ -174,6 +182,7 @@ class Template
 				if(!isset($files[$filepath]))
 				{
 					$xslt .= file_get_contents($filepath);
+					$this->lastmodified = max($this->lastmodified, filemtime($filepath));
 				}
 			}
 		}

@@ -792,6 +792,7 @@ class Database
 
 	private function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)
 	{
+		$results = false;
 		//Check cache if not explecitly set not to
 		if(!$no_cache)
 		{
@@ -799,11 +800,9 @@ class Database
 		}
 
 		//If cache fails or not checked to SQL query
-		if(!$results)
+		if($results === false)
 		{
 			$resultset = $this->sql_exe($sql, $values);
-//		print_r($resultset);
-//		die();
 
 			while($row = $resultset->fetchRow(MDB2_FETCHMODE_ASSOC))
 			{
@@ -826,7 +825,7 @@ class Database
 			$result = false;
 			if($this->memcached)
 			{
-				$result = persistantcache::Singleton()->get($sql, array('time' => $this->time, 'result' => $result));
+				$result = persistantcache::Singleton()->get($sql);
 			}
 			else
 			{
@@ -835,6 +834,7 @@ class Database
 					$result = $_SESSION['sql_cache'][$sql];
 				}
 			}
+
 			if($result != false)
 			{
 				if($values != NULL)
@@ -855,6 +855,7 @@ class Database
 					$this->sql_cache_hits++;
 					$this->sql_log($this->site_sql_count, $sql, 0, true);
 
+					if(!$result['result']) { $result['result'] = NULL; }
 					return $result['result'];
 				}
 				else

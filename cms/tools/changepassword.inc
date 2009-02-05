@@ -95,14 +95,14 @@ if (!$posted) {
 } //end if
 
 //check for errors
-if (!$postVars->variable('oldPass')) send_msg(PASS_EMPTY_OLD);
-if (!$postVars->variable('newPass')) send_msg(PASS_EMPTY_NEW);
-if (strcmp($postVars->variable('newPass'), $postVars->variable('newPassConf'))) send_msg(PASS_CONFIRM);
+if (!$postVars->string('oldPass')) send_msg(PASS_EMPTY_OLD);
+if (!$postVars->string('newPass')) send_msg(PASS_EMPTY_NEW);
+if (strcmp($postVars->string('newPass'), $postVars->string('newPassConf'))) send_msg(PASS_CONFIRM);
 
 //get the user id and hash the old/new password values
 $userid = user::Singleton()->id();
-$hashedNewPass = common::return_hash($postVars->variable('newPass'), false);
-$hashedOldPass = common::return_hash($postVars->variable('oldPass'), false);
+$hashedNewPass = common::return_hash($postVars->string('newPass'), false);
+$hashedOldPass = common::return_hash($postVars->string('oldPass'), false);
 
 //verify that the old password given is the correct one.
 $verifyInfo = database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('id', 'password'), array($userid, $hashedOldPass));
@@ -111,7 +111,7 @@ $verifyInfo = database::Singleton()->sql_select_first(array('id'), 'tbl_users', 
 if (is_null($verifyInfo)) send_msg(PASS_WRONG_OLD);
 
 //check for indentical passwords
-if (!strcmp($postVars->variable('oldPass'), $postVars->variable('newPass'))) send_msg(PASS_IDENTICAL);
+if (!strcmp($postVars->string('oldPass'), $postVars->string('newPass'))) send_msg(PASS_IDENTICAL);
 
 //if no errors occured, save the new password
 database::Singleton()->sql_update_by_id($userid, 'tbl_users', array('password'), array($hashedNewPass));

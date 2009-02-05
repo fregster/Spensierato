@@ -20,7 +20,7 @@ abstract class Cache
 		
 		
 		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
-		$this->send_headers($ETag, $gmdate_mod, $expires, $public);
+		cache::send_headers($ETag, $gmdate_mod, $expires, $public);
 		header('Cache-Control: max-age='.$maxage, false);
 		header('Content-Description: File serverd from a Spensierato site ');
 
@@ -48,7 +48,7 @@ abstract class Cache
 			}
 		}
 
-		$this->send_headers($ETag, $gmdate_mod, $expires, $public);
+		cache::send_headers($ETag, $gmdate_mod, $expires, $public);
 		header('Cache-Control: max-age='.$maxage, false);
 		header('Content-Description: File serverd from a Spensierato site ');
 		

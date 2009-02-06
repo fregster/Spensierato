@@ -355,7 +355,11 @@ class Database
 	}
 
 	//SQL update fileds by id
-	public function sql_update_by_id($id, $table, $fields = array(), $values = array(), $destroy_cache = false)
+	public function sql_update_by_id($id, $table, $fields = array(), $values = array(), $destroy_cache = false){
+		return $this->sql_update_by_col($table, array('ID'), array($id), $fields, $values, $destroy_cache);
+	}
+
+	public function sql_update_by_col($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false)
 	{
 		if(	(count($fields)) != (count($values))	)
 		{
@@ -380,7 +384,7 @@ class Database
 			++$i;
 		}
 
-		$sql = $sql	. $sql_temp_fields . ' WHERE ID = ' . $this->sql_clean_input($id);
+		$sql = $sql	. $sql_temp_fields . $this->sql_build_where_string($where_fields, $where_values);
 
 		//Logging info
 		$this->site_sql_count ++;

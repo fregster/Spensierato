@@ -99,7 +99,6 @@ CREATE TABLE `cms_tbl_list_data` (
   `created_by` int(11) NOT NULL,
   `edited` varchar(48) default NULL,
   `edited_by` int(11) default NULL,
-  `visible` tinyint(4) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);

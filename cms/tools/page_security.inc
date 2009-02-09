@@ -72,10 +72,10 @@ $pageId = CMS::Singleton()->path_vars[2];
 $users = database::Singleton()->sql_select(array('id', 'username'), 'tbl_users', array('admin'), array('0'));
 
 //get all visible lists
-$lists = database::Singleton()->sql_select(array('id', 'name'), 'tbl_list_data', array('visible'), array('1'));
+$lists = database::Singleton()->sql_select(array('id', 'name'), 'tbl_list_data');
 
 //get permissions for this page from DB
-$securityData = database::Singleton()->sql_select_first(array('data'), 'tbl_security', array('page_id'), $pageId);
+$securityData = database::Singleton()->sql_select_first(array('data'), 'tbl_security', array('page_id'), array($pageId));
 
 if(!is_null($securityData['data'])){
 	$types = get_permission_types($securityData['data']);

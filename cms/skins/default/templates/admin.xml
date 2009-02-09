@@ -9,14 +9,27 @@
 							<!--  Show toggle admin and edit options -->
 							<xsl:element name="a">
 								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/toggle/admin_mode</xsl:attribute>
-								Swith off Admin Mode
-							</xsl:element><xsl:if test="/page/user/administrator =1"> | Edit Site details | Edit Site Structure</xsl:if>
+								Switch off Admin Mode
+							</xsl:element>
+							<xsl:if test="/page/user/administrator =1"> | Edit Site details | Edit Site Structure |
+								<xsl:element name="img">
+										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+										<xsl:attribute name="class">sprite sprite-lock_edit</xsl:attribute>
+										<xsl:attribute name="alt">Lists Administration</xsl:attribute>
+										<xsl:attribute name="title">Lists Administration</xsl:attribute>
+								</xsl:element>
+								<xsl:element name="a">
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/lists</xsl:attribute>
+									<xsl:attribute name="class">submodal-400-300</xsl:attribute>
+									Lists Administration
+								</xsl:element>
+							</xsl:if>
 						</xsl:when>
 						<xsl:otherwise>
 							<!--  Show toggle admin -->
 							<xsl:element name="a">
 								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/toggle/admin_mode</xsl:attribute>
-								Swith on Admin Mode
+								Switch on Admin Mode
 							</xsl:element>
 						</xsl:otherwise>
 						</xsl:choose>
@@ -43,7 +56,7 @@
 						<!-- can't edit -->
 						<xsl:if test="/page/security/admin_mode = 1">
 							 <!-- Show toggle admin out and text you can not edit -->
-							 <a href="toggle/admin_mode">Swith off Admin Mode</a>
+							 <a href="toggle/admin_mode">Switch off Admin Mode</a>
 						</xsl:if>
 						You can not edit this page
 					</xsl:if>

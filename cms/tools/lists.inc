@@ -2,9 +2,9 @@
 //page security
 if (!user::Singleton()->is_logged_in() || !Security::singleton()->can_approve()) common::bounce_to_referer();
 
-function find_user_by_id($id, $id_col, $array){
-	foreach ($array as $key => $user){
-		if ($user[$id_col] == $id)
+function find_item_by_id($id, $id_col, $array){
+	foreach ($array as $key => $item){
+		if ($item[$id_col] == $id)
 			return $key;
 	}
 	return false;
@@ -14,7 +14,7 @@ function find_user_by_id($id, $id_col, $array){
 # data init for the tool #
 ##########################
 
-$lists = database::Singleton()->sql_select(array('id', 'name'), 'tbl_list_data');
+$lists = database::Singleton()->sql_select(array('id', 'name', 'valid_from', 'valid_to'), 'tbl_list_data');
 
 $activeList = $lists[0]['id'];
 $members = database::Singleton()->sql_select(array('user_id'), 'tbl_list_membership', array('list_id'), array($activeList));
@@ -65,15 +65,30 @@ if ($postVars->variable('createList')) {
 	else $finalHTML .= '<div>Error: You forgot to provide a list name.</div>';
 }
 else if($postVars->variable('saveUsers')){
+	$activeList = $postVars->variable('activeList');
+
 	if ($postVars->variable('removeUsers'))
 		database::Singleton()->sql_delete_where('tbl_list_membership', array('user_id'), array($postVars->variable('removeUsers')));
 
 	if ($postVars->variable('addUsers')) {
 		foreach ($postVars->variable('addUsers') as $user){
-			database::Singleton()->sql_insert('tbl_list_membership', array('list_id', 'user_id'), array($postVars->variable('activeList'), $user));
+			database::Singleton()->sql_insert('tbl_list_membership', array('list_id', 'user_id'), array($activeList, $user));
 		}
 		unset($user);
 	}
+
+	if ($postVars->variable('validFrom')) $validFromTS = strtotime($postVars->variable('validFrom'));
+	else $validFromTS = time();
+
+	if ($postVars->variable('validTo')) $validToTS = strtotime($postVars->variable('validTo'));
+	else $validToTS = 0;
+
+	database::Singleton()->sql_update_by_id($activeList, 'tbl_list_data', array('valid_from', 'valid_to'), array($validFromTS, $validToTS));
+
+	//re-fetch data after the save
+	//TODO - change the page to use xml so this update is irrelevant
+	$lists = database::Singleton()->sql_select(array('id', 'name', 'valid_from', 'valid_to'), 'tbl_list_data');
+	$members = database::Singleton()->sql_select(array('user_id'), 'tbl_list_membership', array('list_id'), array($activeList));
 }
 else if ($postVars->variable('changeList')) {
 	$activeList = $postVars->variable('chooseList');
@@ -84,9 +99,15 @@ else if ($postVars->variable('changeList')) {
 # construct html form #
 #######################
 
+if ($toDate = $lists[find_item_by_id($activeList, 'id', $lists)]['valid_to']) {
+	$toDate = date('d/m/Y', $lists[find_item_by_id($activeList, 'id', $lists)]['valid_to']);
+}
+$validDates = array('from' => date('d/m/Y', $lists[find_item_by_id($activeList, 'id', $lists)]['valid_from']),
+					'to' => ($toDate?$toDate:''));
+
 $nonMembersList = array();
 foreach ($users as $user){
-	if ((find_user_by_id($user['id'], 'user_id', $members) === false) || (CMS::Singleton()->path_vars[2] != 'edit'))
+	if ((find_item_by_id($user['id'], 'user_id', $members) === false) || (CMS::Singleton()->path_vars[2] != 'edit'))
 		$nonMembersList[] = '<option value="'.$user['id'].'">'.$user['username'].'</option>';
 }
 unset($user);
@@ -105,7 +126,7 @@ if (CMS::Singleton()->path_vars[2] == 'edit') {
 		$listList = implode('', $listList);
 
 		foreach ($members as $member){
-			$membersList[] = '<option value="'.$member['user_id'].'">'.$users[find_user_by_id($member['user_id'], 'id', $users)]['username'].'</option>';
+			$membersList[] = '<option value="'.$member['user_id'].'">'.$users[find_item_by_id($member['user_id'], 'id', $users)]['username'].'</option>';
 		}
 		unset($member);
 		$membersList = implode('', $membersList);
@@ -138,6 +159,10 @@ HTMLBLOCK;
 							$nonMembersList
 						</select>
 					</td>
+				</tr>
+				<tr>
+					<td>Valid from: <input type="text" name="validFrom" value="{$validDates['from']}" /></td>
+					<td>Valid to: <input type="text" name="validTo" value="{$validDates['to']}" /></td>
 				</tr>
 				<tr>
 					<td colspan="2" align="center">

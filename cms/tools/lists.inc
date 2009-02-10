@@ -2,6 +2,11 @@
 //page security
 if (!user::Singleton()->is_logged_in() || !Security::singleton()->can_approve()) common::bounce_to_referer();
 
+
+#############
+# functions #
+#############
+
 function find_item_by_id($id, $id_col, $array){
 	foreach ($array as $key => $item){
 		if ($item[$id_col] == $id)
@@ -9,6 +14,18 @@ function find_item_by_id($id, $id_col, $array){
 	}
 	return false;
 }
+
+function check_dates($date1, $date2){ //temporary date checking function to get the tool working
+	$ts1 = strtotime($date1);
+	$ts2 = strtotime($date2);
+
+	if ($ts1 < $ts2 || !$ts2) {
+		return true;
+	}
+
+	return false;
+}
+
 
 ##########################
 # data init for the tool #
@@ -42,23 +59,27 @@ if ($postVars->variable('createList')) {
 
 		if (!$checkNameExists) {
 
-			CMS::Singleton()->path_vars[2] = 'edit';
-			$insertFields = array('name', 'valid_from', 'valid_to', 'created', 'created_by');
+			if (check_dates($postVars->variable('fromDate'), $postVars->variable('toDate'))) {
 
-			$insertValues = array($postVars->variable('listName'));
-			$insertValues[] = ($postVars->variable('fromDate')?$postVars->variable('fromDate'):time());
-			$insertValues[] = ($postVars->variable('toDate')?$postVars->variable('toDate'):'0');
-			$insertValues[] = time();
-			$insertValues[] = user::Singleton()->id();
+				CMS::Singleton()->path_vars[2] = 'edit';
+				$insertFields = array('name', 'valid_from', 'valid_to', 'created', 'created_by');
 
-			$list_id = database::Singleton()->sql_insert('tbl_list_data', $insertFields, $insertValues);
+				$insertValues = array($postVars->variable('listName'));
+				$insertValues[] = ($postVars->variable('fromDate')?strtotime($postVars->variable('fromDate')):time());
+				$insertValues[] = ($postVars->variable('toDate')?strtotime($postVars->variable('toDate')):'0');
+				$insertValues[] = time();
+				$insertValues[] = user::Singleton()->id();
 
-			if ($postVars->variable('addUsers')) {
-				foreach ($postVars->variable('addUsers') as $user){
-					database::Singleton()->sql_insert('tbl_list_membership', array('list_id', 'user_id'), array($list_id, $user));
+				$list_id = database::Singleton()->sql_insert('tbl_list_data', $insertFields, $insertValues);
+
+				if ($postVars->variable('addUsers')) {
+					foreach ($postVars->variable('addUsers') as $user){
+						database::Singleton()->sql_insert('tbl_list_membership', array('list_id', 'user_id'), array($list_id, $user));
+					}
+					unset($user);
 				}
-				unset($user);
 			}
+			else $finalHTML .= '<div>Error: The "Valid To" date is earlier than the "Valid From" date.</div>';
 		}
 		else $finalHTML .= '<div>Error: A list with that name already exists.</div>';
 	}

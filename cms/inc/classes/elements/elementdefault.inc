@@ -344,14 +344,14 @@ class elementDefault
 				$this->element->setAttribute('edited', $this->edited);
 				$this->element->setAttribute('editor', $this->editor);
 			}
-			if(isset($this->$approved))
+			if(isset($this->approved))
 			{
-				$this->element->setAttribute('approved', $this->$approved);
+				$this->element->setAttribute('approved', $this->approved);
 			}
 
-			if(isset($this->$approver))
+			if(isset($this->approver))
 			{
-				$this->element->setAttribute('approver', $this->$approver);
+				$this->element->setAttribute('approver', $this->approver);
 			}
 
 			$this->element->setAttribute('revision', $this->revision);

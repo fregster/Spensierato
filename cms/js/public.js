@@ -109,6 +109,19 @@ e[i].style.display = 'none';
 }
 }
 };
+function jsToggleDisplay(id){
+	if(document.getElementById(id).style.display == 'none'){
+		jsShowID(id);
+	}else{
+		jsHideID(id);
+	}
+};
+function jsHideID(id){
+	document.getElementById(id).style.display="none";
+};
+function jsShowID(id){
+	document.getElementById(id).style.display="block";
+};
 function notification(_a,_b,_c){
 var _d;
 if(!_c){

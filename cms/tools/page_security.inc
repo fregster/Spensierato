@@ -108,7 +108,6 @@ $securityData = database::Singleton()->sql_select_first(array('data'), 'tbl_secu
 if(!is_null($securityData['data'])){
 	$types = get_permission_types($securityData['data']);
 	$permissions = update_permissions($securityData['data']);
-	var_dump($permissions);
 }
 
 

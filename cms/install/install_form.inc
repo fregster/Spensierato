@@ -60,25 +60,28 @@ if(isset($req_missing[0]) or isset($opt_missing[0]))
 
 	if(count($req_missing) > 0)
 	{
-		echo'<div id="notices_critical"><h3>The following packages are not install and are REQUIRED</h3>';
+		echo'<div id="notices_critical"><h3>The following packages are not install and are REQUIRED</h3><ul>';
 		foreach($req_missing as $req)
 		{
-			echo $req.'<br/>';
+			echo "<li>$req</li>";
 		}
-		echo'</div>';
+		echo'</ul></div>';
 	}
 
 	if(count($opt_missing) > 0)
 	{
-		echo'<div id="notices_warning"><h3>The following packages are not install and are recomended</h3>';
+		echo'<div id="notices_warning"><h4>The following packages are not install and are recomended</h4><ul>';
 		foreach($opt_missing as $opt)
 		{
-			echo $opt.'<br/>';
+			echo "<li>$opt</li>";
 		}
-		echo'</div>';
+		echo'</ul></div>';
 	}
 
-	echo'<p>You may attempt to continue to install but it might not work and even if it does the is little chance the site will</p><br/>';
+	if(isset($req_missing[0]))
+	{
+		echo'<p>You may attempt to continue to install but it might not work and even if the install does the is little chance the site will</p><br/>';
+	}
 }
 else
 {
@@ -120,13 +123,22 @@ if(!Common::rewrite_enabled())
 			</div>
 		
 			<div id="db_users" class="pad-div">
-				If no usernames are set then one will be created and a random password will be generated (Recomended)<br />
+				If no usernames are set then one will be created and a random password will be generated (Recomended)<br /><br />
 				If the password set is does not meet the recomended length an random password will also be created
 				<div>Read only username: <input type="text" name="r_user" value="spensierato_read" /></div>
 				<div>Read Write username: <input type="text" name="rw_user" value="spensierato_writ" /></div>
 				<div>Users password: <input type="password" name="db_password" value="<?php echo(Common::generate_random_string(16)); ?>" /></div>
 			</div>
 		</div>
+	</div>
+	
+	<div id="filesystem" class="pad-div">
+		Please choose where to allow filesystem access. <br/>The site will work with out write access but detailed logging and uploads will be disabled
+		<div>Uploads tempory folder: <input type="text" name="cms_folder_uploads" value="writeable/uploads/tmp/" /></div>
+		<div>Main Download folder: <input type="text" name="cms_folder_downloads" value="writeable/uploads/" /></div>
+		<div>Origonal Images: <input type="text" name="cms_folder_orig_images" value="writeable/uploads/original_images/" /></div>
+		<div>Logging Folder: <input type="text" name="cms_folder_logs" value="writeable/logs/" /></div>
+		<div>Cache Folder: <input type="text" name="cms_folder_cache" value="writeable/cache/" /></div>
 	</div>
 
 	<div id="extra-options-button" class="js-show">

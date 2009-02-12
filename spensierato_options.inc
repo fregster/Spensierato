@@ -182,16 +182,16 @@ Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['document_
 Settings::Singleton()->new_setting('uploads_enabled', true);
 
 //Temporay uploads folder
-Settings::Singleton()->new_setting('cms_folder_uploads', 'writeable/uploads/tmp/', false, true);
+Settings::Singleton()->new_setting('cms_folder_uploads', $GLOBALS['cms_folder_uploads'], false, true);
 
 //Permanant uploads folder
-Settings::Singleton()->new_setting('cms_folder_downloads', 'writeable/uploads/', false, true);
+Settings::Singleton()->new_setting('cms_folder_downloads', $GLOBALS['cms_folder_downloads'], false, true);
 
 //Unscaled images
-Settings::Singleton()->new_setting('cms_folder_orig_images', 'writeable/uploads/original_images/', false, true);
+Settings::Singleton()->new_setting('cms_folder_orig_images', $GLOBALS['cms_folder_orig_images'], false, true);
 
 //Log files
-Settings::Singleton()->new_setting('cms_folder_logs', 'writeable/logs/', false, true);
+Settings::Singleton()->new_setting('cms_folder_logs', $GLOBALS['cms_folder_logs'], false, true);
 
 //download_rate
 //Maximum file download rate in kb/s

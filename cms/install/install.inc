@@ -191,6 +191,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		$GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
 		$GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 		$GLOBALS[\'allow_rewrite\'] = '. $rewrite.';
+		$GLOBALS[\'cms_folder_uploads\'] = '. post::variable('cms_folder_uploads').';
+		$GLOBALS[\'cms_folder_downloads\'] = '. post::variable('cms_folder_downloads').';
+		$GLOBALS[\'cms_folder_orig_images\'] = '. post::variable('cms_folder_orig_images').';
+		$GLOBALS[\'cms_folder_logs\'] = '. post::variable('cms_folder_logs').';
+		$GLOBALS[\'cms_folder_cache\'] = '. post::variable('cms_folder_cache').';
 		?>';
 
 	/**

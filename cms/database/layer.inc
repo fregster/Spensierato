@@ -725,15 +725,23 @@ class Database
 		//if(	($writeuser == true) and ($this->write != NULL))
 		if($writeuser == true)
 		{
-			if($values == NULL)
+			if($this->write != NULL) //Test the write user is set
 			{
-				//Values have not been passed so do simple SQL exec
-				$resultset = $this->write->query($sql);
+				if($values == NULL)
+				{
+					//Values have not been passed so do simple SQL exec
+					$resultset = $this->write->query($sql);
+				}
+				else
+				{
+					//Do prepeared statment
+					$stmt = $this->write->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
+				}
 			}
 			else
 			{
-				//Do prepeared statment
-				$stmt = $this->write->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
+				$error = 'Failed update database, write user disabled<br />';
+				$this->sql_error($error);
 			}
 		}
 		else

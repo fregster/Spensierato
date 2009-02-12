@@ -650,7 +650,7 @@ class CMS
 				if(Security::singleton()->can_approve($this->page_details['value'][1]))
 				{
 					//TODO update from laptop as required classes have not been comited
-					if(isset($_POST['title']))
+					if(post::variable('is_set','title'))
 					{
 						database::singleton()->sql_update_by_id($this->page_details['value'][1], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
 					}
@@ -691,7 +691,7 @@ class CMS
 					Common::redirect('account');
 				}
 
-				if(isset($_POST['new_type']))
+				if(post::variable('is_set','new_type'))
 				{
 					if(Security::singleton()->can_approve($this->page_details['value']))
 					{
@@ -701,7 +701,7 @@ class CMS
 						}
 						else
 						{
-							$element = Element::type($_POST['new_type']);
+							$element = Element::type(post::variable('string','new_type'));
 							$element->create($this->page_details['value']);
 						}
 					}
@@ -832,7 +832,7 @@ class CMS
 				    break;
 
 				default:
-				    render::singleton()->render_file($file);
+				    render::Singleton()->render_file($file);
 			}
 
 			exit;

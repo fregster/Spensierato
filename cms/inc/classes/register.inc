@@ -54,11 +54,11 @@ class Register
 	
 	public function new_registration()
 	{
-		if(capthca::Code_check($_POST['security_code']))
+		if(capthca::Code_check(post::variable('is_set','security_code')))
 		{
 		//build post data
-		$this->username = $_POST['username'];
-		$this->email = $_POST['email'];
+		$this->username = post::variable('string','username');
+		$this->email =  post::variable('string','email');
 		
 		//Generate a random password this makes the hash even more random
 		$this->salt = common::generate_random_string(16);
@@ -115,7 +115,7 @@ class Register
 	private function send_registration()
 	{
 		$link = 'http://'.$_SERVER['SERVER_NAME'].Settings::singleton()->get_setting('document_root').'/register?id='.$this->id.'&key='.$this->hash;
-		$to = $_POST['username'].'<'.$_POST['email'].'>';
+		$to =  post::variable('string','username').'<'. post::variable('string','email').'>';
 		$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
 		
 		$subject = 'Registration at '.settings::singleton()->get_setting('site_name_long');

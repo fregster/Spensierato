@@ -103,7 +103,7 @@ abstract class Common
 	
 	public static function post_sql_safe($var)
 	{
-		return(Common::sql_clean($_POST[$var]));
+		return(Common::sql_clean(post::variable('string',$var)));
 	}
 	
 	public static function sql_clean($input)
@@ -115,14 +115,7 @@ abstract class Common
 	
 	public static function post_is_numeric($var)
 	{
-		if(is_numeric($_POST[$var]))
-		{
-			return $_POST[$var];
-		}
-		else
-		{
-			return false;
-		}
+		return post::variable('is_numeric',$var);
 	}
 	
 	private static function array_compress($array) 

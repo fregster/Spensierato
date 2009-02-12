@@ -177,26 +177,26 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	* Build the settings file string
 	*/
 	$settings_file_string = '<?php
-		//This file contains the CMS settings required before we include the CMS code.
+//This file contains the CMS settings required before we include the CMS code.
 
-		//Database vars
-		//The DB layer suports 2 users read and readwrite
-		//readwrite is used once logged in to provide another layer of prtection against sql injection.
+//Database vars
+//The DB layer suports 2 users read and readwrite
+//readwrite is used once logged in to provide another layer of prtection against sql injection.
 
-		$GLOBALS[\'database_host\'] = \''. $host .'\';
-		$GLOBALS[\'database_driver\'] = \''. $driver .'\';
-		$GLOBALS[\'database_name\'] = \''. $database .'\';
-		$GLOBALS[\'database_user_read\'] = \''. $user_r .'\';
-		$GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\';
-		$GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
-		$GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
-		$GLOBALS[\'allow_rewrite\'] = '. $rewrite.';
-		$GLOBALS[\'cms_folder_uploads\'] = '. post::variable('cms_folder_uploads').';
-		$GLOBALS[\'cms_folder_downloads\'] = '. post::variable('cms_folder_downloads').';
-		$GLOBALS[\'cms_folder_orig_images\'] = '. post::variable('cms_folder_orig_images').';
-		$GLOBALS[\'cms_folder_logs\'] = '. post::variable('cms_folder_logs').';
-		$GLOBALS[\'cms_folder_cache\'] = '. post::variable('cms_folder_cache').';
-		?>';
+$GLOBALS[\'database_host\'] = \''. $host .'\';
+$GLOBALS[\'database_driver\'] = \''. $driver .'\';
+$GLOBALS[\'database_name\'] = \''. $database .'\';
+$GLOBALS[\'database_user_read\'] = \''. $user_r .'\';
+$GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\';
+$GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
+$GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
+$GLOBALS[\'allow_rewrite\'] = '. $rewrite.';
+$GLOBALS[\'cms_folder_uploads\'] = '. post::variable('cms_folder_uploads').';
+$GLOBALS[\'cms_folder_downloads\'] = '. post::variable('cms_folder_downloads').';
+$GLOBALS[\'cms_folder_orig_images\'] = '. post::variable('cms_folder_orig_images').';
+$GLOBALS[\'cms_folder_logs\'] = '. post::variable('cms_folder_logs').';
+$GLOBALS[\'cms_folder_cache\'] = '. post::variable('cms_folder_cache').';
+?>';
 
 	/**
 	* Write the settings file

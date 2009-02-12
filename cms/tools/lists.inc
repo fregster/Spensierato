@@ -120,19 +120,24 @@ else if ($postVars->variable('changeList')) {
 # construct html form #
 #######################
 
-if ($toDate = $lists[find_item_by_id($activeList, 'id', $lists)]['valid_to']) {
-	$toDate = date('d/m/Y', $lists[find_item_by_id($activeList, 'id', $lists)]['valid_to']);
+if ($lists) {
+	if ($toDate = $lists[find_item_by_id($activeList, 'id', $lists)]['valid_to']) {
+		$toDate = date('d/m/Y', $lists[find_item_by_id($activeList, 'id', $lists)]['valid_to']);
+	}
+	$validDates = array('from' => date('d/m/Y', $lists[find_item_by_id($activeList, 'id', $lists)]['valid_from']),
+						'to' => ($toDate?$toDate:''));
 }
-$validDates = array('from' => date('d/m/Y', $lists[find_item_by_id($activeList, 'id', $lists)]['valid_from']),
-					'to' => ($toDate?$toDate:''));
 
-$nonMembersList = array();
-foreach ($users as $user){
-	if ((find_item_by_id($user['id'], 'user_id', $members) === false) || (CMS::Singleton()->path_vars[2] != 'edit'))
-		$nonMembersList[] = '<option value="'.$user['id'].'">'.$user['username'].'</option>';
+if ($users) {
+	$nonMembersList = array();
+	foreach ($users as $user){
+		if ((find_item_by_id($user['id'], 'user_id', $members) === false) || (CMS::Singleton()->path_vars[2] != 'edit'))
+			$nonMembersList[] = '<option value="'.$user['id'].'">'.$user['username'].'</option>';
+	}
+	unset($user);
+	$nonMembersList = implode('', $nonMembersList);
 }
-unset($user);
-$nonMembersList = implode('', $nonMembersList);
+
 
 if (CMS::Singleton()->path_vars[2] == 'edit') {
 	if ($lists) {
@@ -197,6 +202,7 @@ HTMLBLOCK;
 
 		$finalHTML .= $listForm.$userControlForm;
 	}
+	else $finalHTML .= '<p>There are no lists to edit.</p>';
 }
 else{ //default to loading the list creation page
 	$createForm = <<<HTMLBLOCK

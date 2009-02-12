@@ -26,12 +26,29 @@
 */
 
 define('PREFIX', 'cache_kljliouo_'); //Prefix the key names to help prevent collisions
+
+/**
+ * Persistant Cache is a monolithic file for fast caching of data
+ * Supports memcache with fall back to file and then session caching
+ *
+ */
 class persistantcache
 {
 	private $servers = array(array('host' => 'localhost', 'port'=>11211)); // enter an array for each of your memcache servers
 	private $maxsession_cache_time = 0; //0 sets to never expire
 	private $max_object_size = 20480; //The string length of the serialized array, your memcache server may have a diffrent setting
 	private $retry_time = 30; //Time in seconds before trying to reconnect to memcache if all the servers failed
+	private $encrypt_data = false;
+	private $encryption_key = 'mnbvcfde4567890poiuytrazsxv';
+	
+	/**
+	 * File caching
+	 * 
+	 * You will need to employ some method of cleaning and quotering the max size of any filesystem cache
+	 * Please ensure this folder is kept purley for this cache, else the purge and drop might delete your files
+	 */
+	private $allow_file_cache = true;
+	private $file_cache_path = '/tmp/cms_cache/'; //Remeber trailing /
 	
 	/**
 	 * Session caching
@@ -87,8 +104,17 @@ class persistantcache
 			if(isset($_SESSION['cache'])) { unset($_SESSION['cache']); }
 		}
 		
-		//Advanced caching is disabled but poor man caching is enabled
-		if($this->enabled == false && $this->allow_session_cache)
+		//If we want to use file caching test we can write first.
+		if($this->allow_file_cache)
+		{
+			if(!is_writable($this->file_cache_path))
+			{
+				$this->allow_file_cache = false;
+			}
+		}
+		
+		//Advanced caching and file caching is disabled but poor man caching is enabled
+		if($this->enabled == false && $this->allow_session_cache  && $this->allow_file_cache == false)
 		{
 			$_SESSION['cache'] = array();
 			$_SESSION['cache_count'] = 0;
@@ -137,6 +163,21 @@ class persistantcache
 		return sha1(PREFIX.$name);
 	}
 	
+	private function build_file_path($name)
+	{
+		return $this->file_cache_path.PREFIX.'_'.$name.'.cache';
+	}
+	
+	private function encrypt($data)
+	{
+		
+	}
+	
+	private function decrypt($data)
+	{
+		
+	}
+	
 	/**
 	 * Public method for saveing data
 	 * name
@@ -167,6 +208,15 @@ class persistantcache
 				}
 				return result;
 			}
+			else if($this->allow_file_cache)
+			{
+				if ($file = fopen(build_file_path($name), 'wb')) 
+				{
+					$result = fwrite($file, $value);
+					fclose($file);
+					return $result;
+				}
+			} 
 			else if($this->allow_session_cache)
 			{
 				//Because the session cache can't self clean, ensure the cache is not to big, if it is drop the oldest one.
@@ -193,6 +243,14 @@ class persistantcache
 		if($this->enabled)
 		{
 			$result = $this->store->get($name);
+		}
+		else if($this->allow_file_cache)
+		{
+			if(file_exsists())
+			{
+				$result['time'] = filemtime($file);
+				$result['value'] = file_get_contents($file);
+			}
 		}
 		else if($this->allow_session_cache)
 		{
@@ -223,6 +281,10 @@ class persistantcache
 		{
 			$this->store->delete($name);
 		}
+		else if($this->allow_file_cache)
+		{
+				
+		}
 		else if($this->allow_session_cache)
 		{
 			unset($_SESSION['cache'][$name]);
@@ -238,6 +300,10 @@ class persistantcache
 		if($this->enabled)
 		{
 			$this->store->flush();
+		}
+		else if($this->allow_file_cache)
+		{
+				
 		}
 		else
 		{

@@ -68,6 +68,12 @@ class Render
 		$this->render(Template::Singleton()->edit(), $xml);
 	}
 	
+	public function render_file($filepath)
+	{
+		Cache::headers_allow_cache($filepath);
+		$this->final_output(file_get_contents($filepath), false);
+	}
+	
 	public function render_this($input, $htmldecode = false)
 	{
 		$this->final_output($input, $htmldecode);
@@ -77,14 +83,14 @@ class Render
 	private function render($template, $xml)
 	{
 		// Load the site XML pass directly into Render
-		if(isset($_GET['xml']) or Settings::singleton()->get_setting('send_as_xml') or class_exists('xsltProcessor') === false)
+		if(get::variable('int','xml') or Settings::singleton()->get_setting('send_as_xml') or class_exists('xsltProcessor') === false)
 		{
 			//Just send the XML
 			header('content-type: text/xml');
 			
 			$search = '<?xml version="1.0"?>';
 			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?><?xml-stylesheet type="text/xsl" href="'. Settings::singleton()->get_setting('document_root').'/xslt" ?>';
-			if($_GET['xml'] == 1) { $replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?>'; }
+			if(get::variable('int','xml') == 1) { $replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?>'; }
 
 			$this->render_this(str_replace($search, $replace, $xml));
 			exit;
@@ -130,8 +136,23 @@ class Render
 	
 	public function send_css()
 	{
-		Cache::headers_allow_cache(NULL);
+		Cache::headers_allow_cache(Template::Singleton()->css_path());
 		$this->final_output(Template::Singleton()->send_css());
+	}
+	
+	public function send_xslt()
+	{
+		$contents = Template::Singleton()->load();
+		
+		$ETag = md5($contents);
+		$expires = gmdate('D, d M Y H:i:s', ($this->time + 36000)) . ' GMT';
+		$lastmoded = gmdate('D, d M Y H:i:s', Template::Singleton()->lastmodified()) . ' GMT';
+		
+		cache::headers_check_custom_etag($ETag, $lastmoded);
+		
+		header('Content-Type: text/xml; charset='.Settings::Singleton()->get_setting('char_set'));
+		cache::send_headers($ETag, $lastmoded, $expires);		
+		$this->final_output($contents, false);
 	}
 	
 	private function send_html()

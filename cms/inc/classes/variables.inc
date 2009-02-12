@@ -76,5 +76,17 @@ abstract class variables
 		return false;
 	}
 	
+	protected function is_set($input)
+	{
+		print_r($input);
+		die();
+		if($input != NULL and isset($input))
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
 }
 ?>

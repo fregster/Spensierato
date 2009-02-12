@@ -56,7 +56,7 @@ class Debug
 			$render = true;
 		}
 		
-		if($_GET['debug'] and User::Singleton()->is_admin())
+		if(get::variable('is_set','debug') and User::Singleton()->is_admin())
 		{
 			$render = true;
 		}

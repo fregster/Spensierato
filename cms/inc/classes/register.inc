@@ -76,7 +76,7 @@ class Register
 	
 	public function verify_register()
 	{
-		$id = $_GET['id'];
+		$id = get::variable('int','id');
 		$temp_details = database::Singleton()->sql_select_first(array('data', 'ts'), 'tbl_temp', array('id'), array($id));
 
 		if(!isset($temp_details['data'][1]))
@@ -93,7 +93,7 @@ class Register
 		$data = common::xml_to_array($temp_details['data']);
 		
 		//Compare hashes
-		if($data['hash'] == $_GET['key'])
+		if($data['hash'] == get::variable('string','key'))
 		{
 			database::Singleton()->force_write_user();
 			database::Singleton()->sql_delete_by_colum_equals('tbl_temp', 'id', $id);

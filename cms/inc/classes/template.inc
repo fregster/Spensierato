@@ -87,8 +87,8 @@ class Template
 		return $this->build_xslt_template(file_get_contents($path));
 	}
 	
-	public function send_css()
-	{		
+	public function css_path()
+	{
 		switch (CMS::Singleton()->page_details['value']) 
 		{
 			case 'mobile':
@@ -110,6 +110,12 @@ class Template
 				}
 				$path = $this->template_path .'/'.$css_file;
 		}
+		return $path;
+	}
+	
+	public function send_css()
+	{		
+		$path = $this->css_path();
 		
 		if(is_file($path))
 		{

@@ -315,10 +315,10 @@ class CMS
 
 
 		//Redirect after login
-		if(isset($_GET['option']))
+		if(get::variable('is_set', 'option'))
 		{
 
-			Common::redirect(Settings::Singleton()->get_setting('site_root') .'/' . $_GET['option']);
+			Common::redirect(Settings::Singleton()->get_setting('site_root') .'/' . get::variable('string','option'));
 		}
 		else
 		{
@@ -378,7 +378,7 @@ class CMS
 				{
 					if(Settings::singleton()->get_setting('allow_registration'))
 					{
-						if(isset($_GET['key']))
+						if(get::variable('is_set','key'))
 						{
 							register::singleton()->verify_register();
 							die();
@@ -446,7 +446,7 @@ class CMS
 
 				//Check cookies are enabled first
 				Common::cookie_check();
-				if($_SERVER['REQUEST_METHOD'] == 'GET' and !isset($_GET['username']))
+				if($_SERVER['REQUEST_METHOD'] == 'GET'and !get::variable('is_set','username'))
 				{
 					//If not loged in load box else redirect to $this->page_details['value']
 					if(User::Singleton()->is_logged_in())

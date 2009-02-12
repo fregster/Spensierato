@@ -37,7 +37,7 @@ class currentPage
 		//Load the page class
 		$page = new page;
 		
-		if($_GET['xml'] == 2 or Settings::singleton()->get_setting('send_as_xml') == true)
+		if(get::variable('int','xml') == 2 or Settings::singleton()->get_setting('send_as_xml') == true)
 		{
 			$this->xslt = true;
 		}

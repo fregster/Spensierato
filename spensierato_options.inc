@@ -295,4 +295,8 @@ Settings::singleton()->new_setting('memcached_session', false, false, true);
 
 Settings::singleton()->new_setting('virus_scanner', 'clamav', false, true);
 //Settings::singleton()->new_setting('virus_scanner_path', '/path/to/custom/scanner/install/', false, true);
+
+//Setting mod_rewrite
+//Use mod_rewrite to clean the URL's
+Settings::singleton()->new_setting('mod_rewrite', $GLOBALS['allow_rewrite'], false, true);
 ?>

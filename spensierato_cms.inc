@@ -54,7 +54,7 @@ try
 	{
     	$document_root = $GLOBALS['document_root_folder_only'];
 
-    	if(!Common::rewrite_enabled() && $GLOBALS['allow_rewrite'])
+    	if(!Common::rewrite_enabled() && $GLOBALS['allow_rewrite']) //We use the globals here as the settings class might not be loaded
     	{
     		$document_root .= '/index.php';
     	}

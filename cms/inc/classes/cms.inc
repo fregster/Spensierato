@@ -691,7 +691,7 @@ class CMS
 					Common::redirect('account');
 				}
 
-				if(post::variable('is_set','new_type'))
+				if(post::variable('new_type', 'is_set'))
 				{
 					if(Security::singleton()->can_approve($this->page_details['value']))
 					{
@@ -701,7 +701,7 @@ class CMS
 						}
 						else
 						{
-							$element = Element::type(post::variable('string','new_type'));
+							$element = Element::type(post::variable('new_type', 'string'));
 							$element->create($this->page_details['value']);
 						}
 					}

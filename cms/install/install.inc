@@ -173,6 +173,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	//set the path for the settings file
 	$settings_file = $install_folder.'/../../spensierato_setup.inc';
 
+	$doc_root_prefix = $GLOBALS['site_root'].'/cms/';
+
 	/**
 	* Build the settings file string
 	*/
@@ -191,11 +193,11 @@ $GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\';
 $GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
 $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 $GLOBALS[\'allow_rewrite\'] = '. $rewrite.';
-$GLOBALS[\'cms_folder_uploads\'] = \''. post::variable('cms_folder_uploads').'\';
-$GLOBALS[\'cms_folder_downloads\'] = \''. post::variable('cms_folder_downloads').'\';
-$GLOBALS[\'cms_folder_orig_images\'] = \''. post::variable('cms_folder_orig_images').'\';
-$GLOBALS[\'cms_folder_logs\'] = \''. post::variable('cms_folder_logs').'\';
-$GLOBALS[\'cms_folder_cache\'] = \''. post::variable('cms_folder_cache').'\';
+$GLOBALS[\'cms_folder_uploads\'] = \''. $doc_root_prefix.post::variable('cms_folder_uploads').'\';
+$GLOBALS[\'cms_folder_downloads\'] = \''. $doc_root_prefix.post::variable('cms_folder_downloads').'\';
+$GLOBALS[\'cms_folder_orig_images\'] = \''. $doc_root_prefix.post::variable('cms_folder_orig_images').'\';
+$GLOBALS[\'cms_folder_logs\'] = \''. $doc_root_prefix.post::variable('cms_folder_logs').'\';
+$GLOBALS[\'cms_folder_cache\'] = \''. $doc_root_prefix.post::variable('cms_folder_cache').'\';
 ?>';
 
 	/**

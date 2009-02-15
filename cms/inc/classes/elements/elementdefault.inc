@@ -21,6 +21,7 @@ class elementDefault
 	protected $revision;
 	protected $draft;
 	protected $approve;
+	protected $revision_history;
 
 	protected $error = 'There was an error comitting your save';
 
@@ -110,6 +111,14 @@ class elementDefault
 		$element_data->appendXML($this->data);
 		$this->element->appendChild($element_data);
 
+		//attach the archive data if exists
+		$this->get_revision_history();
+		if ($this->revision_history) {
+			$archive_data = $dom->createDocumentFragment();
+			$archive_data->appendXML($this->revision_history);
+			$this->element->appendChild($archive_data);
+		}
+
 		//Attach the element to the root dom
 		$dom->appendChild($this->element);
 
@@ -161,7 +170,7 @@ class elementDefault
 		{
 			//database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array($this->id,user::Singleton()->id()), array('data', 'ts'), array(common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES))), CMS::Singleton()->time()));
 			//database::Singleton()->sql_update_by_id($this->id, $table, $fields = array(), $values = array())
-			database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $built_xml, CMS::Singleton()->time(), $title));
+			database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $built_xml, CMS::Singleton()->time(), $title));
 			die('SAVED');
 		}
 		else
@@ -300,10 +309,10 @@ class elementDefault
 
 	protected function toggle_quickapprove(){
 		//TO FIX: currently this only approvs the most recent pending edit.
-		$approvalData = end(database::Singleton()->sql_select(array('user_id', 'ts', 'data'), 'tbl_elements_approve', array('element_id'), array($this->id)));
+		$approvalData = end(database::Singleton()->sql_select(array('user_id', 'ts', 'data', 'title'), 'tbl_elements_approve', array('element_id'), array($this->id)));
 		$this->archive_data($approvealData['data']);
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'approved', 'approver'), array($approvalData['ts'], $approvalData['user_id'], time(), User::Singleton()->id()));
-		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'search'), array($approvalData['data'], $this->generate_search($approvalData['data'])));
+		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title','search'), array($approvalData['data'], $approvalData['title'], $this->generate_search($approvalData['data'])));
 		return database::Singleton()->sql_delete_where('tbl_elements_approve', array('element_id'), $this->id);
 	}
 
@@ -475,6 +484,25 @@ class elementDefault
 	{
 		$this->revision = Database::Singleton()->sql_count_where('tbl_elements_data_archive', 'element_id', $this->id, options::Singleton()->get_option('admin_mode'));
 		return $this->revision;
+	}
+
+	protected function get_revision_history(){
+		$built_xml = '';
+		$revisions = database::Singleton()->sql_select(array('title', 'replaced_ts', 'replaced_by'), 'tbl_elements_data_archive', array('element_id'), array($this->id));
+		if ($revisions) {
+			$built_xml .= '<archive>';
+			foreach ($revisions as $revision_num => $data){
+				$user = database::Singleton()->sql_select_first(array('username'), 'tbl_users', array('id'), array($data['replaced_by']));
+				$built_xml .= '<revision>';
+				$built_xml .= '<id>'.($revision_num + 1).'</id>';
+				$built_xml .= '<title>'.$data['title'].'</title>';
+				$built_xml .= '<user>'.$user['username'].'</user>';
+				$built_xml .= '<date>'.date(settings::singleton()->get_setting('date_format'), $data['replaced_ts']).'</date>';
+				$built_xml .= '</revision>';
+			}
+			$built_xml .= '</archive>';
+		}
+		$this->revision_history = $built_xml;
 	}
 
 	protected function add_header()

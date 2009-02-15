@@ -563,7 +563,7 @@ class Database
 		{
 			$select_fields = array('*');
 		}
-		else if (!isarray($fields) )
+		else if (!is_array($fields) )
 		{
 			$select_fields = $this->sql_clean_input($fields);
 		}

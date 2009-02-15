@@ -198,7 +198,7 @@ Settings::Singleton()->new_setting('cms_folder_logs', $GLOBALS['cms_folder_logs'
 Settings::Singleton()->new_setting('download_rate', NULL, false, true);
 
 //stream
-//Set the path for the streaming server, 
+//Set the path for the streaming server,
 //use /download/ for simple downloads or '/video/' for php based streaming
 Settings::Singleton()->new_setting('stream', '/video/');
 
@@ -299,4 +299,9 @@ Settings::singleton()->new_setting('virus_scanner', 'clamav', false, true);
 //Setting mod_rewrite
 //Use mod_rewrite to clean the URL's
 Settings::singleton()->new_setting('mod_rewrite', $GLOBALS['allow_rewrite'], false, true);
+
+//setting date_format
+//this determines the date format for the website.
+//use date()-compliant format directives
+Settings::singleton()->new_setting('date_format', 'd/m/Y', false, true);
 ?>

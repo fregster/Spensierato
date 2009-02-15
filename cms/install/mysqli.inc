@@ -27,23 +27,23 @@ CREATE TABLE `cms_tbl_commands` (
 ) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
-$sql_str = '
+$sql_str = "
 CREATE TABLE `cms_tbl_elements_data_archive` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `data` longtext,
+  `title` varchar(128) NOT NULL default 'Please give the element a meaningful title',
   `ts` varchar(45) NOT NULL,
   `replaced_by` int(10) unsigned NOT NULL,
   `replaced_ts` varchar(45) NOT NULL,
   `element_id` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE='.$archive_table_engine.' DEFAULT CHARSET=latin1;';
+) ENGINE=".$archive_table_engine." DEFAULT CHARSET=latin1;";
 array_push($sql, $sql_str);
 
 $sql_str = "
 CREATE TABLE `cms_tbl_elements` (
   `id` int(11) NOT NULL auto_increment,
   `type` varchar(32) NOT NULL,
-  `title` varchar(128) NOT NULL default 'Please give the element a meaningful title',
   `created` varchar(32) NOT NULL default '0',
   `creator` int(11) NOT NULL,
   `edited` varchar(32) default NULL,
@@ -56,37 +56,40 @@ CREATE TABLE `cms_tbl_elements` (
 ) ENGINE=$default_table_engine DEFAULT CHARSET=latin1;";
 array_push($sql, $sql_str);
 
-$sql_str = '
+$sql_str = "
 CREATE TABLE `cms_tbl_elements_approve` (
   `id` int(11) NOT NULL auto_increment,
   `element_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `ts` varchar(64) NOT NULL,
+  `title` varchar(128) NOT NULL default 'Please give the element a meaningful title',
   `data` longtext NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `User to Element` (`element_id`,`user_id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
+) ENGINE=".$default_table_engine.' DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
-$sql_str = '
+$sql_str = "
 CREATE TABLE `cms_tbl_elements_data` (
   `id` int(11) NOT NULL,
+  `title` varchar(128) NOT NULL default 'Please give the element a meaningful title',
   `data` longtext NOT NULL,
   `search` longtext,
   PRIMARY KEY  (`id`)
-) ENGINE='.$full_text_search_table_engine.' DEFAULT CHARSET=latin1;';
+) ENGINE=".$full_text_search_table_engine.' DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
-$sql_str = '
+$sql_str = "
 CREATE TABLE `cms_tbl_elements_draft` (
   `id` int(11) NOT NULL auto_increment,
   `element_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `ts` varchar(64) NOT NULL,
+  `title` varchar(128) NOT NULL default 'Please give the element a meaningful title',
   `data` longtext NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `User to Element` (`element_id`,`user_id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
+) ENGINE=".$default_table_engine.' DEFAULT CHARSET=latin1;';
 array_push($sql, $sql_str);
 
 $sql_str = '

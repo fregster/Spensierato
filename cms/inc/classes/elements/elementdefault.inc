@@ -320,8 +320,8 @@ class elementDefault
 //		$search = $this->generate_search($xml);
 		//TODO Archiving
 		$this->archive_data($xml);
-		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'title'), array(time(), User::Singleton()->id(), $title));
-		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'search'), array($xml, $this->generate_search($xml)));
+		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor'), array(time(), User::Singleton()->id()));
+		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title', 'search'), array($xml, $title, $this->generate_search($xml)));
 
 		return true;
 	}
@@ -333,11 +333,11 @@ class elementDefault
 	}
 
 	protected function archive_data($xml){
-		$archive_data = database::Singleton()->sql_select_first(array('id', 'data'), 'tbl_elements_data', array('id'), array($this->id));
+		$archive_data = database::Singleton()->sql_select_first(array('id', 'title', 'data'), 'tbl_elements_data', array('id'), array($this->id));
 		if ($archive_data && ($archive_data['data'] != '<null />') && ($archive_data['data'] != $xml)) {
 			database::Singleton()->sql_insert('tbl_elements_data_archive',
-									array('data', 'ts', 'replaced_by', 'replaced_ts', 'element_id'),
-									array($archive_data['data'], time(), user::Singleton()->id(), time(), $archive_data['id']));
+									array('data', 'title', 'ts', 'replaced_by', 'replaced_ts', 'element_id'),
+									array($archive_data['data'], $archive_data['title'], time(), user::Singleton()->id(), time(), $archive_data['id']));
 		}
 	}
 
@@ -390,7 +390,7 @@ class elementDefault
 		{
 			if($data == NULL)
 			{
-				$db = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
+				$db = Database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
 				$data = $db['data'];
 			}
 
@@ -422,7 +422,8 @@ class elementDefault
 					}
 					if($key == 'title')
 					{
-						$data = Database::Singleton()->sql_select_first(array('title', 'visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);
+						$data = Database::Singleton()->sql_select_first(array('visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);
+						$title = Database::Singleton()->sql_select_first(array('title'), 'tbl_elements_data', array('id'), array($this->id));
 
 						$this->visible = $data['visible'];
 						$this->deleted = $data['deleted'];
@@ -432,7 +433,7 @@ class elementDefault
 						$this->editor = $data['editor'];
 						$this->approved = $data['approved'];
 						$this->aprover = $data['aprover'];
-						$data = $data['title'];
+						$data = $title['title'];
 
 					}
 					else

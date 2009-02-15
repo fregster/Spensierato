@@ -440,6 +440,12 @@ class elementDefault
 						$data = common::node_from_xml($dbxml, '/data/'.$key);
 					}
 					if($value == 'html') {
+						$approvalData = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_approve', array('element_id'), array($this->id));
+						if ($approvalData) {
+							$approvalData = common::node_from_xml($approvalData['data'], '/'.$key);
+							$data = diffCompare::get_diff($data, $approvalData);
+							$data = diffcompare::format_diff($data);
+						}
 						$data = Common::html($data);
 					}
 					$data = utf8_decode(strip_tags($data));

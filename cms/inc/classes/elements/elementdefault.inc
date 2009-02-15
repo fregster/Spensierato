@@ -301,6 +301,7 @@ class elementDefault
 	protected function toggle_quickapprove(){
 		//TO FIX: currently this only approvs the most recent pending edit.
 		$approvalData = end(database::Singleton()->sql_select(array('user_id', 'ts', 'data'), 'tbl_elements_approve', array('element_id'), array($this->id)));
+		$this->archive_data($approvealData['data']);
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'approved', 'approver'), array($approvalData['ts'], $approvalData['user_id'], time(), User::Singleton()->id()));
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'search'), array($approvalData['data'], $this->generate_search($approvalData['data'])));
 		return database::Singleton()->sql_delete_where('tbl_elements_approve', array('element_id'), $this->id);
@@ -318,7 +319,7 @@ class elementDefault
 		//TODO call search code
 //		$search = $this->generate_search($xml);
 		//TODO Archiving
-
+		$this->archive_data($xml);
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'title'), array(time(), User::Singleton()->id(), $title));
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'search'), array($xml, $this->generate_search($xml)));
 
@@ -329,6 +330,15 @@ class elementDefault
 	{
 		database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
 		return true;
+	}
+
+	protected function archive_data($xml){
+		$archive_data = database::Singleton()->sql_select_first(array('id', 'data'), 'tbl_elements_data', array('id'), array($this->id));
+		if ($archive_data && ($archive_data['data'] != '<null />') && ($archive_data['data'] != $xml)) {
+			database::Singleton()->sql_insert('tbl_elements_data_archive',
+									array('data', 'ts', 'replaced_by', 'replaced_ts', 'element_id'),
+									array($archive_data['data'], time(), user::Singleton()->id(), time(), $archive_data['id']));
+		}
 	}
 
 	//add extra data when in admin mode
@@ -429,8 +439,9 @@ class elementDefault
 					{
 						$data = common::node_from_xml($dbxml, '/data/'.$key);
 					}
-
-					if($value == 'html') { $data = Common::html($data); }
+					if($value == 'html') {
+						$data = Common::html($data);
+					}
 					$data = utf8_decode(strip_tags($data));
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 				}
@@ -455,7 +466,7 @@ class elementDefault
 
 	protected function get_revision()
 	{
-		$this->revision = Database::Singleton()->sql_count_where('tbl_element_data_archive', 'element_id', $this->id, options::Singleton()->get_option('admin_mode'));
+		$this->revision = Database::Singleton()->sql_count_where('tbl_elements_data_archive', 'element_id', $this->id, options::Singleton()->get_option('admin_mode'));
 		return $this->revision;
 	}
 

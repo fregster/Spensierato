@@ -28,8 +28,8 @@ CREATE TABLE `cms_tbl_commands` (
 array_push($sql, $sql_str);
 
 $sql_str = '
-CREATE TABLE `cms_tbl_element_data_archive` (
-  `id` int(10) unsigned NOT NULL,
+CREATE TABLE `cms_tbl_elements_data_archive` (
+  `id` int(10) unsigned NOT NULL auto_increment,
   `data` longtext,
   `ts` varchar(45) NOT NULL,
   `replaced_by` int(10) unsigned NOT NULL,

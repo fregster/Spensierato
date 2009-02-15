@@ -179,7 +179,7 @@ CREATE TABLE `cms_tbl_users` (
   `hash_type` varchar(8),
   `last_login` varchar(32),
   `session_id` varchar(64),
-  `admin` tinyint(4) default NULL COMMENT 'Global site admin',
+  `admin` tinyint(4) default '0' COMMENT 'Global site admin',
   `login_attempts` tinyint(4) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),

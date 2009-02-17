@@ -397,6 +397,8 @@ class elementDefault
 	{
 		if($this->id != 'blank')
 		{
+			$approvalData = database::Singleton()->sql_select_first(array('title', 'data'), 'tbl_elements_approve', array('element_id'), array($this->id));
+
 			if($data == NULL)
 			{
 				$db = Database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
@@ -442,7 +444,7 @@ class elementDefault
 						$this->editor = $data['editor'];
 						$this->approved = $data['approved'];
 						$this->aprover = $data['aprover'];
-						$data = $title['title'];
+						$data = $approvalData?$approvalData['title']:$data = $title['title'];
 
 					}
 					else
@@ -450,11 +452,13 @@ class elementDefault
 						$data = common::node_from_xml($dbxml, '/data/'.$key);
 					}
 					if($value == 'html') {
-						$approvalData = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_approve', array('element_id'), array($this->id));
 						if ($approvalData) {
 							$approvalData = common::node_from_xml($approvalData['data'], '/'.$key);
-							$data = diffCompare::get_diff($data, $approvalData);
-							$data = diffcompare::format_diff($data);
+							$diffData = diffCompare::get_diff($data, $approvalData);
+							$diffData = diffcompare::format_diff($diffData);
+							if ($diffData && trim($diffData) != '') {
+								$data = $diffData;
+							}
 						}
 						$data = Common::html($data);
 					}

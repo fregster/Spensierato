@@ -146,16 +146,16 @@ class Security
 
 	/**
 	 * Security method can_do
-	 * 
+	 *
 	 * This is the main body of the security class
 	 * $what is the what level of security you looking for:
 	 * 		view	edit	approve etc
-	 * 
+	 *
 	 * $page_ids default is null, assumes you looking for the security relating to the current page
 	 * 		pass in an int to get the security relating to that page
 	 * 		pass in an array(int) to get the security relating to the specific pages only in order of inheritance
-	 * 
-	 * This is not for bulk security 
+	 *
+	 * This is not for bulk security
 	 */
 	protected function can_do($what, $page_ids = NULL, $user_id = NULL)
 	{
@@ -231,7 +231,7 @@ class Security
 		{
 			if(isset($security_array['blocked']['group'][0]))
 			{
-				if(count(array_intersect($lists, $security_array['group']['group'])) > 0)
+				if(count(array_intersect($lists, $security_array['blocked']['group'])) > 0)
 				{
 					return $this->save_cache($what, $page_ids, $user_id, false);
 				}

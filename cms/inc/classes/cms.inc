@@ -693,11 +693,18 @@ class CMS
 
 				if(post::variable('new_type', 'is_set'))
 				{
-					if(Security::singleton()->can_approve($this->page_details['value']))
+					if(Security::singleton()->can_edit($this->page_details['value']))
 					{
 						if(post::variable('new_type') === 'newPage')
 						{
-							$this->create_new_page($this->page_details['value']);
+							if(Security::singleton()->can_approve($this->page_details['value']))
+							{
+								$this->create_new_page($this->page_details['value']);
+							}
+							else
+							{
+								error::do403();
+							}
 						}
 						else
 						{

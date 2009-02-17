@@ -75,6 +75,12 @@ class elementDefault
 		{
 			$this->link = $link;
 		}
+
+		$user_draft = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
+		if ($user_draft) {
+			$data = $user_draft['data'];
+		}
+
 		$this->get_data($data);
 		Content::Singleton()->attach_content($this->render());
 	}
@@ -175,6 +181,7 @@ class elementDefault
 		}
 		else
 		{
+			database::Singleton()->sql_delete_where('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
 			if(Security::Singleton()->can_approve_element())
 			{
 				if($this->process_save($built_xml, $title));
@@ -434,7 +441,15 @@ class elementDefault
 					if($key == 'title')
 					{
 						$data = Database::Singleton()->sql_select_first(array('visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);
-						$title = Database::Singleton()->sql_select_first(array('title'), 'tbl_elements_data', array('id'), array($this->id));
+
+						//this is a bit of a hack and should probably be cleaned up at some piont
+						$draft_title = database::Singleton()->sql_select_first(array('title'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
+						if ($draft_title) {
+							$title = $draft_title;
+						}
+						else{
+							$title = Database::Singleton()->sql_select_first(array('title'), 'tbl_elements_data', array('id'), array($this->id));
+						}
 
 						$this->visible = $data['visible'];
 						$this->deleted = $data['deleted'];

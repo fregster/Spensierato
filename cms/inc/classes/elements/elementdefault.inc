@@ -142,8 +142,7 @@ class elementDefault
 		foreach($details as $key => $value)
 		{
 			if($key == 'html') { $value = Common::html($value); }
-			$value = common::sql_clean(strip_tags($value));
-			$xml .= '<'.$key.'>'.$value.'</'.$key.'>';
+			$xml .= "<$key>".common::sql_clean(strip_tags($value))."</$key>";
 		}
 		$xml .= '</xml>';
 
@@ -171,6 +170,7 @@ class elementDefault
 			//database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array($this->id,user::Singleton()->id()), array('data', 'ts'), array(common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES))), CMS::Singleton()->time()));
 			//database::Singleton()->sql_update_by_id($this->id, $table, $fields = array(), $values = array())
 			database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $built_xml, CMS::Singleton()->time(), $title));
+//database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
 			die('SAVED');
 		}
 		else

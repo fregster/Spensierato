@@ -56,6 +56,7 @@
 	<div>
 		<xsl:value-of select="name()" />: <xsl:element name="input">
 		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
 		<xsl:attribute name="value"><xsl:value-of select="." /></xsl:attribute>
 		</xsl:element>
 	</div>

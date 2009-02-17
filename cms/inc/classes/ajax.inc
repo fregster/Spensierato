@@ -47,11 +47,6 @@ class ajax
 		$element = Element::type($id);
 		$element->build($id);
 		echo($element->save(true));
-		
-//		if(database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($id, user::singleton()->id()), array('element_id', 'user_id', 'ts', 'data'), array($id, user::singleton()->id(), time(), $_POST['html'])))
-//		{
-//			echo 'SAVED';
-//		}
 	}
 	
 	private function edit_load($id)

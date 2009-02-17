@@ -15,7 +15,7 @@ function ajaxSave(){
 clearTimeout(t);
 var ed=tinyMCE.get("content");
 ed.setProgressState(1);
-ajaxPost(ajax_host+"/ajax/edit/"+element_id,"<html>"+ed.getContent()+"</html>");
+ajaxPost(ajax_host+"/ajax/edit/"+element_id,"html="+encodeURI(ed.getContent())+"&title="+encodeURI(document.getElementById('title').value));
 http.onreadystatechange=function(){
 if(http.readyState==4){
 if(http.responseText=="SAVED"){

@@ -10,12 +10,15 @@
 					<xsl:element name="form">
 						<xsl:attribute name="action"></xsl:attribute>
 						<xsl:attribute name="method">post</xsl:attribute>
-						
+
 						<!-- test if we might upload a file and if so add the multipart attribute -->
 						<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
-						
+
 						<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
-						<xsl:call-template name="edit_header"/>						
+						<xsl:call-template name="edit_header"/>
+						<xsl:if test="//archive">
+							<xsl:call-template name="revision_rollback"/>
+						</xsl:if>
 						<xsl:apply-templates select="/page/body/element/data"/>
 						<xsl:call-template name="edit_footer"/>
 					</xsl:element>
@@ -25,7 +28,7 @@
 </xsl:template>
 
 <xsl:template match="*[@type = 'html']">
-	
+
 	<div>
 		<xsl:element name="textarea">
 		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
@@ -39,16 +42,16 @@
 			</xsl:when>
 			<xsl:otherwise>
 			<xsl:attribute name="class">mceSimple</xsl:attribute>
-			</xsl:otherwise>		
+			</xsl:otherwise>
 		</xsl:choose>
-		
+
 		<xsl:value-of select="." />
 		<xsl:if test="string-length(.) = 0">Enter your text here</xsl:if>
 		</xsl:element>
 	</div>
-	
+
 </xsl:template>
-	
+
 <xsl:template match="*[@type = 'text']">
 	<div>
 		<xsl:value-of select="name()" />: <xsl:element name="input">
@@ -57,8 +60,8 @@
 		</xsl:element>
 	</div>
 </xsl:template>
-	
-<xsl:template match="*[@type = 'file']">	
+
+<xsl:template match="*[@type = 'file']">
 	<div>
 		<xsl:element name="input">
 			<xsl:attribute name="type">hidden</xsl:attribute>
@@ -68,13 +71,13 @@
 		Choose a file to upload: <input name="uploadedfile" type="file" /><br />
 	</div>
 </xsl:template>
-		
+
 <xsl:template match="*[@type = 'warning']">
 	<div>
 		<xsl:value-of select="./title" /><em><xsl:value-of select="./description" /></em>
 	</div>
 </xsl:template>
-		
+
 <xsl:template match="*[@type = 'auto']">
 	<xsl:if test="string(.)">
 		<div>
@@ -85,9 +88,9 @@
 
 <xsl:template name="edit_header">
 	<div id="edit_header">
-		Created By: <xsl:value-of select="/page/body/element/@creator" /> ( ) | 
+		Created By: <xsl:value-of select="/page/body/element/@creator" /> ( ) |
 		<xsl:if test="/page/body/element/@editor">
-			Edited by: <xsl:value-of select="/page/body/element/@editor" /> ( ) | 
+			Edited by: <xsl:value-of select="/page/body/element/@editor" /> ( ) |
 			Revision: <xsl:value-of select="/page/body/element/@revision" /><br />
 			<xsl:if test="/page/body/element/@approved">
 				Last Aproved By: <xsl:value-of select="/page/body/element/@approved" /><br />
@@ -97,8 +100,24 @@
 	</div>
 </xsl:template>
 
+<xsl:template name="revision_rollback">
+	<div name="revision_rollback">
+		Rollback changes to older version:
+		<xsl:element name="select">
+			<xsl:attribute name="id">revision_list</xsl:attribute>
+			<option value="0"></option>
+			<xsl:for-each select="//archive/revision">
+				<xsl:element name="option">
+					<attribute name="value"><xsl:value-of select="id" /></attribute>
+					<xsl:value-of select="id" /> <xsl:value-of select="title" /> <xsl:value-of select="user" /> <xsl:value-of select="date" />
+				</xsl:element>
+			</xsl:for-each>
+		</xsl:element>
+	</div>
+</xsl:template>
+
 <xsl:template name="edit_footer">
-	<div id="edit_footer">	
+	<div id="edit_footer">
 		<xsl:element name="input">
 			<xsl:attribute name="type">button</xsl:attribute>
 			<xsl:attribute name="value">Re-Load</xsl:attribute>
@@ -117,31 +136,31 @@
 <xsl:template name="header">
 			<head>
 				<xsl:element name="title"><xsl:value-of select="/page/settings/site_name_short" /> | Content Editor</xsl:element>
-				
+
 				<xsl:element name="meta">
 					<xsl:attribute name="name">keywords</xsl:attribute>
 					<xsl:attribute name="content">Stylesheets</xsl:attribute>
 				</xsl:element>
-				
+
 				<xsl:element name="link">
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css</xsl:attribute>
 					<xsl:attribute name="type">text/css</xsl:attribute>
 					<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				</xsl:element>
-				
+
 				<script type="text/javascript">
 					var document_root = '<xsl:value-of select="/page/settings/document_root" />';
 					var js_host = '<xsl:value-of select="/page/settings/static_host_js" />';
 					var ajax_host = '<xsl:value-of select="/page/settings/static_host_ajax" />';
 					var current_page = '<xsl:value-of select="/page/@id" />';
-					
+
 					<xsl:if test="count(/page/settings/pre_load_images/setting) > 0">
 					// set pre-loading image list
 				       var images = new Array();
 				       <xsl:for-each select="/page/settings/pre_load_images/setting">images[<xsl:value-of select="position() -1" />]="<xsl:value-of select="/page/settings/document_root" />/skin/pre-load-images/<xsl:value-of select="."/>"
 				     </xsl:for-each>
 					</xsl:if>
-					function returnRefresh() 
+					function returnRefresh()
 					{
 						window.top.document.body.innerHTML = '';
 					    window.top.location = document_root+'/'+current_page;
@@ -152,14 +171,14 @@
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
 					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js</xsl:attribute>//load
 				</xsl:element>
-				
+
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
 					<!-- <xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>-->
 					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce_gzip.js</xsl:attribute>//load
 				</xsl:element>
-				
-				
+
+
 
 				<script type="text/javascript">
 				tinyMCE_GZ.init({
@@ -169,7 +188,7 @@
 					disk_cache : false,
 					debug : true
 				});
-				</script> 
+				</script>
 
 				<script type="text/javascript">
 				tinyMCE.init({
@@ -205,11 +224,11 @@
 						paste_remove_styles:"1",
 						gecko_spellcheck:"1",
 						plugins:"safari,paste,fullscreen,spellchecker,inlinepopups",
-						
+
 						button_tile_map : true,
 						setup : function(ed) { ed.onKeyUp.add(function(ed, e) { delayedSave(); })	}
 					      });
-				element_id = 'e_<xsl:value-of select="/page/body/element/@id" />';		
+				element_id = 'e_<xsl:value-of select="/page/body/element/@id" />';
 				</script>
 			</head>
 	</xsl:template>

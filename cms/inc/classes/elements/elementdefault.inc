@@ -495,6 +495,11 @@ class elementDefault
 				$user = database::Singleton()->sql_select_first(array('username'), 'tbl_users', array('id'), array($data['replaced_by']));
 				$built_xml .= '<revision>';
 				$built_xml .= '<id>'.($revision_num + 1).'</id>';
+
+				if (strlen($data['title']) > 5) {
+					$data['title'] = substr($data['title'], 0, 4).'...';
+				}
+
 				$built_xml .= '<title>'.$data['title'].'</title>';
 				$built_xml .= '<user>'.$user['username'].'</user>';
 				$built_xml .= '<date>'.date(settings::singleton()->get_setting('date_format'), $data['replaced_ts']).'</date>';

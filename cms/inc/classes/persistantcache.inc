@@ -150,7 +150,7 @@ class persistantcache
 	private function disable_memcached()
 	{
 		$this->enabled = false;
-		$_SESSION['disable_memcached'] = $this->time();
+		$_SESSION['disable_memcached'] = $this->time;
 	}
 	
 	/**

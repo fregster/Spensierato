@@ -147,7 +147,19 @@ class elementDefault
 		$xml = '<xml>';
 		foreach($details as $key => $value)
 		{
-			if($key == 'html') { $value = Common::html($value); }
+			switch ($key)
+			{
+				case 'html':
+					$value = Common::html($value);
+				break;
+				
+				case 'href':
+					if( (substr($value, 0, 7) == 'http://') or (substr($value, 0, 8) == 'https://') or (substr($value, 0, 6) == 'ftp://') ){  }	else
+					{
+						$data = 'http://'.$data;
+					}
+				break;
+			}
 			$xml .= "<$key>".common::sql_clean(strip_tags($value))."</$key>";
 		}
 		$xml .= '</xml>';
@@ -438,34 +450,36 @@ class elementDefault
 					{
 						$this->draft = $user_draft['ts'];
 					}
-					if($key == 'title')
+					
+					switch ($key)
 					{
-						$data = Database::Singleton()->sql_select_first(array('visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);
-
-						//this is a bit of a hack and should probably be cleaned up at some piont
-						$draft_title = database::Singleton()->sql_select_first(array('title'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
-						if ($draft_title) {
-							$title = $draft_title;
-						}
-						else{
-							$title = Database::Singleton()->sql_select_first(array('title'), 'tbl_elements_data', array('id'), array($this->id));
-						}
-
-						$this->visible = $data['visible'];
-						$this->deleted = $data['deleted'];
-						$this->created = $data['created'];
-						$this->creator = $data['creator'];
-						$this->edited = $data['edited'];
-						$this->editor = $data['editor'];
-						$this->approved = $data['approved'];
-						$this->aprover = $data['aprover'];
-						$data = $approvalData?$approvalData['title']:$data = $title['title'];
-
-					}
-					else
-					{
+						case 'title':
+							$data = Database::Singleton()->sql_select_first(array('visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);
+	
+							//this is a bit of a hack and should probably be cleaned up at some piont
+							$draft_title = database::Singleton()->sql_select_first(array('title'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
+							if ($draft_title) {
+								$title = $draft_title;
+							}
+							else{
+								$title = Database::Singleton()->sql_select_first(array('title'), 'tbl_elements_data', array('id'), array($this->id));
+							}
+	
+							$this->visible = $data['visible'];
+							$this->deleted = $data['deleted'];
+							$this->created = $data['created'];
+							$this->creator = $data['creator'];
+							$this->edited = $data['edited'];
+							$this->editor = $data['editor'];
+							$this->approved = $data['approved'];
+							$this->aprover = $data['aprover'];
+							$data = $approvalData?$approvalData['title']:$data = $title['title'];
+						break;
+						
+					default:
 						$data = common::node_from_xml($dbxml, '/data/'.$key);
 					}
+					
 					if($value == 'html') {
 						if ($approvalData) {
 							$approvalData = common::node_from_xml($approvalData['data'], '/'.$key);

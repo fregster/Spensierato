@@ -76,10 +76,10 @@ class elementDefault
 			$this->link = $link;
 		}
 
-		$user_draft = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
-		if ($user_draft) {
-			$data = $user_draft['data'];
-		}
+//		$user_draft = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
+//		if ($user_draft) {
+//			$data = $user_draft['data'];
+//		}
 
 		$this->get_data($data);
 		Content::Singleton()->attach_content($this->render());
@@ -104,7 +104,8 @@ class elementDefault
 		$this->element->setAttribute('eh', $this->edit_height);
 		$this->element->setAttribute('ew', $this->edit_width);
 		$this->element->setAttribute('image', $this->image);
-
+		$this->element->setAttribute('title', $this->title);
+		
 		$this->admin();
 
 		//Transform the data field
@@ -149,6 +150,10 @@ class elementDefault
 		{
 			switch ($key)
 			{
+				case 'title':
+					$value = NULL;
+				break;
+				
 				case 'html':
 					$value = Common::html($value);
 				break;
@@ -418,11 +423,14 @@ class elementDefault
 		if($this->id != 'blank')
 		{
 			$approvalData = database::Singleton()->sql_select_first(array('title', 'data'), 'tbl_elements_approve', array('element_id'), array($this->id));
-
 			if($data == NULL)
 			{
-				$db = Database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
+				$db = Database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
 				$data = $db['data'];
+			}
+			else
+			{
+				$db = Database::Singleton()->sql_select_first(array('title'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
 			}
 
 			$dbxml = '<data>'.$data.'</data>';
@@ -474,13 +482,14 @@ class elementDefault
 							$this->editor = $data['editor'];
 							$this->approved = $data['approved'];
 							$this->aprover = $data['aprover'];
+							$this->title = $title['title'];
 							$data = $approvalData?$approvalData['title']:$data = $title['title'];
 						break;
 						
 					default:
 						$data = common::node_from_xml($dbxml, '/data/'.$key);
 					}
-					
+
 					if($value == 'html') {
 						if ($approvalData) {
 							$approvalData = common::node_from_xml($approvalData['data'], '/'.$key);
@@ -496,12 +505,12 @@ class elementDefault
 					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
 				}
 				$built_xml .= '</data>';
-				//die($built_xml);
 				$this->data = $built_xml;
 			}
 			else
 			{
 				$this->data = $dbxml;
+				$this->title = $db['title'];
 			}
 
 
@@ -512,6 +521,7 @@ class elementDefault
 			$this->data = '<data>Blank</data>';
 			$this->search = NULL;
 		}
+		if($this->title == 'Please give the element a meaningful title') { $this->title = ''; }
 	}
 
 	protected function get_revision()
@@ -520,28 +530,32 @@ class elementDefault
 		return $this->revision;
 	}
 
-	protected function get_revision_history(){
-		$built_xml = '';
-		$revisions = database::Singleton()->sql_select(array('title', 'replaced_ts', 'replaced_by'), 'tbl_elements_data_archive', array('element_id'), array($this->id));
-		if ($revisions) {
-			$built_xml .= '<archive>';
-			foreach ($revisions as $revision_num => $data){
-				$user = database::Singleton()->sql_select_first(array('username'), 'tbl_users', array('id'), array($data['replaced_by']));
-				$built_xml .= '<revision>';
-				$built_xml .= '<id>'.($revision_num + 1).'</id>';
-
-				if (strlen($data['title']) > 5) {
-					$data['title'] = substr($data['title'], 0, 4).'...';
+	protected function get_revision_history()
+	{
+		if(options::Singleton()->get_option('admin_mode'))
+		{
+			$built_xml = '';
+			$revisions = database::Singleton()->sql_select(array('title', 'replaced_ts', 'replaced_by'), 'tbl_elements_data_archive', array('element_id'), array($this->id));
+			if ($revisions) {
+				$built_xml .= '<archive>';
+				foreach ($revisions as $revision_num => $data){
+					$user = database::Singleton()->sql_select_first(array('username'), 'tbl_users', array('id'), array($data['replaced_by']));
+					$built_xml .= '<revision>';
+					$built_xml .= '<id>'.($revision_num + 1).'</id>';
+	
+					if (strlen($data['title']) > 5) {
+						$data['title'] = substr($data['title'], 0, 4).'...';
+					}
+	
+					$built_xml .= '<title>'.$data['title'].'</title>';
+					$built_xml .= '<user>'.$user['username'].'</user>';
+					$built_xml .= '<date>'.date(settings::singleton()->get_setting('date_format'), $data['replaced_ts']).'</date>';
+					$built_xml .= '</revision>';
 				}
-
-				$built_xml .= '<title>'.$data['title'].'</title>';
-				$built_xml .= '<user>'.$user['username'].'</user>';
-				$built_xml .= '<date>'.date(settings::singleton()->get_setting('date_format'), $data['replaced_ts']).'</date>';
-				$built_xml .= '</revision>';
+				$built_xml .= '</archive>';
 			}
-			$built_xml .= '</archive>';
+			$this->revision_history = $built_xml;
 		}
-		$this->revision_history = $built_xml;
 	}
 
 	protected function add_header()

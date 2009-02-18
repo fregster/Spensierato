@@ -83,14 +83,14 @@ class Render
 	private function render($template, $xml)
 	{
 		// Load the site XML pass directly into Render
-		if(get::variable('int','xml') or Settings::singleton()->get_setting('send_as_xml') or class_exists('xsltProcessor') === false)
+		if(get::variable('xml','int') or Settings::singleton()->get_setting('send_as_xml') or class_exists('xsltProcessor') === false)
 		{
 			//Just send the XML
 			header('content-type: text/xml');
 			
 			$search = '<?xml version="1.0"?>';
 			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?><?xml-stylesheet type="text/xsl" href="'. Settings::singleton()->get_setting('document_root').'/xslt" ?>';
-			if(get::variable('int','xml') == 1) { $replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?>'; }
+			if(get::variable('xml','int') == 1) { $replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?>'; }
 
 			$this->render_this(str_replace($search, $replace, $xml));
 			exit;

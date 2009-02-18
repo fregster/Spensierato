@@ -403,7 +403,8 @@ class elementDefault
 
 	public function ajax_edit()
 	{
-		return common::node_from_xml($this->data, '/data/html');
+		$data = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($this->id));
+		return '<html type="html">'.html_entity_decode($data['data']).'</html>';
 	}
 
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor

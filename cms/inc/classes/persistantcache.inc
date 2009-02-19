@@ -151,16 +151,43 @@ class persistantcache
 		return sha1(PREFIX.$name);
 	}
 	
+	/**
+	 * If encrypt is enabled encrypt the data else return the data un touched
+	 * @param $data
+	 * @return encrypted data
+	 */
 	protected function encrypt($data)
 	{
+		//TODO Write encrypt method
+		if($this->encrypt_data)
+		{
+			$data = $data;
+		}
 		return $data;	
 	}
 	
+	/**
+	 * If encrypt is enabled decrypt the data else return the data un touched
+	 * @param $data
+	 * @return decrypted data
+	 */
 	protected function decrypt($data)
 	{
+		//TODO Test data is encrypted and write decrypt method
+		if($this->encrypt_data)
+		{
+			$data = $data;
+		}
 		return $data;	
 	}
 	
+	/**
+	 * Build the data into a consistant store
+	 * @param $name
+	 * @param $value
+	 * @param $time
+	 * @return array();
+	 */
 	protected function build_save($name, $value, $time)
 	{
 		//Build the expire time
@@ -175,9 +202,19 @@ class persistantcache
 		}
 		
 		//Build the value
-		$value = array('value' => $this->encrypt(serialize($value)), 'time' => $expire_time);
+		$data = serialize($value);
+		$value = array('value' => $this->encrypt($data), 'time' => $expire_time, 'validate' => crc32($data), 'encrypted' => $this->encrypt_data);
 		
 		return array('name'=>$this->build_key($name), 'data'=>$value);
+	}
+	
+	protected function validate_data($data, $check)
+	{
+		if(crc32($data) == $check)
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -270,7 +307,7 @@ class persistantcache_memcache extends persistantcache
 	{
 		$name = $this->build_key($name);
 		$result = $this->store->get($name);
-		if($result['time'] > $this->time)
+		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate']))
 		{
 			return unserialize($this->decrypt($result['value']));
 		}		
@@ -370,7 +407,7 @@ class persistantcache_file extends persistantcache
 			$result['value'] = file_get_contents($file);
 		}
 		
-		if($result['time'] > $this->time)
+		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate']))
 		{
 			return unserialize($this->decrypt($result['value']));
 		}
@@ -444,7 +481,7 @@ class persistantcache_session extends persistantcache
 		
 		$result = $_SESSION['cache'][$name];
 
-		if($result['time'] > $this->time)
+		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate']))
 		{
 			return unserialize($this->decrypt($result['value']));
 		}

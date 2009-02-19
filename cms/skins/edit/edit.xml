@@ -104,8 +104,8 @@
 			Edited by: <xsl:value-of select="/page/body/element/@editor" /> ( ) |
 			Revision: <xsl:value-of select="/page/body/element/@revision" /><br />
 			<xsl:if test="/page/body/element/@approved">
-				Last Aproved By: <xsl:value-of select="/page/body/element/@approved" /><br />
-				Approved On: <xsl:value-of select="/page/body/element/@approver" /><br />
+				Last Aproved By: <xsl:value-of select="/page/body/element/@approver" /><br />
+				Approved On: <xsl:value-of select="/page/body/element/@approved" /><br />
 			</xsl:if>
 		</xsl:if>
 	</div>

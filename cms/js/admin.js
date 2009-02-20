@@ -1,8 +1,16 @@
-function ajaxLoad(){
+function ajaxLoad(revision = false){
 clearTimeout(t);
 var ed=tinyMCE.get("content");
 ed.setProgressState(1);
-ajaxGet(ajax_host+"/ajax/edit/",element_id);
+
+var url = '';
+if (revision) {
+	url = ajax_host + "/ajax/rev/" + revision + "/";
+}
+else{
+	usrl = ajax_host + "ajax/edit/";
+}
+ajaxGet(url,element_id);
 http.onreadystatechange=function(){
 if(http.readyState==4){
 var _2=http.responseText;

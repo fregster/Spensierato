@@ -116,6 +116,7 @@
 		Rollback changes to older version:
 		<xsl:element name="select">
 			<xsl:attribute name="id">revision_list</xsl:attribute>
+			<xsl:attribute name="onchange">ajaxLoad(this.value);</xsl:attribute>
 			<option value="0"></option>
 			<xsl:for-each select="//archive/revision">
 				<xsl:element name="option">

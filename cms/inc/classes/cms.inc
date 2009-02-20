@@ -48,7 +48,7 @@ class CMS
 		$this->microtime = microtime();
 
 		//Is a persistant_cache available ie memcached supported
-		if(persistantcache::Singleton()->advanced() == true)
+		if(persistantcache::Singleton()->enabled() == true)
 		{
 			Database::Singleton()->use_memcached();
 		}
@@ -145,11 +145,7 @@ class CMS
 		$totaltime = ($this->time_finish - $this->time_start) ;
 		$phptime = $totaltime - Database::Singleton()->sql_time();
 		$sql_info = Database::Singleton()->sql_count();
-		$cache = 'SC';
-		if(persistantcache::Singleton()->advanced())
-		{
-			$cache = 'AC';
-		}
+		$cache = persistantcache::Singleton()->type();
 
 		$sql_string = $sql_info[0].' SQL Querys ('.round($sql_info[1]).'% Cached in '.$cache.')';
 

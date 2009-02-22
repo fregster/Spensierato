@@ -847,9 +847,10 @@ class CMS
 		die();
 	}
 
+	//this function is obsolitted by the installation process
 	private function settings_update()
 	{
-		//Update folders to make them relative if required
+	/*	//Update folders to make them relative if required
 		$settings = array('cms_folder_uploads',
 						'cms_folder_downloads',
 						'cms_folder_orig_images');
@@ -864,7 +865,7 @@ class CMS
 				Settings::Singleton()->overwrite_setting($setting, $new_folder);
 			}
 
-		}
+		}*/
 	}
 
 	private function saved($main)

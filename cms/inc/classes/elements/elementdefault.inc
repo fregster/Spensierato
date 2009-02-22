@@ -163,8 +163,9 @@ class elementDefault
 					//to add more protocols, add them to the |-seperated list in the ()
 					if(preg_match('#^(https?|ftp)://#', $value)){  }
 					else
-					{
-						$data = 'http://'.$data;
+					{	//delete any protocol in the url and prefix with http://
+						$value = preg_replace('#^[a-z]*://#', '', $value);
+						$value = 'http://'.$value;
 					}
 				break;
 			}

@@ -140,75 +140,53 @@ class elementDefault
 
 		$details = array_merge($_POST, $extra);
 
-		//Build posted data as XML structure
-		$xml = '<xml>';
+		//get the title and remove it from the array so it
+		//doesn't get into the xml, since it isn't part of the data
+		if ($details['title'] == 'Please give the element a meaningful title') {
+			$details['title'] = NULL;
+		}
+		$title = $details['title'];
+		unset($details['title']);
+
+		//get the data that will be saved in the 'data' field in the db and construct it as xml
+		$xml = '';
 		foreach($details as $key => $value)
 		{
 			switch ($key)
 			{
-				case 'title':
-					$value = NULL;
-				break;
-
 				case 'html':
 					$value = Common::html($value);
 				break;
 
 				case 'href':
-					if( (substr($value, 0, 7) == 'http://') or (substr($value, 0, 8) == 'https://') or (substr($value, 0, 6) == 'ftp://') ){  }	else
+					//matches http://, https://, ftp://.
+					//to add more protocols, add them to the |-seperated list in the ()
+					if(preg_match('#^(https?|ftp)://#', $value)){  }
+					else
 					{
 						$data = 'http://'.$data;
 					}
 				break;
 			}
-			$xml .= "<$key>".common::sql_clean(strip_tags($value))."</$key>";
-		}
-		$xml .= '</xml>';
-
-		//Check data
-		foreach($this->tags as $key => $value)
-		{
-			if($key == 'title')
-			{
-				$title = new SimpleXMLElement($xml);
-				$title = ''.$title->title;
-				if(strlen($title) < 2)
-				{
-					$title = NULL;
-				}
-			}
-			else
-			{
-				$data = common::node_from_xml($xml, '/xml/'.$key);
-				$built_xml .= '<'.$key.'>'.utf8_encode(common::sql_clean(strip_tags(Common::html($data)))).'</'.$key.'>';
-			}
+			$xml .= "<$key>".utf8_encode(common::sql_clean(strip_tags($value)))."</$key>";
 		}
 
 		if($draft)
 		{
 			//database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array($this->id,user::Singleton()->id()), array('data', 'ts'), array(common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES))), CMS::Singleton()->time()));
 			//database::Singleton()->sql_update_by_id($this->id, $table, $fields = array(), $values = array())
-			database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $built_xml, CMS::Singleton()->time(), $title));
+			database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
 //database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
 			die('SAVED');
 		}
 		else
 		{
 			database::Singleton()->sql_delete_where('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
-			if(Security::Singleton()->can_approve_element())
+			if($this->process_save($xml, $title));
 			{
-				if($this->process_save($built_xml, $title));
-				{
-					return true;
-				}
+				return true;
 			}
-			else
-			{
-				if($this->submit_save_for_approval($built_xml, $title));
-				{
-					return true;
-				}
-			}
+
 			return false;
 		}
 
@@ -338,23 +316,25 @@ class elementDefault
 
 	protected function generate_search($input)
 	{
-		return strip_tags(html_entity_decode($input));
+		$input = str_replace('</p><p>', ' ', html_entity_decode($input));
+		return strip_tags($input);
 	}
 
 	protected function process_save($xml, $title)
 	{
 		$this->save_upload();
 
-		$this->archive_data($xml);
-		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor'), array(time(), User::Singleton()->id()));
-		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title', 'search'), array($xml, $title, $this->generate_search($xml)));
+		//save if has permissions
+		if (security::Singleton()->can_do('approve')) {
+			$this->archive_data($xml);
+			database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor'), array(time(), User::Singleton()->id()));
+			database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title', 'search'), array($xml, $title, $this->generate_search($xml)));
+		}
+		//else submit for approval
+		else {
+			database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
+		}
 
-		return true;
-	}
-
-	protected function submit_save_for_approval($xml, $title)
-	{
-		database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
 		return true;
 	}
 
@@ -466,16 +446,6 @@ class elementDefault
 		if(options::Singleton()->get_option('admin_mode'))
 		{
 
-			if(Security::Singleton()->can_approve_element($this->id) && $type == 'approve')
-			{
-				$can_approve = $data['ts'];
-			}
-
-			if(isset($can_approve) or $type == 'approve')
-			{
-				$this->approve = true;
-			}
-
 			if(isset($data['ts']) && $type == 'draft')
 			{
 				$this->draft = $data['ts'];
@@ -520,7 +490,7 @@ class elementDefault
 			$this->data = $dbxml;
 		}
 
-		if($data['title'] == 'Please give the element a meaningful title') { $this->title = ''; }
+		if(empty($data['title'])) { $this->title = 'Please give the element a meaningful title'; }
 		else { $this->title = $data['title']; }
 
 		$this->search = $this->generate_search($data['data']);

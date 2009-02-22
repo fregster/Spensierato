@@ -1,10 +1,9 @@
 <?php
 $path = get_include_path();
-set_include_path  (dirname(__FILE__));
+set_include_path  ($path. PATH_SEPARATOR .dirname(__FILE__));
 include_once 'Text/Diff.php';
 include_once 'Text/Diff/Renderer.php';
 include_once 'Text/Diff/Renderer/inline.php';
-set_include_path($path);
 
 class diffCompare
 {
@@ -69,16 +68,7 @@ class diffCompare
    		}
 
    		$html_fragment = preg_replace('/^<!DOCTYPE.+?>/', '', str_replace( array('<html>', '</html>', '<body>', '</body>'), array('', '', '', ''), $dom_temp->saveHTML()));
-		//$html_fragment = htmlentities($html_fragment);
-   		return ( $html_fragment);
+		return ( $html_fragment);
 	}
 }
-/*$old = 'This is a text string';
-$new = 'This is a diffrent text string';
-$diff = diffcompare::get_diff($old, $new);
-echo('Old: '.$old.'<br/>');
-echo('New: '.$new.'<br/>');
-
-echo('Diff: '.$diff.'<br/>');
-echo('Formated: '.diffcompare::format_diff($diff).'<br/>')*/
 ?>

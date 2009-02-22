@@ -157,7 +157,7 @@ class Security
 	 *
 	 * This is not for bulk security
 	 */
-	protected function can_do($what, $page_ids = NULL, $user_id = NULL)
+	public function can_do($what, $page_ids = NULL, $user_id = NULL)
 	{
 		if(!$this->is_level($what)) { die('Security Exception'); }
 

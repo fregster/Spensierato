@@ -76,12 +76,8 @@ class elementDefault
 			$this->link = $link;
 		}
 
-//		$user_draft = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
-//		if ($user_draft) {
-//			$data = $user_draft['data'];
-//		}
-
 		$this->get_data($data);
+		$this->check_pending_approval();
 		Content::Singleton()->attach_content($this->render());
 	}
 
@@ -105,7 +101,7 @@ class elementDefault
 		$this->element->setAttribute('ew', $this->edit_width);
 		$this->element->setAttribute('image', $this->image);
 		$this->element->setAttribute('title', $this->title);
-		
+
 		$this->admin();
 
 		//Transform the data field
@@ -153,11 +149,11 @@ class elementDefault
 				case 'title':
 					$value = NULL;
 				break;
-				
+
 				case 'html':
 					$value = Common::html($value);
 				break;
-				
+
 				case 'href':
 					if( (substr($value, 0, 7) == 'http://') or (substr($value, 0, 8) == 'https://') or (substr($value, 0, 6) == 'ftp://') ){  }	else
 					{
@@ -342,16 +338,13 @@ class elementDefault
 
 	protected function generate_search($input)
 	{
-		return strip_tags($input);
+		return strip_tags(html_entity_decode($input));
 	}
 
 	protected function process_save($xml, $title)
 	{
 		$this->save_upload();
 
-		//TODO call search code
-//		$search = $this->generate_search($xml);
-		//TODO Archiving
 		$this->archive_data($xml);
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor'), array(time(), User::Singleton()->id()));
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title', 'search'), array($xml, $title, $this->generate_search($xml)));
@@ -389,7 +382,7 @@ class elementDefault
 			}
 			if(isset($this->approved))
 			{
-				$this->element->setAttribute('approved', $this->approved);
+				$this->element->setAttribute('approved', date(settings::singleton()->get_setting('date_format)'), $this->approved));
 			}
 
 			if(isset($this->approver))
@@ -408,8 +401,9 @@ class elementDefault
 
 	public function ajax_edit()
 	{
-		$data = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($this->id));
-		return '<html type="html">'.html_entity_decode($data['data']).'</html>';
+		database::Singleton()->sql_delete_where('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
+		$this->get_data();
+		return common::node_from_xml($this->data, '/data/html');
 	}
 
 	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor
@@ -418,110 +412,126 @@ class elementDefault
 		//$this->data = $this->data;
 	}
 
-	protected function get_data($data = NULL)
-	{
-		if($this->id != 'blank')
-		{
-			$approvalData = database::Singleton()->sql_select_first(array('title', 'data'), 'tbl_elements_approve', array('element_id'), array($this->id));
-			if($data == NULL)
-			{
-				$db = Database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
-				$data = $db['data'];
+	//select the correct data to display
+	protected function get_data($data = NULL){
+
+		$general_info = database::Singleton()->sql_select_first(array('visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id));
+		$default_data = database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->id));
+		$final_data = array();
+
+		//display plain text when not editing
+		if (is_numeric(CMS::Singleton()->path_vars[0]) || is_null(CMS::Singleton()->path_vars[0])) {
+			if (!is_null($data)) {
+				$final_data = array_merge(array('data' => $data, 'title' => $default_data['title']), $general_info);
 			}
-			else
-			{
-				$db = Database::Singleton()->sql_select_first(array('title'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
-			}
-
-			$dbxml = '<data>'.$data.'</data>';
-
-			if(options::Singleton()->get_option('admin_mode'))
-			{
-				$built_xml = '<data>';
-				foreach($this->tags as $key => $value)
-				{
-					//If can approve then check if there outstanding approvals waiting or
-					//Check if the user has any outstanding approvals waiting
-					$user_awaiting_approval = Database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()), NULL, NULL, TRUE);
-					$user_draft = Database::Singleton()->sql_select_first(array('ts'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()), NULL, NULL, TRUE);
-
-					if(Security::Singleton()->can_approve_element($this->id) )
-					{
-						$can_approve = Database::Singleton()->sql_select_first(array('ts'), 'tbl_elements_approve', array('element_id'), array($this->id), NULL, NULL, TRUE);
-					}
-
-					if(isset($can_approve) or (isset($user_awaiting_approval)) )
-					{
-						$this->approve = true;
-					}
-
-					if(isset($user_draft['ts']))
-					{
-						$this->draft = $user_draft['ts'];
-					}
-					
-					switch ($key)
-					{
-						case 'title':
-							$data = Database::Singleton()->sql_select_first(array('visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id), NULL, NULL, TRUE);
-	
-							//this is a bit of a hack and should probably be cleaned up at some piont
-							$draft_title = database::Singleton()->sql_select_first(array('title'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
-							if ($draft_title) {
-								$title = $draft_title;
-							}
-							else{
-								$title = Database::Singleton()->sql_select_first(array('title'), 'tbl_elements_data', array('id'), array($this->id));
-							}
-	
-							$this->visible = $data['visible'];
-							$this->deleted = $data['deleted'];
-							$this->created = $data['created'];
-							$this->creator = $data['creator'];
-							$this->edited = $data['edited'];
-							$this->editor = $data['editor'];
-							$this->approved = $data['approved'];
-							$this->aprover = $data['aprover'];
-							$this->title = $title['title'];
-							$data = $approvalData?$approvalData['title']:$data = $title['title'];
-						break;
-						
-					default:
-						$data = common::node_from_xml($dbxml, '/data/'.$key);
-					}
-
-					if($value == 'html') {
-						if ($approvalData) {
-							$approvalData = common::node_from_xml($approvalData['data'], '/'.$key);
-							$diffData = diffCompare::get_diff($data, $approvalData);
-							$diffData = diffcompare::format_diff($diffData);
-							if ($diffData && trim($diffData) != '') {
-								$data = $diffData;
-							}
-						}
-						$data = Common::html($data);
-					}
-					$data = utf8_decode(strip_tags($data));
-					$built_xml .= '<'.$key.' type="'.$value.'">'.$data.'</'.$key.'>';
+		}
+		else{
+			if (options::Singleton()->get_option('admin_mode')) {
+				//check if there is a saved draft for the user
+				$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
+				if (!is_null($data)) {
+					$final_data = array_merge($data, $general_info);
 				}
-				$built_xml .= '</data>';
-				$this->data = $built_xml;
+				else{
+					if (Security::Singleton()->can_do('approve')) {
+						//check if there is aproval data
+						$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_approve', array('id'), array($this->id));
+						if (!is_null($data)) {
+							//get text diff
+							$old = strip_tags($default_data['data']);
+							$new = strip_tags($data['data']);
+							$diff = diffCompare::get_diff($old, $new);
+							$data['data'] = diffCompare::format_diff($diff);
+
+							$final_data = array_merge($data, $general_info);
+						}
+					}
+				}
 			}
-			else
+		}
+
+		//if no data was set yet, just get the element data from the db
+		if (empty($final_data)) {
+			$final_data = array_merge($default_data, $general_info);
+		}
+
+		$this->arrange_data($final_data, $type);
+	}
+
+	//this is what used to be get_data, now only arranges the data as xml
+	protected function arrange_data($data, $type = NULL)
+	{
+		$dbxml = '<data>'.$data['data'].'</data>';
+
+		if(options::Singleton()->get_option('admin_mode'))
+		{
+
+			if(Security::Singleton()->can_approve_element($this->id) && $type == 'approve')
 			{
-				$this->data = $dbxml;
-				$this->title = $db['title'];
+				$can_approve = $data['ts'];
 			}
 
+			if(isset($can_approve) or $type == 'approve')
+			{
+				$this->approve = true;
+			}
 
-			$this->search = $db['search'];
+			if(isset($data['ts']) && $type == 'draft')
+			{
+				$this->draft = $data['ts'];
+			}
+
+			$built_xml = '<data>';
+			foreach($this->tags as $key => $value)
+			{
+				switch ($key)
+				{
+					case 'title':
+						$this->visible = $data['visible'];
+						$this->deleted = $data['deleted'];
+						$this->created = $data['created'];
+						$this->creator = $data['creator'];
+						$this->edited = $data['edited'];
+						$this->editor = $data['editor'];
+						$this->approved = $data['approved'];
+						$this->aprover = $data['aprover'];
+						$data_content = $data['title'];
+						break;
+
+					case 'html':
+						//figure out why decode + strip is neceassary here.
+						//it shouldn't be and i think it breaks the text diff.
+						$data_content = Common::html(html_entity_decode(strip_tags($data['data'])));
+						break;
+
+					default:
+						$data_content = common::node_from_xml($dbxml, '/data/'.$key);
+						break;
+				}
+
+				$data_content = utf8_decode(strip_tags($data_content));
+				$built_xml .= '<'.$key.' type="'.$value.'">'.$data_content.'</'.$key.'>';
+			}
+			$built_xml .= '</data>';
+			$this->data = $built_xml;
 		}
 		else
 		{
-			$this->data = '<data>Blank</data>';
-			$this->search = NULL;
+			$this->data = $dbxml;
 		}
-		if($this->title == 'Please give the element a meaningful title') { $this->title = ''; }
+
+		if($data['title'] == 'Please give the element a meaningful title') { $this->title = ''; }
+		else { $this->title = $data['title']; }
+
+		$this->search = $this->generate_search($data['data']);
+	}
+
+	//seperated from arrange_data()
+	protected function check_pending_approval(){
+		$approvals = database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('id'), array($this->id));
+		if (!is_null($approvals) && security::Singleton()->can_do('approve')) {
+			$this->approve = true;
+		}
 	}
 
 	protected function get_revision()
@@ -542,11 +552,11 @@ class elementDefault
 					$user = database::Singleton()->sql_select_first(array('username'), 'tbl_users', array('id'), array($data['replaced_by']));
 					$built_xml .= '<revision>';
 					$built_xml .= '<id>'.($revision_num + 1).'</id>';
-	
+
 					if (strlen($data['title']) > 5) {
 						$data['title'] = substr($data['title'], 0, 4).'...';
 					}
-	
+
 					$built_xml .= '<title>'.$data['title'].'</title>';
 					$built_xml .= '<user>'.$user['username'].'</user>';
 					$built_xml .= '<date>'.date(settings::singleton()->get_setting('date_format'), $data['replaced_ts']).'</date>';

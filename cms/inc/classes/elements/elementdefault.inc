@@ -156,7 +156,7 @@ class elementDefault
 			{
 				case 'html':
 					$value = Common::html($value);
-				break;
+					break;
 
 				case 'href':
 					//matches http://, https://, ftp://.
@@ -167,7 +167,14 @@ class elementDefault
 						$value = preg_replace('#^[a-z]*://#', '', $value);
 						$value = 'http://'.$value;
 					}
-				break;
+					break;
+
+				case 'email':
+					if (!common::email_address_check($value)) {
+						//do something about invalid emails
+						$value = NULL;
+					}
+					break;
 			}
 			$xml .= "<$key>".utf8_encode(common::sql_clean(strip_tags($value)))."</$key>";
 		}
@@ -316,8 +323,8 @@ class elementDefault
 	}
 
 	protected function generate_search($input)
-	{
-		$input = str_replace('</p><p>', ' ', html_entity_decode($input));
+	{	//exchange </tag><tag> couples with spaces
+		$input = preg_replace('#</\w+><\w+>#', ' ', html_entity_decode($input));
 		return strip_tags($input);
 	}
 

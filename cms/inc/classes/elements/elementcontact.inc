@@ -14,7 +14,8 @@ class elementContact extends elementDefault
 
 	protected function attach_extra_data()
 	{
-		return array('title' => '');
+		//return array('title' => '');
+		return array();
 
 	}
 

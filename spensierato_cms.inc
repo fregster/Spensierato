@@ -6,36 +6,45 @@ function exception_handler($exception)
 
 /**
  * Auto class loading function
+ * $class_block_list are for elements or classes that are not ready for production
+ * Uncoment them for testing
  *
  * @param string $class_name
  */
+$class_block_list = array(	
+//'elementvideo' => 1,
+//'elementgallery' => 1,
+//'elementlink' => 1,
+);
+$include_path = dirname(__FILE__);
 function __autoload($class_name)
 {
-	if($class_name != '' and $class_name != null and !class_exists($class_name))
-	{
-		$class_name = strtolower($class_name);
-		$path = dirname(__FILE__);
+	global $class_block_list;
+	global $include_path;
+	$class_name = strtolower($class_name);
 
+	if($class_name != '' and $class_name != null and !class_exists($class_name) and !isset($class_block_list[$class_name]))
+	{
 		if($class_name == 'database')
 		{
 			//Database files
-			require_once($path.'/cms/database/database.inc');
+			require_once($include_path.'/cms/database/database.inc');
 			return true;
 		}
 
-		if(file_exists($path.'/cms/inc/classes/'.$class_name.'.inc'))
+		if(file_exists($include_path.'/cms/inc/classes/'.$class_name.'.inc'))
 		{
-			require_once $path.'/cms/inc/classes/'.$class_name.'.inc';
+			require_once $include_path.'/cms/inc/classes/'.$class_name.'.inc';
 			return true;
 		}
-		else if (file_exists($path.'/cms/inc/classes/elements/'.$class_name.'.inc'))
+		else if (file_exists($include_path.'/cms/inc/classes/elements/'.$class_name.'.inc'))
 		{
-			require_once $path.'/cms/inc/classes/elements/'.$class_name.'.inc';
+			require_once $include_path.'/cms/inc/classes/elements/'.$class_name.'.inc';
 			return true;
 		}
-		else if (file_exists($path.'/cms/inc/classes/optional/'.$class_name.'.inc'))
+		else if (file_exists($include_path.'/cms/inc/classes/optional/'.$class_name.'.inc'))
 		{
-			require_once $path.'/cms/inc/classes/optional/'.$class_name.'.inc';
+			require_once $include_path.'/cms/inc/classes/optional/'.$class_name.'.inc';
 			return true;
 		}
 		else
@@ -43,6 +52,7 @@ function __autoload($class_name)
 			 die('<p>Critical error: Class "'.$class_name.'" not defined</p>');
 		}
 	}
+	return false;
 }
 
 set_exception_handler('exception_handler');
@@ -110,7 +120,7 @@ try
 	require_once('./cms/cms_includes.inc');
 
 	//uncomment to force an install
-	//$install = true;
+//	$install = true;
 
 	//run the installation
 	if($install)

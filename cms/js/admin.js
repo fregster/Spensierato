@@ -1,14 +1,13 @@
-function ajaxLoad(revision = false){
+function ajaxLoad(revision){
 clearTimeout(t);
 var ed=tinyMCE.get("content");
 ed.setProgressState(1);
-
 var url = '';
-if (revision) {
-	url = ajax_host + "/ajax/rev/" + revision + "/";
-}
-else{
-	usrl = ajax_host + "ajax/edit/";
+if (typeof revision != 'undefined')
+{
+url = ajax_host + "/ajax/rev/" + revision + "/";
+}else{
+usrl = ajax_host + "ajax/edit/";
 }
 ajaxGet(url,element_id);
 http.onreadystatechange=function(){

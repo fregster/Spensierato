@@ -61,7 +61,7 @@ class ajax
 	}
 
 	private function revision($rev_id, $element_id){
-		$element_revs = database::singleton()->sql_select_first(array('data'), 'tbl_elements_archive_data', array('element_id'), array($element_id));
+		$element_revs = database::singleton()->sql_select_first(array('data'), 'tbl_elements_data_archive', array('element_id'), array($element_id));
 		$revision_data = $element_revs[($rev_id - 1)]['data'];
 		$element = Element::type($element_id);
 		$element->build($element_id, $revision_data);

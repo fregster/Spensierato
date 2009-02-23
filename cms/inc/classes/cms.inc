@@ -149,7 +149,7 @@ class CMS
 
 		$sql_string = $sql_info[0].' SQL Querys ('.round($sql_info[1]).'% Cached in '.$cache.')';
 
-		$runtime=('<div class="footer_text">Page generated in ' . Common::microtime_to_seconds($totaltime) . ' seconds<br /> ' . round((100/$totaltime*$phptime), 0) . '% php time and with ' .$sql_string.'</div>');
+		$runtime=('<div class="footer_text">Page generated in ' . Common::microtime_to_seconds($totaltime) . ' seconds<br /> ' . round((100/$totaltime*$phptime), 0) . '% php time and with ' .$sql_string.' using '.(memory_get_peak_usage(true) / (1024 * 1024)).' MB</div>');
 
 		return ('<div id="page_section_footer">'.$runtime.'</div>');
 
@@ -329,8 +329,15 @@ class CMS
 		{
 			case 'HTML':
 				//Database file, call content singleton
-				Options::singleton()->admin_check();
-				Render::Singleton()->render_html(Content::Singleton()->build(), true);
+				if(Security::singleton()->can_view())
+				{
+					Options::singleton()->admin_check();
+					Render::Singleton()->render_html(Content::Singleton()->build(), true);
+				}
+				else
+				{
+					Error::do403();
+				}
 			    break;
 
 			case 'STYLESHEET':

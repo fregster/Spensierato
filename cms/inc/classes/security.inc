@@ -21,7 +21,6 @@ class Security
 {
 	protected static $instance;
 	protected $levels;
-	protected $security_cache;
 	private $security_cache_time = 60;
 
 	public static function Singleton()
@@ -46,19 +45,6 @@ class Security
 	function __construct()
 	{
 		$this->levels = array('block', 'view', 'edit', 'approve');
-		if(isset($_SESSION['security_cache']))
-		{
-			$this->security_cache = $_SESSION['security_cache'];
-		}
-		else
-		{
-			$this->security_cache = array();
-		}
-	}
-
-	function __destruct()
-	{
-		$_SESSION['security_cache'] = $this->security_cache;
 	}
 
 	public function __clone()

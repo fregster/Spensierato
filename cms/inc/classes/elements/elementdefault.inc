@@ -440,7 +440,9 @@ class elementDefault
 
 		//if no data was set yet, just get the element data from the db
 		if (empty($final_data)) {
-			$final_data = array_merge($default_data, $general_info);
+			if(isset($default_data[0]) && isset($general_info[0])) { $final_data = array_merge($default_data, $general_info); }
+			else
+			{ $final_data &= $default_data; }
 		}
 
 		$this->arrange_data($final_data, $type);

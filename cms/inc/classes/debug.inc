@@ -65,7 +65,7 @@ class Debug
 		if($render)
 		{
 			global $profile;
-			$this->record('Profile Trace', $profile); // Add the autoloader profiler
+			if(isset($profile[0])){ $this->record('Profile Trace', $profile); } // Add the autoloader profiler
 			return Common::array_to_xml_simple($this->debug_log, 'xml', 'item');
 			// TODO cookie::Singleton()->debug();
 		}

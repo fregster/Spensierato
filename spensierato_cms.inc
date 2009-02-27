@@ -17,42 +17,46 @@ $class_block_list = array(
 //'elementlink' => 1,
 );
 $include_path = dirname(__FILE__);
+$profile = array();
 function __autoload($class_name)
 {
 	global $class_block_list;
 	global $include_path;
+	global $profile;
+	$trace = false;
+	
+	$paths = array(	$include_path.'/cms/inc/classes/', 
+					$include_path.'/cms/inc/classes/elements/',
+					$include_path.'/cms/inc/classes/optional/',
+				);
+	
 	$class_name = strtolower($class_name);
 
-	if($class_name != '' and $class_name != null and !class_exists($class_name) and !isset($class_block_list[$class_name]))
+	if($class_name != '' and $class_name != null and !class_exists($class_name) and !isset($class_block_list[$class_name])) //Ensure we should be trying to load the class
 	{
-		if($class_name == 'database')
+		if($class_name == 'database') //Quick check for DB class as its outside the normal classes dir
 		{
 			//Database files
-			require_once($include_path.'/cms/database/database.inc');
-			return true;
+			if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage(true); }
+				require_once($include_path.'/cms/database/database.inc');			
+			if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage(true) - $start_mem), 'load_time' => $mtime - $start_time); }
+				return true;
 		}
 
-		if(file_exists($include_path.'/cms/inc/classes/'.$class_name.'.inc'))
+		foreach($paths as $path) //Cycle through the includes dir in order of preference
 		{
-			require_once $include_path.'/cms/inc/classes/'.$class_name.'.inc';
-			return true;
+			if(file_exists($path.$class_name.'.inc')) //Check the file exists
+			{
+				if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage(true); }
+					require_once $path.$class_name.'.inc';
+				if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage(true) - $start_mem), 'load_time' => $mtime - $start_time); }
+					return true;
+			}
 		}
-		else if (file_exists($include_path.'/cms/inc/classes/elements/'.$class_name.'.inc'))
-		{
-			require_once $include_path.'/cms/inc/classes/elements/'.$class_name.'.inc';
-			return true;
-		}
-		else if (file_exists($include_path.'/cms/inc/classes/optional/'.$class_name.'.inc'))
-		{
-			require_once $include_path.'/cms/inc/classes/optional/'.$class_name.'.inc';
-			return true;
-		}
-		else
-		{
-			 die('<p>Critical error: Class "'.$class_name.'" not defined</p>');
-		}
+		
+		die('<p>Critical error: Class "'.$class_name.'" not defined</p>'); //A class has been called the can not be loaded
 	}
-	return false;
+	return false; //Should never really get here
 }
 
 set_exception_handler('exception_handler');
@@ -72,7 +76,7 @@ try
 		return $document_root;
 	}
 	
-	function get_site_document_root_folder_only()
+	function get_site_document_root_folder_only() //This does NOT work if we have a front end proxy, needs thought on a possible solution.
     {
     	$a = substr($_SERVER['PHP_SELF'], 0 , strripos($_SERVER['PHP_SELF'], '.php'));
     	$document_root = substr($a, 0, strripos($a, '/'));

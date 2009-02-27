@@ -189,7 +189,7 @@ class Security
 		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
 
 		$security_array = Common::xml_to_array($this->default_security_xml());
-		if(isset($page_security_xml[0]))
+		if(isset($page_security_xml[0]['data']))
 		{
 			//Security has been set
 			foreach($page_security_xml as $xml)
@@ -200,11 +200,15 @@ class Security
 				}
 			}
 		}
+		else if($what == 'view')  //Security is not set and were looking for view permissions
+		{
+			return true; //default to allow for testing
+		}
 
 		/**
 		 * Check for blocked first
 		 */
-
+//print_r($page_security_xml); die();
 		if(isset($security_array['blocked']['user'][0]))
 		{
 			if (in_array($user_id, $security_array['blocked']['user']))

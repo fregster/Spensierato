@@ -5,6 +5,7 @@ class Debug
 	private $debug_level = 0;
 	private $debug_log = array();
 	private $debug_log_folder = '/var/log/cms';
+	private $profile_loaded = false;
 	
 	public static function Singleton()
 	{
@@ -63,6 +64,8 @@ class Debug
 		
 		if($render)
 		{
+			global $profile;
+			$this->record('Profile Trace', $profile); // Add the autoloader profiler
 			return Common::array_to_xml_simple($this->debug_log, 'xml', 'item');
 			// TODO cookie::Singleton()->debug();
 		}

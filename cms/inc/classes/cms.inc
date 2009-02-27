@@ -192,12 +192,6 @@ class CMS
 
 	private function start_session()
 	{
-//		if($this->memcached == true)
-//		{
-//			$session_save_path = "tcp://localhost:11211?persistent=1&weight=2&timeout=2&retry_interval=10,  ,tcp://$host:$port  ";
-//			ini_set('session.save_handler', 'memcache');
-//			ini_set('session.save_path', $session_save_path);
-//		}
 //			Setting the domain seems to sometimes stop the browser from saving the cookie
 //		session_set_cookie_params(0, Settings::Singleton()->get_setting('document_root'), $_SERVER['SERVER_NAME'], NULL, TRUE);
 //		if(Settings::Singleton()->get_setting('document_root') != '/')
@@ -206,8 +200,8 @@ class CMS
 //		}
 		//Use SHA1 as the Session ID type, reduces the possability of session stealing
 		//Increase the bits per Char so we can store it in a smaller DB field
-		ini_set('session.hash_bits_per_character',    5);
-		ini_set('session.hash_function',    1);
+		ini_set('session.hash_bits_per_character', 5);
+		ini_set('session.hash_function', 1);
 		session_start();
 		$this->session_user_agent_check();
 		$this->session_ip_check();
@@ -229,7 +223,7 @@ class CMS
 			}
 			else
 			{
-				$_SESSION['CMS_SALT'] = md5(time());;
+				$_SESSION['CMS_SALT'] = md5($this->time);;
 				$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']. $_SESSION['CMS_SALT']);
 			}
 
@@ -305,7 +299,7 @@ class CMS
 
 	private function site_login($id)
 	{
-		die();
+//		die();
 		$_SESSION['site_login'] = true;
 		User::site_get_users_details($id);
 
@@ -384,7 +378,7 @@ class CMS
 						if(get::variable('is_set','key'))
 						{
 							register::singleton()->verify_register();
-							die();
+							exit;
 						}
 						else
 						{
@@ -495,7 +489,7 @@ class CMS
 				if(file_exists($file))
 				{
 					include($file);
-					die();
+					exit;
 				}
 				else
 				{
@@ -545,7 +539,7 @@ class CMS
 
 				case 'STREAM':
 					Stream::stream($this->page_details['value']);
-					die();
+					exit;
 				break;
 
 				case 'PREVIEW':
@@ -589,7 +583,7 @@ class CMS
 					if(is_file($file))
 					{
 						FileTransfer::singleton()->get_file($file, true, false);
-						die();
+						exit;
 					}
 				}
 				error::do404();
@@ -602,13 +596,13 @@ class CMS
 				 * Calls the template class which compresses and sends the CSS file
 				 */
 				Render::Singleton()->send_css();
-				die();
+				exit;
 
 				break;
 
 			case 'AD':
 				ad::google();
-				die();
+				exit;
 				break;
 
 			case 'EDIT':
@@ -652,7 +646,6 @@ class CMS
 			case 'EDIT_UPDATE_PAGE':
 				if(Security::singleton()->can_approve($this->page_details['value'][1]))
 				{
-					//TODO update from laptop as required classes have not been comited
 					if(post::variable('is_set','title'))
 					{
 						database::singleton()->sql_update_by_id($this->page_details['value'][1], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
@@ -687,7 +680,6 @@ class CMS
 
 			case 'EDITSAVE':
 				//Is this an update or createing a new element
-				//TODO remove refrences to POST
 				if($this->page_details['value'] == 'account')
 				{
 					User::Singleton()->update_from_post();
@@ -851,7 +843,7 @@ class CMS
 	private function send_loading($value)
 	{
 		include(Settings::Singleton()->get_setting('cms_root').'/js/submodal/loading.inc');
-		die();
+		exit;
 	}
 
 	//this function is obsolitted by the installation process

@@ -142,6 +142,7 @@ class user
 		}
 		
 		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array($xml), true);
+		$this->set_user_details(true); //Reload the users details
 	}
 	
 	public function is_admin()
@@ -199,32 +200,35 @@ class user
 		return $this->user_details['username'].' <'.$this->user_details['email'].'>';
 	}
 	
-	private function set_user_details()
+	private function set_user_details($force = false)
 	{
-		//$this->user_details = Database::Singleton()->sql_select_first(array('nickname', 'forename', 'surname', 'email'), 'tbl_users', array('id'), array($this->userid));
-		
-		$user_data = Database::Singleton()->sql_select(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
-		
-		if(isset($user_data[0]))
+		$this->user_details = persistantcache::Singleton()->get('user_details');
+		if(!$this->user_details || $force)
 		{
-			foreach($user_data as $data)
+			$user_data = Database::Singleton()->sql_select(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
+			
+			if(isset($user_data[0]))
 			{
-				$data = '<xml>'.$data['data'].'</xml>';
-				$xml = simplexml_load_string($data);
-	
-				foreach ($xml->children() as $child)
+				foreach($user_data as $data)
 				{
-					$this->user_details[$child->getName()] = strip_tags($child->saveXML());
+					$data = '<xml>'.$data['data'].'</xml>';
+					$xml = simplexml_load_string($data);
+		
+					foreach ($xml->children() as $child)
+					{
+						$this->user_details[$child->getName()] = strip_tags($child->saveXML());
+					}
 				}
 			}
+			
+			$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
+			
+			$this->user_details['id'] = $this->userid;
+			$this->user_details['username'] = $user_details2['username'];
+			$this->user_details['administrator'] = $user_details2['admin'];
+			
+			persistantcache::Singleton()->save('user_details', $this->user_details, 180);
 		}
-		
-		$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
-		
-		$this->user_details['id'] = $this->userid;
-		$this->user_details['username'] = $user_details2['username'];
-		$this->user_details['administrator'] = $user_details2['admin'];
-		
 		$this->lists = Lists::Singleton()->get_lists_for_user($this->userid);
 	}
 	

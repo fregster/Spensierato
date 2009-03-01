@@ -161,7 +161,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	debug('Createing Homepage');
 	database::Singleton()->force_write_user();
 	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible', 'title'), array(0, time(), 0, 1, 'Homepage'));
-	database::Singleton()->sql_insert('tbl_security', array('page_id', 'data'), array(1, security::Singleton()->default_security_xml()));
 
 	debug('Adding starting element');
 	$element = Element::type('elementText');
@@ -174,7 +173,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$settings_file = $install_folder.'/../../spensierato_setup.inc';
 
 	$doc_root_prefix = $GLOBALS['site_root'].'/cms/';
-	
+
 	//TODO tidy up
 	if(substr(post::variable('cms_folder_uploads'), 0, 1) != '/')
 	{
@@ -184,7 +183,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		$uploads = post::variable('cms_folder_uploads');
 	}
-	
+
 	if(substr(post::variable('cms_folder_downloads'), 0, 1) != '/')
 	{
 		$downloads = $doc_root_prefix.post::variable('cms_folder_downloads');
@@ -193,7 +192,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		$downloads = post::variable('cms_folder_downloads');
 	}
-	
+
 	if(substr(post::variable('cms_folder_orig_images'), 0, 1) != '/')
 	{
 		$images = $doc_root_prefix.post::variable('cms_folder_orig_images');
@@ -202,7 +201,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		$images = post::variable('cms_folder_orig_images');
 	}
-	
+
 	if(substr(post::variable('cms_folder_logs'), 0, 1) != '/')
 	{
 		$logs = $doc_root_prefix.post::variable('cms_folder_logs');
@@ -211,7 +210,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		$logs = post::variable('cms_folder_logs');
 	}
-	
+
 	if(substr(post::variable('cms_folder_cache'), 0, 1) != '/')
 	{
 		$cache = $doc_root_prefix.post::variable('cms_folder_cache');

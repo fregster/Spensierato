@@ -788,7 +788,6 @@ class CMS
 			$sort = database::Singleton()->sql_max_field('tbl_pages', 'sort', array('parent_id'), array($parent_id));
 			$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array($parent_id, time(), user::Singleton()->id()));
 		}
-		database::Singleton()->sql_insert('tbl_security', array('page_id', 'data'), array($id, security::Singleton()->default_security_xml()));
 		common::redirect($id);
 	}
 

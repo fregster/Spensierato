@@ -136,7 +136,8 @@ class CMS
 		$this->page_details = currentPage::Singleton()->page_details();
 
 		//Decide what to do with the current page
-		$this->get_page();
+//		$this->get_page();
+		cmspage::singleton()->run();
 	}
 
 	public function end_cms()
@@ -173,7 +174,7 @@ class CMS
 
 	public function delete_session()
 	{
-		$_SESSION = array();
+		$_SESSION = array(); //Clear the session data
 
 		if (isset($_COOKIE[session_name()])) {
 		    setcookie(session_name(), '', time()-42000, '/');
@@ -182,7 +183,7 @@ class CMS
 		session_destroy();
 	}
 
-	private function destroy_session($url = NULL)
+	public function destroy_session($url = NULL)
 	{
 		$this->delete_session();
 
@@ -299,7 +300,6 @@ class CMS
 
 	private function site_login($id)
 	{
-//		die();
 		$_SESSION['site_login'] = true;
 		User::site_get_users_details($id);
 

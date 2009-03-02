@@ -25,12 +25,23 @@ function __autoload($class_name)
 	global $profile;
 	$trace = false;
 	
-	$paths = array(	$include_path.'/cms/inc/classes/', 
-					$include_path.'/cms/inc/classes/elements/',
-					$include_path.'/cms/inc/classes/optional/',
-				);
-	
 	$class_name = strtolower($class_name);
+	
+	$paths = array(		$include_path.'/cms/inc/classes/',
+						$include_path.'/cms/inc/classes/elements/',
+						$include_path.'/cms/inc/classes/optional/',
+					);
+	
+	if(substr($class_name, 0, 7) == 'cmspage') //Quick hack for page types
+	{
+		$path = $include_path.'/cms/inc/classes/pages/';
+		
+		if(isset($class_name[8]))
+		{
+			$class_name = substr($class_name, 8);
+		}
+		return require_once $path.$class_name.'.inc';
+	}
 
 	if($class_name != '' and $class_name != null and !class_exists($class_name) and !isset($class_block_list[$class_name])) //Ensure we should be trying to load the class
 	{
@@ -45,6 +56,7 @@ function __autoload($class_name)
 
 		foreach($paths as $path) //Cycle through the includes dir in order of preference
 		{
+//			echo($path.$class_name.'.inc<br/>');
 			if(file_exists($path.$class_name.'.inc')) //Check the file exists
 			{
 				if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage(true); }

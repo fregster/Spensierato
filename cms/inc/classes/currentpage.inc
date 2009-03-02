@@ -93,7 +93,7 @@ class currentPage
 	private function check_page()
 	{
 		//Page id checking, if not set goto homepage
-		if(!isset(CMS::Singleton()->path_vars[0]))
+		if(!isset(CMS::Singleton()->path_vars[0]) or CMS::Singleton()->path_vars[0] == 'home')
 		{
 			//$path_vars is not set so load an empty page from page
 			return array('type' => 'HTML',
@@ -104,7 +104,7 @@ class currentPage
 			//Check to see if the option is a command return 404 page if not found
 			if(!is_numeric(CMS::Singleton()->path_vars[0]))
 			{
-				switch (CMS::Singleton()->path_vars[0]) 
+				switch (CMS::Singleton()->path_vars[0]) //The point of this switch is to set what sort of page were rendering and then allow the controler (CMS) singleton to do any silly stuff before we run the page it also allow easy mapping of multiple switches to one page class
 				{
 					//CMS Included Functions no security checks
 					case 'tools':

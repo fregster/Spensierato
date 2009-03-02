@@ -58,7 +58,8 @@ abstract class Common
 
 	public static function time_with_microseconds()
 	{
-		return CMS::Singleton()->time()+Common::micro_time();
+		return array_sum(explode(' ',microtime()));
+		
 	}
 	/**
 	 * Replaced with time and microtime in CMS

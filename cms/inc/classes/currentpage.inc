@@ -27,8 +27,7 @@ class currentPage
 	function __construct()
 	{
 		//Work out what the current page is
-//		$this->page_type = $this->check_page();
-		$this->check_page2();
+		$this->check_page();
 
 		$this->id = $this->page_type['value'];
 		
@@ -96,7 +95,7 @@ class currentPage
 		}
 	}
 	
-	private function check_page2()
+	private function check_page()
 	{		
 		//Page id checking, if not set goto homepage
 		if(!isset(CMS::Singleton()->path_vars[0]) or CMS::Singleton()->path_vars[0] == 'home')
@@ -155,254 +154,6 @@ class currentPage
 			}
 		}
 	}
-	
-//	private function check_page()
-//	{
-//		//Page id checking, if not set goto homepage
-//		if(!isset(CMS::Singleton()->path_vars[0]) or CMS::Singleton()->path_vars[0] == 'home')
-//		{
-//			//$path_vars is not set so load an empty page from page
-//			return array('type' => 'HTML',
-//						'value' => Page::Singleton()->load(NULL));
-//		}
-//		else
-//		{
-//			//Check to see if the option is a command return 404 page if not found
-//			if(!is_numeric(CMS::Singleton()->path_vars[0]))
-//			{
-//				switch (CMS::Singleton()->path_vars[0]) //The point of this switch is to set what sort of page were rendering and then allow the controler (CMS) singleton to do any silly stuff before we run the page it also allow easy mapping of multiple switches to one page class
-//				{
-//					//CMS Included Functions no security checks
-//					case 'tools':
-//							return array('type' => 'TOOL',
-//										'value' => CMS::Singleton()->path_vars[1]);
-//						break;
-//					
-//					//TinyMCE file
-//					case 'editor':
-//							return array('type' => 'CONTENTEDITOR',
-//										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
-//						break;
-//					
-//					//Advert page
-//					case 'ad':
-//						return array('type' => 'AD', 'value'=> null);
-//						break;
-//						
-//					case 'loading':
-//							return array('type' => 'LOADING',
-//										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
-//							break;
-//					
-//					case 'loading.html':
-//							return array('type' => 'LOADING',
-//										'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
-//							break;
-//					
-//					case 'ajax':
-//							return array('type' => 'AJAX',
-//										'value' => CMS::Singleton()->path_vars);
-//							break;
-//							
-//					case 'register':
-//						if($_SERVER['REQUEST_METHOD'] == 'POST')
-//						{
-//							//Submision of registration details
-//							return array('type' => 'REGISTER_DETAILS',
-//										'value' => CMS::Singleton()->path_vars[1]);
-//						}
-//						else
-//						{
-//							//Filling in registration forms
-//							return array('type' => 'REGISTER',
-//										'value' => CMS::Singleton()->path_vars[1]);
-//						}
-//					
-//					//CMS Included Files page specific security checks
-//					case 'cms':
-//						return array('type' => 'CMS',
-//									'value' => CMS::Singleton()->path_vars[1]);
-//						break;
-//						
-//					//CSS download
-//					case 'css':
-//						return array('type' => 'CSS',
-//									'value' => CMS::Singleton()->path_vars[1]);
-//						break;
-//					
-//					//Site downloads does a security check
-//					case 'download':
-//						return array('type' => 'DOWNLOAD',
-//									'value' => CMS::Singleton()->path_vars[1]);
-//						break;
-//						
-//					//Streaming video
-//					case 'video':
-//						return array('type' => 'STREAM',
-//									'value' => CMS::Singleton()->path_vars[1]);
-//						break;
-//						
-//					//Site video preview does a security check
-//					case 'preview':
-//						return array('type' => 'PREVIEW',
-//									'value' => CMS::Singleton()->path_vars[1]);
-//						break;
-//					
-//					//CMS files no security cached
-//					case 'file':
-//						return array('type' => 'FILE',
-//									'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
-//						break;
-//						
-//					//CMS JS files no security cached and minifyed
-//					case 'js':
-//						return array('type' => 'JS',
-//									'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
-//						break;
-//					
-//					//TODO Merge
-//					//CMS JS files running through combine no security and cached
-//					case 'js-combine':
-//						return array('type' => 'JAVASCRIPT',
-//									'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
-//						break;
-//						
-//					case 'xslt':
-//						$this->xslt = true;
-//						return array('type' => 'STYLESHEET',
-//									'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
-//						break;
-//					
-//					//Site images NO security check
-//					case 'image':
-//						return array('type' => 'IMAGE',
-//									'value' => CMS::Singleton()->path_vars[1]);
-//						break;
-//						
-//					//Skin images NO security check
-//					case 'skin':
-//						return array('type' => 'SKIN',
-//									'value' => CMS::Singleton()->path_vars[1]);
-//						break;
-//					
-//					//CMS Admin pages Checks for Site Admin permissions
-//					case 'admin':
-//						return array('type' => 'ADMIN',
-//									'value' => Common::clean_and_combine_url(CMS::Singleton()->path_vars, 1));
-//						break;
-//						
-//					//CMS Users Account page
-//					case 'account':
-//						return array('type' => 'ACCOUNT',
-//									'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
-//						break;
-//						
-//					//CMS Users Account page
-//					case 'warnings':
-//						return array('type' => 'WARNINGS',
-//									'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
-//						break;
-//					
-//					//CMS in edit mode
-//					case 'edit':
-//						if($_SERVER['REQUEST_METHOD'] == 'POST')
-//						{
-//							//This is to update an element
-//							return array('type' => 'EDITSAVE',
-//										'value' => CMS::Singleton()->path_vars[1]);
-//						}
-//						else
-//						{
-//							if(CMS::Singleton()->path_vars[1] == 'toggle')
-//							{
-//								return array('type' => 'EDIT_TOGGLE',
-//											'value' => array(CMS::Singleton()->path_vars[2],CMS::Singleton()->path_vars[3]));
-//							}
-//
-//							//View an element in edit mode
-//							return array('type' => 'EDIT',
-//										'value' => CMS::Singleton()->path_vars[1]);
-//						}
-//						
-//						break;
-//						
-//					case 'tp':
-//							return array('type' => 'EDIT_TOGGLE_PAGE',
-//										'value' => CMS::Singleton()->path_vars);
-//						break;
-//						
-//					case 'te':
-//							return array('type' => 'EDIT_TOGGLE_ELEMENT',
-//										'value' => CMS::Singleton()->path_vars);
-//						break;
-//						
-//					case 'up':
-//							return array('type' => 'EDIT_UPDATE_PAGE',
-//										'value' => CMS::Singleton()->path_vars);
-//						break;
-//							
-//					//Set a CMS var and bounce back	
-//					case 'toggle':
-//						return array(	'type' => 'OPTIONTOGGLE',
-//										'value' => CMS::Singleton()->path_vars[1],
-//										'bounce' => CMS::Singleton()->path_vars[2]);
-//										
-//					//Set a CMS var and bounce back	
-//					case 'capthca':
-//							return array(	'type' => 'CAPTHCA');
-//						
-//					//Logging in / out options
-//					case 'login':
-//						return array(	'type' => 'LOGIN',
-//										'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
-//										
-//					case 'logout':
-//						return array(	'type' => 'LOGOUT',
-//										'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
-//								
-//					//Static CMS content type pages		
-//					case 'help':
-//						return array(	'type' => 'HELP',
-//										'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
-//										
-//					case 'access':
-//						return array(	'type' => 'ACCESS',
-//										'value' => Page::Singleton()->load(CMS::Singleton()->path_vars[1]));
-//						
-//					case 'install':
-//						return array( 'type' => 'INSTALL',
-//										'value' => null);
-//					
-//					default:
-//						$command = $this->command_lookup($page_var);
-//		
-//						if($command != false)
-//						{
-//							return array('type' => $command['type'],
-//										'value' => $command['page']);
-//						}
-//						else
-//						{
-//							die('Page not setup');
-//							Error::error(404, 'No page found');
-//						}
-//				}
-//			}
-//			else
-//			{
-//				//pat_vars[0] is numeric
-//				if(CMS::Singleton()->page_exists(CMS::Singleton()->path_vars[0]) == true)
-//				{
-//					return array('type' => 'HTML',
-//								'value' => CMS::Singleton()->path_vars[0]);
-//				}
-//				else
-//				{
-//					Error::error(404, 'The page requested does not exsist');
-//				}
-//			}
-//		}
-//	}
 	
 	public function page_path()
 	{
@@ -465,7 +216,7 @@ class currentPage
 		if(count($page_type) == 0)
 		{
 			echo(count($page_type));
-			error_page('404', 'Page load error');
+			error::do404();
 		}
 		else
 		{

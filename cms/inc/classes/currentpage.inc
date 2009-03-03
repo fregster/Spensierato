@@ -2,7 +2,7 @@
 /**
  * currentPage class
  * This class is for the working out what the current URL page should be doing
- * This is not specific to HTML pages just working out what the page request is 
+ * This is not specific to HTML pages just working out what the page request is
  *
  */
 class currentPage
@@ -13,72 +13,72 @@ class currentPage
 	private $id;
 	private $path;
 	private $xslt = false;
-	
+
 	public static function Singleton()
 	{
 	   if (!isset(self::$instance)) {
 		   $c = __CLASS__;
 		   self::$instance = new $c;
 	   }
-	
+
 	   return self::$instance;
 	}
-	
+
 	function __construct()
 	{
 		//Work out what the current page is
 		$this->check_page();
 
-		$this->id = $this->page_type['value'];
-		
+		$this->id = isset($this->page_type['value'])?$this->page_type['value']:NULL;
+
 		//Get current page details
 		$this->get_page_details();
-		
+
 		//Load the page class
 		$page = new page;
-		
+
 		if(get::variable('int','xml') == 2 or Settings::singleton()->get_setting('send_as_xml') == true)
 		{
 			$this->xslt = true;
 		}
 	}
-	
+
 	public function __clone()
 	{
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
-	
+
 	//This name is no longer relevent but for the sake of not having to re-factor ...
 	public function page_details()
 	{
 		return $this->page_type;
 	}
-	
+
 	public function page_information()
 	{
 		return $this->page_details;
 	}
-	
+
 	public function id()
 	{
 		return $this->page_type['value'];
 	}
-	
+
 	public function title()
 	{
 		return $this->page_details['title'];
 	}
-	
+
 	public function type()
 	{
 		return $this->page_type['type'];
 	}
-	
+
 	private function get_page_details()
 	{
 		$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->id));
 	}
-	
+
 	private function command_lookup($command)
 	{
 		$command = Database::Singleton()->sql_select_first(array('*'), 'tbl_commands', array('command'), array($command));
@@ -94,9 +94,9 @@ class currentPage
 			return false;
 		}
 	}
-	
+
 	private function check_page()
-	{		
+	{
 		//Page id checking, if not set goto homepage
 		if(!isset(CMS::Singleton()->path_vars[0]) or CMS::Singleton()->path_vars[0] == 'home')
 		{
@@ -120,13 +120,13 @@ class currentPage
 					'te' => 'edit_toggle_element',
 					'up'=> 'edit_update_page',
 				);
-		
+
 				$this->page_type['type'] = strtolower(CMS::Singleton()->path_vars[0]);
 				if(isset($match[$this->page_type['type']]))
 				{
 					$this->page_type['type'] = $match[$this->page_type['type']];
 				}
-				
+
 				CMS::Singleton()->page_details = $this->page_type;
 				if(!cmspage::Singleton()->initalise())
 				{
@@ -146,7 +146,7 @@ class currentPage
 				$this->page_type['type'] = 'html';
 				$this->page_type['value'] = CMS::Singleton()->path_vars[0];
 				CMS::Singleton()->page_details = $this->page_type;
-				
+
 				if(!cmspage::Singleton()->initalise())
 				{
 					Error::do404();
@@ -154,41 +154,41 @@ class currentPage
 			}
 		}
 	}
-	
+
 	public function page_path()
 	{
 		if(isset($this->path[0]))
 		{
 			return $this->path;
 		}
-		
+
 		$this->path = $this->get_page_parents($this->id);
 		array_push($this->path, $this->id);
 		return $this->path;
 	}
-	
-	public function get_page_parents($id) 
+
+	public function get_page_parents($id)
 	{
 		if($id != 0)
 		{
 			$parents_exist = true;
 			$parents = array();
 			$current_page = $id;
-				
-			while($parents_exist == true) 
+
+			while($parents_exist == true)
 			{
 				$result = Database::Singleton()->sql_select(array('id', 'parent_id'), 'tbl_pages', array('id'), array($current_page));
-		
+
 				$id = $result[0]['parent_id'];
-				
+
 				array_push($parents, $id);
-						
+
 				if(($id == 0) or ($id == null) )
 				{
 					$parents_exist = false;
 					break;
-				} 
-				else 
+				}
+				else
 				{
 					$current_page = $id;
 				}
@@ -205,14 +205,14 @@ class currentPage
 	public function include_page($page_id)
 	{
 		echo('<div id="page_section_body">');
-		
+
 		$page_type = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($page_id));
-		
+
 		if(Settings::Singleton()->Setting['debug'] > 3)
 		{
 			print_r($page_type);
 		}
-		
+
 		if(count($page_type) == 0)
 		{
 			echo(count($page_type));
@@ -221,7 +221,7 @@ class currentPage
 		else
 		{
 			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page'), array($page_id), array('sort'));
-	
+
 			if(count($elements) != 0)
 			{
 				foreach($elements as $element)
@@ -233,14 +233,14 @@ class currentPage
 		echo('</div>
 	');
 	}
-	
-	public function get_page($id) 
+
+	public function get_page($id)
 	{
 		$page = Database::Singleton()->sql_select_first(NULL, 'tbl_pages', array('id'), array($id));
 		return $page;
-		
+
 	}
-	
+
 	public function xslt()
 	{
 		return $this->xslt;

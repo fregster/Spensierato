@@ -4,7 +4,7 @@ abstract class Common
 	public static function get_path_vars()
 	{
 		//Expand URL to get vars
-		return (Common::array_compress(Common::getPathVariables($_SERVER[PHP_SELF], __FILE__)));
+		return (Common::array_compress(Common::getPathVariables($_SERVER['PHP_SELF'], __FILE__)));
 	}
 
 	public static function return_hash($input, $use_random = true)
@@ -59,7 +59,7 @@ abstract class Common
 	public static function time_with_microseconds()
 	{
 		return array_sum(explode(' ',microtime()));
-		
+
 	}
 	/**
 	 * Replaced with time and microtime in CMS
@@ -129,7 +129,10 @@ abstract class Common
 
 	private static function getPathVariables()
     {
-        return explode("/", $_SERVER['PATH_INFO']);
+		if (isset($_SERVER['PATH_INFO'])) {
+			return explode("/", $_SERVER['PATH_INFO']);
+		}
+        return array('');
     }
 
 	public static function clean_and_combine_url($url, $int)
@@ -160,6 +163,8 @@ abstract class Common
 		{
 			function process_children($xml)
 			{
+				$php_array = array();
+
 				foreach ($xml->children() as $child)
 				{
 					foreach($child->children() as $grandchild)

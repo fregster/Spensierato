@@ -223,6 +223,8 @@ class Database
 	// sql_select(Fields(if Null *), Table, Where (array), Where values (array must match number of fields), Order fields (array), Prder direction (if not sec ASC)
 	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
+		$sql_temp_select = '';
+
 		if($fields == NULL)
 		{
 			$sql_temp_select = array('*');
@@ -257,6 +259,8 @@ class Database
 		{
 			$i = 0;
 			$count_order = count($order_fields);
+			$sql_temp_order = '';
+
 			while($i <= ($count_order - 1))
 			{
 				if($order_directions[$i] != 'DESC')
@@ -624,6 +628,7 @@ class Database
 		{
 //			print_r($where_fields); print_r($where_values);
 			$i = 0;
+			$sql_temp_where = '';
 
 			while($i <= ($count_where))
 			{
@@ -691,7 +696,7 @@ class Database
 
 			//If logged in create db write user this should help prevent against SQL injection
 			//As only logged in can use the db writeable user
-			if($_SESSION['userid'] != 0)
+			if(isset($_SESSION['userid']) && $_SESSION['userid'] != 0)
 			{
 				//Create write user
 				$dsn = array(

@@ -406,9 +406,10 @@ class elementDefault
 		$general_info = database::Singleton()->sql_select_first(array('visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id));
 		$default_data = database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->id));
 		$final_data = array();
+		$type = NULL;
 
 		//display plain text when not editing
-		if (is_numeric(CMS::Singleton()->path_vars[0]) || is_null(CMS::Singleton()->path_vars[0])) {
+		if (!isset(CMS::Singleton()->path_vars[0]) || is_null(CMS::Singleton()->path_vars[0]) || is_numeric(CMS::Singleton()->path_vars[0])) {
 			if (!is_null($data)) {
 				$final_data = array_merge(array('data' => $data, 'title' => $default_data['title']), $general_info);
 			}
@@ -419,6 +420,7 @@ class elementDefault
 				$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
 				if (!is_null($data)) {
 					$final_data = array_merge($data, $general_info);
+					$type = 'draft';
 				}
 				else{
 					if (Security::Singleton()->can_do('approve')) {

@@ -6,23 +6,23 @@ class Debug
 	private $debug_log = array();
 	private $debug_log_folder = '/var/log/cms';
 	private $profile_loaded = false;
-	
+
 	public static function Singleton()
 	{
-	   if (!isset(self::$instance)) 
+	   if (!isset(self::$instance))
 	   {
 		   $c = __CLASS__;
 		   self::$instance = new $c;
 	   }
-	
+
 	   return self::$instance;
 	}
-	
+
 	public function __clone()
 	{
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
-	
+
 	function __construct()
 	{
 		if(Settings::Singleton()->get_setting('debug') > 0)
@@ -38,7 +38,7 @@ class Debug
 			}
 		}
 	}
-	
+
 	public function record($what, $details)
 	{
 		if($this->debug_level > 0)
@@ -48,20 +48,22 @@ class Debug
 			$this->log_to_file($log);
 		}
 	}
-	
+
 	public function render()
 	{
+		$render  = false;
+
 		//Options that trigger debug rendering
 		if($this->debug_level >= 5)
 		{
 			$render = true;
 		}
-		
+
 		if(get::variable('is_set','debug') and User::Singleton()->is_admin())
 		{
 			$render = true;
 		}
-		
+
 		if($render)
 		{
 			global $profile;
@@ -74,14 +76,14 @@ class Debug
 			return '<xml />';
 		}
 	}
-	
+
 	private function log_to_file($details)
 	{
 		//Write to log file
 		//TODO write log to file code
 		if($this->debug_level >= 10)
 		{
-		
+
 		}
 	}
 }

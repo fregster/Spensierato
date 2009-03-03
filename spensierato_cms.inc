@@ -11,7 +11,7 @@ function exception_handler($exception)
  *
  * @param string $class_name
  */
-$class_block_list = array(	
+$class_block_list = array(
 //'elementvideo' => 1,
 //'elementgallery' => 1,
 //'elementlink' => 1,
@@ -24,18 +24,18 @@ function __autoload($class_name)
 	global $include_path;
 	global $profile;
 	$trace = false;
-	
+
 	$class_name = strtolower($class_name);
-	
+
 	$paths = array(		$include_path.'/cms/inc/classes/',
 						$include_path.'/cms/inc/classes/elements/',
 						$include_path.'/cms/inc/classes/optional/',
 					);
-	
+
 	if(substr($class_name, 0, 7) == 'cmspage') //Quick hack for page types
 	{
 		$path = $include_path.'/cms/inc/classes/pages/';
-		
+
 		if(isset($class_name[8]))
 		{
 			$class_name = substr($class_name, 8);
@@ -49,7 +49,7 @@ function __autoload($class_name)
 		{
 			//Database files
 			if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage(true); }
-				require_once($include_path.'/cms/database/database.inc');			
+				require_once($include_path.'/cms/database/database.inc');
 			if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage(true) - $start_mem), 'load_time' => $mtime - $start_time); }
 				return true;
 		}
@@ -65,7 +65,7 @@ function __autoload($class_name)
 					return true;
 			}
 		}
-		
+
 		die('<p>Critical error: Class "'.$class_name.'" not defined</p>'); //A class has been called the can not be loaded
 	}
 	return false; //Should never really get here
@@ -87,7 +87,7 @@ try
 
 		return $document_root;
 	}
-	
+
 	function get_site_document_root_folder_only() //This does NOT work if we have a front end proxy, needs thought on a possible solution.
     {
     	$a = substr($_SERVER['PHP_SELF'], 0 , strripos($_SERVER['PHP_SELF'], '.php'));
@@ -103,22 +103,22 @@ try
     			$proto = 'https://';
     		}
     		$document_root = $proto . $_SERVER['SERVER_NAME'];
-    		
+
     	}
 		return $document_root;
     }
 
 	function get_file_root()
 	{
-		$ext = substr($_SERVER[SCRIPT_FILENAME], -4 , 4);
-		$a = substr($_SERVER[SCRIPT_FILENAME], 0 , strripos($_SERVER[SCRIPT_FILENAME], $ext));
+		$ext = substr($_SERVER['SCRIPT_FILENAME'], -4 , 4);
+		$a = substr($_SERVER['SCRIPT_FILENAME'], 0 , strripos($_SERVER['SCRIPT_FILENAME'], $ext));
 		return substr($a, 0, strripos($a, '/'));
 	}
 
 	//document root is the URL root ie spensierato.net
 	$GLOBALS['document_root_folder_only'] = get_site_document_root_folder_only();
 	$GLOBALS['document_root'] = get_site_document_root();
-	
+
 	//site root is the filesystem root ie /var/www/spensierato/
 	$GLOBALS['site_root'] = get_file_root();
 

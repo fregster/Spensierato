@@ -243,6 +243,7 @@ $GLOBALS[\'cms_folder_downloads\'] = \''.$downloads.'\';
 $GLOBALS[\'cms_folder_orig_images\'] = \''.$images.'\';
 $GLOBALS[\'cms_folder_logs\'] = \''.$logs.'\';
 $GLOBALS[\'cms_folder_cache\'] = \''.$cache.'\';
+$GLOBALS[\'random_key\'] = \''.post::variable('random_key').'\';
 ?>';
 
 	/**

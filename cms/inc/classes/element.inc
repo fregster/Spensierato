@@ -7,7 +7,7 @@ abstract class Element
 		{
 			$type = Element::get_element_type($type);
 		}
-		
+
 		if(class_exists($type))
 		{
 			$c = $type;
@@ -16,10 +16,10 @@ abstract class Element
 		{
 			$c = elementDefault;
 		}
-		
+
 		return new $c;
 	}
-	
+
 	public static function get_element_type($id)
 	{
 		$type = Database::Singleton()->sql_select_first(array('type'), 'tbl_elements', array('id'), array($id));
@@ -33,7 +33,7 @@ abstract class Element
 		{
 			$types = array();
 		}
-		
+
 		if(!$admin or options::Singleton()->get_option('admin_mode'))
 		{
 			array_push($types, array('name' => $name, 'class' => $class));

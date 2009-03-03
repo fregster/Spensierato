@@ -47,19 +47,19 @@ class CMS
 		$this->time = time();
 		$this->microtime = microtime();
 
+		//Start the session
+		$this->start_session();
+
 		//Is a persistant_cache available ie memcached supported
 		if(persistantcache::Singleton()->enabled() == true)
 		{
 			Database::Singleton()->use_memcached();
 		}
 
-		//Start the session
-		$this->start_session();
-
 		warnings::Singleton()->register('Options Loaded', '', 4);
 
 		//Start page timer
-		if(Settings::Singleton()->Setting['site_option_showpagetime'])
+		if(Settings::Singleton()->get_setting('site_option_showpagetime'))
 		{
 			$this->time_start = Common::time_with_microseconds();
 		}
@@ -86,7 +86,7 @@ class CMS
 	{
 		return $this->time;
 	}
-	
+
 	public function cms_root()
 	{
 		return $this->cms_root;
@@ -111,7 +111,7 @@ class CMS
 		}
 		ob_start();
 
-		if($_SERVER['HTTPS'])
+		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'])
 		{
 			Settings::singleton()->new_setting('https',$_SERVER['HTTPS'] ,false,false);
 		}
@@ -126,6 +126,7 @@ class CMS
 		}
 
 		//Update settings which require moding
+		//********remove this function call next cleanup**********//
 		$this->settings_update();
 
 		//Setup the user

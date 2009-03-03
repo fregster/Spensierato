@@ -13,18 +13,18 @@ class warnings
 {
 	private $warnings;
 	private static $instance;
-	
+
 	public static function Singleton()
-	
+
 	{
 	   if (!isset(self::$instance)) {
 		   $c = __CLASS__;
 		   self::$instance = new $c;
 	   }
-	
+
 	   return self::$instance;
 	}
-	
+
 	public function __clone()
 	{
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
@@ -34,32 +34,32 @@ class warnings
 	{
 		$this->warnings = array();
 		//Do standard warning checks here for easy of code finding.
-		
+
 		//Check paths are writable
 		$paths = array( Settings::singleton()->get_setting('cms_folder_uploads'),
 						Settings::singleton()->get_setting('cms_folder_downloads'),
 						Settings::singleton()->get_setting('cms_folder_orig_images')
 					);
-		
+
 		foreach($paths as $path)
 		{
-			if (!is_dir($path)) 
+			if (!is_dir($path))
 			{
     			$this->register('Folder does not exsist', 'Please create the folder '.$path.' as uploads, downloads and local caching may be disabled');
 			}
-			
-			if (!is_readable($path)) 
+
+			if (!is_readable($path))
 			{
     			$this->register('Folder is not readable', 'The folder '.$path.' does not have read permissions, downloads are disabled', 1);
 			}
-			
-			if (!is_writable($path)) 
+
+			if (!is_writable($path))
 			{
     			$this->register('Folder is not writable', 'The folder '.$path.' does not have write permissions uploads are disabled', 1);
     			Settings::Singleton()->overwrite_setting('uploads_enabled', false);
 			}
 		}
-		
+
 		//Checks only to be done if in admin mode
 		if(Options::Singleton()->get_option('admin_mode'))
 		{
@@ -72,12 +72,12 @@ class warnings
 			else
 			{
 				$update_log = Settings::singleton()->get_setting('cms_root') . '/writeable/logs/update.log';
-				
+
 				if(is_file($update_log))
 				{
 					if(fopen($update_log, 'w'))
 					{
-						fclose($update_log);	
+						fclose($update_log);
 					}
 					else
 					{
@@ -86,14 +86,14 @@ class warnings
 				}
 			}
 		}
-		
+
 	}
-	
+
 	public function __destruct()
 	{
 		options::singleton()->set_option('display_warnings', false);
 	}
-	
+
 	public function register($warning_title, $description, $level = 2)
 	{
 		if(!isset($this->warnings[$level][0]))
@@ -103,32 +103,32 @@ class warnings
 		array_push($this->warnings[$level], array('title' => $warning_title, 'description' => $description));
 		options::singleton()->set_option('display_warnings', true);
 	}
-	
+
 	public function get($level = 0)
 	{
 		$warnings = array();
-		
-		while ($level >= 0) 
+
+		while ($level >= 0)
 		{
-			if(count($this->warnings[$level]) > 0)
+			if(isset($this->warnings[$level]) && count($this->warnings[$level]) > 0)
 			{
 				array_push($warnings, $this->warnings[$level]);
 			}
 			$level--;
 		}
-		
+
 		if(count($warnings) > 0)
 		{
 			return $warnings;
 		}
-		
+
 		return null;
 	}
-	
+
 	public function get_as_xml($level = 0)
 	{
 		if(Security::Singleton()->can_edit()) { $level = 1; }
-		if(User::is_admin()) { $level = 2;}
+		if(User::Singleton()->is_admin()) { $level = 2;}
 
 		return Common::array_to_xml_simple($this->get($level), 'warnings', 'warning');
 	}

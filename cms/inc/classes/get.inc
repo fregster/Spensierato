@@ -7,7 +7,10 @@ class get extends variables
 {
 	public function variable($input, $type = NULL)
 	{
-		return parent::variable($_GET[$input], $type);
+		if (isset($_GET[$input])) {
+			return parent::variable($_GET[$input], $type);
+		}
+		return FALSE;
 	}
 }
 ?>

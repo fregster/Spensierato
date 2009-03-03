@@ -7,7 +7,7 @@ class user
 {
 
 	private static $instance;
-	protected $userid;
+	protected $userid = 0;
 	private $lists;
 	private $user_details;
 	
@@ -32,10 +32,6 @@ class user
 		if(isset($_SESSION['userid']))
 		{
 			$this->userid = $_SESSION['userid'];
-		}
-		else
-		{
-			$this->userid = 0;
 		}
 		
 		$this->set_user_details();
@@ -68,10 +64,7 @@ class user
 		{
 			return false;
 		}
-		else
-		{
-			return true;
-		}
+		return true;
 	}
 	
 	public function create($username, $email, $password = NULL, $admin = false)
@@ -180,14 +173,6 @@ class user
 	
 	public function user_details_as_xml()
 	{
-//		$serializer_options = array ( 
-//			   'addDecl' => FALSE, 
-//			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
-//			   'indent' => '  ',
-//			   'rootName'  => 'user',
-//			   'defaultTagName'  => 'detail'
-//			);
-//		return Common::array_to_xml($this->user_details, $serializer_options);
 		return Common::array_to_xml_simple($this->user_details, 'user', 'detail');
 	}
 
@@ -202,33 +187,28 @@ class user
 	
 	private function set_user_details($force = false)
 	{
-		$this->user_details = persistantcache::Singleton()->get('user_details');
-		if(!$this->user_details || $force)
-		{
-			$user_data = Database::Singleton()->sql_select(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
-			
-			if(isset($user_data[0]))
-			{
-				foreach($user_data as $data)
-				{
-					$data = '<xml>'.$data['data'].'</xml>';
-					$xml = simplexml_load_string($data);
+		$user_data = Database::Singleton()->sql_select(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
 		
-					foreach ($xml->children() as $child)
-					{
-						$this->user_details[$child->getName()] = strip_tags($child->saveXML());
-					}
+		if(isset($user_data[0]))
+		{
+			foreach($user_data as $data)
+			{
+				$data = '<xml>'.$data['data'].'</xml>';
+				$xml = simplexml_load_string($data);
+	
+				foreach ($xml->children() as $child)
+				{
+					$this->user_details[$child->getName()] = strip_tags($child->saveXML());
 				}
 			}
-			
-			$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
-			
-			$this->user_details['id'] = $this->userid;
-			$this->user_details['username'] = $user_details2['username'];
-			$this->user_details['administrator'] = $user_details2['admin'];
-			
-			persistantcache::Singleton()->save('user_details', $this->user_details, 180);
 		}
+		
+		$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
+		
+		$this->user_details['id'] = $this->userid;
+		$this->user_details['username'] = $user_details2['username'];
+		$this->user_details['administrator'] = $user_details2['admin'];
+		
 		$this->lists = Lists::Singleton()->get_lists_for_user($this->userid);
 	}
 	

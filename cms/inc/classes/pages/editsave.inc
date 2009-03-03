@@ -1,6 +1,12 @@
 <?php
 class cmspage_editsave extends cmspage
 {
+	public function initalise()
+	{
+		$this->value = CMS::Singleton()->path_vars[1];
+		return true;
+	}
+	
 	public function run()
 	{
 		//Is this an update or createing a new element
@@ -42,6 +48,23 @@ class cmspage_editsave extends cmspage
 			}
 		}
 		common::redirect($this->page_details['value']);
+	}
+	
+	private function create_new_page($parent_id)
+	{
+		if($parent_id === '-1')
+		{
+			if(Security::Singleton()->is_admin())
+			{
+				$id = database::Singleton()->sql_insert('tbl_pages', array('created', 'creator', 'title'), array(time(), user::Singleton()->id(), 'Homepage'));
+			}
+		}
+		else
+		{
+			$sort = database::Singleton()->sql_max_field('tbl_pages', 'sort', array('parent_id'), array($parent_id));
+			$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array($parent_id, time(), user::Singleton()->id()));
+		}
+		common::redirect($id);
 	}
 }
 ?>

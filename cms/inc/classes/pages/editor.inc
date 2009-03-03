@@ -1,5 +1,5 @@
 <?php
-class cmspage_javascript extends cmspage
+class cmspage_editor extends cmspage
 {
 	public function initalise()
 	{
@@ -9,8 +9,7 @@ class cmspage_javascript extends cmspage
 	
 	public function run()
 	{
-		javascript::run($this->value);
-		die();
+		ContentEditor::run($this->value);
 	}
 }
 ?>

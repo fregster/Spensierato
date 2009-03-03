@@ -3,7 +3,7 @@ class cmspage //This relies on CurentPage been loaded
 {
 	protected static $instance;
 	protected $type;
-	protected $value;
+	protected $value = NULL;
 	protected $class;
 	protected $path_vars;
 
@@ -27,8 +27,7 @@ class cmspage //This relies on CurentPage been loaded
 	function __construct()
 	{
 		$this->type = CMS::Singleton()->page_details['type'];
-		$this->value = CMS::Singleton()->page_details['value'];
-		$this->class = 'cmspage_'.$this->type;
+		$this->class = 'cmspage_'.$this->type; //The class name expected
 		$this->path_vars &= CMS::Singleton()->path_vars;
 	}
 
@@ -37,9 +36,18 @@ class cmspage //This relies on CurentPage been loaded
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 	
+	public function initalise()
+	{
+		if($this->type == 'cmspage') { return false; } //If this class has not been extended then the page type does not exsist and so return false
+		return true;
+	}
+	
 	public function run()
 	{
-		 die('500 Unable in include any content because type (' . $this->type . ') unknown  (' . $this->value.')');
+		if($this->type == 'cmspage') //The class has not been setup the error has been ignored and run has been called so die
+		{
+			die('500 Unable in include any content because type (' . $this->type . ') unknown  (' . $this->value.')');
+		}
 	}
 	
 	/**

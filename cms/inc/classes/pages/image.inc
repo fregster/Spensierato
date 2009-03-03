@@ -1,6 +1,12 @@
 <?php
 class cmspage_image extends cmspage
 {
+	public function initalise()
+	{
+		$this->value = CMS::Singleton()->path_vars[1];
+		return true;
+	}
+	
 	public function run()
 	{
 		/**

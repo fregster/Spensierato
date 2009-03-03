@@ -1,10 +1,11 @@
 <?php
 /**
  * Class Page
- * Use this to edit all page details
- * Current page functions should be moved here
  *
+ * THIS SHOULD ALL BE MOVED TO CMSPAGE
  */
+
+//TODO Migrate this all to cmspage
 class page
 {
 	private static $instance;

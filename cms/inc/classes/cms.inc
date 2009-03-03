@@ -86,6 +86,11 @@ class CMS
 	{
 		return $this->time;
 	}
+	
+	public function cms_root()
+	{
+		return $this->cms_root;
+	}
 
 	public function microtime()
 	{
@@ -298,552 +303,498 @@ class CMS
 		return $this->testing;
 	}
 
-	private function site_login($id)
-	{
-		$_SESSION['site_login'] = true;
-		User::site_get_users_details($id);
+//	private function site_login($id) //Don't think this is actually called anywhere
+//	{
+//		$_SESSION['site_login'] = true;
+//		User::site_get_users_details($id);
+//
+//
+//		//Redirect after login
+//		if(get::variable('is_set', 'option'))
+//		{
+//
+//			Common::redirect(Settings::Singleton()->get_setting('site_root') .'/' . get::variable('string','option'));
+//		}
+//		else
+//		{
+//			Common::redirect(Settings::Singleton()->get_setting('site_root') . '/home');
+//		}
+//	}
+//
+//	private function get_page()
+//	{
+//		$value = $this->page_details['value'];
+//		switch ($this->page_details['type'])
+//		{
+//			case 'HTML':
+//				//Database file, call content singleton
+//				if(Security::singleton()->can_view())
+//				{
+//					Options::singleton()->admin_check();
+//					Render::Singleton()->render_html(Content::Singleton()->build(), true);
+//				}
+//				else
+//				{
+//					Error::do403();
+//				}
+//			    break;
+//
+//			case 'STYLESHEET':
+//				//Just send the XSLT
+//				render::Singleton()->send_xslt();
+//				break;
+//
+//			case 'LOADING':
+//				//Send a loading page and image;
+//				$this->send_loading($this->page_details['value']);
+//				break;
+//
+//			case 'JS':
+//				//Get JS useing minify
+//				$this->get_js($this->page_details['value']);
+//				break;
+//
+//			case 'JAVASCRIPT':
+//				//Get JS useing minify
+//				javascript::run($this->page_details['value']);
+//				die();
+//				break;
+//
+//			case 'CONTENTEDITOR':
+//				ContentEditor::run($this->page_details['value']);
+//				break;
+//
+//			case 'HELP':
+//				$element = Element::type('elementHelp');
+//				$element->build('help');
+//				$this->get_html();
+//				break;
+//
+//			case 'REGISTER':
+//				//If not loged in load box else redirect to $this->page_details['value']
+//				if(User::Singleton()->is_logged_in())
+//				{
+//					Common::redirect($this->page_details['value']);
+//				}
+//				else
+//				{
+//					if(Settings::singleton()->get_setting('allow_registration'))
+//					{
+//						if(get::variable('is_set','key'))
+//						{
+//							register::singleton()->verify_register();
+//							exit;
+//						}
+//						else
+//						{
+//							//Check cookies are enabled first
+//							Common::cookie_check();
+//
+//							//Load CMS Registration box
+//							$element = Element::type('elementRegister');
+//							$element->build('Register');
+//							$this->get_html($this->page_details['value']);
+//						}
+//					}
+//					else
+//					{
+//						Error::do403();
+//					}
+//				}
+//				break;
+//
+//			case 'REGISTER_DETAILS':
+//				if(User::Singleton()->is_logged_in())
+//				{
+//					Common::redirect($this->page_details['value']);
+//				}
+//				else
+//				{
+//					if(Settings::singleton()->get_setting('allow_registration'))
+//					{
+//						//Do registration function
+//						register::singleton()->new_registration();
+//						$element = Element::type('elementRegister');
+//						$element->build('Register');
+//						$this->get_html($this->page_details['value']);
+//					}
+//					else
+//					{
+//						Error::do403();
+//					}
+//				}
+//				break;
+//
+//			case 'WARNINGS':
+//				$element = Element::type('elementWarnings');
+//				$element->build('Warnings');
+//				Render::Singleton()->render_edit(Content::Singleton()->build());
+//				break;
+//
+//			case 'ACCOUNT':
+//				$element = Element::type('elementAccount');
+//				$element->build('account');
+//				$this->get_html();
+//				break;
+//
+//			case 'ACCESS':
+//				$element = Element::type('elementAccess');
+//				$element->build('access');
+//				$this->get_html();
+//				break;
+//
+//			case 'LOGIN':
+//				//CMS Login
+//
+//				//Check cookies are enabled first
+//				Common::cookie_check();
+//				if($_SERVER['REQUEST_METHOD'] == 'GET'and !get::variable('is_set','username'))
+//				{
+//					//If not loged in load box else redirect to $this->page_details['value']
+//					if(User::Singleton()->is_logged_in())
+//					{
+//						Common::redirect($this->page_details['value']);
+//					}
+//					else
+//					{
+//						//Load CMS Login box
+//						$element = Element::type('elementLogin');
+//						$element->build('login');
+//						$this->get_html($this->page_details['value']);
+//					}
+//				}
+//				else
+//				{
+//					//Do login function
+//					User::Singleton()->login();
+//					Common::redirect($this->page_details['value']);
+//				}
+//				break;
+//
+//			case 'LOGOUT':
+//				//CMS Logout
+//				$this->destroy_session($this->page_details['value']);
+//				break;
+//
+//			case 'ADMIN':
+//				//Admin page check admin security
+//				if(Security::singleton()->is_admin())
+//				{
+//					$this->get_admin($this->page_details['value']);
+//				}
+//				else
+//				{
+//					Error::do403();
+//				}
+//				break;
+//
+//			case 'TOOL':
+//				//CMS Included Functions no security checks
+//				$file = $this->cms_root . '/tools/' . Common::clean_path($this->page_details['value']) .'.inc';
+//				if(file_exists($file))
+//				{
+//					include($file);
+//					exit;
+//				}
+//				else
+//				{
+//					error::do404();
+//				}
+//			    break;
+//
+//			case 'CMS':
+//				//CMS Included Files page specific security checks
+//				$this->get_document($this->page_details['value']);
+//				break;
+//
+//			case 'DOWNLOAD':
+//				// Site downloads
+//				// Need to get document details
+//				// Check the related page details
+//				// call file transfer retrieve
+//
+//
+//				if(Security::singleton()->can_view_element($this->page_details['value']))
+//				{
+//					FileTransfer::singleton()->get_download($this->page_details['value']);
+//				}
+//				else
+//				{
+//					error::do403();
+//				}
+//				break;
+//
+//				case 'IMAGE':
+//				/**
+//				 * Site images
+//				 * Need to get document details
+//				 * Check the related page details
+//				 * call file transfer retrieve
+//				 */
+//
+//				if(Security::singleton()->can_view_element($this->page_details['value']))
+//				{
+//					FileTransfer::singleton()->get_image($this->page_details['value']);
+//				}
+//				else
+//				{
+//					error::do403();
+//				}
+//				break;
+//
+//				case 'STREAM':
+//					Stream::stream($this->page_details['value']);
+//					exit;
+//				break;
+//
+//				case 'PREVIEW':
+//				/**
+//				 * Site images
+//				 * Need to get document details
+//				 * Check the related page details
+//				 * call file transfer retrieve
+//				 */
+//
+//				if(Security::singleton()->can_view_element($this->page_details['value']))
+//				{
+//					FileTransfer::singleton()->get_preview($this->page_details['value']);
+//				}
+//				else
+//				{
+//					error::do403();
+//				}
+//				break;
+//
+//				case 'SKIN':
+//				//Skin images NO security check
+//				/**
+//				 * Site images
+//				 * Need to get document details
+//				 * Check the related page details
+//				 * call file transfer retrieve
+//				 */
+//
+//				$file_search = array(
+//				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin').'/'.$this->page_details['value'],
+//				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$this->page_details['value'],
+//				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/pre-load-images/'.$this->path_vars[2],
+//				Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/'.$this->path_vars[2],
+//				Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/'.$this->path_vars[1],
+//				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$this->path_vars[1],
+//				);
+//
+//				foreach($file_search as $file)
+//				{
+//					if(is_file($file))
+//					{
+//						FileTransfer::singleton()->get_file($file, true, false);
+//						exit;
+//					}
+//				}
+//				error::do404();
+//
+//				break;
+//
+//			case 'CSS':
+//				//CSS Files NO security check
+//				/**
+//				 * Calls the template class which compresses and sends the CSS file
+//				 */
+//				Render::Singleton()->send_css();
+//				exit;
+//
+//				break;
+//
+//			case 'AD':
+//				ad::google();
+//				exit;
+//				break;
+//
+//			case 'EDIT':
+//				//Edit render element
+//				if(Security::singleton()->can_edit_element($this->page_details['value']))
+//				{
+//					$element = Element::type($this->page_details['value']);
+//					$element->build($this->page_details['value']);
+//					Render::Singleton()->render_edit(Content::Singleton()->build());
+//				}
+//				else
+//				{
+//					if($this->page_details['value'] === 'style.css')
+//					{
+//						FileTransfer::singleton()->get_file(Settings::Singleton()->get_setting('cms_root').'/skins/default/style.css');
+//					}
+//					error::do403();
+//				}
+//				break;
+//
+//			case 'EDIT_TOGGLE_PAGE':
+//				if(Security::singleton()->can_approve($this->page_details['value'][1]))
+//				{
+//					if($this->page_details['value'][2] == 'visibility')
+//					{
+//						database::singleton()->sql_toggle_field_by_id($this->page_details['value'][1], 'tbl_pages', 'visible');
+//					}
+//
+//					if($this->page_details['value'][2] == 'delete')
+//					{
+//						database::singleton()->sql_toggle_field_by_id($this->page_details['value'][1], 'tbl_pages', 'deleted');
+//					}
+//					common::redirect($this->page_details['value'][1]);
+//				}
+//				else
+//				{
+//					error::do403();
+//				}
+//				break;
+//
+//			case 'EDIT_UPDATE_PAGE':
+//				if(Security::singleton()->can_approve($this->page_details['value'][1]))
+//				{
+//					if(post::variable('is_set','title'))
+//					{
+//						database::singleton()->sql_update_by_id($this->page_details['value'][1], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
+//					}
+//					common::redirect($this->page_details['value'][1]);
+//				}
+//				else
+//				{
+//					error::do403();
+//				}
+//				break;
+//
+//			case 'EDIT_TOGGLE_ELEMENT':
+//				if(Security::singleton()->can_approve_element($this->page_details['value'][1]))
+//				{
+//					$element = Element::type($this->page_details['value'][1]);
+//					$element->build($this->page_details['value'][1]);
+//
+//					$element->toggle($this->page_details['value'][2]);
+//					common::redirect($element->main());
+//				}
+//				else
+//				{
+//					error::do403();
+//				}
+//				break;
+//
+//			case 'AJAX':
+//				//Pass directly to the AJAX class for processing
+//				ajax::process($this->page_details['value']);
+//				break;
+//
+//			case 'EDITSAVE':
+//				//Is this an update or createing a new element
+//				if($this->page_details['value'] == 'account')
+//				{
+//					User::Singleton()->update_from_post();
+//					Common::redirect('account');
+//				}
+//
+//				if(post::variable('new_type', 'is_set'))
+//				{
+//					if(Security::singleton()->can_edit($this->page_details['value']))
+//					{
+//						if(post::variable('new_type') === 'newPage')
+//						{
+//							if(Security::singleton()->can_approve($this->page_details['value']))
+//							{
+//								$this->create_new_page($this->page_details['value']);
+//							}
+//							else
+//							{
+//								error::do403();
+//							}
+//						}
+//						else
+//						{
+//							$element = Element::type(post::variable('new_type', 'string'));
+//							$element->create($this->page_details['value']);
+//						}
+//					}
+//					else
+//					{
+//						error::do403();
+//					}
+//				}
+//				else
+//				{
+//					if(Security::singleton()->can_edit_element($this->page_details['value']))
+//					{
+//						$element = Element::type($this->page_details['value']);
+//						$element->build($this->page_details['value']);
+//						if($element->save(false))
+//						{
+//							//Save worked bounce to main page for element
+//							$this->saved($element->main());
+////							Common::redirect($element->main());
+//						}
+//						else
+//						{
+//							//Save failed show error page
+//						}
+//					}
+//					else
+//					{
+//						error::do403();
+//					}
+//				}
+//				common::redirect($this->page_details['value']);
+//
+//				break;
+//
+//			case 'OPTIONTOGGLE':
+//				// Toggle option value
+//				options::Singleton()->toggle_option($this->page_details['value']);
+//				Common::bounce_to_referer();
+//				break;
+//
+//			case 'FILE':
+//				FileTransfer::Singleton()->get_public_file($this->page_details['value']);
+//				break;
+//
+//			case 'CAPTHCA':
+//				Capthca::create_Images();
+//				break;
+//
+//			case 'REDIR':
+//				$this->get_html($this->page_details['value']);
+//			    break;
+//
+//			case 'FOLDER':
+//				if(Security::singleton()->can_view_element($this->page_details['value']))
+//				{
+//					$element_xml = Content::singleton()->render_element_xml($this->page_details['value']);
+//					$output_xml = DocumentFolder::convert_xml_to_displayable($element_xml);
+//					header('Content-Type: text/xml');
+//					die($output_xml);
+//				}
+//				else
+//				{
+//					error::do403();
+//				}
+//
+//			default:
+//			    die('500 Unable in include any content because type (' . $type . ') unknown  (' . $this->page_details['value'].')');
+//		}
+//	}
 
-
-		//Redirect after login
-		if(get::variable('is_set', 'option'))
-		{
-
-			Common::redirect(Settings::Singleton()->get_setting('site_root') .'/' . get::variable('string','option'));
-		}
-		else
-		{
-			Common::redirect(Settings::Singleton()->get_setting('site_root') . '/home');
-		}
-	}
-
-	private function get_page()
-	{
-		$value = $this->page_details['value'];
-		switch ($this->page_details['type'])
-		{
-			case 'HTML':
-				//Database file, call content singleton
-				if(Security::singleton()->can_view())
-				{
-					Options::singleton()->admin_check();
-					Render::Singleton()->render_html(Content::Singleton()->build(), true);
-				}
-				else
-				{
-					Error::do403();
-				}
-			    break;
-
-			case 'STYLESHEET':
-				//Just send the XSLT
-				render::Singleton()->send_xslt();
-				break;
-
-			case 'LOADING':
-				//Send a loading page and image;
-				$this->send_loading($this->page_details['value']);
-				break;
-
-			case 'JS':
-				//Get JS useing minify
-				$this->get_js($this->page_details['value']);
-				break;
-
-			case 'JAVASCRIPT':
-				//Get JS useing minify
-				javascript::run($this->page_details['value']);
-				die();
-				break;
-
-			case 'CONTENTEDITOR':
-				ContentEditor::run($this->page_details['value']);
-				break;
-
-			case 'HELP':
-				$element = Element::type('elementHelp');
-				$element->build('help');
-				$this->get_html();
-				break;
-
-			case 'REGISTER':
-				//If not loged in load box else redirect to $this->page_details['value']
-				if(User::Singleton()->is_logged_in())
-				{
-					Common::redirect($this->page_details['value']);
-				}
-				else
-				{
-					if(Settings::singleton()->get_setting('allow_registration'))
-					{
-						if(get::variable('is_set','key'))
-						{
-							register::singleton()->verify_register();
-							exit;
-						}
-						else
-						{
-							//Check cookies are enabled first
-							Common::cookie_check();
-
-							//Load CMS Registration box
-							$element = Element::type('elementRegister');
-							$element->build('Register');
-							$this->get_html($this->page_details['value']);
-						}
-					}
-					else
-					{
-						Error::do403();
-					}
-				}
-				break;
-
-			case 'REGISTER_DETAILS':
-				if(User::Singleton()->is_logged_in())
-				{
-					Common::redirect($this->page_details['value']);
-				}
-				else
-				{
-					if(Settings::singleton()->get_setting('allow_registration'))
-					{
-						//Do registration function
-						register::singleton()->new_registration();
-						$element = Element::type('elementRegister');
-						$element->build('Register');
-						$this->get_html($this->page_details['value']);
-					}
-					else
-					{
-						Error::do403();
-					}
-				}
-				break;
-
-			case 'WARNINGS':
-				$element = Element::type('elementWarnings');
-				$element->build('Warnings');
-				Render::Singleton()->render_edit(Content::Singleton()->build());
-				break;
-
-			case 'ACCOUNT':
-				$element = Element::type('elementAccount');
-				$element->build('account');
-				$this->get_html();
-				break;
-
-			case 'ACCESS':
-				$element = Element::type('elementAccess');
-				$element->build('access');
-				$this->get_html();
-				break;
-
-			case 'LOGIN':
-				//CMS Login
-
-				//Check cookies are enabled first
-				Common::cookie_check();
-				if($_SERVER['REQUEST_METHOD'] == 'GET'and !get::variable('is_set','username'))
-				{
-					//If not loged in load box else redirect to $this->page_details['value']
-					if(User::Singleton()->is_logged_in())
-					{
-						Common::redirect($this->page_details['value']);
-					}
-					else
-					{
-						//Load CMS Login box
-						$element = Element::type('elementLogin');
-						$element->build('login');
-						$this->get_html($this->page_details['value']);
-					}
-				}
-				else
-				{
-					//Do login function
-					User::Singleton()->login();
-					Common::redirect($this->page_details['value']);
-				}
-				break;
-
-			case 'LOGOUT':
-				//CMS Logout
-				$this->destroy_session($this->page_details['value']);
-				break;
-
-			case 'ADMIN':
-				//Admin page check admin security
-				if(Security::singleton()->is_admin())
-				{
-					$this->get_admin($this->page_details['value']);
-				}
-				else
-				{
-					Error::do403();
-				}
-				break;
-
-			case 'TOOL':
-				//CMS Included Functions no security checks
-				$file = $this->cms_root . '/tools/' . Common::clean_path($this->page_details['value']) .'.inc';
-				if(file_exists($file))
-				{
-					include($file);
-					exit;
-				}
-				else
-				{
-					error::do404();
-				}
-			    break;
-
-			case 'CMS':
-				//CMS Included Files page specific security checks
-				$this->get_document($this->page_details['value']);
-				break;
-
-			case 'DOWNLOAD':
-				// Site downloads
-				// Need to get document details
-				// Check the related page details
-				// call file transfer retrieve
-
-
-				if(Security::singleton()->can_view_element($this->page_details['value']))
-				{
-					FileTransfer::singleton()->get_download($this->page_details['value']);
-				}
-				else
-				{
-					error::do403();
-				}
-				break;
-
-				case 'IMAGE':
-				/**
-				 * Site images
-				 * Need to get document details
-				 * Check the related page details
-				 * call file transfer retrieve
-				 */
-
-				if(Security::singleton()->can_view_element($this->page_details['value']))
-				{
-					FileTransfer::singleton()->get_image($this->page_details['value']);
-				}
-				else
-				{
-					error::do403();
-				}
-				break;
-
-				case 'STREAM':
-					Stream::stream($this->page_details['value']);
-					exit;
-				break;
-
-				case 'PREVIEW':
-				/**
-				 * Site images
-				 * Need to get document details
-				 * Check the related page details
-				 * call file transfer retrieve
-				 */
-
-				if(Security::singleton()->can_view_element($this->page_details['value']))
-				{
-					FileTransfer::singleton()->get_preview($this->page_details['value']);
-				}
-				else
-				{
-					error::do403();
-				}
-				break;
-
-				case 'SKIN':
-				//Skin images NO security check
-				/**
-				 * Site images
-				 * Need to get document details
-				 * Check the related page details
-				 * call file transfer retrieve
-				 */
-
-				$file_search = array(
-				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin').'/'.$this->page_details['value'],
-				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$this->page_details['value'],
-				Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/pre-load-images/'.$this->path_vars[2],
-				Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/'.$this->path_vars[2],
-				Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/'.$this->path_vars[1],
-				Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$this->path_vars[1],
-				);
-
-				foreach($file_search as $file)
-				{
-					if(is_file($file))
-					{
-						FileTransfer::singleton()->get_file($file, true, false);
-						exit;
-					}
-				}
-				error::do404();
-
-				break;
-
-			case 'CSS':
-				//CSS Files NO security check
-				/**
-				 * Calls the template class which compresses and sends the CSS file
-				 */
-				Render::Singleton()->send_css();
-				exit;
-
-				break;
-
-			case 'AD':
-				ad::google();
-				exit;
-				break;
-
-			case 'EDIT':
-				//Edit render element
-				if(Security::singleton()->can_edit_element($this->page_details['value']))
-				{
-					$element = Element::type($this->page_details['value']);
-					$element->build($this->page_details['value']);
-					Render::Singleton()->render_edit(Content::Singleton()->build());
-				}
-				else
-				{
-					if($this->page_details['value'] === 'style.css')
-					{
-						FileTransfer::singleton()->get_file(Settings::Singleton()->get_setting('cms_root').'/skins/default/style.css');
-					}
-					error::do403();
-				}
-				break;
-
-			case 'EDIT_TOGGLE_PAGE':
-				if(Security::singleton()->can_approve($this->page_details['value'][1]))
-				{
-					if($this->page_details['value'][2] == 'visibility')
-					{
-						database::singleton()->sql_toggle_field_by_id($this->page_details['value'][1], 'tbl_pages', 'visible');
-					}
-
-					if($this->page_details['value'][2] == 'delete')
-					{
-						database::singleton()->sql_toggle_field_by_id($this->page_details['value'][1], 'tbl_pages', 'deleted');
-					}
-					common::redirect($this->page_details['value'][1]);
-				}
-				else
-				{
-					error::do403();
-				}
-				break;
-
-			case 'EDIT_UPDATE_PAGE':
-				if(Security::singleton()->can_approve($this->page_details['value'][1]))
-				{
-					if(post::variable('is_set','title'))
-					{
-						database::singleton()->sql_update_by_id($this->page_details['value'][1], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
-					}
-					common::redirect($this->page_details['value'][1]);
-				}
-				else
-				{
-					error::do403();
-				}
-				break;
-
-			case 'EDIT_TOGGLE_ELEMENT':
-				if(Security::singleton()->can_approve_element($this->page_details['value'][1]))
-				{
-					$element = Element::type($this->page_details['value'][1]);
-					$element->build($this->page_details['value'][1]);
-
-					$element->toggle($this->page_details['value'][2]);
-					common::redirect($element->main());
-				}
-				else
-				{
-					error::do403();
-				}
-				break;
-
-			case 'AJAX':
-				//Pass directly to the AJAX class for processing
-				ajax::process($this->page_details['value']);
-				break;
-
-			case 'EDITSAVE':
-				//Is this an update or createing a new element
-				if($this->page_details['value'] == 'account')
-				{
-					User::Singleton()->update_from_post();
-					Common::redirect('account');
-				}
-
-				if(post::variable('new_type', 'is_set'))
-				{
-					if(Security::singleton()->can_edit($this->page_details['value']))
-					{
-						if(post::variable('new_type') === 'newPage')
-						{
-							if(Security::singleton()->can_approve($this->page_details['value']))
-							{
-								$this->create_new_page($this->page_details['value']);
-							}
-							else
-							{
-								error::do403();
-							}
-						}
-						else
-						{
-							$element = Element::type(post::variable('new_type', 'string'));
-							$element->create($this->page_details['value']);
-						}
-					}
-					else
-					{
-						error::do403();
-					}
-				}
-				else
-				{
-					if(Security::singleton()->can_edit_element($this->page_details['value']))
-					{
-						$element = Element::type($this->page_details['value']);
-						$element->build($this->page_details['value']);
-						if($element->save(false))
-						{
-							//Save worked bounce to main page for element
-							$this->saved($element->main());
-//							Common::redirect($element->main());
-						}
-						else
-						{
-							//Save failed show error page
-						}
-					}
-					else
-					{
-						error::do403();
-					}
-				}
-				common::redirect($this->page_details['value']);
-
-				break;
-
-			case 'OPTIONTOGGLE':
-				// Toggle option value
-				options::Singleton()->toggle_option($this->page_details['value']);
-				Common::bounce_to_referer();
-				break;
-
-			case 'FILE':
-				FileTransfer::Singleton()->get_public_file($this->page_details['value']);
-				break;
-
-			case 'CAPTHCA':
-				Capthca::create_Images();
-				break;
-
-			case 'REDIR':
-				$this->get_html($this->page_details['value']);
-			    break;
-
-			case 'FOLDER':
-				if(Security::singleton()->can_view_element($this->page_details['value']))
-				{
-					$element_xml = Content::singleton()->render_element_xml($this->page_details['value']);
-					$output_xml = DocumentFolder::convert_xml_to_displayable($element_xml);
-					header('Content-Type: text/xml');
-					die($output_xml);
-				}
-				else
-				{
-					error::do403();
-				}
-
-			default:
-			    die('500 Unable in include any content because type (' . $type . ') unknown  (' . $this->page_details['value'].')');
-		}
-	}
-
-	private function create_new_page($parent_id)
-	{
-		if($parent_id === '-1')
-		{
-			if(Security::Singleton()->is_admin())
-			{
-				$id = database::Singleton()->sql_insert('tbl_pages', array('created', 'creator', 'title'), array(time(), user::Singleton()->id(), 'Homepage'));
-			}
-		}
-		else
-		{
-			$sort = database::Singleton()->sql_max_field('tbl_pages', 'sort', array('parent_id'), array($parent_id));
-			$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array($parent_id, time(), user::Singleton()->id()));
-		}
-		common::redirect($id);
-	}
-
-	private function get_html()
-	{
-		Render::Singleton()->render_html(Content::Singleton()->build());
-		//cookie::Singleton()->debug();
-	}
-
-	private function get_js($path)
-	{
-		$try = Settings::Singleton()->get_setting('cms_root').'/js/'.Common::clean_path($path);
-		if(is_file($try))
-		{
-			$this->send_js_file($try);
-			exit;
-		}
-
-		$try = Settings::Singleton()->get_setting('cms_root') . '/publicfiles/'.Common::clean_path($path);
-		if(is_file($try))
-		{
-			$this->send_js_file($try);
-			exit;
-		}
-		die('404 '.$path);
-	}
-
-	private function send_js_file($file)
-		{
-			// javascript header
-			header('Content-type: text/javascript');
-
-			switch (Settings::Singleton()->get_setting('js_minify'))
-			{
-				case '1':
-					//Use internal code minification
-					echo(Common::remove_js_comments(file_get_contents($file)));
-				    break;
-
-				case '2':
-					//Use JSMini
-					echo JSMin::minify(file_get_contents($file));
-				    break;
-
-				default:
-				    render::Singleton()->render_file($file);
-			}
-
-			exit;
-		}
-
-	private function send_loading($value)
-	{
-		include(Settings::Singleton()->get_setting('cms_root').'/js/submodal/loading.inc');
-		exit;
-	}
+//	private function create_new_page($parent_id)
+//	{
+//		if($parent_id === '-1')
+//		{
+//			if(Security::Singleton()->is_admin())
+//			{
+//				$id = database::Singleton()->sql_insert('tbl_pages', array('created', 'creator', 'title'), array(time(), user::Singleton()->id(), 'Homepage'));
+//			}
+//		}
+//		else
+//		{
+//			$sort = database::Singleton()->sql_max_field('tbl_pages', 'sort', array('parent_id'), array($parent_id));
+//			$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array($parent_id, time(), user::Singleton()->id()));
+//		}
+//		common::redirect($id);
+//	}
 
 	//this function is obsolitted by the installation process
 	private function settings_update()

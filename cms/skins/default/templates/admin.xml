@@ -68,7 +68,7 @@
 		<xsl:if test="/page/options/admin_mode = 1 and /page/security/can_edit =1">
 			<xsl:choose>
 				<xsl:when test="/page/@id != ''">
-				<xsl:if test="/page/@type = 'HTML'">
+				<xsl:if test="/page/@type = 'html'">
 					<xsl:if test="/page/security/can_approve =1">
 						<xsl:element name="form">
 							<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/up/<xsl:value-of select="/page/@id" /></xsl:attribute>

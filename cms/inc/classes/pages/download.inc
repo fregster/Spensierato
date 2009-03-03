@@ -1,6 +1,12 @@
 <?php
 class cmspage_download extends cmspage
 {
+	public function initalise()
+	{
+		$this->value = CMS::Singleton()->path_vars[1];
+		return true;
+	}
+	
 	public function run()
 	{
 		// Site downloads

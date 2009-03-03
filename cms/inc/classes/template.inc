@@ -26,7 +26,7 @@ class Template
 	function __construct()
 	{
 		$this->template_path = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin');
-		$this->defailt_path = Settings::Singleton()->get_setting('cms_root').'/skins/'.'/default';
+		$this->defailt_path = Settings::Singleton()->get_setting('cms_root').'/skins/default';
 		
 		$templateinc = $this->template_path.'/template.inc';
 		
@@ -89,7 +89,9 @@ class Template
 	
 	public function css_path()
 	{
-		switch (CMS::Singleton()->page_details['value']) 
+//		print_r(CMS::Singleton()->path_vars[1]);
+//		die('css');
+		switch (CMS::Singleton()->path_vars[1]) 
 		{
 			case 'mobile':
 				$path = $this->defailt_path .'/mobile.css';
@@ -115,29 +117,22 @@ class Template
 	
 	public function send_css()
 	{		
-		$path = $this->css_path();
-		
-		if(is_file($path))
+		if(is_file($this->css_path()))
 		{
 			// send the requisite header information and character set
-			Cache::headers_allow_cache($path, true);
+			Cache::headers_allow_cache($this->css_path(), true);
 			header ('Content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
 
 			if(Settings::singleton()->get_setting('css_minify'))
 			{
-		    	return(Common::remove_extra_lines(Common::remove_css_comments(file_get_contents($path))));
+		    	return(Common::remove_extra_lines(Common::remove_css_comments(file_get_contents($this->css_path()))));
 			}
 			else
 			{
-				return(file_get_contents($path));
+				return(file_get_contents($this->css_path()));
 			}
 		}
-		else
-		{
-			//Send 404
-			//TODO write 404
-			die($path);
-		}
+		error::do404();
 	}
 	
 	private function build_xslt_template($xslt)

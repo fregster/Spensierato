@@ -15,7 +15,9 @@ function find_user_by_id($id, $array){
 }
 
 function clean_xml($xml){
-	return trim(preg_replace('#<\?.*\?>#', '', $xml));
+	$xml = trim(preg_replace('#<\?.*\?>#', '', $xml));
+	$xml = preg_replace('#(<user/>|<group/>)#', '', $xml);
+	return $xml;
 }
 
 function get_permission_types($xml){
@@ -105,10 +107,12 @@ $lists = database::Singleton()->sql_select(array('id', 'name'), 'tbl_list_data')
 //get permissions for this page from DB
 $securityData = database::Singleton()->sql_select_first(array('data'), 'tbl_security', array('page_id'), array($pageId));
 
-if(!is_null($securityData['data'])){
-	$types = get_permission_types($securityData['data']);
-	$permissions = update_permissions($securityData['data']);
+if(is_null($securityData['data'])){
+	$securityData['data'] = security::singleton()->default_security_xml();
 }
+
+$types = get_permission_types($securityData['data']);
+$permissions = update_permissions($securityData['data']);
 
 
 ####################
@@ -187,7 +191,7 @@ else if ($postVars->variable('addUser')) {
 	$securityData = clean_xml($securityXML->asXML());
 
 	//save the new security in the DB
-	database::Singleton()->sql_update_by_col('tbl_security', array('page_id'), array($pageId), array('data'), array($securityData));
+	database::Singleton()->sql_update_or_insert('tbl_security', array('page_id'), array($pageId), array('page_id', 'data'), array($pageId, $securityData));
 
 	//update permissions so the form is updated
 	$permissions = update_permissions($securityData);

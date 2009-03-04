@@ -403,10 +403,10 @@ class Database
 		 * This currently does not work in MySQL and so 2 transactions are required unfortunatly
 		 */
 
-		$exsists = $this->sql_select_first(array($where_fields[0], 'id'), $table, $where_fields, $where_values);
+		$exsists = $this->sql_select_first(array($where_fields[0]), $table, $where_fields, $where_values);
 		if(isset($exsists))
 		{
-			return $this->sql_update_by_id($exsists['id'], $table, $fields, $values);
+			return $this->sql_update_by_col($table, array($where_fields[0]), array($exsists[$where_fields[0]]), $fields, $values);
 		}
 		else
 		{

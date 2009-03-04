@@ -1,6 +1,8 @@
 <?php
 class cmspage_html extends cmspage
 {
+	protected $page_details;
+	
 	public function initalise()
 	{
 		if(CMS::Singleton()->page_exists(CMS::Singleton()->path_vars(0)) == true)
@@ -32,7 +34,7 @@ class cmspage_html extends cmspage
 			}
 			
 			//Get current page details
-			$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->id));
+			$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->value));
 			return true;
 		}
 		return false;
@@ -45,6 +47,11 @@ class cmspage_html extends cmspage
 		
 		Options::singleton()->admin_check();
 		Render::Singleton()->render_html(Content::Singleton()->build(), true);
+	}
+	
+	public function title()
+	{
+		return $this->page_details['title'];
 	}
 }
 ?>

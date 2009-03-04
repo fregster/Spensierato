@@ -105,7 +105,7 @@ class currentPage
 		{
 			//$path_vars is not set so load an empty page from page
 			$this->page_type['type'] = 'html';
-			$this->page_type['value'] = Page::Singleton()->load(NULL);
+			$this->page_type['value'] = NULL; //FIXME This is depreciated the cmspage should work it out
 			CMS::Singleton()->page_details = $this->page_type; //FIXME hack to fix looping
 			cmspage::Singleton()->initalise();
 		}

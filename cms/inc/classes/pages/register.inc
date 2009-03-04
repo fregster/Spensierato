@@ -1,10 +1,10 @@
 <?php
-class cmspage_register extends cmspage
+class cmspage_register extends cmspage_html
 {
 	public function initalise()
 	{
 		$this->value = CMS::Singleton()->path_vars(1);
-		return true;
+		return parent::initalise();
 	}
 	
 	public function run()

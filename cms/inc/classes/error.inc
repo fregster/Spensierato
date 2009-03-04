@@ -31,6 +31,14 @@ abstract class error
 	{
 		die('404 File not found');
 	}
+	
+	/**
+	* Default error handling
+	*/
+	private static function log($msg)
+	{
+		error_log($msg, 3, "/var/tmp/my-errors.log");
+	}
 }
 //Over write the exception handler to use the now loaded error class
 set_exception_handler(array('error','exception'));

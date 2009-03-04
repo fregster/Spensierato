@@ -6,6 +6,7 @@ class cmspage //This relies on CurentPage been loaded
 	protected $value = NULL;
 	protected $class;
 	protected $path_vars;
+	protected $path;
 
 	public static function Singleton()
 	{
@@ -47,6 +48,16 @@ class cmspage //This relies on CurentPage been loaded
 		{
 			die('500 Unable in include any content because type (' . $this->type . ') unknown  (' . $this->value.')');
 		}
+	}	
+	
+	public function id()
+	{
+		return $this->value;
+	}
+	
+	public function title()
+	{
+		return $this->page_details['title'];
 	}
 
 	/**

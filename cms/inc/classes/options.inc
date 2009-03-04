@@ -69,13 +69,6 @@ class options
 	
 	public function options_as_xml()
 	{
-//		$serializer_options = array ( 
-//			   'addDecl' => FALSE, 
-//			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
-//			   'indent' => '  ',
-//			   'rootName'  => 'options',
-//			   'defaultTagName'  => 'option'
-//			);
 		return Common::array_to_xml_simple($_SESSION['cms_options'], 'options', 'option');
 	}
 	

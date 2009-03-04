@@ -32,7 +32,8 @@ class Menu
 	public function build()
 	{
 		//Get current page details
-		$this->current_page = currentPage::Singleton()->id();
+		$this->current_page = cmspage::Singleton()->id();
+
 		$this->current_page_details = currentPage::Singleton()->page_information();
 
 		//Get path to current page
@@ -68,8 +69,6 @@ class Menu
 		if(!$toppage)
 		{
 			//pop the last parent off as it should be in the top array then reverse it
-
-//				$menu_array['parents'] = array_reverse(array_pop($this->parents));
 			$menu_array['parents'] = array_reverse($this->parents);
 			
 			unset($menu_array['parents'][0]);
@@ -90,13 +89,7 @@ class Menu
 			   'rootName'  => 'menu',
 			   'defaultTagName'  => 'menu_item'
 			);
-//
-//		$this->menu_xml = Common::array_to_xml($menu_array, $serializer_options);
-
 		$this->menu_xml = Common::array_to_xml_simple($menu_array, 'menu', 'menu_item');
-		
-//		print_r(Common::array_to_xml($menu_array, $serializer_options));
-//		print_r($this->menu_xml); die();
 
 		return $this->menu_xml;
 	}
@@ -174,25 +167,22 @@ class Menu
 	
 	private function get_parallel_links()
 	{
-		//if($this->current_page_details['parent_id'] != 0)
-		//{
-			$parallel = $this->get_children_of($this->current_page_details['parent_id']);
-			
-			$i=0;
-			if(isset($parallel[0]))
+		$parallel = $this->get_children_of($this->current_page_details['parent_id']);
+		
+		$i=0;
+		if(isset($parallel[0]))
+		{
+			foreach($parallel as $link)
 			{
-				foreach($parallel as $link)
+				if($link['id'] == $this->current_page)
 				{
-					if($link['id'] == $this->current_page)
-					{
-						unset($parallel[$i]);
-						break;
-					}
-					$i++;
+					unset($parallel[$i]);
+					break;
 				}
+				$i++;
 			}
-			return $parallel;
-		//}
+		}
+		return $parallel;
 	}
 	
 	private function get_page_details($id)

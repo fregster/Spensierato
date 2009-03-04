@@ -1,14 +1,15 @@
 <?php
-class cmspage_login extends cmspage
+class cmspage_login extends cmspage_html
 {
 	public function initalise()
 	{
-		$this->value = Page::Singleton()->load(CMS::Singleton()->path_vars(1));
-		return true;
+		$this->value = CMS::Singleton()->path_vars(1);
+		return parent::initalise();
 	}
 	
 	public function run()
 	{
+//		print_r($this); die();
 		//CMS Login
 
 		//Check cookies are enabled first

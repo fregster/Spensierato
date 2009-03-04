@@ -1,5 +1,5 @@
 <?php
-class cmspage_register_details extends cmspage
+class cmspage_register_details extends cmspage_html
 {
 	public function run()
 	{

@@ -157,6 +157,12 @@ abstract class Common
 
 	public static function xml_to_array($xml)
 	{
+		if(class_exists('persistantcache', false))
+		{
+			$result = persistantcache::Singleton()->get('xml_to_array_'.$xml);
+			if($result != false) { return $result; }
+		}
+		
 		$xml = simplexml_load_string($xml);
 
 		if(!function_exists('process_children'))
@@ -180,10 +186,16 @@ abstract class Common
 						$php_array[$child->getName()] = strip_tags($child->saveXML());
 					}
 				}
+				
+				if(class_exists('persistantcache', false))
+				{
+					persistantcache::Singleton()->save('xml_to_array_'.$xml, $php_array);
+				}
+		
 				return $php_array;
 			}
 		}
-
+		
 		return process_children($xml);
 	}
 

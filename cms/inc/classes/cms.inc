@@ -197,6 +197,13 @@ class CMS
 		Common::redirect($url);
 	}
 
+	public function path_vars($index){
+		if (isset($this->path_vars[$index])) {
+			return $this->path_vars[$index];
+		}
+		return NULL;
+	}
+
 	private function start_session()
 	{
 //			Setting the domain seems to sometimes stop the browser from saving the cookie

@@ -476,7 +476,7 @@ class elementDefault
 						$this->edited = $data['edited'];
 						$this->editor = $data['editor'];
 						$this->approved = $data['approved'];
-						$this->aprover = $data['aprover'];
+						$this->approver = $data['approver'];
 						$data_content = $data['title'];
 						break;
 

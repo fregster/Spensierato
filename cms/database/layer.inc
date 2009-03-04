@@ -610,8 +610,16 @@ class Database
 		$this->sql_delete_where($from, $fields, $values);
 	}
 
-	public function sql_count_where($table, $fields, $values, $FORCE_NO_CACHE = FALSE)
+	public function sql_count_where($table, $where_fields, $where_values, $FORCE_NO_CACHE = FALSE)
 	{
+		if (!is_array($where_fields)) {
+			$where_fields = array($where_fields);
+		}
+
+		if (!is_array($where_values)) {
+			$where_values = array($where_values);
+		}
+
 		$sql = 'SELECT count(*) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
 
 		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);

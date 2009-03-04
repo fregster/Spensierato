@@ -131,7 +131,7 @@ if ($lists) {
 if ($users) {
 	$nonMembersList = array();
 	foreach ($users as $user){
-		if ((find_item_by_id($user['id'], 'user_id', $members) === false) || (CMS::Singleton()->path_vars[2] != 'edit'))
+		if ($members && (find_item_by_id($user['id'], 'user_id', $members) === false) || (CMS::Singleton()->path_vars(2) != 'edit'))
 			$nonMembersList[] = '<option value="'.$user['id'].'">'.$user['username'].'</option>';
 	}
 	unset($user);
@@ -139,7 +139,7 @@ if ($users) {
 }
 
 
-if (CMS::Singleton()->path_vars[2] == 'edit') {
+if (CMS::Singleton()->path_vars(2) == 'edit') {
 	if ($lists) {
 
 		$listList = array();

@@ -84,7 +84,7 @@ class Content
 		//TODO update to use page class when I upload it!
 		$page_details = currentPage::Singleton()->page_details();
 		$page_info = currentpage::Singleton()->page_information();
-		$this->set_attribute('title', currentPage::Singleton()->title());
+		$this->set_attribute('title', cmspage::Singleton()->title());
 		$this->set_attribute('visible', $page_info['visible']);
 		$this->set_attribute('deleted', $page_info['deleted']);
 		$this->set_attribute('content', 'blank');
@@ -226,7 +226,7 @@ class Content
 		//Only load elements from DB if page type = html
 		if(CMS::Singleton()->page_details['type'] == 'html')
 		{
-			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible'), array(currentPage::Singleton()->id(), $this->visible), array('id'), array('sort'), options::Singleton()->get_option('admin_mode'));
+			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible'), array(cmspage::Singleton()->id(), $this->visible), array('id'), array('sort'), options::Singleton()->get_option('admin_mode'));
 			$id_string = '';
 
 			if(isset($elements[0]))

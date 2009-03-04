@@ -34,9 +34,6 @@ class currentPage
 		//Get current page details
 		$this->get_page_details();
 
-		//Load the page class
-		$page = new page;
-
 		if(get::variable('int','xml') == 2 or Settings::singleton()->get_setting('send_as_xml') == true)
 		{
 			$this->xslt = true;

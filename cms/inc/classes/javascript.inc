@@ -11,7 +11,7 @@
 	 * distribute, sublicense, and/or sell copies of the Software, and to
 	 * permit persons to whom the Software is furnished to do so, subject to
 	 * the following conditions:
-	 * 
+	 *
 	 * The above copyright notice and this permission notice shall be
 	 * included in all copies or substantial portions of the Software.
 	 *
@@ -58,34 +58,34 @@ abstract class javascript
 		{
 			$cache 	  = false;
 		}
-		
+
 		//Create a hash of the file names for createing and checking a single unique cache file
 		$hash = sha1($files);
 		$base = realpath($jsdir);
 		$type = 'javascript';
 		$elements = explode(',', $files);
-		
+
 		// Determine last modification date of the files
 		$lastmodified = 0;
 		while (list(,$element) = each($elements)) {
 			$path = realpath($base . '/' . $element);
-		
-			if (($type == 'javascript' && substr($path, -3) != '.js') || 
+
+			if (($type == 'javascript' && substr($path, -3) != '.js') ||
 				($type == 'css' && substr($path, -4) != '.css')) {
 				header ("HTTP/1.0 403 Forbidden");
-				exit;	
+				exit;
 			}
-		
+
 			if (substr($path, 0, strlen($base)) != $base || !file_exists($path)) {
 				header ("HTTP/1.0 404 Not Found");
 				exit;
 			}
-			
+
 			$lastmodified = max($lastmodified, filemtime($path));
 		}
 //		$mtime = filemtime($path);
 		$gmdate_mod = gmdate('D, d M Y H:i:s', $lastmodified) . ' GMT';
-		
+
 		// Determine supported compression method
 		$gzip = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip');
 		$deflate = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate');
@@ -94,23 +94,23 @@ abstract class javascript
 		$encoding = $gzip ? 'gzip' : ($deflate ? 'deflate' : 'none');
 
 		// Check for buggy versions of Internet Explorer
-		if (!strstr($_SERVER['HTTP_USER_AGENT'], 'Opera') && 
+		if (!strstr($_SERVER['HTTP_USER_AGENT'], 'Opera') &&
 			preg_match('/^Mozilla\/4\.0 \(compatible; MSIE ([0-9]\.[0-9])/i', $_SERVER['HTTP_USER_AGENT'], $matches)) {
 			$version = floatval($matches[1]);
-			
+
 			if ($version < 6)
 				$encoding = 'none';
-				
-			if ($version == 6 && !strstr($_SERVER['HTTP_USER_AGENT'], 'EV1')) 
+
+			if ($version == 6 && !strstr($_SERVER['HTTP_USER_AGENT'], 'EV1'))
 				$encoding = 'none';
 		}
-		
+
 		$cachefile = 'cms-cache-' . $hash . '.' . $type;
 		$file = $cachedir . '/' . $cachefile;
-		
+
 		if($cache)
 		{
-			if (file_exists($file)) 
+			if (file_exists($file))
 			{
 				if($lastmodified < filemtime($file))
 				{
@@ -118,9 +118,9 @@ abstract class javascript
 					//Try looking for packed or cleaned content
 					if(file_exists($file.'cleaned')) { $file = $file.'cleaned'; }
 					if(file_exists($file.'packed')) { $file = $file.'packed'; }
-					Cache::headers_check_304($file);				
-					
-					if ($fp = fopen($file, 'rb')) 
+					Cache::headers_check_304($file);
+
+					if ($fp = fopen($file, 'rb'))
 					{
 						fclose($fp);
 						header('X-Cache-JS: Quick');
@@ -132,12 +132,12 @@ abstract class javascript
 				else
 				{
 					//The cached file is outdated so delete it
-					unset($file);
+					unlink($file);
 				}
 			}
 		}
 
-		
+
 		/*---------- First time visit or files were modified --------------*/
 
 		// Get contents of the files
@@ -149,11 +149,11 @@ abstract class javascript
 		}
 		//Clean contents
 		$contents = javascript::clean($contents);
-		
+
 		// Store cache
-		if ($cache) 
+		if ($cache)
 		{
-			if ($fp = fopen($file, 'wb')) 
+			if ($fp = fopen($file, 'wb'))
 			{
 				$cached = fwrite($fp, $contents);
 				fclose($fp);
@@ -174,17 +174,17 @@ abstract class javascript
 			header('Expires:' . $expires);
 			header('Cache-control: public');
 			header('Pragma:');
-			
+
 			//Fake a re createable ETag and 304 if we can
 			$ETag = md5($contents);
 			$gmdate_mod = gmdate('D, d M Y H:i:s', $lastmodified) . ' GMT';
-			
+
 			header('Last-Modified: ' . $gmdate_mod);
-			header('ETag: "'.$ETag.'"'); 
-			
+			header('ETag: "'.$ETag.'"');
+
 			//Headers recieved from browser
 			$headers = apache_request_headers();
-			
+
 			if(isset($headers['If-None-Match']))
 			{
 				 if (strpos($headers['If-None-Match'], $ETag) != false)
@@ -192,39 +192,39 @@ abstract class javascript
 					Cache::send_304($ETag);
 				}
 			}
-			
-			if ($gmdate_mod == $headers['If-Modified-Since']) 
+
+			if ($gmdate_mod == $headers['If-Modified-Since'])
 			{
 				Cache::send_304();
 			}
-			
+
 		}
-		
+
 		$contents = javascript::getcontentscompressed($contents, $encoding);
 		javascript::sendcontent($type, $encoding, $contents);
 	}
-		
+
 	private static function clean ($contents)
 	{
 		$contents = str_replace('__CMS__DOCUMENT_ROOT', Settings::singleton()->get_setting('document_root'), $contents);
 		$contents = str_replace('__CMS__PAGE_ID', currentPage::singleton()->id(), $contents);
-		
+
 		//Remove comments from the string
-		switch (Settings::Singleton()->get_setting('js_minify')) 
+		switch (Settings::Singleton()->get_setting('js_minify'))
 		{
 			case '1':
 				//Use internal code minification
 				$contents = Common::remove_js_comments(file_get_contents($contents));
 			    break;
-			
+
 			case '2':
 				//Use external minification
 				$contents = JSMin::minify(file_get_contents($contents));
 			    break;
-			
+
 			default:
 				$contents = $contents;
-				
+
 			return($contents);
 		}
 	}
@@ -237,23 +237,23 @@ abstract class javascript
 
 		// Determine used compression method
 		$encoding = $gzip ? 'gzip' : ($deflate ? 'deflate' : 'none');
-		
-		if (isset($encoding) && $encoding != 'none') 
+
+		if (isset($encoding) && $encoding != 'none')
 		{
 			// Send compressed contents
 			$contents=(gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE));
-		} 
-		
+		}
+
 		// Send regular contents
 		return $contents;
 	}
-	
+
 	private static function sendcontent($type, $encoding, $contents)
 	{
 		header ('Content-Type: text/' . $type);
 		if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 		header ('Content-Length: ' . strlen($contents));
-		
+
 		die($contents);
 	}
 }

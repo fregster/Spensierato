@@ -21,7 +21,7 @@
 * @author Paul Fryer <paul@fryer.org.uk>
 * @license http://www.opensource.org/licenses/lgpl-3.0.html LGPL
 * @link http://www.fryer.org.uk/
-* 
+*
 * Version 2 Released Feb 2009
 */
 
@@ -39,12 +39,12 @@ class persistantcache
 	protected $max_cache_time = 30;
 	protected $max_object_size = 20480; //The string length of the serialized array
 	protected static $retry_time = 30; //Time in seconds before reworking out the best cache type
-	
+
 	protected $allow_memcache = true;
 	protected $allow_file_cache = true;
 	protected $allow_session_cache = true;
 	protected static $cache_preference_order = array('memcache', 'file', 'session');
-	
+
 	/**
 	 * DO NOT CHANGE THESE
 	 */
@@ -53,7 +53,7 @@ class persistantcache
 	protected static $time; //Local cache of the time
 	public static $cache_type_inuse;
 	private static $instance;
-	
+
 	public function __clone()
 	{
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
@@ -62,16 +62,16 @@ class persistantcache
 	protected function __construct()
 	{
 		$this->init();
-		return false; //Unable to use a persistant cache 
+		return false; //Unable to use a persistant cache
 	}
-	
+
 	//Standard init function
 	protected function init()
 	{
 		//Internaly cache time
 		$this->time = time();
 	}
-	
+
 	public static function Singleton()
 	{
 		if (!isset(self::$instance)) //No instance found so call rebuild to build a new one
@@ -81,7 +81,7 @@ class persistantcache
 
 	   return self::$instance;
 	}
-	
+
 	/**
 	 * Rebuild Singleton
 	 * This actually replaces the current instance with the best available cache type
@@ -92,7 +92,7 @@ class persistantcache
 		$c =persistantcache::get_type();
 		self::$instance = new $c;
 	}
-	
+
 	/**
 	 * Work out the best avaiable cache type
 	 * @return class name
@@ -119,15 +119,15 @@ class persistantcache
 				}
 			}
 		}
-		
+
 		return $c;
 	}
-	
+
 	public function version()
 	{
 		return 0;
 	}
-	
+
 	/**
 	 * Return true if an advanced caching system is in use else false for session or no cache
 	 */
@@ -135,12 +135,12 @@ class persistantcache
 	{
 		return $this->enabled;
 	}
-	
+
 	public function type()
 	{
 		return $this->easy_cache_type_name;
 	}
-	
+
 	/**
 	 * Build the key name
 	 * As memcache can support a key with a max length of 240 bytes build a sha1 hash (256 bits)
@@ -150,7 +150,7 @@ class persistantcache
 	{
 		return sha1(PREFIX.$name);
 	}
-	
+
 	/**
 	 * If encrypt is enabled encrypt the data else return the data un touched
 	 * @param $data
@@ -163,9 +163,9 @@ class persistantcache
 		{
 			$data = $data;
 		}
-		return $data;	
+		return $data;
 	}
-	
+
 	/**
 	 * If encrypt is enabled decrypt the data else return the data un touched
 	 * @param $data
@@ -178,9 +178,9 @@ class persistantcache
 		{
 			$data = $data;
 		}
-		return $data;	
+		return $data;
 	}
-	
+
 	/**
 	 * Build the data into a consistant store
 	 * @param $name
@@ -200,14 +200,14 @@ class persistantcache
 		{
 			$expire_time = $expire_time + 999999999999999999999999;
 		}
-		
+
 		//Build the value
 		$data = serialize($value);
 		$value = array('value' => $this->encrypt($data), 'time' => $expire_time, 'validate' => crc32($data), 'encrypted' => $this->encrypt_data);
-		
+
 		return array('name'=>$this->build_key($name), 'data'=>$value);
 	}
-	
+
 	protected function validate_data($data, $check)
 	{
 		if(crc32($data) == $check)
@@ -216,7 +216,7 @@ class persistantcache
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Public method for saveing data
 	 * name
@@ -227,7 +227,7 @@ class persistantcache
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Get an object from the cache by key name
 	 */
@@ -235,7 +235,7 @@ class persistantcache
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Delete an object from the cache
 	 */
@@ -243,7 +243,7 @@ class persistantcache
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Delete every thing from the cache, useful when the database is known to have been updated.
 	 */
@@ -258,27 +258,27 @@ class persistantcache_memcache extends persistantcache
 	private $store; //Memcache object
 	private $servers = array(array('host' => 'localhost', 'port'=>11211)); // enter an array for each of your memcache servers
 	private $maxsession_cache_time = 0; //0 sets to never expire
-	
+
 	protected function __construct()
 	{
 		$this->init();
-		
-		if(($_SESSION['disable_memcached'] + persistantcache::$retry_time) > $this->time )
+
+		if(isset($_SESSION['disable_memcached']) && ($_SESSION['disable_memcached'] + persistantcache::$retry_time) > $this->time )
 		{
 			return false;
 		}
-		
+
 		//Are we using memcached and if so ensure if it recently failed we don't try to reconnect to quickly
 		if(extension_loaded('memcache') && $this->allow_memcache)
 		{
 			$this->store = new Memcache;
-			
+
 			//Run though the array of servers adding each one to the connection pool
 			foreach($this->servers as $server)
 			{
 				$this->store->addServer($server['host'], $server['port'], TRUE, 1, 1, 1, TRUE, 'memcached_server_fail');
 			}
-			
+
 			//Mark that we are using an advanced caching mech, purge any session cache
 			$this->enabled = true;
 			$this->easy_cache_type_name = 'AC';
@@ -287,7 +287,7 @@ class persistantcache_memcache extends persistantcache
 		}
 		return false;
 	}
-	
+
 	public function save($name, $value, $time = 0)
 	{
 		$data = $this->build_save($name, $value, $time);
@@ -299,10 +299,10 @@ class persistantcache_memcache extends persistantcache
 			    $result = $this->store->set($data['name'], $data['data'], MEMCACHE_COMPRESSED, $data['data']['time']);
 			}
 			return $result;
-		}		
+		}
 		return false;
 	}
-	
+
 	public function get($name)
 	{
 		$name = $this->build_key($name);
@@ -310,26 +310,26 @@ class persistantcache_memcache extends persistantcache
 		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate']))
 		{
 			return unserialize($this->decrypt($result['value']));
-		}		
+		}
 		return false;
 	}
-	
+
 	public function drop($name)
 	{
 		$name = $this->build_key($name);
 		$this->store->delete($name);
 	}
-	
+
 	public function purge()
 	{
 		return $this->store->flush();
 	}
-	
+
 	public function version()
 	{
 		$this->store->getVersion();
 	}
-	
+
 	/**
 	 * Register that a server has gone offline
 	 * Needs work
@@ -338,7 +338,7 @@ class persistantcache_memcache extends persistantcache
 	{
 		$this->disable_memcached();
 	}
-	
+
 	/**
 	 * All servers off line, disable and make offline timestamp
 	 */
@@ -354,20 +354,20 @@ class persistantcache_file extends persistantcache
 {
 	/**
 	 * File caching
-	 * 
+	 *
 	 * You will need to employ some method of cleaning and quotering the max size of any filesystem cache
 	 * Please ensure this folder is kept purley for this cache, else the purge and drop might delete your files
 	 */
-	
+
 	private $file_cache_path = '/tmp/cms_cache/'; //Remeber trailing /
 	private $max_file_size = 20480; //The max string length of the serialized array
 	private $file_system_maintance = true;
-	private $max_time_before_maintance = 3600; //Seconds before maintance is ran 
-	
+	private $max_time_before_maintance = 3600; //Seconds before maintance is ran
+
 	protected function __construct()
 	{
 		$this->init();
-		
+
 		//If we want to use file caching test we can write first.
 		if($this->allow_file_cache)
 		{
@@ -383,12 +383,12 @@ class persistantcache_file extends persistantcache
 		}
 		return false;
 	}
-	
+
 	public function save($name, $value, $time = 0)
 	{
 		$data = build_save($name, $value, $time);
 
-		if($file = fopen($this->build_file_path($data['name']), 'wb')) 
+		if($file = fopen($this->build_file_path($data['name']), 'wb'))
 		{
 			$result = fwrite($file, $data['data']);
 			fclose($file);
@@ -396,36 +396,36 @@ class persistantcache_file extends persistantcache
 		}
 		return false;
 	}
-	
+
 	public function get($name)
 	{
 		$name = $this->build_key($name);
-		
+
 		if(file_exists($name))
 		{
 			$result['time'] = filemtime($file);
 			$result['value'] = file_get_contents($file);
 		}
-		
+
 		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate']))
 		{
 			return unserialize($this->decrypt($result['value']));
 		}
-		
+
 		return false;
 	}
-	
+
 	public function drop($name)
 	{
 		$name = $this->build_key($name);
 		//TODO Write drop file method
 	}
-	
+
 	public function purge()
 	{
 		//TODO Write purge file method
 	}
-	
+
 	private function build_file_path($name)
 	{
 		return $this->file_cache_path.PREFIX.'_'.$name.'.cache';
@@ -439,11 +439,11 @@ class persistantcache_session extends persistantcache
 	 * CAUTION Only use this on site where your going to have a small number of users
 	 */
 	private $max_objects_in_session_cache = 50; //Prevent the sessions getting to big note there is no way of knowing how many users there are at once.
-	
+
 	protected function __construct()
 	{
 		$this->init();
-		
+
 		if($this->allow_session_cache)
 		{
 			$_SESSION['cache'] = array();
@@ -454,15 +454,15 @@ class persistantcache_session extends persistantcache
 		}
 		return false;
 	}
-	
+
 	public function save($name, $value, $time = 0)
 	{
 		$data = $this->build_save($name, $value, $time);
 
 		if(strlen($data['data']['value']) < $this->max_object_size)
 		{
-				//Because the session cache can't self clean, ensure the cache is not to big, if it is drop the oldest one.
-				if($_SESSION['cache_count'] > $max_objects_in_session_cache)
+				//Because the session cache can't self clean, ensure the cache is not too big, if it is drop the oldest one.
+				if($_SESSION['cache_count'] > $this->max_objects_in_session_cache)
 				{
 					$_SESSION['cache'] = array_reverse($_SESSION['cache']);
 					array_pop($_SESSION['cache']);
@@ -471,33 +471,33 @@ class persistantcache_session extends persistantcache
 				$_SESSION['cache'][$data['name']] = $data['data'];
 				++$_SESSION['cache_count'];
 				return true;
-		}		
+		}
 		return false;
 	}
-	
+
 	public function get($name)
 	{
 		$name = $this->build_key($name);
-		
-		$result = $_SESSION['cache'][$name];
+
+		$result = isset($_SESSION['cache'][$name])?$_SESSION['cache'][$name]:NULL;
 
 		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate']))
 		{
 			return unserialize($this->decrypt($result['value']));
 		}
-		
+
 		//The data in the session cache is outdated so delete it
 		unset($_SESSION['cache'][$name]);
 		return false;
 	}
-	
+
 	public function drop($name)
 	{
 		$name = $this->build_key($name);
 		unset($_SESSION['cache'][$name]);
 		--$_SESSION['cache_count'];
 	}
-	
+
 	public function purge()
 	{
 		$_SESSION['cache'] = array();

@@ -709,7 +709,7 @@ class Database
 				$this->write = $this->connect($dsn);
 			}
 
-			$this->dsn = $dsn;
+			$this->dsn = isset($dsn)?$dsn:NULL;
 			$this->connected = true;
 		}
 	}

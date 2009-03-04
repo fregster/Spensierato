@@ -61,7 +61,10 @@ class currentPage
 
 	public function id()
 	{
-		return $this->page_type['value'];
+		if (isset($this->page_type['value'])) {
+			return $this->page_type['value'];
+		}
+		return NULL;
 	}
 
 	public function title()

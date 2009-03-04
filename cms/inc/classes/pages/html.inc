@@ -3,9 +3,9 @@ class cmspage_html extends cmspage
 {
 	public function initalise()
 	{
-		if(CMS::Singleton()->page_exists(CMS::Singleton()->path_vars[0]) == true)
+		if(CMS::Singleton()->page_exists(CMS::Singleton()->path_vars(0)) == true)
 		{
-			$this->value = CMS::Singleton()->path_vars[0];
+			$this->value = CMS::Singleton()->path_vars(0);
 			return true;
 		}
 		return false;

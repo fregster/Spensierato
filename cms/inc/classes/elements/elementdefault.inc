@@ -409,7 +409,7 @@ class elementDefault
 		$type = NULL;
 
 		//display plain text when not editing
-		if (!isset(CMS::Singleton()->path_vars[0]) || is_null(CMS::Singleton()->path_vars[0]) || is_numeric(CMS::Singleton()->path_vars[0])) {
+		if (is_null(CMS::Singleton()->path_vars(0)) || is_numeric(CMS::Singleton()->path_vars(0))) {
 			if (!is_null($data)) {
 				$final_data = array_merge(array('data' => $data, 'title' => $default_data['title']), $general_info);
 			}

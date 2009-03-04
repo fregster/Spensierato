@@ -3,7 +3,7 @@ class cmspage_login extends cmspage
 {
 	public function initalise()
 	{
-		$this->value = Page::Singleton()->load(CMS::Singleton()->path_vars[1]);
+		$this->value = Page::Singleton()->load(CMS::Singleton()->path_vars(1));
 		return true;
 	}
 	

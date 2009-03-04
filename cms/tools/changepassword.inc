@@ -59,13 +59,13 @@ $posted = $postVars->variable('savePass');
 if (!$posted) {
 
 	//if an error code was set
-	if (isset(CMS::Singleton()->path_vars[2])) {
+	if (isset(CMS::Singleton()->path_vars(2))) {
 
 		//start the error code msg text
 		$error = '<div>ERROR: ';
 
 		//check which error occured and create msg accordingly
-		switch(CMS::Singleton()->path_vars[2]){
+		switch(CMS::Singleton()->path_vars(2)){
 			case 1:
 				$error .= 'You forgot to enter your old password!';;
 				break;

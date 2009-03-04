@@ -61,7 +61,7 @@ if ($postVars->variable('createList')) {
 
 			if (check_dates($postVars->variable('fromDate'), $postVars->variable('toDate'))) {
 
-				CMS::Singleton()->path_vars[2] = 'edit';
+				CMS::Singleton()->path_vars(2) = 'edit';
 				$insertFields = array('name', 'valid_from', 'valid_to', 'created', 'created_by');
 
 				$insertValues = array($postVars->variable('listName'));

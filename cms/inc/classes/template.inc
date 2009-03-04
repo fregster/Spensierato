@@ -89,9 +89,9 @@ class Template
 
 	public function css_path()
 	{
-//		print_r(CMS::Singleton()->path_vars[1]);
+//		print_r(CMS::Singleton()->path_vars(1));
 //		die('css');
-		$path_vars = isset(CMS::Singleton()->path_vars[1])?CMS::Singleton()->path_vars[1]:NULL;
+		$path_vars = CMS::Singleton()->path_vars(1);
 		switch ($path_vars)
 		{
 			case 'mobile':

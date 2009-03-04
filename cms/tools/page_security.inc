@@ -96,7 +96,7 @@ function change_user_permission($userId, $group, $permLvl, $xmlStr){
 # data init for the tool #
 ##########################
 
-$pageId = CMS::Singleton()->path_vars[2];
+$pageId = CMS::Singleton()->path_vars(2);
 
 //get all non-admin users
 $users = database::Singleton()->sql_select(array('id', 'username'), 'tbl_users', array('admin'), array('0'));

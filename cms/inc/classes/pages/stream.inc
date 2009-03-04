@@ -3,7 +3,7 @@ class cmspage_stream extends cmspage
 {
 	public function initalise()
 	{
-		$this->value = CMS::Singleton()->path_vars[1];
+		$this->value = CMS::Singleton()->path_vars(1);
 		return true;
 	}
 	

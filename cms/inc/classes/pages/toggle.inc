@@ -5,8 +5,8 @@ class cmspage_toggle extends cmspage
 	
 	public function initalise()
 	{
-		$this->value = CMS::Singleton()->path_vars[1];
-		$this->bounce = CMS::Singleton()->path_vars[2];
+		$this->value = CMS::Singleton()->path_vars(1);
+		$this->bounce = CMS::Singleton()->path_vars(2);
 		return true;
 	}
 	

@@ -101,7 +101,7 @@ class currentPage
 	private function check_page()
 	{
 		//Page id checking, if not set goto homepage
-		if(!isset(CMS::Singleton()->path_vars[0]) or CMS::Singleton()->path_vars[0] == 'home')
+		if(is_null(CMS::Singleton()->path_vars(0)) || CMS::Singleton()->path_vars(0) == 'home')
 		{
 			//$path_vars is not set so load an empty page from page
 			$this->page_type['type'] = 'html';
@@ -111,7 +111,7 @@ class currentPage
 		}
 		else
 		{
-			if(!is_numeric(CMS::Singleton()->path_vars[0]))
+			if(!is_numeric(CMS::Singleton()->path_vars(0)))
 			{
 				//FIXME update filenames / merge or change request types etc
 				$match = array(
@@ -124,7 +124,7 @@ class currentPage
 					'up'=> 'edit_update_page',
 				);
 
-				$this->page_type['type'] = strtolower(CMS::Singleton()->path_vars[0]);
+				$this->page_type['type'] = strtolower(CMS::Singleton()->path_vars(0));
 				if(isset($match[$this->page_type['type']]))
 				{
 					$this->page_type['type'] = $match[$this->page_type['type']];
@@ -147,7 +147,7 @@ class currentPage
 			{
 				//pat_vars[0] is numeric
 				$this->page_type['type'] = 'html';
-				$this->page_type['value'] = CMS::Singleton()->path_vars[0];
+				$this->page_type['value'] = CMS::Singleton()->path_vars(0);
 				CMS::Singleton()->page_details = $this->page_type;
 
 				if(!cmspage::Singleton()->initalise())

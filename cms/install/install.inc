@@ -63,6 +63,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 	//Options
 	if(post::variable('rewrite')) { $rewrite = 'true'; }
+	else { $rewrite = 'false'; }
 
 	debug('Vars set');
 

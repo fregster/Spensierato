@@ -287,7 +287,7 @@ abstract class Common
 		return Common::remove_extra_lines($input);
 	}
 
-	public function remove_js_comments($code)
+	public static function remove_js_comments($code)
 	{
      $mq = $sq = $mc = $sc = false;
      $output = "";
@@ -577,7 +577,7 @@ abstract class Common
 //        }
     }
 
-    public function rewrite_enabled()
+    public static function rewrite_enabled()
     {
     	if ( in_array("mod_rewrite", apache_get_modules()) )
     	{

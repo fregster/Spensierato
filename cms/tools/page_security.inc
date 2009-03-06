@@ -238,7 +238,7 @@ array_push($htmlArray, '<input type="submit" name="savePerm" value="Save" />', '
 if (count($permissions['user']) || count($permissions['group']))
 	$htmlList = implode('', $htmlArray);
 
-
+$userOptions = '';
 if ($users) {
 	$userList = array('<optgroup label="Users">');
 	foreach ($users as $user){
@@ -248,6 +248,7 @@ if ($users) {
 	$userOptions = implode('', $userList);
 }
 
+$listOptions = '';
 if ($lists) {
 	$listList = array('<optgroup label="Lists">');
 	foreach ($lists as $list){

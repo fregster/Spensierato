@@ -149,16 +149,16 @@ class CMS
 	public function end_cms()
 	{
 		$this->time_finish = Common::time_with_microseconds();
-		$totaltime = ($this->time_finish - $this->time_start) ;
+		$totaltime = ($this->time_finish - $this->time_start);
 		$phptime = $totaltime - Database::Singleton()->sql_time();
 		$sql_info = Database::Singleton()->sql_count();
 		$cache = persistantcache::Singleton()->type();
 		$percent = 0;
-		if($totaltime != 0 and $phptime != 0) { $percent = 100/$totaltime*$phptime; }
+		if($totaltime != 0 and $phptime != 0) { $percent = $phptime/$totaltime*100;}
 
 		$sql_string = $sql_info[0].' SQL Querys ('.round($sql_info[1]).'% Cached in '.$cache.')';
 
-		$runtime=('<div class="footer_text">Page generated in ' . Common::microtime_to_seconds($totaltime) . ' seconds<br /> ' . round($percent, 0) . '% php time and with ' .$sql_string.' using '.(memory_get_peak_usage(true) / (1024 * 1024)).' MB</div>');
+		$runtime=('<div class="footer_text">Page generated in ' . round($totaltime, 4) . ' seconds<br /> ' . round($percent, 0) . '% php time and with ' .$sql_string.' using '.(memory_get_peak_usage(true) / (1024 * 1024)).' MB</div>');
 
 		return ('<div id="page_section_footer">'.$runtime.'</div>');
 

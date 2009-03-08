@@ -8,6 +8,7 @@ class elementLogin extends elementDefault
 		$this->name = 'Login Box Element';
 		$this->image = 'login.png';
 		$this->image_edit = '';
+		$this->title = 'Login';
 	}
 	
 	protected function get_data()

@@ -90,16 +90,15 @@ class cookie
 
 	public function get_cookie_value($name)
 	{
+		$value = null;
 		if( (is_array($this->cookie_array)) and (is_string($name)) )
 		{
-			if(isset($this->cookie_array[$name]));
+			if(isset($this->cookie_array[$name]))
 			{
-				//return $this->cookie_array[$name];
 				$value = $this->cookie_array[$name];
-				return $value;
 			}
 		}
-		return NULL;
+		return $value;
 	}
 
 	private function key_value()

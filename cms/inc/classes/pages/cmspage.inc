@@ -48,13 +48,13 @@ class cmspage //This relies on CurentPage been loaded
 		{
 			die('500 Unable in include any content because type (' . $this->type . ') unknown  (' . $this->value.')');
 		}
-	}	
-	
+	}
+
 	public function id()
 	{
 		return $this->value;
 	}
-	
+
 	public function title()
 	{
 		return null;
@@ -92,7 +92,7 @@ class cmspage //This relies on CurentPage been loaded
 
 	protected function security_page_edit()
 	{
-		if(!Security::singleton()->can_page_element($this->value))
+		if(!Security::singleton()->can_edit_element($this->value))
 		{
 			error::do403();
 		}

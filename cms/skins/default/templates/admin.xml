@@ -129,7 +129,7 @@
 						<xsl:element name="div">
 
 							<xsl:element name="form">
-								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
+								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/editsave/<xsl:value-of select="/page/@id" /></xsl:attribute>
 								<xsl:attribute name="method">post</xsl:attribute>
 								<xsl:attribute name="id">new_<xsl:value-of select="/page/@id" /></xsl:attribute>
 								<p>Create New <xsl:call-template name="new_element" />

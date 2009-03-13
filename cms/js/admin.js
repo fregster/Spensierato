@@ -7,7 +7,7 @@ if (typeof revision != 'undefined')
 {
 url = ajax_host + "/ajax/rev/" + revision + "/";
 }else{
-url = ajax_host + "ajax/edit/";
+url = ajax_host + "/ajax/edit/";
 }
 ajaxGet(url,element_id);
 http.onreadystatechange=function(){

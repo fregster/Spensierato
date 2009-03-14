@@ -512,6 +512,7 @@ class Database
 
 		$i = 0;
 		$count_fields = count($fields);
+		$sql_temp_fields = '';
 		while($i <= ($count_fields - 1))
 		{
 			$sql_temp_fields = $sql_temp_fields . '`'.$this->sql_clean_input($fields[$i]) .'` ';
@@ -521,6 +522,7 @@ class Database
 
 		$i = 0;
 		$count_values = count($values);
+		$sql_temp_values = '';
 		while($i <= ($count_values - 1))
 		{
 			$sql_temp_values = $sql_temp_values . '"'.$this->sql_clean_input($values[$i]) .'" ';

@@ -6,7 +6,7 @@ class cmspage_editsave extends cmspage
 		$this->value = CMS::Singleton()->path_vars(1);
 		return true;
 	}
-	
+
 	public function run()
 	{
 		//Is this an update or createing a new element
@@ -23,7 +23,7 @@ class cmspage_editsave extends cmspage
 			if(post::variable('new_type') === 'newPage')
 			{
 				$this->security_page_approve();
-				$this->create_new_page($this->page_details['value']);
+				$this->create_new_page($this->value);
 			}
 			else
 			{
@@ -34,9 +34,9 @@ class cmspage_editsave extends cmspage
 		else
 		{
 			$this->security_element_edit();
-			
-			$element = Element::type($this->page_details['value']);
-			$element->build($this->page_details['value']);
+
+			$element = Element::type($this->value);
+			$element->build($this->value);
 			if($element->save(false))
 			{
 				//Save worked bounce to main page for element
@@ -47,9 +47,9 @@ class cmspage_editsave extends cmspage
 				//Save failed show error page
 			}
 		}
-		common::redirect($this->page_details['value']);
+		common::redirect($this->value);
 	}
-	
+
 	private function create_new_page($parent_id)
 	{
 		if($parent_id === '-1')

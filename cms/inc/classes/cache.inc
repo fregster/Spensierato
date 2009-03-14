@@ -132,9 +132,12 @@ abstract class Cache
 			}
 		}
 		
-		if ($gmdate_mod == $headers['If-Modified-Since']) 
+		if(isset($headers['If-Modified-Since']))
 		{
-			Cache::send_304();
+			if ($gmdate_mod == $headers['If-Modified-Since']) 
+			{
+				Cache::send_304();
+			}
 		}
 	}
 	

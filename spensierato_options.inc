@@ -121,7 +121,7 @@ Settings::Singleton()->new_setting('js_minify', 0, false, true);
 //This setting allows the javascript once built to be cached on the file system
 //The reduces the number of external scripts called, improves compression and reduces load on your server
 //The folder with in the CMS 'writable' or '/tmp/cms' needs to be writeable by the web server
-Settings::Singleton()->new_setting('js_cache', true, false, true);
+Settings::Singleton()->new_setting('js_cache', false, false, true);
 
 Settings::Singleton()->new_setting('css_minify', true, false, true);
 

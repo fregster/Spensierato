@@ -4,6 +4,7 @@ class cmspage_edit extends cmspage
 	public function initalise()
 	{
 		$this->value = CMS::Singleton()->path_vars(1);
+		$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->value));
 		return true;
 	}
 	

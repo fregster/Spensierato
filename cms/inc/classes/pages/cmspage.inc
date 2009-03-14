@@ -59,6 +59,11 @@ class cmspage //This relies on CurentPage been loaded
 	{
 		return null;
 	}
+	
+	public function page_information()
+	{
+		return $this->page_details;
+	}
 
 	/**
 	 * Standard security calls for ease

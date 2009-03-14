@@ -34,7 +34,7 @@ class Menu
 		//Get current page details
 		$this->current_page = cmspage::Singleton()->id();
 
-		$this->current_page_details = currentPage::Singleton()->page_information();
+		$this->current_page_details = cmspage::Singleton()->page_information();
 
 		//Get path to current page
 		$this->path = array_reverse($this->get_path());
@@ -50,9 +50,7 @@ class Menu
 		
 		//Get grandchildren of current page
 		
-		
 		//Build complete menu array
-		
 		
 		//Test if we are on a top page and so don't need parents and parallel links
 		$toppage = false;
@@ -71,16 +69,13 @@ class Menu
 			//pop the last parent off as it should be in the top array then reverse it
 			$menu_array['parents'] = array_reverse($this->parents);
 			
-			unset($menu_array['parents'][0]);
+//			unset($menu_array['parents'][0]); //NOTICE can't remember why this was in? is it still needed?
 			
 			$menu_array['parallel'] = $this->get_parallel_links();
 			$menu_array['current'] = $this->current_page_details;
-			
-			
-			
-
 		}
-		$menu_array['children']= $this->children;
+		
+		$menu_array['children'] = $this->children;
 		
 		$serializer_options = array ( 
 			   'addDecl' => FALSE, 
@@ -135,23 +130,23 @@ class Menu
 			$this->working_page_id = $this->current_page_details['parent_id'];
 		}
 		
-		$this_page_parent_details = $this->get_page_details($this->working_page_id);
+		$this->page_parent_details = $this->get_page_details($this->working_page_id);
 
 		//Do security check and do not push if failed
-		if(Security::Singleton()->can_view($this_page_parent_details['id']))
+		if(Security::Singleton()->can_view($this->page_parent_details['id']))
 		{
 			
-			if(in_array($this_page_parent_details['id'], $this->path))
+			if(in_array($this->page_parent_details['id'], $this->path))
 			{
-				$this_page_parent_details['selected'] = true;
+				$this->page_parent_details['selected'] = true;
 			}
 			
-			if($this_page_parent_details['parent_id'] != 0)
+			if($this->page_parent_details['parent_id'] != 0)
 			{	
-				array_push($this->parents, $this_page_parent_details);
+				$this->parents[] = $this->page_parent_details;
 			}
 			
-			$this->working_page_id = $this_page_parent_details['parent_id'];
+			$this->working_page_id = $this->page_parent_details['parent_id'];
 			
 			if($this->working_page_id != 0)
 			{

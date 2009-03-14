@@ -24,6 +24,6 @@
 * @link http://spensierato.fryer.org.uk/
 */
 
-
+error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 require_once('./spensierato_cms.inc');
 ?>

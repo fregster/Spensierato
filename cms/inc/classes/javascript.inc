@@ -126,6 +126,7 @@ abstract class javascript
 						header('X-Cache-JS: Quick');
 						Cache::headers_allow_cache($file);
 						$contents = javascript::getcontentscompressed(file_get_contents($file), $encoding);
+//						echo($file);die($contents);
 						javascript::sendcontent($type, $encoding, $contents);
 					}
 				}
@@ -148,9 +149,11 @@ abstract class javascript
 			$contents .= "\n\n" . file_get_contents($path);
 		}
 		//Clean contents
+//		die($contents);
 		$contents = javascript::clean($contents);
 
 		// Store cache
+		$cached = false;
 		if ($cache)
 		{
 			if ($fp = fopen($file, 'wb'))
@@ -193,9 +196,12 @@ abstract class javascript
 				}
 			}
 
-			if ($gmdate_mod == $headers['If-Modified-Since'])
+			if(isset($headers['If-None-Match']))
 			{
-				Cache::send_304();
+				if ($gmdate_mod == $headers['If-Modified-Since'])
+				{
+					Cache::send_304();
+				}
 			}
 
 		}
@@ -223,10 +229,10 @@ abstract class javascript
 			    break;
 
 			default:
-				$contents = $contents;
-
-			return($contents);
+				break;
 		}
+
+		return($contents);
 	}
 
 	private static function getcontentscompressed($contents, $encodeing)
@@ -253,7 +259,6 @@ abstract class javascript
 		header ('Content-Type: text/' . $type);
 		if ($encoding != 'none') { header ("Content-Encoding: " . $encoding); }
 		header ('Content-Length: ' . strlen($contents));
-
 		die($contents);
 	}
 }

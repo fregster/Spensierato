@@ -94,12 +94,12 @@ try
     	$document_root = substr($a, 0, strripos($a, '/'));
     	if($document_root == '')
     	{
-    		$proto = 'https://';
+    		$proto = 'http://';
     		if(isset($_SERVER['HTTPS']))
     		{
-	    		if( ($_SERVER['HTTPS'] == '') || ($_SERVER['HTTPS'] == 'off') )
+	    		if( ($_SERVER['HTTPS'] != '') && ($_SERVER['HTTPS'] != 'off') )
 	    		{
-	    			$proto = 'http://';
+	    			$proto = 'https://';
 	    		}
     		}
     		$document_root = $proto . $_SERVER['SERVER_NAME'];

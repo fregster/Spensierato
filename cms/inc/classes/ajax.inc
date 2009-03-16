@@ -14,9 +14,9 @@ class ajax
 				break;
 
 			case 'register':
-				if(Capthca::Code_check(post::variable('is_set','security_code')))
+				if(Capthca::Code_check(post::variable('security_code', 'is_set')))
 				{
-					register::username_check(post::variable('string','username'));
+					register::username_check(post::variable('username', 'string'));
 				}
 			break;
 

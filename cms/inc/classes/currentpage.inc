@@ -116,10 +116,7 @@ class currentPage
 					'tool'=>'tools',
 					'loading.html'=>'loading',
 					'video'=>'stream',
-					'js-combine' => 'javascript',
-					'tp' => 'edit_toggle_page',
-					'te' => 'edit_toggle_element',
-					'up'=> 'edit_update_page',
+					'js-combine' => 'javascript'
 				);
 
 				$this->page_type['type'] = strtolower(CMS::Singleton()->path_vars(0));

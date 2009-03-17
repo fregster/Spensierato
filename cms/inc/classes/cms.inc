@@ -807,6 +807,7 @@ class CMS
 //	}
 
 	//this function is obsolitted by the installation process
+	//delete on cleanup
 	private function settings_update()
 	{
 	/*	//Update folders to make them relative if required
@@ -827,6 +828,8 @@ class CMS
 		}*/
 	}
 
+	//this has been moved to cmspage_edit, and should not be required here anymore.
+	//delete on cleanup
 	private function saved($main)
 	{
 		die('

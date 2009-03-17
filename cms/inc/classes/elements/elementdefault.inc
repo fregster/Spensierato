@@ -423,18 +423,24 @@ class elementDefault
 					$type = 'draft';
 				}
 				else{
-					if (Security::Singleton()->can_do('approve')) {
-						//check if there is aproval data
-						$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_approve', array('id'), array($this->id));
-						if (!is_null($data)) {
-							//get text diff
+					//check if there is aproval data
+					$whereFields = array('element_id');
+					$whereVals = array($this->id);
+					//for non-approvers, only show their own changes
+					if (!Security::Singleton()->can_do('approve')) {
+						array_push($whereFields, 'user_id');
+						array_push($whereVals, user::singleton()->id());
+					}
+					$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_approve', $whereFields, $whereVals);
+					if (!is_null($data)) {
+						if (Security::Singleton()->can_do('approve')) {
+							//get text diff for approvers
 							$old = strip_tags($default_data['data']);
 							$new = strip_tags($data['data']);
 							$diff = diffCompare::get_diff($old, $new);
 							$data['data'] = diffCompare::format_diff($diff);
-
-							$final_data = array_merge($data, $general_info);
 						}
+						$final_data = array_merge($data, $general_info);
 					}
 				}
 			}

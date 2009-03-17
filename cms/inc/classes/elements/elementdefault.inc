@@ -481,9 +481,7 @@ class elementDefault
 						break;
 
 					case 'html':
-						//figure out why decode + strip is neceassary here.
-						//it shouldn't be and i think it breaks the text diff.
-						$data_content = Common::html(html_entity_decode(strip_tags($data['data'])));
+						$data_content = Common::html(html_entity_decode($data['data']));
 						break;
 
 					default:
@@ -510,7 +508,7 @@ class elementDefault
 
 	//seperated from arrange_data()
 	protected function check_pending_approval(){
-		$approvals = database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('id'), array($this->id));
+		$approvals = database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('element_id'), array($this->id));
 		if (!is_null($approvals) && security::Singleton()->can_do('approve')) {
 			$this->approve = true;
 		}

@@ -6,6 +6,7 @@ class elementDefault
 	protected $details;
 	protected $type;
 	protected $name;
+	protected $title;
 	protected $image;
 	protected $image_edit;
 	protected $edit_height;

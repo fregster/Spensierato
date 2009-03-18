@@ -136,12 +136,13 @@ class Menu
 		if(Security::Singleton()->can_view($this->page_parent_details['id']))
 		{
 			
-			if(in_array($this->page_parent_details['id'], $this->path))
+			if(isset($this->page_parent_details['id']) && in_array($this->page_parent_details['id'], $this->path))
 			{
 				$this->page_parent_details['selected'] = true;
 			}
 			
-			if($this->page_parent_details['parent_id'] != 0)
+			
+			if(isset($this->page_parent_details['parent_id']) && $this->page_parent_details['parent_id'] != 0)
 			{	
 				$this->parents[] = $this->page_parent_details;
 			}

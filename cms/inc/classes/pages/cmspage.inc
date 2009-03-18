@@ -7,6 +7,7 @@ class cmspage //This relies on CurentPage been loaded
 	protected $class;
 	protected $path_vars;
 	protected $path;
+	protected $page_details;
 
 	public static function Singleton()
 	{

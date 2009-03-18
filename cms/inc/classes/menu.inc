@@ -69,7 +69,7 @@ class Menu
 			//pop the last parent off as it should be in the top array then reverse it
 			$menu_array['parents'] = array_reverse($this->parents);
 			
-//			unset($menu_array['parents'][0]); //NOTICE can't remember why this was in? is it still needed?
+			unset($menu_array['parents'][0]);
 			
 			$menu_array['parallel'] = $this->get_parallel_links();
 			$menu_array['current'] = $this->current_page_details;

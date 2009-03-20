@@ -8,8 +8,9 @@ class elementRegister extends elementDefault
 		$this->name = 'Registration Box Element';
 		$this->image = 'login.png';
 		$this->image_edit = '';
+		$this->title = 'Register';
 	}
-	
+
 	protected function get_data()
 	{
 		$template = 'templates/register.html';

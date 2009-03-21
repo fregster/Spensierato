@@ -304,4 +304,9 @@ Settings::singleton()->new_setting('mod_rewrite', $GLOBALS['allow_rewrite'], fal
 //this determines the date format for the website.
 //use date()-compliant format directives
 Settings::singleton()->new_setting('date_format', 'd/m/Y', false, true);
+
+//setting server_os
+//this setting contains the server's os
+//used to toggle os specific finctionality (e.g. ffmpeg)
+Settings::singleton()->new_setting('server_os', $GLOBALS['server_os'], false, true);
 ?>

@@ -173,52 +173,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	//set the path for the settings file
 	$settings_file = $install_folder.'/../../spensierato_setup.inc';
 
-	$doc_root_prefix = $GLOBALS['site_root'].'/cms/';
-
-	//TODO tidy up
-	if(substr(post::variable('cms_folder_uploads'), 0, 1) != '/')
-	{
-		$uploads = $doc_root_prefix.post::variable('cms_folder_uploads');
+	//detect the server OS and set the doc root accordingly.
+	if(stripos(PHP_OS, 'win') !== FALSE){
+		$os = 'windows';
+		$doc_root_prefix = $GLOBALS['site_root'].'/cms/';
 	}
-	else
-	{
-		$uploads = post::variable('cms_folder_uploads');
-	}
-
-	if(substr(post::variable('cms_folder_downloads'), 0, 1) != '/')
-	{
-		$downloads = $doc_root_prefix.post::variable('cms_folder_downloads');
-	}
-	else
-	{
-		$downloads = post::variable('cms_folder_downloads');
-	}
-
-	if(substr(post::variable('cms_folder_orig_images'), 0, 1) != '/')
-	{
-		$images = $doc_root_prefix.post::variable('cms_folder_orig_images');
-	}
-	else
-	{
-		$images = post::variable('cms_folder_orig_images');
-	}
-
-	if(substr(post::variable('cms_folder_logs'), 0, 1) != '/')
-	{
-		$logs = $doc_root_prefix.post::variable('cms_folder_logs');
-	}
-	else
-	{
-		$logs = post::variable('cms_folder_logs');
-	}
-
-	if(substr(post::variable('cms_folder_cache'), 0, 1) != '/')
-	{
-		$cache = $doc_root_prefix.post::variable('cms_folder_cache');
-	}
-	else
-	{
-		$cache = post::variable('cms_folder_cache');
+	else{
+		$os = 'unix';
+		$doc_root_prefix = '';
 	}
 
 	/**
@@ -239,12 +201,13 @@ $GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\';
 $GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
 $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
 $GLOBALS[\'allow_rewrite\'] = '. $rewrite.';
-$GLOBALS[\'cms_folder_uploads\'] = \''. $uploads.'\';
-$GLOBALS[\'cms_folder_downloads\'] = \''.$downloads.'\';
-$GLOBALS[\'cms_folder_orig_images\'] = \''.$images.'\';
-$GLOBALS[\'cms_folder_logs\'] = \''.$logs.'\';
-$GLOBALS[\'cms_folder_cache\'] = \''.$cache.'\';
+$GLOBALS[\'cms_folder_uploads\'] = \''.$doc_root_prefix.post::variable('cms_folder_uploads').'\';
+$GLOBALS[\'cms_folder_downloads\'] = \''.$doc_root_prefix.post::variable('cms_folder_downloads').'\';
+$GLOBALS[\'cms_folder_orig_images\'] = \''.$doc_root_prefix.post::variable('cms_folder_orig_images').'\';
+$GLOBALS[\'cms_folder_logs\'] = \''.$doc_root_prefix.post::variable('cms_folder_logs').'\';
+$GLOBALS[\'cms_folder_cache\'] = \''.$doc_root_prefix.post::variable('cms_folder_cache').'\';
 $GLOBALS[\'random_key\'] = \''.post::variable('random_key').'\';
+$GLOBALS[\'server_os\'] = \''.$os.'\';
 ?>';
 
 	/**

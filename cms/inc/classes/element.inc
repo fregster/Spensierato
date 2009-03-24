@@ -14,7 +14,7 @@ abstract class Element
 		}
 		else
 		{
-			$c = elementDefault;
+			$c = 'elementDefault';
 		}
 
 		return new $c;

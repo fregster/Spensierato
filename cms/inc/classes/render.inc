@@ -121,8 +121,8 @@ class Render
 		/* If compression is requested and the level is numeric */
 		if(is_numeric(Settings::Singleton()->get_setting('output_compression_level')) and $this->acceptsGZIP() and Settings::Singleton()->get_setting('output_compression_level') > 0)
 		{
-			ob_start("ob_gzhandler");
-			ob_start("compress");
+//			ob_start("ob_gzhandler");
+//			ob_start("compress");
 			$contents = gzencode($content, Settings::Singleton()->get_setting('output_compression_level'));
 			header ('Content-Encoding: gzip');
 			header ('Content-Length: ' . strlen($contents));
@@ -137,8 +137,9 @@ class Render
 
 	public function send_css()
 	{
-		Cache::headers_allow_cache(Template::Singleton()->css_path());
+		Cache::headers_allow_cache(Template::Singleton()->css_path(), true);
 		$this->final_output(Template::Singleton()->send_css());
+		exit;
 	}
 
 	public function send_xslt()

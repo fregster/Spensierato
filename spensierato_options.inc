@@ -309,4 +309,8 @@ Settings::singleton()->new_setting('date_format', 'd/m/Y', false, true);
 //this setting contains the server's os
 //used to toggle os specific finctionality (e.g. ffmpeg)
 Settings::singleton()->new_setting('server_os', $GLOBALS['server_os'], false, true);
+
+//output_compression_level
+//Sets the GZip compression level set to 0 to disable
+Settings::singleton()->new_setting('output_compression_level', 9, false, true);
 ?>

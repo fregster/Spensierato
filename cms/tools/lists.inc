@@ -128,6 +128,7 @@ if ($lists) {
 						'to' => ($toDate?$toDate:''));
 }
 
+$nonMembersList = '';
 if ($users) {
 	$nonMembersList = array();
 	foreach ($users as $user){

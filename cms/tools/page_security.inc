@@ -237,6 +237,7 @@ array_push($htmlArray, '<input type="submit" name="savePerm" value="Save" />', '
 
 if (count($permissions['user']) || count($permissions['group']))
 	$htmlList = implode('', $htmlArray);
+else $htmlList = '';
 
 $userOptions = '';
 if ($users) {

@@ -14,6 +14,12 @@ if(class_exists('elementDownload'))
 			$this->image = 'disk';
 			$this->image_edit = '';
 		}
+		
+		protected function add_header()
+		{
+			$js = Settings::singleton()->get_setting('site_folder_js').'swfobject.js';
+			content::singleton()->add_custom_head('script', array('type' => 'text/javascript', 'src'=> $js));
+		}
 	}
 }
 ?>

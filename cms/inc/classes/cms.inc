@@ -870,7 +870,7 @@ class CMS
 		}
 		$update_interval = Settings::Singleton()->get_setting('update_version_check_schedule')*24*60*60;
 
-		if($pervious_update_check+$update_interval > time())
+		if(isset($pervious_update_check) && $pervious_update_check+$update_interval > time())
 		{
 
 			$update_log = fopen($update_log, 'w');

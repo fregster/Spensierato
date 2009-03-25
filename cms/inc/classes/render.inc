@@ -123,6 +123,11 @@ class Render
 		{
 //			ob_start("ob_gzhandler");
 //			ob_start("compress");
+			if(ob_get_length() != false) //If content has been pushed into the Output buffer add it to the contents to be gziped and clean the buffer
+			{
+				$content = ob_get_clean(). $content;
+				
+			}
 			$contents = gzencode($content, Settings::Singleton()->get_setting('output_compression_level'));
 			header ('Content-Encoding: gzip');
 			header ('Content-Length: ' . strlen($contents));

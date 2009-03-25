@@ -110,7 +110,7 @@
 
 			<xsl:if test="./data/filesize > 0">
 				<script type="text/javascript">
-					swfobject.embedSWF("<xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="./@id" />", "flashcontent", "50", "50", "9.0.0", "<xsl:value-of select="/page/settings/document_root" />/files/expressinstall.swf", false, {salign:"t"});
+					swfobject.embedSWF("<xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="./@id" />", "flashcontent", "100%", "100%", "9.0.0", "<xsl:value-of select="/page/settings/document_root" />/files/expressinstall.swf", false, {salign:"t"});
 				</script>
 
 				<div style="height: 500px; vertical-align: text-top;" id="flashcontent">You do not have Adobe Flash player installed.</div>

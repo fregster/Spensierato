@@ -305,6 +305,10 @@ class persistantcache_memcache extends persistantcache
 
 	public function get($name)
 	{
+		if($this->store == false)
+		{
+			return false;
+		}
 		$name = $this->build_key($name);
 		$result = $this->store->get($name);
 		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate'])  && $this->store != false)

@@ -255,7 +255,7 @@ class persistantcache
 
 class persistantcache_memcache extends persistantcache
 {
-	private $store; //Memcache object
+	private $store = false; //Memcache object
 	private $servers = array(array('host' => 'localhost', 'port'=>11211)); // enter an array for each of your memcache servers
 	private $maxsession_cache_time = 0; //0 sets to never expire
 
@@ -291,7 +291,7 @@ class persistantcache_memcache extends persistantcache
 	public function save($name, $value, $time = 0)
 	{
 		$data = $this->build_save($name, $value, $time);
-		if(strlen($data['data']['value']) < $this->max_object_size)
+		if(strlen($data['data']['value']) < $this->max_object_size && $this->store != false)
 		{
 			$result = $this->store->replace($data['name'], $data['data'], MEMCACHE_COMPRESSED, $data['data']['time']);
 			if( $result == false )
@@ -307,7 +307,7 @@ class persistantcache_memcache extends persistantcache
 	{
 		$name = $this->build_key($name);
 		$result = $this->store->get($name);
-		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate']))
+		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate'])  && $this->store != false)
 		{
 			return unserialize($this->decrypt($result['value']));
 		}
@@ -316,18 +316,30 @@ class persistantcache_memcache extends persistantcache
 
 	public function drop($name)
 	{
-		$name = $this->build_key($name);
-		$this->store->delete($name);
+		if($this->store != false)
+		{
+			$name = $this->build_key($name);
+			return $this->store->delete($name);
+		}
+		return false;
 	}
 
 	public function purge()
 	{
-		return $this->store->flush();
+		if($this->store != false)
+		{
+			return $this->store->flush();
+		}
+		return false;
 	}
 
 	public function version()
 	{
-		$this->store->getVersion();
+		if($this->store != false)
+		{
+			$this->store->getVersion();
+		}
+		return false;
 	}
 
 	/**

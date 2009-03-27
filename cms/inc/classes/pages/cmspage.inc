@@ -8,6 +8,7 @@ class cmspage //This relies on CurentPage been loaded
 	protected $path_vars;
 	protected $path;
 	protected $page_details;
+	protected $id = NULL;
 
 	public static function Singleton()
 	{
@@ -53,14 +54,17 @@ class cmspage //This relies on CurentPage been loaded
 
 	public function id()
 	{
-		return $this->value;
+		if (is_null($this->id)) {
+		 	return $this->value;
+		 }
+		return $this->id;
 	}
 
 	public function title()
 	{
 		return null;
 	}
-	
+
 	public function page_information()
 	{
 		return $this->page_details;

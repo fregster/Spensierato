@@ -6,6 +6,14 @@ class cmspage_edit extends cmspage
 		$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->value[1]));
 
 		$this->value = CMS::Singleton()->path_vars;
+
+		foreach ($this->value as $val){
+			if (is_numeric($val)) {
+				$this->id = $val;
+				break;
+			}
+		}
+
 		return true;
 	}
 

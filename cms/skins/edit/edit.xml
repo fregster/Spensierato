@@ -7,21 +7,33 @@
 			<xsl:attribute name="style">background: #FFFFFF;</xsl:attribute>
 			<div id="notifications" style="visibility: hidden;">Notifications</div>
 					<div id="page_edit">
-					<xsl:element name="form">
-						<xsl:attribute name="action"></xsl:attribute>
-						<xsl:attribute name="method">post</xsl:attribute>
-
-						<!-- test if we might upload a file and if so add the multipart attribute -->
-						<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
-
-						<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
-						<xsl:call-template name="edit_header"/>
-						<xsl:if test="//archive">
-							<xsl:call-template name="revision_rollback"/>
-						</xsl:if>
-						<xsl:apply-templates select="/page/body/element/data"/>
-						<xsl:call-template name="edit_footer"/>
-					</xsl:element>
+						<div id="page_edit_versions">
+							<div id="page_edit_approvals">
+								Submittions waiting approval
+							</div>
+							<xsl:if test="//archive">
+								<div id="page_edit_revisions">
+									<xsl:call-template name="revision_rollback"/>
+								</div>	
+							</xsl:if>
+						</div>
+						<div id="page_edit_toggle" class="jsShow" onclick="jsToggleDisplay('page_edit_versions'); return false;">
+							-
+						</div>
+						<div id="page_edit_form">
+							<xsl:element name="form">
+								<xsl:attribute name="action"></xsl:attribute>
+								<xsl:attribute name="method">post</xsl:attribute>
+		
+								<!-- test if we might upload a file and if so add the multipart attribute -->
+								<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+		
+								<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
+								<xsl:call-template name="edit_header"/>
+								<xsl:apply-templates select="/page/body/element/data"/>
+								<xsl:call-template name="edit_footer"/>
+							</xsl:element>
+						</div>
 					</div>
 			</xsl:element>
         </html>

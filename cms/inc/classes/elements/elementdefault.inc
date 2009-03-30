@@ -36,7 +36,7 @@ class elementDefault
 		$this->image = 'accept';
 		$this->image_edit = 'page_edit';
 		$this->edit_height = 400;
-		$this->edit_width = 700;
+		$this->edit_width = 725;
 
 		$this->add_header();
 	}

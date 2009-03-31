@@ -20,10 +20,10 @@
 									</p>
 								</xsl:if>
 							</div>
+							<div id="page_edit_toggle" class="jsShow" onclick="jsToggleDisplay('page_edit_versions'); return false;">
+								-
+							</div>
 						</xsl:if>
-						<div id="page_edit_toggle" class="jsShow" onclick="jsToggleDisplay('page_edit_versions'); return false;">
-							-
-						</div>
 						<div id="page_edit_form">
 							<xsl:element name="form">
 								<xsl:attribute name="action"></xsl:attribute>

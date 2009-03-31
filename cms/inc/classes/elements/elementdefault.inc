@@ -23,6 +23,7 @@ class elementDefault
 	protected $draft;
 	protected $approve;
 	protected $revision_history;
+	protected $approvals_list;
 
 	protected $error = 'There was an error comitting your save';
 
@@ -121,6 +122,14 @@ class elementDefault
 			$archive_data = $dom->createDocumentFragment();
 			$archive_data->appendXML($this->revision_history);
 			$this->element->appendChild($archive_data);
+		}
+
+		//attach the pending approvals data if exist
+		$this->get_pending_approval_list();
+		if ($this->approvals_list) {
+			$approvals_list = $dom->createDocumentFragment();
+			$approvals_list->appendXML($this->approvals_list);
+			$this->element->appendChild($approvals_list);
 		}
 
 		//Attach the element to the root dom
@@ -316,7 +325,7 @@ class elementDefault
 
 	protected function toggle_quickapprove(){
 		//TO FIX: currently this only approvs the most recent pending edit.
-		$approvalData = end(database::Singleton()->sql_select(array('user_id', 'ts', 'data', 'title'), 'tbl_elements_approve', array('element_id'), array($this->id)));
+		$approvalData = database::Singleton()->sql_select_first(array('user_id', 'ts', 'data', 'title'), 'tbl_elements_approve', array('element_id'), array($this->id), array('id'), array('DESC'));
 		$this->archive_data($approvealData['data']);
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'approved', 'approver'), array($approvalData['ts'], $approvalData['user_id'], time(), User::Singleton()->id()));
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title','search'), array($approvalData['data'], $approvalData['title'], $this->generate_search($approvalData['data'])));
@@ -432,7 +441,7 @@ class elementDefault
 						array_push($whereFields, 'user_id');
 						array_push($whereVals, user::singleton()->id());
 					}
-					$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_approve', $whereFields, $whereVals);
+					$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_approve', $whereFields, $whereVals, array('id'), array('DESC'));
 					if (!is_null($data)) {
 						if (Security::Singleton()->can_do('approve')) {
 							//get text diff for approvers
@@ -514,10 +523,35 @@ class elementDefault
 	}
 
 	//seperated from arrange_data()
-	protected function check_pending_approval(){
-		$approvals = database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('element_id'), array($this->id));
-		if (!is_null($approvals) && security::Singleton()->can_do('approve')) {
-			$this->approve = true;
+	protected function check_pending_approval($return_list = FALSE){
+		if ($return_list) {
+			$approvals = database::Singleton()->sql_select(array('id', 'ts', 'user_id'), 'tbl_elements_approve', array('element_id'), array($this->id));
+			return $approvals;
+		}
+		else{
+			$approvals = database::Singleton()->sql_select(array('id'), 'tbl_elements_approve', array('element_id'), array($this->id));
+			if (!is_null($approvals) && security::Singleton()->can_do('approve')) {
+				$this->approve = true;
+			}
+		}
+	}
+
+	protected function get_pending_approval_list(){
+		$approval_list = $this->check_pending_approval(TRUE);
+		if ($approval_list && options::singleton()->get_option('admin_mode')) {
+			$built_xml = '<pending_approvals>';
+			foreach ($approval_list as $pending_approval){
+				$built_xml .= '<approval>';
+				$built_xml .= '<id>'.$pending_approval['id'].'</id>';
+				$built_xml .= '<date>'.date(settings::singleton()->get_setting('date_format'), $pending_approval['ts']).'</date>';
+				if (settings::singleton()->get_setting('show_username_in_approvals')) {
+					$user = database::Singleton()->sql_select_first(array('username'), 'tbl_users', array('id'), array($pending_approval['user_id']));
+					$built_xml .= '<username>'.$user['username'].'</username>';
+				}
+				$built_xml .= '</approval>';
+			}
+			$built_xml .= '</pending_approvals>';
+			$this->approvals_list = $built_xml;
 		}
 	}
 

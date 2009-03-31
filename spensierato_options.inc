@@ -310,6 +310,11 @@ Settings::singleton()->new_setting('date_format', 'd/m/Y', false, true);
 //used to toggle os specific finctionality (e.g. ffmpeg)
 Settings::singleton()->new_setting('server_os', $GLOBALS['server_os'], false, true);
 
+//setting show_username_in_approvals
+//this determines whether to show the username in the pending approvals list in element editing
+Settings::singleton()->new_setting('show_username_in_approvals', true, false, true);
+
+
 //output_compression_level
 //Sets the GZip compression level set to 0 to disable
 Settings::singleton()->new_setting('output_compression_level', 9, false, true);

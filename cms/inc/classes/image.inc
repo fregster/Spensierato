@@ -66,13 +66,13 @@ class image
 					}
 					else
 					{	
-						$ratio = ($width > $height) ? $th_max_width/$image_attribs[0] : $th_max_height/$image_attribs[1];
+						$ratio = ($th_max_width > $th_max_height) ? $th_max_width/$image_attribs[0] : $th_max_height/$image_attribs[1];
 						$th_width = $image_attribs[0] * $ratio;
 						$th_height = $image_attribs[1] * $ratio;
 						
 						$im_new = imagecreatetruecolor($th_width,$th_height);
 						
-						if(function_exists(imageantialias)) { imageantialias($im_new,true); }
+						if(function_exists('imageantialias')) { imageantialias($im_new,true); }
 						imageCopyResampled($im_new,$uploadasjpeg,0,0,0,0,$th_width,$th_height, $image_attribs[0], $image_attribs[1]);
 	
 						//Copy the new image to the original file location with the quality

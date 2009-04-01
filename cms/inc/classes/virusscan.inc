@@ -8,7 +8,7 @@ class virusScan
 	{
 	   if (!isset(self::$instance)) {
 		   
-	   		if(class_exists(Settings::singleton()->get_setting['virus_scanner']))
+	   		if(class_exists('Settings') && isset(Settings::singleton()->get_setting['virus_scanner']))
 	   		{
 	   			$c = Settings::singleton()->get_setting['virus_scanner'];
 	   		}

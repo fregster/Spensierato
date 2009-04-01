@@ -83,3 +83,23 @@ dhtmlLoadScript(js_host+"/js/submodal/submodal.js");
 function adminInit(){
 dynamicjsloader();
 };
+
+function get_diff(name){
+	var approvals = document.getElementsByName(name);
+	var post_params = '';
+	for(i = 0; i < approvals.length; i++){
+		if (approvals[i].checked == true) {
+			post_params = post_params + 'approvals[]=' + approvals[i].value + '&';
+		}
+	}
+
+	ajaxPost(ajax_host+"/ajax/approvals/"+element_id, encodeURI(post_params));
+
+	http.onreadystatechange=function(){
+		if(http.readyState==4){
+			var ed=tinyMCE.get("content");
+			var diff=http.responseText;
+			ed.setContent(diff);
+		}
+	};
+}

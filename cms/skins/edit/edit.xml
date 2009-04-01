@@ -167,14 +167,16 @@
 	<xsl:for-each select="//pending_approvals/approval">
 		<xsl:element name="input">
 			<xsl:attribute name="type">checkbox</xsl:attribute>
-			<xsl:attribute name="name"><xsl:value-of select="id" /></xsl:attribute>
-			<xsl:attribute name="id"><xsl:value-of select="id" /></xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
+			<xsl:attribute name="name">approvals[]</xsl:attribute>
+			<xsl:attribute name="id">approval_<xsl:value-of select="id" /></xsl:attribute>
 			<xsl:if test="position() = last()">
 				<xsl:attribute name="checked">checked</xsl:attribute>
 			</xsl:if>
+			<xsl:attribute name="onchange">get_diff(this.name);</xsl:attribute>
 		</xsl:element>
 		<xsl:element name="label">
-			<xsl:attribute name="for"><xsl:value-of select="id" /></xsl:attribute>
+			<xsl:attribute name="for">approval_<xsl:value-of select="id" /></xsl:attribute>
 			<xsl:value-of select="date" />
 			<xsl:if test="username">
 				, by <xsl:value-of select="username" />

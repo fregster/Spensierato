@@ -151,8 +151,8 @@ class Render
 	{
 		$contents = Template::Singleton()->load();
 
-		$ETag = md5($contents);
-		$expires = gmdate('D, d M Y H:i:s', (CMS::time() + 36000)) . ' GMT';
+		$ETag = md5($contents); 
+		$expires = gmdate('D, d M Y H:i:s', (CMS::Singleton()->time() + 36000)) . ' GMT';
 		$lastmoded = gmdate('D, d M Y H:i:s', Template::Singleton()->lastmodified()) . ' GMT';
 
 		cache::headers_check_custom_etag($ETag, $lastmoded);

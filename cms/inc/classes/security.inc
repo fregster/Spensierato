@@ -21,7 +21,10 @@ class Security
 {
 	protected static $instance;
 	protected $levels;
-	private $security_cache_time = 60;
+	protected $block_first = true; //This is really if you want to extend the class and do allow then block as oposed to deny then explicit allow
+	protected $security_cache_time = 60; //In seconds
+	
+	private $block_checked;
 
 	public static function Singleton()
 	{
@@ -145,6 +148,7 @@ class Security
 	 */
 	public function can_do($what, $page_ids = NULL, $user_id = NULL)
 	{
+		$this->block_checked = false;
 		if(!$this->is_level($what)) { die('Security Exception'); }
 
 		if($user_id == NULL)
@@ -208,24 +212,27 @@ class Security
 		/**
 		 * Check for blocked first
 		 */
-//print_r($page_security_xml); die();
-		if(isset($security_array['blocked']['user'][0]))
+		if($this->block_first)
 		{
-			if (in_array($user_id, $security_array['blocked']['user']))
+			if(isset($security_array['blocked']['user'][0]))
 			{
-				return $this->save_cache($what, $page_ids, $user_id, false);
-			}
-		}
-
-		if(isset($lists[0]))
-		{
-			if(isset($security_array['blocked']['group'][0]))
-			{
-				if(count(array_intersect($lists, $security_array['blocked']['group'])) > 0)
+				if (in_array($user_id, $security_array['blocked']['user']))
 				{
 					return $this->save_cache($what, $page_ids, $user_id, false);
 				}
 			}
+	
+			if(isset($lists[0]))
+			{
+				if(isset($security_array['blocked']['group'][0]))
+				{
+					if(count(array_intersect($lists, $security_array['blocked']['group'])) > 0)
+					{
+						return $this->save_cache($what, $page_ids, $user_id, false);
+					}
+				}
+			}
+			$this->block_checked = true;
 		}
 
 		/**
@@ -256,6 +263,29 @@ class Security
 				return $this->save_cache($what, $page_ids, $user_id, true);
 			}
 		}
+		
+		if($this->block_checked == false) //Blocked has not been checked. Note: Is this needed as we return false below anyway?
+		{
+			if(isset($security_array['blocked']['user'][0]))
+			{
+				if (in_array($user_id, $security_array['blocked']['user']))
+				{
+					return $this->save_cache($what, $page_ids, $user_id, false);
+				}
+			}
+	
+			if(isset($lists[0]))
+			{
+				if(isset($security_array['blocked']['group'][0]))
+				{
+					if(count(array_intersect($lists, $security_array['blocked']['group'])) > 0)
+					{
+						return $this->save_cache($what, $page_ids, $user_id, false);
+					}
+				}
+			}
+		}
+		
 		return false;
 	}
 

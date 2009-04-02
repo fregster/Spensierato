@@ -5,44 +5,33 @@ class clamav extends virusScan
 	
 	function __construct()
 	{
-		parent::construct();
-		
 		if($this->use_deamon_version)
 		{
-			$command = 'clamdscan';
+			$this->command = 'clamdscan';
 		}
 		else
 		{
-			$command = 'clamscan';
+			$this->command = 'clamscan';
 		}
+		
+		$this->possible_av_locations = array('/usr/local/bin/', '/usr/bin/');
 		
 		if(Settings::singleton()->get_setting('virus_scanner_path') == false)
 		{
-			if(file_exists('/usr/local/bin/'.$command))
-			{
-				$this->command = '/usr/local/bin/'.$command;
-			}
-			else if(file_exists('/usr/bin/'.$command))
-			{
-				$this->command = '/usr/bin/'.$command;
-			}
-			else
-			{
-				//Socket not found try using basic command (Works on Debian and Ubuntu)
-				$this->command = $command;
-			}
+			$this->possible_av_locations[] = Settings::singleton()->get_setting('virus_scanner_path');
 		}
+		
+		array_reverse($this->possible_av_locations);
+		
+		parent::construct();
+		
+		//Fall back if file is not found by using just the command (Works on Debian and Ubuntu)
 		 $this->command .= ' --no-summary '; 
 	}
 
 	public function scan_file($file)
 	{
-		$av = true;
-		$output = array();
-		$command = $this->command.' '.$file;
-		
-		//Execute the command
-		exec($command, $output, $av);
+		$av = parent::scan_file($file);
 		
 		/*
 		 * clamav return codes

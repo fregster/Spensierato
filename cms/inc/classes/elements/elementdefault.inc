@@ -529,7 +529,7 @@ class elementDefault
 			return $approvals;
 		}
 		else{
-			$approvals = database::Singleton()->sql_select(array('id'), 'tbl_elements_approve', array('element_id'), array($this->id));
+			$approvals = database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('element_id'), array($this->id));
 			if (!is_null($approvals) && security::Singleton()->can_do('approve')) {
 				$this->approve = true;
 			}
@@ -540,13 +540,16 @@ class elementDefault
 		$approval_list = $this->check_pending_approval(TRUE);
 		if ($approval_list && options::singleton()->get_option('admin_mode')) {
 			$built_xml = '<pending_approvals>';
-			foreach ($approval_list as $pending_approval){
+			foreach ($approval_list as $key => $pending_approval){
 				$built_xml .= '<approval>';
 				$built_xml .= '<id>'.$pending_approval['id'].'</id>';
 				$built_xml .= '<date>'.date(settings::singleton()->get_setting('date_format'), $pending_approval['ts']).'</date>';
 				if (settings::singleton()->get_setting('show_username_in_approvals')) {
 					$user = database::Singleton()->sql_select_first(array('username'), 'tbl_users', array('id'), array($pending_approval['user_id']));
 					$built_xml .= '<username>'.$user['username'].'</username>';
+				}
+				if ($key === 0) {
+					$built_xml .= '<checked />';
 				}
 				$built_xml .= '</approval>';
 			}

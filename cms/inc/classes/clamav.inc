@@ -1,20 +1,17 @@
 <?php
-class clamav extends virusScan
+class clamav extends virusscan
 {
 	private $use_deamon_version = true;
+	private $command_minimal;
+	protected $command = 'clamscan'; //Default command overwriten in the construct if using the deamon version
+	protected $possible_av_locations = array('/usr/local/bin/', '/usr/bin/'); //FreeBSD and Debian default paths
 	
-	function __construct()
+	public function __construct()
 	{
 		if($this->use_deamon_version)
 		{
 			$this->command = 'clamdscan';
 		}
-		else
-		{
-			$this->command = 'clamscan';
-		}
-		
-		$this->possible_av_locations = array('/usr/local/bin/', '/usr/bin/'); //FreeBSD and Debian default paths
 		
 		if(Settings::singleton()->get_setting('virus_scanner_path') != false)
 		{
@@ -23,17 +20,17 @@ class clamav extends virusScan
 		
 		array_reverse($this->possible_av_locations);
 		
-		parent::construct();
+		parent::__construct();
 		
 		//Fall back if file is not found by using just the command (Works on Debian and Ubuntu)
 		$this->command_minimal = $this->command;
-		$this->command .= ' --no-summary '; 
+		$this->command .= ' --no-summary '; print_r($this);die();
 	}
 
 	public function scan_file($file)
 	{
 		$av = parent::scan_file($file);
-		
+
 		/*
 		 * clamav return codes
 		 * 0 : No virus found.

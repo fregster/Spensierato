@@ -1,5 +1,5 @@
 <?php
-class virusScan
+class virusscan
 {
 	protected static $instance;
 	protected $command;
@@ -25,7 +25,7 @@ class virusScan
 	   return self::$instance;
 	}
 	
-	protected function __construct()
+	function __construct()
 	{
 		foreach($this->possible_av_locations as $path)
 		{
@@ -52,7 +52,7 @@ class virusScan
 			$output = array();
 			
 			//Execute the command
-			exec(build_exec_command($file), $output, $av);
+			exec($this->build_exec_command($file), $output, $av);print_r($av); die();
 			return $av;
 		}
 		return false;

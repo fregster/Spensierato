@@ -16,7 +16,7 @@ class clamav extends virusScan
 		
 		$this->possible_av_locations = array('/usr/local/bin/', '/usr/bin/'); //FreeBSD and Debian default paths
 		
-		if(Settings::singleton()->get_setting('virus_scanner_path') == false)
+		if(Settings::singleton()->get_setting('virus_scanner_path') != false)
 		{
 			$this->possible_av_locations[] = Settings::singleton()->get_setting('virus_scanner_path');
 		}

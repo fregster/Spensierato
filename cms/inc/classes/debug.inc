@@ -41,9 +41,9 @@ class Debug
 
 	public function record($what, $details)
 	{
-		if($this->debug_level > 0)
+		if($this->debug_level > 0 or (get::variable('debug','is_set') and User::Singleton()->is_admin()))
 		{
-			$log = array(CMS::time(), $what, $details);
+			$log = array('time' => time(), 'name' => $what, 'data' => $details);
 			array_push($this->debug_log, $log);
 			$this->log_to_file($log);
 		}
@@ -51,30 +51,17 @@ class Debug
 
 	public function render()
 	{
-		$render  = false;
 
 		//Options that trigger debug rendering
-		if($this->debug_level >= 5)
+		if($this->debug_level >= 5 or (get::variable('debug','is_set') and User::Singleton()->is_admin()))
 		{
-			$render = true;
-		}
-
-		if(get::variable('is_set','debug') and User::Singleton()->is_admin())
-		{
-			$render = true;
-		}
-
-		if($render)
-		{
-			global $profile;
-			if(isset($profile[0])){ $this->record('Profile Trace', $profile); } // Add the autoloader profiler
-			return Common::array_to_xml_simple($this->debug_log, 'xml', 'item');
+			global $class_profile;
+			if(isset($class_profile[0])){ $this->record('Profile Trace', $class_profile); } // Add the autoloader profiler
+			return( Common::array_to_xml_simple($this->debug_log, 'xml', 'item'));
 			// TODO cookie::Singleton()->debug();
 		}
-		else
-		{
-			return '<xml />';
-		}
+		
+		return '<xml />';
 	}
 
 	private function log_to_file($details)

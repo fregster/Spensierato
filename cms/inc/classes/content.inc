@@ -121,10 +121,10 @@ class Content
 		$this->attach_head();
 		$this->attach_settings();
 		$this->attach_user();
-		$this->attach_debug();
 		$this->attach_security();
 		$this->attach_options();
-		$this->attach_warnings();
+		$this->attach_warnings(); //This should be the last but one
+		$this->attach_debug(); //This should be the last one
 		$this->build_xml();
 
 		return $this->dom->saveXML();

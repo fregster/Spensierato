@@ -17,12 +17,14 @@ $class_block_list = array(
 //'elementlink' => 1,
 );
 $include_path = dirname(__FILE__);
-$profile = array();
+$class_profile_use_true_memory = false;
+$class_profile = array(array('class' => 'inital code', 'mem_diff' => (memory_get_usage($class_profile_use_true_memory))));
 function __autoload($class_name)
 {
 	global $class_block_list;
 	global $include_path;
-	global $profile;
+	global $class_profile;
+	global $class_profile_use_true_memory;
 	$trace = false;
 
 	$class_name = strtolower($class_name);
@@ -40,7 +42,10 @@ function __autoload($class_name)
 		{
 			$class_name = substr($class_name, 8);
 		}
-		return require_once $path.$class_name.'.inc';
+		if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
+			require_once $path.$class_name.'.inc';
+		if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
+			return true;
 	}
 
 	if($class_name != '' and $class_name != null and !class_exists($class_name) and !isset($class_block_list[$class_name])) //Ensure we should be trying to load the class
@@ -48,20 +53,19 @@ function __autoload($class_name)
 		if($class_name == 'database') //Quick check for DB class as its outside the normal classes dir
 		{
 			//Database files
-			if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage(true); }
+			if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
 				require_once($include_path.'/cms/database/database.inc');
-			if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage(true) - $start_mem), 'load_time' => $mtime - $start_time); }
+			if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
 				return true;
 		}
 
 		foreach($paths as $path) //Cycle through the includes dir in order of preference
 		{
-//			echo($path.$class_name.'.inc<br/>');
 			if(file_exists($path.$class_name.'.inc')) //Check the file exists
 			{
-				if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage(true); }
+				if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
 					require_once $path.$class_name.'.inc';
-				if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage(true) - $start_mem), 'load_time' => $mtime - $start_time); }
+				if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
 					return true;
 			}
 		}

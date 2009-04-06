@@ -105,6 +105,7 @@ class currentPage
 			$this->page_type['type'] = 'html';
 			$this->page_type['value'] = NULL; //FIXME This is depreciated the cmspage should work it out
 			CMS::Singleton()->page_details = $this->page_type; //FIXME hack to fix looping
+
 			cmspage::Singleton()->initalise();
 		}
 		else

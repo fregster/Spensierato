@@ -14,7 +14,7 @@ class clamav extends virusScan
 			$this->command = 'clamscan';
 		}
 		
-		$this->possible_av_locations = array('/usr/local/bin/', '/usr/bin/');
+		$this->possible_av_locations = array('/usr/local/bin/', '/usr/bin/'); //FreeBSD and Debian default paths
 		
 		if(Settings::singleton()->get_setting('virus_scanner_path') == false)
 		{
@@ -26,7 +26,8 @@ class clamav extends virusScan
 		parent::construct();
 		
 		//Fall back if file is not found by using just the command (Works on Debian and Ubuntu)
-		 $this->command .= ' --no-summary '; 
+		$this->command_minimal = $this->command;
+		$this->command .= ' --no-summary '; 
 	}
 
 	public function scan_file($file)
@@ -49,7 +50,7 @@ class clamav extends virusScan
 			break;
 			
 			case 1:
-				return $output[sizeof($output) - 1];
+				return 'Virus Scan ClamAV'.$this->version().' found a virus';
 			break;
 			
 			case 2:
@@ -57,13 +58,21 @@ class clamav extends virusScan
 			break;
 			
 			case 127:
-				return 'Virus Scanner command not found';
+				return 'Virus Scanner not found';
 			break;
 			
 			default:
 				return 'Virus Scan Failed for an unknow reason error code: '.$av.' was retuned';
 			break;
 		}	
+	}
+	
+	public function version()
+	{
+		$version = null;
+		passthru($this->command_minimal.' --version', $version);
+		
+		return $version;
 	}
 }
 

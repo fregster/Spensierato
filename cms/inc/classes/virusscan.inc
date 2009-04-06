@@ -10,9 +10,9 @@ class virusScan
 	{
 	   if (!isset(self::$instance)) {
 		   
-	   		if(class_exists('Settings') && isset(Settings::singleton()->get_setting['virus_scanner']))
+	   		if(class_exists('Settings') && isset(Settings::singleton()->get_setting('virus_scanner')))
 	   		{
-	   			$c = Settings::singleton()->get_setting['virus_scanner'];
+	   			$c = Settings::singleton()->get_setting('virus_scanner');
 	   		}
 	   		else
 	   		{
@@ -80,6 +80,15 @@ class virusScan
 	protected function build_exec_command($file)
 	{
 		return $this->command.' '.$file;
+	}
+	
+	/**
+	 * Return the virusscan version
+	 * @return string of version
+	 */
+	public function version()
+	{
+		return '0';
 	}
 }
 ?>

@@ -124,13 +124,20 @@ class Template
 			Cache::headers_allow_cache($this->css_path(), true);
 			header ('Content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
 
+			$css = persistantcache::Singleton()->get('template_css');
+			if(!isset($css['mtime']) || $css['mtime'] != filemtime($this->css_path()))
+			{
+				$css = array('css' => file_get_contents($this->css_path()), 'mtime' => filemtime($this->css_path()));
+				persistantcache::Singleton()->save('template_css', $css);
+			}
+			
 			if(Settings::singleton()->get_setting('css_minify'))
 			{
-		    	return(Common::remove_extra_lines(Common::remove_css_comments(file_get_contents($this->css_path()))));
+		    	return(Common::remove_extra_lines(Common::remove_css_comments($css['css'])));
 			}
 			else
 			{
-				return(file_get_contents($this->css_path()));
+				return($css['css']);
 			}
 		}
 		error::do404();

@@ -151,7 +151,7 @@ class user
 			$password = common::generate_random_string(8);
 		}
 		
-		$hash = hash(Settings::Singleton()->get_setting('site_option_encryption'), $userid.$password);
+		$hash = hash(Settings::Singleton()->get_setting('site_option_encryption'), $this->userid.$password);
 		
 		//Save the password in the DB
 		$this->update_password($hash);

@@ -30,7 +30,7 @@ class cookie
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 
-	function __construct()
+	public function __construct()
 	{
 		if(function_exists('mcrypt_get_iv_size'))
 		{
@@ -55,7 +55,7 @@ class cookie
 		}
 	}
 
-	function __destruct()
+	public function __destruct()
 	{
 		$this->save();
 	}

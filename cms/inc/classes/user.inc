@@ -10,33 +10,33 @@ class user
 	protected $userid = 0;
 	private $lists;
 	private $user_details;
-	
+
 	public static function Singleton()
 	{
-	   if (!isset(self::$instance)) 
+	   if (!isset(self::$instance))
 	   {
 		   $c = __CLASS__;
 		   self::$instance = new $c;
 	   }
-	
+
 	   return self::$instance;
 	}
-	
+
 	public function __clone()
 	{
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
-	
+
 	function __construct()
 	{
 		if(isset($_SESSION['userid']))
 		{
 			$this->userid = $_SESSION['userid'];
 		}
-		
+
 		$this->set_user_details();
-		
-		//Check that default required values are set		
+
+		//Check that default required values are set
 		if(!isset($this->lists))
 		{
 			$this->lists = array(0 => 0);
@@ -45,19 +45,19 @@ class user
 
 	public function start()
 	{
-		
+
 	}
-	
+
 	public function id()
 	{
 		return $this->userid;
 	}
-	
+
 	public function lists()
 	{
 		return $this->lists;
 	}
-	
+
 	public function is_logged_in()
 	{
 		if($this->userid == 0)
@@ -66,20 +66,20 @@ class user
 		}
 		return true;
 	}
-	
+
 	public function create($username, $email, $password = NULL, $admin = false)
 	{
 		database::Singleton()->force_write_user();
 			$cols = array('username');
 			$data = array($username);
-			
+
 			if($admin)
 			{
 				array_push($cols, 'admin');
 				array_push($data, 1);
 			}
 			$this->userid = database::singleton()->sql_insert('tbl_users', $cols, $data);
-			
+
 			database::singleton()->sql_insert('tbl_users_data', array('data', 'user_id'), array('<email>'.$email.'</email>', $this->userid));
 			$this->set_user_details();
 			if($admin)
@@ -91,16 +91,16 @@ class user
 				$this->reset_password();
 			}
 		database::Singleton()->destroy_write_user();
-		
+
 		$this->do_login();
 		Common::redirect(1);
 	}
-	
+
 	public function login()
 	{
 		$auth = $this->site_auth();
-		
-		if($auth = true)
+
+		if($auth === true)
 		{
 			$this->do_login();
 		}
@@ -111,12 +111,12 @@ class user
 		}
 		Common::bounce_to_referer();
 	}
-	
+
 	public function update_user_session_id()
 	{
 		Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('session_id'), $values = array(session_id()));
 	}
-	
+
 	public function update_from_post()
 	{
 		$values = array('nickname' => post::variable('nickname'),
@@ -133,16 +133,16 @@ class user
 				$xml .= '<'.$key.'>'.common::html($value).'</'.$key.'>';
 			}
 		}
-		
+
 		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array($xml), true);
 		$this->set_user_details(true); //Reload the users details
 	}
-	
+
 	public function is_admin()
 	{
 		return $this->user_details['administrator'];
 	}
-	
+
 	private function create_password($password = NULL)
 	{
 		//Create a password
@@ -150,19 +150,19 @@ class user
 		{
 			$password = common::generate_random_string(8);
 		}
-		
+
 		$hash = hash(Settings::Singleton()->get_setting('site_option_encryption'), $this->userid.$password);
-		
+
 		//Save the password in the DB
 		$this->update_password($hash);
-		
+
 		return $password;
 	}
-	
+
 	public function reset_password()
 	{
 		$password = $this->create_password();
-		
+
 		//Email the password out
 		$message = 'Your password for your account on '. Settings::singleton()->get_setting('site_name_long').' has been reset<br />Your password is '.$password;
 		$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
@@ -170,7 +170,7 @@ class user
 
 		return common::email($this->email(), $from, $subject, $message, true);
 	}
-	
+
 	public function user_details_as_xml()
 	{
 		return Common::array_to_xml_simple($this->user_details, 'user', 'detail');
@@ -184,35 +184,35 @@ class user
 	{
 		return $this->user_details['username'].' <'.$this->user_details['email'].'>';
 	}
-	
+
 	private function set_user_details($force = false)
 	{
 		$user_data = Database::Singleton()->sql_select(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
-		
+
 		if(isset($user_data[0]))
 		{
 			foreach($user_data as $data)
 			{
 				$data = '<xml>'.$data['data'].'</xml>';
 				$xml = simplexml_load_string($data);
-	
+
 				foreach ($xml->children() as $child)
 				{
 					$this->user_details[$child->getName()] = strip_tags($child->saveXML());
 				}
 			}
 		}
-		
+
 		$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
-		
+
 		$this->user_details['id'] = $this->userid;
 		$this->user_details['username'] = $user_details2['username'];
 		$this->user_details['administrator'] = $user_details2['admin'];
-		
+
 		$this->lists = Lists::Singleton()->get_lists_for_user($this->userid);
 	}
-	
-	//Returns true on sucsess or false on fail
+
+	//Returns true on sucsess or error text on fail
 	private function site_auth()
 	{
 		$username = post::variable('username');
@@ -224,10 +224,10 @@ class user
 			return 'Security Code was incorect';
 			warnings::singleton()->register('Security Code was incorect');
 		}
-		
+
 		//Make username case insensative by forcing lowercase
 		$username = strtolower($username);
-		
+
 		//Get hash type for posted username
 		$hash_type_db = Database::Singleton()->sql_select_first(array('hash_type', 'id'), 'tbl_users', array('username'), array($username));
 		//Check hash type if count ! 1 then the username is not set
@@ -270,12 +270,12 @@ class user
 			return 'Username and password do not match';
 		}
 	}
-	
+
 	private function update_password($hash)
 	{
 		return Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('password', 'hash_type'), array($hash, Settings::Singleton()->get_setting('site_option_encryption')));
 	}
-	
+
 	protected function do_login()
 	{
 		if(post::variable('login_rememberme') == 'true')
@@ -290,24 +290,24 @@ class user
 		{
 			cookie::Singleton()->remove_cookie('login_rememberme');
 		}
-		
+
 		Database::Singleton()->force_write_user();
-		
+
 		//Regenerate the session ID
 		CMS::Singleton()->regenerate_session();
-		
+
 		$_SESSION['userid'] = $this->userid;
 		$this->set_user_details();
 
 		//Update last login time
 		Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('last_login'), $values = array(time()));
-		
+
 		//Load the previous option state
 		options::Singleton()->load_saved_options();
 		options::Singleton()->set_option('force_reload', true);
-		
+
 		Database::Singleton()->destroy_write_user();
 	}
-	
+
 }
 ?>

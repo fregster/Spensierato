@@ -2,11 +2,12 @@ function jsSecureLogin() {
 	var username = document.forms.login.elements.username.value;
 	var password = document.forms.login.elements.password.value;
 	var code = document.forms.login.elements.security_code.value;
-	var hash = SHA256(SHA256(password)+code);	
-	
-	ajaxPost(ajax_host+'/ajax/login?', 'username='+username+'&key='+hash);
+	var hash = SHA256(SHA256(password)+code);
+	var login_rememberme = document.forms.login.elements.login_rememberme.value;
+
+	ajaxPost(ajax_host+'/ajax/login?', 'username='+username+'&key='+hash+'&login_rememberme='+login_rememberme);
     document.forms.searchform.elements.searchtext.value = '';
-       
+
     http.onreadystatechange=function()
    	{
        	if(http.readyState==4)
@@ -21,7 +22,7 @@ function jsSecureLogin() {
 			}
 		}
 	};
-	
+
 };
 
 /**

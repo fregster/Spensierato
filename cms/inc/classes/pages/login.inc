@@ -6,7 +6,7 @@ class cmspage_login extends cmspage_html
 		$this->value = CMS::Singleton()->path_vars(1);
 		return parent::initalise();
 	}
-	
+
 	public function run()
 	{
 //		print_r($this); die();
@@ -14,7 +14,7 @@ class cmspage_login extends cmspage_html
 
 		//Check cookies are enabled first
 		Common::cookie_check();
-		if($_SERVER['REQUEST_METHOD'] == 'GET'and !get::variable('is_set','username'))
+		if($_SERVER['REQUEST_METHOD'] == 'GET' and !get::variable('username', 'is_set'))
 		{
 			//If not loged in load box else redirect to $this->page_details['value']
 			if(User::Singleton()->is_logged_in())
@@ -30,7 +30,7 @@ class cmspage_login extends cmspage_html
 			}
 		}
 		else
-		{
+		{die(var_dump($_POST));
 			//Do login function
 			User::Singleton()->login();
 			Common::redirect($this->value);

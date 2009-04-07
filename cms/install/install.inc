@@ -221,7 +221,7 @@ $GLOBALS[\'server_os\'] = \''.$os.'\';
 	else
 		debug('Settings file created');
 
-	debug('The site is now setup<br />You can log in with the user admin and the password '.$password.'<br/>Click <a href="'.$GLOBALS['document_root'].'">here</a> to login');
+	debug('The site is now setup<br/><strong>Note: If you manual set the install directive you will need to remove it now!</strong><br />You can log in with the user admin and the password '.$password.'<br/>Click <a href="'.$GLOBALS['document_root'].'">here</a> to login');
 }
 
 function debug($text)

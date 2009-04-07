@@ -181,18 +181,6 @@ Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['document_
 //true / false
 Settings::Singleton()->new_setting('uploads_enabled', true);
 
-//Temporay uploads folder
-Settings::Singleton()->new_setting('cms_folder_uploads', $GLOBALS['cms_folder_uploads'], false, true);
-
-//Permanant uploads folder
-Settings::Singleton()->new_setting('cms_folder_downloads', $GLOBALS['cms_folder_downloads'], false, true);
-
-//Unscaled images
-Settings::Singleton()->new_setting('cms_folder_orig_images', $GLOBALS['cms_folder_orig_images'], false, true);
-
-//Log files
-Settings::Singleton()->new_setting('cms_folder_logs', $GLOBALS['cms_folder_logs'], false, true);
-
 //download_rate
 //Maximum file download rate in kb/s
 Settings::Singleton()->new_setting('download_rate', NULL, false, true);
@@ -266,9 +254,6 @@ Settings::Singleton()->new_setting('google_ad_height', 150);
 //Enable the mobile CSS, this overwrites css styles with non positional css
 Settings::Singleton()->new_setting('css_mobile', true);
 
-//Load the random key into the settings singleton
-Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key'], true, true);
-
 //Setting update_version_check
 //To enable auto version checking set this value to the update server
 //If the log dir is not writeable auto update checking will be disabled
@@ -296,19 +281,10 @@ Settings::singleton()->new_setting('memcached_session', false, false, true);
 Settings::singleton()->new_setting('virus_scanner', 'clamav', false, true);
 //Settings::singleton()->new_setting('virus_scanner_path', '/path/to/custom/scanner/install/', false, true);
 
-//Setting mod_rewrite
-//Use mod_rewrite to clean the URL's
-Settings::singleton()->new_setting('mod_rewrite', $GLOBALS['allow_rewrite'], false, true);
-
 //setting date_format
 //this determines the date format for the website.
 //use date()-compliant format directives
 Settings::singleton()->new_setting('date_format', 'd/m/Y', false, true);
-
-//setting server_os
-//this setting contains the server's os
-//used to toggle os specific finctionality (e.g. ffmpeg)
-Settings::singleton()->new_setting('server_os', $GLOBALS['server_os'], false, true);
 
 //setting show_username_in_approvals
 //this determines whether to show the username in the pending approvals list in element editing
@@ -318,4 +294,31 @@ Settings::singleton()->new_setting('show_username_in_approvals', true, false, tr
 //output_compression_level
 //Sets the GZip compression level set to 0 to disable
 Settings::singleton()->new_setting('output_compression_level', 9, false, true);
+
+if(!$install) //Settings that require the install to have been completed
+{
+	//Temporay uploads folder
+	Settings::Singleton()->new_setting('cms_folder_uploads', $GLOBALS['cms_folder_uploads'], false, true);
+	
+	//Permanant uploads folder
+	Settings::Singleton()->new_setting('cms_folder_downloads', $GLOBALS['cms_folder_downloads'], false, true);
+	
+	//Unscaled images
+	Settings::Singleton()->new_setting('cms_folder_orig_images', $GLOBALS['cms_folder_orig_images'], false, true);
+	
+	//Log files
+	Settings::Singleton()->new_setting('cms_folder_logs', $GLOBALS['cms_folder_logs'], false, true);
+	
+	//Load the random key into the settings singleton
+	Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key'], true, true);
+	
+	//Setting mod_rewrite
+	//Use mod_rewrite to clean the URL's
+	Settings::singleton()->new_setting('mod_rewrite', $GLOBALS['allow_rewrite'], false, true);
+
+	//setting server_os
+	//this setting contains the server's os
+	//used to toggle os specific finctionality (e.g. ffmpeg)
+	Settings::singleton()->new_setting('server_os', $GLOBALS['server_os'], false, true);
+}
 ?>

@@ -5,12 +5,13 @@ class virusscan
 	protected $command;
 	protected $possible_av_locations = array();
 	protected $enabled = false;
-	
+
 	public static function singleton()
 	{
 	   if (!isset(self::$instance)) {
-		   
-	   		if(class_exists('Settings') && isset(Settings::singleton()->get_setting('virus_scanner')))
+
+
+	   		if(class_exists('Settings') && Settings::singleton()->get_setting('virus_scanner'))
 	   		{
 	   			$c = Settings::singleton()->get_setting('virus_scanner');
 	   		}
@@ -18,13 +19,13 @@ class virusscan
 	   		{
 	   			$c = __CLASS__;
 	   		}
-	   				   
+
 		   self::$instance = new $c;
 	   }
-	
+
 	   return self::$instance;
 	}
-	
+
 	function __construct()
 	{
 		foreach($this->possible_av_locations as $path)
@@ -37,12 +38,12 @@ class virusscan
 			}
 		}
 	}
-	
+
 	/**
 	 * Default file virus scan method
 	 *
 	 * @param path to $file
-	 * @return false if no virus found or a string if found. returns false on fail 
+	 * @return false if no virus found or a string if found. returns false on fail
 	 */
 	public function scan_file($file)
 	{
@@ -50,14 +51,14 @@ class virusscan
 		{
 			$av = true;
 			$output = array();
-			
+
 			//Execute the command
-			exec($this->build_exec_command($file), $output, $av);print_r($av); die();
+			exec($this->build_exec_command($file), $output, $av);//print_r($av); die();
 			return $av;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This is just a proxy method to scan_file to return true or false to make if statments easy
 	 *
@@ -71,7 +72,7 @@ class virusscan
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This builds the cli exe command to scan a file
 	 * @param $file
@@ -81,7 +82,7 @@ class virusscan
 	{
 		return $this->command.' '.$file;
 	}
-	
+
 	/**
 	 * Return the virusscan version
 	 * @return string of version

@@ -161,10 +161,10 @@ class Template
 	private function load_xslt_template()
 	{
 		$path = $this->default_path .'/templates/*.xml';
-		$xslt = '';
 		$files = array();
+		$list_of_files = glob($path);
 
-		foreach (glob($path) as $filepath)
+		foreach ($list_of_files as $filepath)
 		{
 			$filename = basename($filepath);
 			if(file_exists($this->template_path .'/templates/'.$filename))
@@ -173,21 +173,40 @@ class Template
 
 			}
 			$files[$filepath] = true;
-			$xslt .= file_get_contents($filepath);
 			$this->lastmodified = max($this->lastmodified, filemtime($filepath));
 		}
 
-		if($this->default_path != $this->template_path)
+		if($this->default_path != $this->template_path && (Settings::Singleton()->get_setting('template_dont_extend_default') == false))
 		{
-			foreach (glob($this->template_path.'/templates/*.xml') as $filepath)
+			$list_of_files = glob($this->template_path.'/templates/*.xml');
+			foreach ($list_of_files as $filepath)
 			{
 				if(!isset($files[$filepath]))
 				{
-					$xslt .= file_get_contents($filepath);
+					$files[$filepath] = true;
 					$this->lastmodified = max($this->lastmodified, filemtime($filepath));
 				}
 			}
 		}
+		unset($list_of_files);
+		
+		$xslt = persistantcache::Singleton()->get('template_xslt');
+		
+		if(!isset($xslt['mtime']) || $xslt['mtime'] != $this->lastmodified)
+		{
+			$xslt = ''; //drop the array
+			foreach($files as $key => $value)
+			{
+				$xslt .= file_get_contents($key);
+			}
+		}
+		else
+		{
+			$xslt = $xslt['xslt']; //Overwrite the array
+		}
+		
+		persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified));
+		
 		return $xslt;
 	}
 

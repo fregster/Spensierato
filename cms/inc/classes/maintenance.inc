@@ -8,7 +8,7 @@ abstract class maintenance
 	/**
 	 * Proxy to db maintance
 	 */
-	static public function db_optimize()
+	public static function db_optimize()
 	{
 		database_maintenance::Singleton()->optimize();
 	}

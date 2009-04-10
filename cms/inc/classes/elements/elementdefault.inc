@@ -30,7 +30,7 @@ class elementDefault
 	private $tags = array('title' => 'text');
 	private $element;
 
-	function __construct()
+	public function __construct()
 	{
 		$this->type = __CLASS__;
 		$this->name = 'Default Element';

@@ -5,7 +5,7 @@
 require_once('variables.inc');
 class post extends variables
 {
-	public function variable($input, $type = NULL)
+	public static function variable($input, $type = NULL)
 	{
 		if (isset($_POST[$input])) {
 			return parent::variable($_POST[$input], $type);

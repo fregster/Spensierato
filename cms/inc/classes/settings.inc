@@ -4,7 +4,7 @@ class Settings
 	private $settings = array();
 	private $db_loaded = false;
 
-	protected static $instance;
+	private static $instance;
 
 	public static function singleton()
 	{
@@ -17,7 +17,7 @@ class Settings
 	   return self::$instance;
 	}
 
-	private function __construct()
+	protected function __construct()
 	{
 		//Force some default settings
 		$document_root = Common::document_root();

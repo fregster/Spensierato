@@ -30,7 +30,7 @@ class cookie
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 
-	public function __construct()
+	protected function __construct()
 	{
 		if(function_exists('mcrypt_get_iv_size'))
 		{
@@ -127,7 +127,7 @@ class cookie
 			$cookie_information_new = serialize(array('salt' => $this->salt(), 'data' => $data));
 
 			// save the cookie array
-			setcookie($this->cookie_name, $cookie_information_new, time()+$this->cookie_life , Settings::Singleton()->get_setting('document_root'), $_SERVER['SERVER_NAME'], NULL, TRUE);
+			setcookie($this->cookie_name, $cookie_information_new, time()+$this->cookie_life , Settings::Singleton()->get_setting('document_root'), FALSE, FALSE, TRUE);
 		}
 	}
 

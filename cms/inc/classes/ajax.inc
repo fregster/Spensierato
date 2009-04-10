@@ -1,5 +1,5 @@
 <?php
-class ajax
+abstract class ajax
 {
 	public static function process($vars)
 	{
@@ -35,7 +35,7 @@ class ajax
 		}
 	}
 
-	private function approvals($element_id){
+	private static function approvals($element_id){
 		$element_id = str_replace('e_', '', $element_id);
 		$element_data = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($element_id));
 		$data = $element_data['data'];
@@ -45,12 +45,13 @@ class ajax
 				$approval = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_approve', array('id'), array($approval_id));
 				$diff = new diffCompare($data, $approval['data']);
 				$data = $diff->render();
+				unset($diff);
 			}
 		}
 		echo html_entity_decode($data);
 	}
 
-	private function edit($id)
+	private static function edit($id)
 	{
 		//remove the e_ from form inputs
 		$id = str_replace('e_', '', $id);
@@ -65,21 +66,21 @@ class ajax
 		}
 	}
 
-	private function edit_post($id)
+	private static function edit_post($id)
 	{
 		$element = Element::type($id);
 		$element->build($id);
 		return $element->save(true);
 	}
 
-	private function edit_load($id, $data = NULL)
+	private static function edit_load($id, $data = NULL)
 	{
 		$element = Element::type($id);
 		$element->build($id, $data);
 		return $element->ajax_edit();
 	}
 
-	private function revision($rev_id, $element_id){
+	private static function revision($rev_id, $element_id){
 		$element_id = str_replace('e_', '', $element_id);
 		$element_revs = database::singleton()->sql_select_first(array('data'), 'tbl_elements_data_archive', array('element_id'), array($element_id));
 		$revision_data = $element_revs[($rev_id - 1)]['data'];

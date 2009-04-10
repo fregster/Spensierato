@@ -19,11 +19,11 @@
  */
 class Security
 {
-	protected static $instance;
+	private static $instance;
 	protected $levels;
 	protected $block_first = true; //This is really if you want to extend the class and do allow then block as oposed to deny then explicit allow
 	protected $security_cache_time = 60; //In seconds
-	
+
 	private $block_checked;
 
 	public static function Singleton()
@@ -45,7 +45,7 @@ class Security
 	   return self::$instance;
 	}
 
-	function __construct()
+	protected function __construct()
 	{
 		$this->levels = array('block', 'view', 'edit', 'approve');
 	}
@@ -221,7 +221,7 @@ class Security
 					return $this->save_cache($what, $page_ids, $user_id, false);
 				}
 			}
-	
+
 			if(isset($lists[0]))
 			{
 				if(isset($security_array['blocked']['group'][0]))
@@ -263,7 +263,7 @@ class Security
 				return $this->save_cache($what, $page_ids, $user_id, true);
 			}
 		}
-		
+
 		if($this->block_checked == false) //Blocked has not been checked. Note: Is this needed as we return false below anyway?
 		{
 			if(isset($security_array['blocked']['user'][0]))
@@ -273,7 +273,7 @@ class Security
 					return $this->save_cache($what, $page_ids, $user_id, false);
 				}
 			}
-	
+
 			if(isset($lists[0]))
 			{
 				if(isset($security_array['blocked']['group'][0]))
@@ -285,7 +285,7 @@ class Security
 				}
 			}
 		}
-		
+
 		return false;
 	}
 

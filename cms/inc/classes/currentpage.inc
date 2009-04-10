@@ -24,7 +24,7 @@ class currentPage
 	   return self::$instance;
 	}
 
-	function __construct()
+	protected function __construct()
 	{
 		//Work out what the current page is
 		$this->check_page();
@@ -34,7 +34,7 @@ class currentPage
 		//Get current page details
 		$this->get_page_details();
 
-		if(get::variable('int','xml') == 2 or Settings::singleton()->get_setting('send_as_xml') == true)
+		if(get::variable('xml', 'int') == 2 || Settings::singleton()->get_setting('send_as_xml') == true)
 		{
 			$this->xslt = true;
 		}

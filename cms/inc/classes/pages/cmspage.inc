@@ -26,7 +26,7 @@ class cmspage //This relies on CurentPage been loaded
 	   return self::$instance;
 	}
 
-	function __construct()
+	protected function __construct()
 	{
 		$this->type = CMS::Singleton()->page_details['type'];
 		$this->class = 'cmspage_'.$this->type; //The class name expected

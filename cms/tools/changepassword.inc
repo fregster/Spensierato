@@ -59,7 +59,8 @@ $posted = $postVars->variable('savePass');
 if (!$posted) {
 
 	//if an error code was set
-	if (isset(CMS::Singleton()->path_vars(2))) {
+	$error = CMS::Singleton()->path_vars(2);
+	if (isset($error)) {
 
 		//start the error code msg text
 		$error = '<div>ERROR: ';

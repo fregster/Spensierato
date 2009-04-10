@@ -16,7 +16,7 @@ class Render
 	   return self::$instance;
 	}
 
-	function __construct()
+	protected function __construct()
 	{
 		if(isset($_SESSION['render_admin']))
 		{
@@ -126,7 +126,7 @@ class Render
 			if(ob_get_length() != false) //If content has been pushed into the Output buffer add it to the contents to be gziped and clean the buffer
 			{
 				$content = ob_get_clean(). $content;
-				
+
 			}
 			$contents = gzencode($content, Settings::Singleton()->get_setting('output_compression_level'));
 			header ('Content-Encoding: gzip');
@@ -151,7 +151,7 @@ class Render
 	{
 		$contents = Template::Singleton()->load();
 
-		$ETag = md5($contents); 
+		$ETag = md5($contents);
 		$expires = gmdate('D, d M Y H:i:s', (CMS::Singleton()->time() + 36000)) . ' GMT';
 		$lastmoded = gmdate('D, d M Y H:i:s', Template::Singleton()->lastmodified()) . ' GMT';
 

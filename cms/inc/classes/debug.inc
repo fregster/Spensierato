@@ -23,7 +23,7 @@ class Debug
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 
-	function __construct()
+	protected function __construct()
 	{
 		if(Settings::Singleton()->get_setting('debug') > 0)
 		{
@@ -60,7 +60,7 @@ class Debug
 			return( Common::array_to_xml_simple($this->debug_log, 'xml', 'item'));
 			// TODO cookie::Singleton()->debug();
 		}
-		
+
 		return '<xml />';
 	}
 

@@ -58,7 +58,7 @@ class Database
 	 *
 	 * @param unknown_type $dsn
 	 */
-	public function __construct()
+	protected function __construct()
 	{
 		$this->time = time();
 		$this->microtime = microtime();
@@ -611,7 +611,7 @@ class Database
 		$this->sql_select_into($fields, $values, $from, $to, $where, $extra_insert);
 		$this->sql_delete_where($from, $fields, $values);
 	}
-	
+
 	public function sql_search($table, $col, $query, $select = NULL, $boolean = false, $where_fields = array(), $where_values = array(), $from = 0 , $to = 100, $order = 'DESC', $score = 10)
 	{
 		$boolean = '';
@@ -621,22 +621,22 @@ class Database
 		{
 			$where = ' AND '.$where;
 		}
-		
+
 		if($boolean != false)
 		{
 			$boolean = ' IN BOOLEAN MODE';
 		}
-		
+
 		if($order != 'DESC')
 		{
 			$order = 'ASC';
 		}
-		
+
 		if(!is_numeric($score))
 		{
 			$score = 10;
 		}
-				
+
 		$sql = 'SELECT '.$this->sql_build_select_string($select).', (MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.") * 10) AS score FROM `".$this->prefix. $this->sql_clean_input($table).'` WHERE ( MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.') '.$where.' ) ORDER BY score '.$order.' LIMIT '.$from.', '.$to;
 		$result = $this->sql_exe($sql, NULL);
 		return $result;
@@ -657,7 +657,7 @@ class Database
 		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 		return $result[0]['count(*)'];
 	}
-	
+
 	private function sql_build_select_string($fields)
 	{
 		if($fields == NULL)
@@ -695,7 +695,7 @@ class Database
 			return ' WHERE ('.$part.')';
 		}
 	}
-	
+
 	private function sql_build_where_string_part($where_fields, $where_values)
 	{
 		//Include Where clause into sql if set

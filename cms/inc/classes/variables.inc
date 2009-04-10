@@ -4,8 +4,8 @@
  */
 abstract class variables
 {
-	public function variable($input, $type = NULL)
-	{	
+	public static function variable($input, $type = NULL)
+	{
 		if($input == NULL or $input == '')
 		{
 			return false;
@@ -18,65 +18,65 @@ abstract class variables
 
 		return variables::default_string($input);
 	}
-	
-	protected function default_string($input)
+
+	protected static function default_string($input)
 	{
 		$remove = array('<', '>', '"', "'");
 
 		return(str_replace($remove, '', $input));
 	}
-	
-	protected function html($input)
+
+	protected static function html($input)
 	{
 		return Common::html($html);
 	}
-	
-	protected function string($input)
+
+	protected static function string($input)
 	{
 		if(is_string($input))
 		{
 			return $input;
 		}
-		
+
 		return false;
 	}
-	
-	protected function sql($input)
+
+	protected static function sql($input)
 	{
 		return Common::sql_clean($input);
 	}
-	
-	protected function numeric($input)
+
+	protected static function numeric($input)
 	{
 		if(is_numeric($input))
 		{
 			return $input;
 		}
-		
+
 		return false;
 	}
-	
-	protected function int($input)
+
+	protected static function int($input)
 	{
 		if(is_int($input))
 		{
 			return $input;
 		}
-		
+
 		return false;
 	}
-	
-	protected function is_array($input)
+
+	protected static function is_array($input)
 	{
 		if(isset($input[0]))
 		{
 			return $input;
 		}
-		
+
 		return false;
 	}
-	
-	protected function is_set($input)
+
+	protected static function is_set($input)
 	{
 		print_r($input);
 		die();
@@ -84,9 +84,9 @@ abstract class variables
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 }
 ?>

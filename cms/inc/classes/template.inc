@@ -1,7 +1,7 @@
 <?php
 class Template
 {
-	protected static $instance;
+	private static $instance;
 
 	private $template_path;
 	private $preload = array();
@@ -23,7 +23,7 @@ class Template
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 
-	function __construct()
+	protected function __construct()
 	{
 		$this->template_path = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin');
 		$this->default_path = Settings::Singleton()->get_setting('cms_root').'/skins/default';
@@ -130,7 +130,7 @@ class Template
 				$css = array('css' => file_get_contents($this->css_path()), 'mtime' => filemtime($this->css_path()));
 				persistantcache::Singleton()->save('template_css', $css);
 			}
-			
+
 			if(Settings::singleton()->get_setting('css_minify'))
 			{
 		    	return(Common::remove_extra_lines(Common::remove_css_comments($css['css'])));
@@ -196,9 +196,9 @@ class Template
 			}
 		}
 		unset($list_of_files);
-		
+
 		$xslt = persistantcache::Singleton()->get('template_xslt');
-		
+
 		if(!isset($xslt['mtime']) || $xslt['mtime'] != $this->lastmodified)
 		{
 			$xslt = ''; //drop the array
@@ -211,9 +211,9 @@ class Template
 		{
 			$xslt = $xslt['xslt']; //Overwrite the array
 		}
-		
+
 		persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified));
-		
+
 		return $xslt;
 	}
 

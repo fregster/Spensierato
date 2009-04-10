@@ -6,7 +6,7 @@ class clamav extends virusscan
 	protected $command = 'clamscan'; //Default command overwriten in the construct if using the deamon version
 	protected $possible_av_locations = array('/usr/local/bin/', '/usr/bin/'); //FreeBSD and Debian default paths
 
-	public function __construct()
+	protected function __construct()
 	{
 		if($this->use_deamon_version)
 		{

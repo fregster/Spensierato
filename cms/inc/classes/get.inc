@@ -5,7 +5,7 @@
 require_once('variables.inc');
 class get extends variables
 {
-	public function variable($input, $type = NULL)
+	public static function variable($input, $type = NULL)
 	{
 		if (isset($_GET[$input])) {
 			return parent::variable($_GET[$input], $type);

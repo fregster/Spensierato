@@ -1,7 +1,7 @@
 <?php
 class Content
 {
-	protected static $instance;
+	private static $instance;
 	private $extra_elements;
 	private $lastmodified = 0;
 	private $e_string = '';
@@ -43,7 +43,7 @@ class Content
 	   return self::$instance;
 	}
 
-	function __construct()
+	protected function __construct()
 	{
 		$this->elements_attached = false;
 		$this->dom = new DOMDocument();

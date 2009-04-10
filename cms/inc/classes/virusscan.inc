@@ -26,7 +26,7 @@ class virusscan
 	   return self::$instance;
 	}
 
-	function __construct()
+	protected function __construct()
 	{
 		foreach($this->possible_av_locations as $path)
 		{

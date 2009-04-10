@@ -1,7 +1,7 @@
 <?php
 class FileTransfer
 {
-	protected static $instance;
+	private static $instance;
 
 	public static function Singleton()
 	{
@@ -11,6 +11,10 @@ class FileTransfer
 	   }
 
 	   return self::$instance;
+	}
+
+	protected function __construct(){
+
 	}
 
 	public function get_public_file($value)
@@ -129,7 +133,6 @@ class FileTransfer
 			die('file '.$file.' not found');
 		}
 	}
-
 
 	public function save_file($id, $revision)
 	{

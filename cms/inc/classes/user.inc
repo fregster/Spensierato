@@ -27,7 +27,7 @@ class user
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 
-	function __construct()
+	protected function __construct()
 	{
 		if(isset($_SESSION['userid']))
 		{

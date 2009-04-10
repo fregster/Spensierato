@@ -1,33 +1,32 @@
 <?php
 class Menu
 {
-	protected static $instance;
-	
+	private static $instance;
+
 	private $menu_xml;
 	private $path;
-	
+
 	//vars needed to work out XML
 	private $current_page; //id
 	private $current_page_details = array();
 	private $working_page_id; //id
 	private $parents = array();
-	
+
 	public static function Singleton()
 	{
 	   if (!isset(self::$instance)) {
 		   $c = __CLASS__;
 		   self::$instance = new $c;
 	   }
-	
+
 	   return self::$instance;
 	}
-	
-	function __construct()
+
+	protected function __construct()
 	{
 		//Setup vars
-		
 	}
-	
+
 	//Build the xml for the menu
 	public function build()
 	{
@@ -41,17 +40,17 @@ class Menu
 
 		//Get the parents of the current page
 		$this->get_parents();
-		
+
 		//Get top level links of current tree
 		$menu_array['top'] = $this->get_children_of($this->path[0]);
-		
+
 		//Get children of current page
 		$this->children = $this->get_children();
-		
+
 		//Get grandchildren of current page
-		
+
 		//Build complete menu array
-		
+
 		//Test if we are on a top page and so don't need parents and parallel links
 		$toppage = false;
 		if(is_array($menu_array['top']))
@@ -68,18 +67,18 @@ class Menu
 		{
 			//pop the last parent off as it should be in the top array then reverse it
 			$menu_array['parents'] = array_reverse($this->parents);
-			
+
 			unset($menu_array['parents'][0]);
-			
+
 			$menu_array['parallel'] = $this->get_parallel_links();
 			$menu_array['current'] = $this->current_page_details;
 		}
-		
+
 		$menu_array['children'] = $this->children;
-		
-		$serializer_options = array ( 
-			   'addDecl' => FALSE, 
-			   'encoding' => Settings::Singleton()->get_setting('char_set'), 
+
+		$serializer_options = array (
+			   'addDecl' => FALSE,
+			   'encoding' => Settings::Singleton()->get_setting('char_set'),
 			   'indent' => '  ',
 			   'rootName'  => 'menu',
 			   'defaultTagName'  => 'menu_item'
@@ -88,24 +87,24 @@ class Menu
 
 		return $this->menu_xml;
 	}
-	
+
 	public function get_path()
 	{
-		return $this->get_path_to($this->current_page); 
+		return $this->get_path_to($this->current_page);
 	}
-	
+
 	public function get_path_to($id)
 	{
 		//The id of the current page.
 		$current_record = Database::Singleton()->sql_select_first(array('parent_id'), 'tbl_pages', array('id'), array($id));
 
-		//The array of ids to the current page. 
+		//The array of ids to the current page.
 		$path = array();
 		while(true)
-		{	
+		{
 			$record = Database::Singleton()->sql_select_first(array('parent_id'), 'tbl_pages', array('id'), array($id));
 			if(is_null($record['parent_id']))
-			{		
+			{
 				array_push($path,$id);
 				return $path;
 			}
@@ -116,12 +115,12 @@ class Menu
 			}
 		}
 	}
-	
+
 	private function get_children()
 	{
 		return $this->get_children_of($this->current_page);
 	}
-	
+
 	private function get_parents()
 	{
 		//set working page
@@ -129,26 +128,26 @@ class Menu
 		{
 			$this->working_page_id = $this->current_page_details['parent_id'];
 		}
-		
+
 		$this->page_parent_details = $this->get_page_details($this->working_page_id);
 
 		//Do security check and do not push if failed
 		if(Security::Singleton()->can_view($this->page_parent_details['id']))
 		{
-			
+
 			if(isset($this->page_parent_details['id']) && in_array($this->page_parent_details['id'], $this->path))
 			{
 				$this->page_parent_details['selected'] = true;
 			}
-			
-			
+
+
 			if(isset($this->page_parent_details['parent_id']) && $this->page_parent_details['parent_id'] != 0)
-			{	
+			{
 				$this->parents[] = $this->page_parent_details;
 			}
-			
+
 			$this->working_page_id = $this->page_parent_details['parent_id'];
-			
+
 			if($this->working_page_id != 0)
 			{
 				$this->get_parents();
@@ -160,11 +159,11 @@ class Menu
 		//end security check
 		}
 	}
-	
+
 	private function get_parallel_links()
 	{
 		$parallel = $this->get_children_of($this->current_page_details['parent_id']);
-		
+
 		$i=0;
 		if(isset($parallel[0]))
 		{
@@ -180,13 +179,13 @@ class Menu
 		}
 		return $parallel;
 	}
-	
+
 	private function get_page_details($id)
 	{
 		return Database::Singleton()->sql_select_first(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('id'), array($id));
-		
+
 	}
-	
+
 	private function get_children_of($id = 0)
 	{
 		if(options::Singleton()->get_option('admin_mode'))
@@ -198,7 +197,7 @@ class Menu
 		{
 			$where = array('parent_id', 'deleted');
 			$values = array($id, '0');
-			
+
 			if(!user::singleton()->is_logged_in())
 			{
 				array_push($where, 'visible');
@@ -219,7 +218,7 @@ class Menu
 					{
 						$details[$i]['current'] = true;
 					}
-					
+
 					if(in_array($page['id'], $this->path))
 					{
 						$details[$i]['selected'] = true;

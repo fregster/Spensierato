@@ -30,7 +30,7 @@ class warnings
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 
-	private function __construct()
+	protected function __construct()
 	{
 		$this->warnings = array();
 		//Do standard warning checks here for easy of code finding.

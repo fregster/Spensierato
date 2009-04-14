@@ -41,14 +41,16 @@ abstract class ajax
 		$data = $element_data['data'];
 		$approvals_list = post::variable('approvals');
 		if (!empty($approvals_list)) {
+			$approvals = array();
 			foreach ($approvals_list as $approval_id){
-				$approval = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_approve', array('id'), array($approval_id));
-				$diff = new diffCompare($data, $approval['data']);
-				$data = $diff->render();
-				unset($diff);
+				$result = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_approve', array('id'), array($approval_id));
+				$approvals[] = $result['data'];
 			}
+
+			$approvals = array_reverse($approvals);
+			$data = diffCompare::multi_diff($data, $approvals);
 		}
-		echo html_entity_decode($data);
+		die(html_entity_decode($data));
 	}
 
 	private static function edit($id)

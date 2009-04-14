@@ -447,8 +447,8 @@ class elementDefault
 							//get text diff for approvers
 							$old = strip_tags($default_data['data']);
 							$new = strip_tags($data['data']);
-							$diff = new diffCompare($old, $new);
-							$data['data'] = $diff->render();
+							$data['data'] = diffCompare::multi_diff($old, array($new));
+							//$data['data'] = $diff->render();
 						}
 						$final_data = array_merge($data, $general_info);
 					}

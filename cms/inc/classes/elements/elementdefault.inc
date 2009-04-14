@@ -165,6 +165,12 @@ class elementDefault
 			switch ($key)
 			{
 				case 'html':
+					//this section cleans out <span> tags used by the diff class before saving to the DB.
+					//the first replace deletes the "delete" text + span tags
+					//the second replace just deletes the tags, since the added text is meant to be saved
+					$value = preg_replace('~<span style="background-color: #FF0000;">.*?</span>~s', '', $value);
+					$value = preg_replace('~<span style="background-color: #00FF00;">(.*?)</span>~s', '$1', $value);
+
 					$value = Common::html($value);
 					break;
 

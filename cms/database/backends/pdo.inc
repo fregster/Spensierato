@@ -4,7 +4,8 @@ class database_pdo extends database
 	protected function connect($dsn, $options = NULL, $mods = NULL)
 	{
 		try {
-		    	$pdo = new PDO("mysql:host=$dsn['hostspec'];dbname=$dsn['database']", "$dsn['username']", "$dsn['password']");
+				$connection_String = 'mysql:host='.$dsn['hostspec'].';dbname='.$dsn['database'];
+		    	$pdo = new PDO($connection_String, $dsn['username'], $dsn['password']);
 		    }
 			catch(PDOException $e)
 		    {
@@ -17,15 +18,42 @@ class database_pdo extends database
 	{
 		$error = false;
 		
-		$db &= $this->read;
-		if($writeuser == true)
-		{
-			$db &= $this->write;
-		}
-		
 		try 
 		{
-			$resultset = $pdo->query($sql);
+			if($writeuser == true)
+			{
+				if($this->write != NULL) //Test the write user is set
+				{
+					if($values == NULL)
+					{
+						//Values have not been passed so do simple SQL exec
+						$resultset = $this->write->query($sql);
+					}
+					else
+					{
+						//Do prepeared statment
+						$stmt = $this->write->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
+					}
+				}
+				else
+				{
+					$error = 'Failed update database, write user disabled<br />';
+					$this->sql_error($error);
+				}
+			}
+			else
+			{
+				if($values == NULL)
+				{
+					//Values have not been passed so do simple SQL exec
+					$resultset = $this->read->query($sql);
+				}
+				else
+				{
+					//Do prepeared statment
+					$stmt = $this->read->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
+				}
+			}
 		}
 		catch(PDOException $e)
 	    {
@@ -35,5 +63,15 @@ class database_pdo extends database
 	    return array('resultset' => $resultset, 'error' => $error);
 	}
 	
+	protected function sql_select_exe_run($resultset)
+	{
+		$results = array();
+	
+    	foreach ($resultset as $row)
+        {
+       		$results[] = $row;
+        }
+		return $results;
+	}
 }
 ?>

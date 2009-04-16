@@ -42,7 +42,7 @@ class Database
 	{
 	   if (!isset(self::$instance))
 	   {
-	   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = 'mdb2'; }
+	   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = 'pdo'; }
 			$c = 'database_'.$GLOBALS['database_backend'];
 			include(dirname(__FILE__).'/backends/'.$GLOBALS['database_backend'].'.inc');
 	   		if(!class_exists($c))
@@ -217,8 +217,8 @@ class Database
 	public function sql_select_first($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
 		$result = $this->sql_select($fields, $table, $where_fields, $where_values, $order_fields, $order_directions, $FORCE_NO_CACHE, 1);
-		if(isset($result[0])) {	return  $result[0]; }
-		return null;
+		if(!isset($result[0])) { $result[0] = null; }
+		return  $result[0];
 	}
 
 	// Standard Select function

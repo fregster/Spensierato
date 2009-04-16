@@ -178,14 +178,21 @@ class currentPage
 			{
 				$result = Database::Singleton()->sql_select(array('id', 'parent_id'), 'tbl_pages', array('id'), array($current_page));
 
-				$id = $result[0]['parent_id'];
-
-				array_push($parents, $id);
-
-				if(($id == 0) or ($id == null) )
+				if(isset($result[0]['parent_id']))
 				{
-					$parents_exist = false;
-					break;
+					$id = $result[0]['parent_id'];
+	
+					array_push($parents, $id);
+	
+					if(($id == 0) or ($id == null) )
+					{
+						$parents_exist = false;
+						break;
+					}
+					else
+					{
+						$current_page = $id;
+					}
 				}
 				else
 				{

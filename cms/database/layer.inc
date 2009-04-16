@@ -217,7 +217,8 @@ class Database
 	public function sql_select_first($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
 		$result = $this->sql_select($fields, $table, $where_fields, $where_values, $order_fields, $order_directions, $FORCE_NO_CACHE, 1);
-		return  $result[0];
+		if(isset($result[0])) {	return  $result[0]; }
+		return null;
 	}
 
 	// Standard Select function

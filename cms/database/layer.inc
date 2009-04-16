@@ -5,9 +5,9 @@ class Database
 	private $options = array('allow_external_calls' => true);
 
 	private static $instance;
-	private $read;
-	private $write = NULL;
-	private $connected = false;
+	protected $read;
+	protected $write = NULL;
+	protected $connected = false;
 
 	private $prefix;
 	private $sql_db_type;
@@ -37,12 +37,19 @@ class Database
 	 */
 	private $time;
 	private $microtime;
-
+	
 	public static function Singleton()
 	{
 	   if (!isset(self::$instance))
 	   {
-		   $c = __CLASS__;
+	   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = 'mdb2'; }
+			$c = 'database_'.$GLOBALS['database_backend'];
+			include(dirname(__FILE__).'/backends/'.$GLOBALS['database_backend'].'.inc');
+	   		if(!class_exists($c))
+	   		{
+	   			$c = __CLASS__;
+	   		}
+
 		   self::$instance = new $c;
 	   }
 
@@ -112,27 +119,21 @@ class Database
 		$this->dsn = $this->dsn_default;
 	}
 
-	private function connect($dsn, $options = NULL, $mods = NULL)
+	protected function connect($dsn, $options = NULL, $mods = NULL)
 	{
-		//Load the MDB2 code
-		//Doing this here only loads the code if a DB query is actually going to be done
-		require_once 'MDB2.php';
-
-		$mdb2 =& MDB2::singleton($dsn, $options);
-		if (PEAR::isError($mdb2) or (MDB2::isError($mdb2)))
+		$db = @mysql_connect($dsn['hostspec'], $dsn['username'], $dsn['password']);
+		if(!$db) 
 		{
-			$this->sql_error($mdb2->getMessage());
+			$error = 'Unable to connect to the database';
+			$this->sql_error($error);
 		}
-
-		if(isset($mods[0]))
+		
+		if (! @mysql_select_db($dsn['database']) )
 		{
-			foreach($mods as $mod)
-			{
-				$mdb2->loadModule($mod);
-			}
+			$error = 'Unable to locate the database';
+			$this->sql_error($error);
 		}
-
-		return $mdb2;
+		return $db;
 	}
 
 	public function __clone()
@@ -412,93 +413,6 @@ class Database
 		{
 			return $this->sql_insert($table, $fields, $values);
 		}
-
-		/* This would be the ideal way I think it would work in MSSQL or others that support the IF statment  */
-		/*
-		$table = $this->prefix.$this->sql_clean_input($table);
-		if(	(count($where_fields)) != (count($where_values))	)
-		{
-			return false;
-		}
-
-		if(	(count($fields)) != (count($values))	)
-		{
-			return false;
-		}
-
-		$sql = 'IF EXISTS (SELECT * FROM '. $table . ' AS t1 ';
-
-
-		$i = 0;
-		$count_where = count($where_values);
-		while($i <= ($count_where - 1))
-		{
-			$sql_temp_where = $sql_temp_where . '(`' . $this->sql_clean_input($where_fields[$i]) .'` = "'. $this->sql_clean_input($where_values[$i]) .'")';
-
-			if($i < ($count_where - 1))
-			{
-				$sql_temp_where = $sql_temp_where . ' AND ';
-			}
-
-			$i++;
-		}
-
-		$where = ' WHERE (' . $sql_temp_where .') ';
-
-		$sql .= $where .' begin ';
-
-		//Simple update query
-
-		$sql .= 'UPDATE '. $this->sql_clean_input($table) . ' SET ';
-
-		$i = 0;
-		$count_fields = count($fields);
-		while($i <= ($count_fields - 1))
-		{
-			$sql .= ' `'.$this->sql_clean_input($fields[$i]) .'` = "'.$this->sql_clean_input($values[$i]) .'" ';
-			if($i < ($count_fields - 1)) { $sql .=', '; }
-			$i++;
-		}
-
-
-		$i = 0;
-		while($i <= ($count_fields - 1))
-		{
-			$sql_temp_fields = $sql_temp_fields . '`'.$this->sql_clean_input($fields[$i]) .'` ';
-			if($i < ($count_fields - 1)) { $sql_temp_fields .=', '; }
-			$i++;
-		}
-
-		$i = 0;
-		while($i <= ($count_fields - 1))
-		{
-			$sql_temp_values = $sql_temp_values . '"'.$this->sql_clean_input($values[$i]) .'" ';
-			if($i < ($count_fields - 1)) { $sql_temp_values .=', '; }
-			$i++;
-		}
-
-		$sql .= ' end else begin ';
-
-		//Simple insert query
-
-		$sql .= 'INSERT INTO '. $table . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
-
-		$sql .= ' end ';
-
-		die($sql);
-		//Goal =
-		//		IF (EXISTS (SELECT * FROM AA_TestTable AS t1
-		//  WHERE t1.ord_num = 'FFF'))
-		//begin
-		//  UPDATE AA_TestTable
-		//  SET ord_qty = 999
-		//  WHERE ord_num = 'FFF'
-		//end
-		//else
-		//begin
-		//  INSERT INTO AA_TestTable (ord_num, top_assy, ord_qty)
-		//  VALUES('GGG', 'XYZ', 567)
-		//end */
 	}
 
 	public function sql_insert($table, $fields, $values)
@@ -636,8 +550,14 @@ class Database
 		{
 			$score = 10;
 		}
-
+		//Mysql search
 		$sql = 'SELECT '.$this->sql_build_select_string($select).', (MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.") * 10) AS score FROM `".$this->prefix. $this->sql_clean_input($table).'` WHERE ( MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.') '.$where.' ) ORDER BY score '.$order.' LIMIT '.$from.', '.$to;
+		
+		//MS SQL search
+		/*
+		 * SELECT * FROM Table WHERE FREETEXTTABLE (colname, 'value')
+		 * $sql = 'SELECT '.$this->sql_build_select_string($select).' FROM `".$this->prefix. $this->sql_clean_input($table).'` WHERE FREETEXTTABLE (`'.$this->sql_clean_input($col)."` '.$this->sql_clean_input($query).') '.$where
+		 */
 		$result = $this->sql_exe($sql, NULL);
 		return $result;
 	}
@@ -757,7 +677,7 @@ class Database
 		}
 	}
 
-	private function sql_connect()
+	protected function sql_connect()
 	{
 		if(!$this->connected)
 		{
@@ -803,78 +723,39 @@ class Database
 
 		$sql_start_time = microtime();
 
-		//Query the database Object
-		//if(	($writeuser == true) and ($this->write != NULL))
-		if($writeuser == true)
+		$results = $this->sql_run($sql, $values, $writeuser);
+		
+		if($this->show_error_sql && $results['error'])
 		{
-			if($this->write != NULL) //Test the write user is set
-			{
-				if($values == NULL)
-				{
-					//Values have not been passed so do simple SQL exec
-					$resultset = $this->write->query($sql);
-				}
-				else
-				{
-					//Do prepeared statment
-					$stmt = $this->write->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
-				}
-			}
-			else
-			{
-				$error = 'Failed update database, write user disabled<br />';
-				$this->sql_error($error);
-			}
-		}
-		else
-		{
-			if($values == NULL)
-			{
-				//Values have not been passed so do simple SQL exec
-				$resultset = $this->read->query($sql);
-			}
-			else
-			{
-				//Do prepeared statment
-				$stmt = $this->read->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
-			}
-		}
-
-		if(isset($stmt))
-		{
-			if (PEAR::isError($stmt))
-			{
-				$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />';
-				if($this->show_error_sql)
-				{
-					$error .= 'From : '. $sql .'<br />With: ' .$values;
-				}
-				$this->sql_error($error);
-			}
-			$resultset = $stmt->execute($values);
-		}
-
-		if (PEAR::isError($resultset))
-		{
-			$error = 'Failed to issue query, error message : ' . $resultset->getMessage().', '. $resultset->getDebugInfo().'<br />';
-			if($this->show_error_sql)
-			{
-					$error .= 'From : '. $sql;
-			}
-
-			$this->sql_error($error);
+				$error .= 'From : '. $sql;
+				$this->sql_error($results['error']);
 		}
 
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit);
 
-		return $resultset;
+		return $results['resultset'];
+	}
+	
+	protected function sql_run($sql, $values, $writeuser)
+	{
+		$error = false;
+		$result = mysql_query($sql);
+		
+		if (!$result) 
+		{
+	  		$error = mysql_error();
+		}
+		
+		return array('resultset' => mysql_fetch_array($result), 'error' => $error);
 	}
 
-	private function sql_error($message, $line = NULL, $file = NULL)
+	protected function sql_error($message, $line = NULL, $file = NULL)
 	{
 		$fh = fopen($this->error_file, 'r');
 		$theData = fread($fh, filesize($this->error_file));
 		fclose($fh);
+		var_dump($this);
+		var_dump(debug_backtrace());
 
 	    die(str_replace('***ERROR***', $message, $theData));
 	}
@@ -896,17 +777,21 @@ class Database
 		//If cache fails or not checked to SQL query
 		if($results === false)
 		{
-			$resultset = $this->sql_exe($sql, $values);
-
-			while($row = $resultset->fetchRow(MDB2_FETCHMODE_ASSOC))
-			{
-				$results[] = $row;
-			}
+			$results = $this->sql_select_exe_run($this->sql_exe($sql, $values));
 
 			//Cache the result
 			$this->sql_cache($sql, $values, $results);
 		}
 
+		return $results;
+	}
+	
+	protected function sql_select_exe_run($resultset)
+	{
+		while($row = $resultset->fetchRow(MDB2_FETCHMODE_ASSOC))
+		{
+			$results[] = $row;
+		}
 		return $results;
 	}
 

@@ -13,12 +13,12 @@ class database_pdo extends database
 		    }
 		return $pdo;
 	}
-	
+
 	protected function sql_run($sql, $values, $writeuser)
 	{
 		$error = false;
-		
-		try 
+
+		try
 		{
 			if($writeuser == true)
 			{
@@ -32,7 +32,7 @@ class database_pdo extends database
 					else
 					{
 						//Do prepeared statment
-						$stmt = $this->write->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
+						$stmt = $this->write->prepare($sql);
 					}
 				}
 				else
@@ -51,7 +51,7 @@ class database_pdo extends database
 				else
 				{
 					//Do prepeared statment
-					$stmt = $this->read->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
+					$stmt = $this->read->prepare($sql);
 				}
 			}
 		}
@@ -59,14 +59,14 @@ class database_pdo extends database
 	    {
 	   		$this->sql_error($e->getMessage());
 	    }
-	    
+
 	    return array('resultset' => $resultset, 'error' => $error);
 	}
-	
+
 	protected function sql_select_exe_run($resultset)
 	{
 		$results = array();
-	
+
     	foreach ($resultset as $row)
         {
        		$results[] = $row;

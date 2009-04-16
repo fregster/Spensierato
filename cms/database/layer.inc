@@ -3,6 +3,7 @@
 class Database
 {
 	private $options = array('allow_external_calls' => true);
+	private static $backends = array('mdb2', 'pdo', 'php'); //Preference order of backends
 
 	private static $instance;
 	protected $read;
@@ -42,7 +43,7 @@ class Database
 	{
 	   if (!isset(self::$instance))
 	   {
-	   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = 'pdo'; }
+	   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = database::$backends[0]; }
 			$c = 'database_'.$GLOBALS['database_backend'];
 			include(dirname(__FILE__).'/backends/'.$GLOBALS['database_backend'].'.inc');
 	   		if(!class_exists($c))
@@ -121,19 +122,7 @@ class Database
 
 	protected function connect($dsn, $options = NULL, $mods = NULL)
 	{
-		$db = @mysql_connect($dsn['hostspec'], $dsn['username'], $dsn['password']);
-		if(!$db) 
-		{
-			$error = 'Unable to connect to the database';
-			$this->sql_error($error);
-		}
 		
-		if (! @mysql_select_db($dsn['database']) )
-		{
-			$error = 'Unable to locate the database';
-			$this->sql_error($error);
-		}
-		return $db;
 	}
 
 	public function __clone()
@@ -739,15 +728,7 @@ class Database
 	
 	protected function sql_run($sql, $values, $writeuser)
 	{
-		$error = false;
-		$result = mysql_query($sql);
 		
-		if (!$result) 
-		{
-	  		$error = mysql_error();
-		}
-		
-		return array('resultset' => mysql_fetch_array($result), 'error' => $error);
 	}
 
 	protected function sql_error($message, $line = NULL, $file = NULL)

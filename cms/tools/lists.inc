@@ -33,7 +33,10 @@ function check_dates($date1, $date2){ //temporary date checking function to get 
 
 $lists = database::Singleton()->sql_select(array('id', 'name', 'valid_from', 'valid_to'), 'tbl_list_data');
 
-$activeList = $lists[0]['id'];
+$activeList = NULL;
+if ($lists) {
+	$activeList = $lists[0]['id'];
+}
 $members = database::Singleton()->sql_select(array('user_id'), 'tbl_list_membership', array('list_id'), array($activeList));
 
 $users = database::Singleton()->sql_select(array('id', 'username'), 'tbl_users', array('admin'), array(0));
@@ -132,7 +135,7 @@ $nonMembersList = '';
 if ($users) {
 	$nonMembersList = array();
 	foreach ($users as $user){
-		if ($members && (find_item_by_id($user['id'], 'user_id', $members) === false) || (CMS::Singleton()->path_vars(2) != 'edit'))
+		if (!$members || ($members && (find_item_by_id($user['id'], 'user_id', $members) === false)) || (CMS::Singleton()->path_vars(2) != 'edit'))
 			$nonMembersList[] = '<option value="'.$user['id'].'">'.$user['username'].'</option>';
 	}
 	unset($user);

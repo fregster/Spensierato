@@ -186,7 +186,7 @@ class Database
 		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions);
 		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 	}
-	
+
 	protected function sql_select_build($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL)
 	{
 		$sql_temp_select = '';
@@ -255,11 +255,11 @@ class Database
 
 	public function sql_max_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
-		$sql = sql_max_field_build($table, $field, $where_fields, $where_values);
+		$sql = $this->sql_max_field_build($table, $field, $where_fields, $where_values);
 		$result = $this->sql_select_exe($sql, NULL, TRUE);
 		return $result[0]['max( sort )'];
 	}
-	
+
 	protected function sql_max_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		return 'SELECT max( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);;
@@ -271,7 +271,7 @@ class Database
 		$result = $this->sql_select_exe($sql, NULL, TRUE);
 		return $result[0]['min( sort )'];
 	}
-	
+
 	protected function sql_min_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		return 'SELECT min( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
@@ -285,7 +285,7 @@ class Database
 		//Run the SQL
 		return $this->sql_update_exe($sql, null, $destroy_cache);
 	}
-	
+
 	protected function sql_update_time_build($table, $id)
 	{
 		return 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = \'' . $this->time . '\' WHERE id = \'' . $this->sql_clean_input($id) . '\'';
@@ -317,7 +317,7 @@ class Database
 		//Run the SQL
 		return $this->sql_update_exe($sql, NULL, $destroy_cache);
 	}
-	
+
 	protected function sql_update_by_col_build($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array())
 	{
 		if(	(count($fields)) != (count($values))	)
@@ -362,10 +362,10 @@ class Database
 			return $this->sql_insert($table, $fields, $values);
 		}
 	}
-	
+
 	public function sql_insert($table, $fields, $values)
 	{
-		$sql = sql_insert_build($table, $fields, $values);
+		$sql = $this->sql_insert_build($table, $fields, $values);
 		$this->sql_exe($sql, NULL, true);
 		return database_execution::Singleton()->write->lastInsertID($table,'id');
 	}
@@ -402,7 +402,7 @@ class Database
 
 		return 'INSERT INTO '. $table . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 	}
-	
+
 	public function sql_delete_by_colum_equals($table, $col, $equals, $destroy_cache = false)
 	{
 		$sql = $this->sql_delete_by_colum_equals_build($table, $col, $equals);
@@ -420,7 +420,7 @@ class Database
 		$sql = $this->sql_delete_where_build($table, $where_fields, $where_values);
 		return $this->sql_exe($sql, NULL, true);
 	}
-	
+
 	protected function sql_delete_where_build($table, $where_fields, $where_values)
 	{
 		$table = $this->prefix.$this->sql_clean_input($table);
@@ -443,7 +443,7 @@ class Database
 		$result = $this->sql_exe($sql, NULL, true);
 		return $result;
 	}
-	
+
 	protected function sql_select_into_build($fields, $from, $to, $where_fields, $where_values, $extra_insert = NULL)
 	{
 		$from = $this->prefix.$this->sql_clean_input($from);
@@ -521,7 +521,7 @@ class Database
 		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 		return $result[0]['count(*)'];
 	}
-	
+
 	protected function sql_count_where_build($table, $where_fields, $where_values)
 	{
 		if (!is_array($where_fields)) {

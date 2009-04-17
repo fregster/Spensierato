@@ -3,20 +3,20 @@ class database_execution
 {
 	private static $backends = array('mdb2', 'pdo', 'php'); //Preference order of backends
 	protected static $instance;
-	
+
 	protected $read;
-	protected $write = NULL;
+	public $write = NULL;
 	protected $connected = false;
-	
+
 	private $dsn_default;
 	private $dsn;
-	
+
 	public static function Singleton()
 	{
-	   if (!isset(self::$instance)) 
+	   if (!isset(self::$instance))
 	   {
 	   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = database_execution::$backends[0]; }
-	   
+
 	   		if(file_exists(dirname(__FILE__).'/'.$GLOBALS['database_backend'].'.inc'))
 	   		{
 	   			require_once(dirname(__FILE__).'/'.$GLOBALS['database_backend'].'.inc');
@@ -26,12 +26,12 @@ class database_execution
 	   		{
 			    die('Unable to build the requested database layer');
 	   		}
-	   		
+
 		   self::$instance = new $c;
 	   }
 	   return self::$instance;
 	}
-	
+
 	/**
 	 * The public call to build the DSN and connect to the backend lib
 	 * @return true
@@ -47,9 +47,9 @@ class database_execution
 			    'hostspec' => $GLOBALS['database_host'],
 			    'database' => $GLOBALS['database_name'],
 				);
-	
+
 				$this->read = $this->connect($this->dsn_default);
-	
+
 				//If logged in create db write user this should help prevent against SQL injection
 				//As only logged in can use the db writeable user
 				if(isset($_SESSION['userid']) && $_SESSION['userid'] != 0)
@@ -64,14 +64,14 @@ class database_execution
 					);
 					$this->write = $this->connect($dsn);
 				}
-	
+
 			$this->dsn = isset($dsn)?$dsn:NULL;
 			$this->connected = true;
 		}
 
 		return $this->connected;
 	}
-	
+
 	/**
 	 * force_write_user
 	 * Use this method to overwrite the read user with the write user
@@ -96,17 +96,17 @@ class database_execution
 		);
 		$this->write = $this->connect($this->dsn);
 	}
-	
+
 	public function destroy_write_user()
 	{
 		unset($this->write);
 		$this->dsn = $this->dsn_default;
 	}
-	
+
 	/**
 	 * This method needs to be extended for each lib type
 	 * It should return a db object that will get mapped to $this->read or $this->wrtie as required
-	 * 
+	 *
 	 * @param $dsn
 	 * @param $options
 	 * @param $mods
@@ -116,12 +116,12 @@ class database_execution
 	{
 
 	}
-	
+
 	public function sql_run($sql, $values, $writeuser)
 	{
-		
+
 	}
-	
+
 	public function sql_select_exe_run($resultset)
 	{
 

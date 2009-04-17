@@ -68,26 +68,25 @@ if (!$posted) {
 		//check which error occured and create msg accordingly
 		switch(CMS::Singleton()->path_vars(2)){
 			case 1:
-				$error .= 'You forgot to enter your old password!';;
+				$error .= 'You forgot to enter your old password!</div>';;
 				break;
 			case 2:
-				$error .= 'You forgot to enter your new password!';
+				$error .= 'You forgot to enter your new password!</div>';
 				break;
 			case 3:
-				$error .= 'The old password you entered is wrong!';
+				$error .= 'The old password you entered is wrong!</div>';
 				break;
 			case 4:
-				$error .= 'The new password you entered is identical to the old one!';
+				$error .= 'The new password you entered is identical to the old one!</div>';
 				break;
 			case 5:
-				$error .= 'The password confirmation is wrong!';
+				$error .= 'The password confirmation is wrong!</div>';
 				break;
 			case 6:
 				$passwordForm = $successHTML;
-				unset($error);
+				$error = '';
 				break;
 		}
-		$error .= '</div>';
 	}
 
 	//display form and error (if exists)
@@ -118,7 +117,7 @@ if (!strcmp($postVars->variable('oldPass', 'string'), $postVars->variable('newPa
 database::Singleton()->sql_update_by_id($userid, 'tbl_users', array('password'), array($hashedNewPass));
 
 //email the password to the user if requested
-if (!is_null($postVars->variable('emailPass'))) {
+if ($postVars->variable('emailPass')) {
 	$to = user::Singleton()->email();
 	$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
 	$subject = 'New password at '.settings::singleton()->get_setting('site_name_long');

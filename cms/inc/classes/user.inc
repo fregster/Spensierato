@@ -245,7 +245,7 @@ class user
 		//Removed because I need it to be able to be worked out on the client side for the JS sha256 login stuff
 		###also on line 156###
 		$pwd = $password;
-
+		$hash_outdated = FALSE;
 		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_encryption'))
 		{
 			$hash_outdated = true;

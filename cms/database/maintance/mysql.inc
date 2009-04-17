@@ -1,5 +1,5 @@
 <?php
-class mysql extends database_maintenance
+class database_maintenance_mysql implements database_maintenance
 {
 	public function optimize()
 	{

@@ -1,5 +1,5 @@
 <?php
-class database_php extends database
+class database_execution_php extends database_execution
 {
 	protected function connect($dsn, $options = NULL, $mods = NULL)
 	{
@@ -18,7 +18,7 @@ class database_php extends database
 		return $db;
 	}
 	
-	protected function sql_run($sql, $values, $writeuser)
+	public function sql_run($sql, $values, $writeuser)
 	{
 		$error = false;
 		$result = mysql_query($sql);
@@ -31,7 +31,7 @@ class database_php extends database
 		return array('resultset' => $result, 'error' => $error);
 	}
 	
-	protected function sql_select_exe_run($resultset)
+	public function sql_select_exe_run($resultset)
 	{
 		$results = array();
 		while ($row = mysql_fetch_assoc($resultset))

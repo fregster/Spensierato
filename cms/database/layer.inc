@@ -1,19 +1,12 @@
 <?php
-
 class Database
 {
 	private $options = array('allow_external_calls' => true);
-	private static $backends = array('mdb2', 'pdo', 'php'); //Preference order of backends
-
 	private static $instance;
-	protected $read;
-	protected $write = NULL;
-	protected $connected = false;
-
+	private $connected = false;
+	
 	private $prefix;
 	private $sql_db_type;
-	private $dsn;
-	private $dsn_default;
 	private $error_file = false;
 
 	private $sql_cache_enabled = true;
@@ -43,12 +36,12 @@ class Database
 	{
 	   if (!isset(self::$instance))
 	   {
-	   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = database::$backends[0]; }
-			$c = 'database_'.$GLOBALS['database_backend'];
-			include(dirname(__FILE__).'/backends/'.$GLOBALS['database_backend'].'.inc');
+	   		if(!isset($GLOBALS['database_driver'])) { $GLOBALS['database_driver'] = database::$backends[0]; }
+			$c = 'database_'.$GLOBALS['database_driver'];
+			include(dirname(__FILE__).'/server_types/'.$GLOBALS['database_driver'].'.inc');
 	   		if(!class_exists($c))
 	   		{
-	   			$c = __CLASS__;
+	   			die('Unable to create correct database layer type ('.$c.')');	
 	   		}
 
 		   self::$instance = new $c;
@@ -88,41 +81,18 @@ class Database
 		return database::connect($dsn, $options, $mods);
 	}
 
-
 	/**
-	 * force_write_user
-	 * Use this method to overwrite the read user with the write user
-	 * This can be used then to allow database updates if there is a requirement to do
-	 * inserts etc with a not logged in user
-	 *
-	 * When finished call destroy_write_user() to revert back to the read user
-	 * Examples for use are in registration when you wish to store some data but the user will not be logged in
-	 *
-	 * Please be careful and ensure to fully protect the input against posible auto form fillers etc.
-	 *
+	 * Here for legacy purposes
+	 * @return unknown_type
 	 */
 	public function force_write_user()
 	{
-		//Create write user
-		$this->dsn = array(
-		    'phptype'  => $GLOBALS['database_driver'],
-		    'username' => $GLOBALS['database_user_readwrite'],
-		    'password' => $GLOBALS['database_password'],
-		    'hostspec' => $GLOBALS['database_host'],
-		    'database' => $GLOBALS['database_name'],
-		);
-		$this->write = $this->connect($this->dsn);
+		database_execution::singleton()->force_write_user();
 	}
 
 	public function destroy_write_user()
 	{
-		unset($this->write);
-		$this->dsn = $this->dsn_default;
-	}
-
-	protected function connect($dsn, $options = NULL, $mods = NULL)
-	{
-		
+		database_execution::singleton()->destroy_write_user();
 	}
 
 	public function __clone()
@@ -275,31 +245,10 @@ class Database
 			$sql = $sql	. ' ORDER BY ' . $sql_temp_order;
 		}
 
-		if( ($limit != NULL) and (is_numeric($limit)) )
-		{
-			//For databases that suport the LIMIT command
-			if($this->dsn['phptype'] == 'mysqli')
-			{
-				$sql = $sql	. ' LIMIT ' . $limit;
-			}
-
-			//For MS SQL Server
-			if($this->dsn['phptype'] == 'mssql')
-			{
-					$sql = str_replace('SELECT ', 'SELECT TOP '.$limit.' ', $sql);
-			}
-		}
-
 		//Logging info
 		$this->site_sql_count ++;
 
-		//Check SQL
-		//$resultset = $mdb2->query($sql);
-		$results = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
-
-		return $results;
-
-
+		return $sql;
 	}
 
 	public function sql_max_field($table, $field, $where_fields = NULL, $where_values = NULL)
@@ -671,33 +620,7 @@ class Database
 	{
 		if(!$this->connected)
 		{
-			$this->dsn_default = array(
-		    'phptype'  => $GLOBALS['database_driver'],
-		    'username' => $GLOBALS['database_user_read'],
-		    'password' => $GLOBALS['database_password'],
-		    'hostspec' => $GLOBALS['database_host'],
-		    'database' => $GLOBALS['database_name'],
-			);
-
-			$this->read = $this->connect($this->dsn_default);
-
-			//If logged in create db write user this should help prevent against SQL injection
-			//As only logged in can use the db writeable user
-			if(isset($_SESSION['userid']) && $_SESSION['userid'] != 0)
-			{
-				//Create write user
-				$dsn = array(
-				    'phptype'  => $GLOBALS['database_driver'],
-				    'username' => $GLOBALS['database_user_readwrite'],
-				    'password' => $GLOBALS['database_password'],
-				    'hostspec' => $GLOBALS['database_host'],
-				    'database' => $GLOBALS['database_name'],
-				);
-				$this->write = $this->connect($dsn);
-			}
-
-			$this->dsn = isset($dsn)?$dsn:NULL;
-			$this->connected = true;
+			$this->connected = database_execution::Singleton()->sql_connect();
 		}
 	}
 
@@ -713,7 +636,7 @@ class Database
 
 		$sql_start_time = microtime();
 
-		$results = $this->sql_run($sql, $values, $writeuser);
+		$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
 		
 		if($this->show_error_sql && $results['error'])
 		{
@@ -724,11 +647,6 @@ class Database
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit);
 
 		return $results['resultset'];
-	}
-	
-	protected function sql_run($sql, $values, $writeuser)
-	{
-		
 	}
 
 	protected function sql_error($message, $line = NULL, $file = NULL)
@@ -742,12 +660,12 @@ class Database
 	    die(str_replace('***ERROR***', $message, $theData));
 	}
 
-	private function sql_update_exe($sql, $values = NULL, $destroy_cache = false)
+	protected function sql_update_exe($sql, $values = NULL, $destroy_cache = false)
 	{
 		return $this->sql_exe($sql, $values, true, $destroy_cache);
 	}
 
-	private function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)
+	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)
 	{
 		$results = false;
 		//Check cache if not explecitly set not to
@@ -759,21 +677,12 @@ class Database
 		//If cache fails or not checked to SQL query
 		if($results === false)
 		{
-			$results = $this->sql_select_exe_run($this->sql_exe($sql, $values));
+			$results = database_execution::singleton()->sql_select_exe_run($this->sql_exe($sql, $values));
 
 			//Cache the result
 			$this->sql_cache($sql, $values, $results);
 		}
 
-		return $results;
-	}
-	
-	protected function sql_select_exe_run($resultset)
-	{
-		while($row = $resultset->fetchRow(MDB2_FETCHMODE_ASSOC))
-		{
-			$results[] = $row;
-		}
 		return $results;
 	}
 

@@ -1,5 +1,5 @@
 <?php
-class database_pdo extends database
+class database_execution_pdo extends database_execution
 {
 	protected function connect($dsn, $options = NULL, $mods = NULL)
 	{
@@ -14,7 +14,7 @@ class database_pdo extends database
 		return $pdo;
 	}
 
-	protected function sql_run($sql, $values, $writeuser)
+	public function sql_run($sql, $values, $writeuser)
 	{
 		$error = false;
 
@@ -63,7 +63,7 @@ class database_pdo extends database
 	    return array('resultset' => $resultset, 'error' => $error);
 	}
 
-	protected function sql_select_exe_run($resultset)
+	public function sql_select_exe_run($resultset)
 	{
 		$results = array();
 

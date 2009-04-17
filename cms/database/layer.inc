@@ -364,7 +364,7 @@ class Database
 	{
 		$sql = sql_insert_build($table, $fields, $values);
 		$this->sql_exe($sql, NULL, true);
-		return $this->write->lastInsertID($table,'id');
+		return database_execution::Singleton()->write->lastInsertID($table,'id');
 	}
 
 	protected function sql_insert_build($table, $fields, $values)

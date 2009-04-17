@@ -46,7 +46,6 @@ class Database
 
 		   self::$instance = new $c;
 	   }
-
 	   return self::$instance;
 	}
 
@@ -74,10 +73,7 @@ class Database
 
 	public static function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{
-//		$this->dsn = $dsn;
-
 		//A DSN has been set so create the connection with the specified options
-		//Create the read user
 		return database::connect($dsn, $options, $mods);
 	}
 
@@ -184,6 +180,12 @@ class Database
 	// sql_select(Fields(if Null *), Table, Where (array), Where values (array must match number of fields), Order fields (array), Prder direction (if not sec ASC)
 	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
+		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions);
+		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+	}
+	
+	protected function sql_select_build($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL)
+	{
 		$sql_temp_select = '';
 
 		if($fields == NULL)
@@ -245,42 +247,45 @@ class Database
 			$sql = $sql	. ' ORDER BY ' . $sql_temp_order;
 		}
 
-		//Logging info
-		$this->site_sql_count ++;
-
 		return $sql;
 	}
 
 	public function sql_max_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
-		$sql = 'SELECT max( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);;
-
+		$sql = sql_max_field_build($table, $field, $where_fields, $where_values);
 		$result = $this->sql_select_exe($sql, NULL, TRUE);
 		return $result[0]['max( sort )'];
+	}
+	
+	protected function sql_max_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
+	{
+		return 'SELECT max( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);;
 	}
 
 	public function sql_min_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
-		$sql = 'SELECT min( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
-
+		$sql = $this->sql_min_field_build($table, $field, $where_fields, $where_values);
 		$result = $this->sql_select_exe($sql, NULL, TRUE);
 		return $result[0]['min( sort )'];
+	}
+	
+	protected function sql_min_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
+	{
+		return 'SELECT min( '.$this->sql_clean_input($field).' ) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
 	}
 
 	//SQL Update time field query
 	public function sql_update_time($table, $id, $destroy_cache = false)
 	{
-		$sql_start_time = microtime();
-
-		$sql = 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = \'' . $this->time . '\' WHERE id = \'' . $this->sql_clean_input($id) . '\'';
-
-		//Logging info
-		$this->site_sql_count ++;
+		$sql = $this->sql_update_time($table, $id);
 
 		//Run the SQL
-		$this->sql_update_exe($sql);
-
-		return true;
+		return $this->sql_update_exe($sql, null, $destroy_cache);
+	}
+	
+	protected function sql_update_time($table, $id)
+	{
+		return 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = \'' . $this->time . '\' WHERE id = \'' . $this->sql_clean_input($id) . '\'';
 	}
 
 	public function sql_toggle_field_by_id($id, $table, $field, $destroy_cache = false)
@@ -305,6 +310,13 @@ class Database
 
 	public function sql_update_by_col($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false)
 	{
+		$sql = $this->sql_update_by_col_build($table, $where_fields, $where_values, $fields, $values);
+		//Run the SQL
+		return $this->sql_update_exe($sql, NULL, $destroy_cache);
+	}
+	
+	protected function sql_update_by_col_build($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array())
+	{
 		if(	(count($fields)) != (count($values))	)
 		{
 			return false;
@@ -328,13 +340,7 @@ class Database
 			++$i;
 		}
 
-		$sql = $sql	. $sql_temp_fields . $this->sql_build_where_string($where_fields, $where_values);
-
-		//Logging info
-		$this->site_sql_count ++;
-
-		//Run the SQL
-		return $this->sql_update_exe($sql, NULL, $destroy_cache);
+		return $sql	. $sql_temp_fields . $this->sql_build_where_string($where_fields, $where_values);
 	}
 
 	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false)
@@ -353,8 +359,15 @@ class Database
 			return $this->sql_insert($table, $fields, $values);
 		}
 	}
-
+	
 	public function sql_insert($table, $fields, $values)
+	{
+		$sql = sql_insert_build($table, $fields, $values);
+		$this->sql_exe($sql, NULL, true);
+		return $this->write->lastInsertID($table,'id');
+	}
+
+	protected function sql_insert_build($table, $fields, $values)
 	{
 		$table = $this->prefix.$this->sql_clean_input($table);
 
@@ -383,24 +396,32 @@ class Database
 			$i++;
 		}
 
-		$sql = 'INSERT INTO '. $table . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 
-		$this->sql_exe($sql, NULL, true);
-		return database_execution::Singleton()->write->lastInsertID($table,'id');
+		return 'INSERT INTO '. $table . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 	}
-
+	
 	public function sql_delete_by_colum_equals($table, $col, $equals, $destroy_cache = false)
 	{
-		$table = $this->prefix.$this->sql_clean_input($table);
-		$sql = 'DELETE FROM '.$table.' WHERE `'.$this->sql_clean_input($col).'` = "'.$this->sql_clean_input($equals).'"';
+		$sql = $this->sql_delete_by_colum_equals_build($table, $col, $equals);
 		return $this->sql_exe($sql, NULL, true);
+	}
+
+	protected function sql_delete_by_colum_equals_build($table, $col, $equals)
+	{
+		$table = $this->prefix.$this->sql_clean_input($table);
+		return 'DELETE FROM '.$table.' WHERE `'.$this->sql_clean_input($col).'` = "'.$this->sql_clean_input($equals).'"';
 	}
 
 	public function sql_delete_where($table, $where_fields, $where_values)
 	{
-		$table = $this->prefix.$this->sql_clean_input($table);
-		$sql = 'DELETE FROM '.$table.' '.$this->sql_build_where_string($where_fields, $where_values);
+		$sql = $this->sql_delete_where_build($table, $where_fields, $where_values);
 		return $this->sql_exe($sql, NULL, true);
+	}
+	
+	protected function sql_delete_where_build($table, $where_fields, $where_values)
+	{
+		$table = $this->prefix.$this->sql_clean_input($table);
+		return 'DELETE FROM '.$table.' '.$this->sql_build_where_string($where_fields, $where_values);
 	}
 
 	/**
@@ -414,6 +435,13 @@ class Database
 	 * 					array('field' => value)
 	 */
 	public function sql_select_into($fields, $from, $to, $where_fields, $where_values, $extra_insert = NULL)
+	{
+		$sql = $this->sql_select_into_build($fields, $from, $to, $where_fields, $where_values, $extra_insert);
+		$result = $this->sql_exe($sql, NULL, true);
+		return $result;
+	}
+	
+	protected function sql_select_into_build($fields, $from, $to, $where_fields, $where_values, $extra_insert = NULL)
 	{
 		$from = $this->prefix.$this->sql_clean_input($from);
 		$to = $this->prefix.$this->sql_clean_input($to);
@@ -443,9 +471,7 @@ class Database
 			}
 		}
 
-		$sql = "SELECT $sql_temp_select INTO `$to` FROM `$from` WHERE ".$this->sql_build_where_string($where_fields, $where_values);
-		$result = $this->sql_exe($sql, NULL, true);
-		return $result;
+		return "SELECT $sql_temp_select INTO `$to` FROM `$from` WHERE ".$this->sql_build_where_string($where_fields, $where_values);
 	}
 
 	/**
@@ -465,43 +491,35 @@ class Database
 		$this->sql_delete_where($from, $fields, $values);
 	}
 
+	/**
+	 * This is database type specific by default returns null
+	 * @param $table
+	 * @param $col
+	 * @param $query
+	 * @param $select
+	 * @param $boolean
+	 * @param $where_fields
+	 * @param $where_values
+	 * @param $from
+	 * @param $to
+	 * @param $order
+	 * @param $score
+	 * @return unknown_type
+	 */
 	public function sql_search($table, $col, $query, $select = NULL, $boolean = false, $where_fields = array(), $where_values = array(), $from = 0 , $to = 100, $order = 'DESC', $score = 10)
 	{
-		$boolean = '';
-		$order = 'DESC';
-		$where = $this->sql_build_where_string_part($where_fields, $where_values);
-		if(strlen($where) > 0)
-		{
-			$where = ' AND '.$where;
-		}
-
-		if($boolean != false)
-		{
-			$boolean = ' IN BOOLEAN MODE';
-		}
-
-		if($order != 'DESC')
-		{
-			$order = 'ASC';
-		}
-
-		if(!is_numeric($score))
-		{
-			$score = 10;
-		}
-		//Mysql search
-		$sql = 'SELECT '.$this->sql_build_select_string($select).', (MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.") * 10) AS score FROM `".$this->prefix. $this->sql_clean_input($table).'` WHERE ( MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.') '.$where.' ) ORDER BY score '.$order.' LIMIT '.$from.', '.$to;
-
-		//MS SQL search
-		/*
-		 * SELECT * FROM Table WHERE FREETEXTTABLE (colname, 'value')
-		 * $sql = 'SELECT '.$this->sql_build_select_string($select).' FROM `".$this->prefix. $this->sql_clean_input($table).'` WHERE FREETEXTTABLE (`'.$this->sql_clean_input($col)."` '.$this->sql_clean_input($query).') '.$where
-		 */
-		$result = $this->sql_exe($sql, NULL);
-		return $result;
+		return null;
 	}
 
 	public function sql_count_where($table, $where_fields, $where_values, $FORCE_NO_CACHE = FALSE)
+	{
+		$sql = $this->sql_count_where_build($table, $where_fields, $where_values);
+
+		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+		return $result[0]['count(*)'];
+	}
+	
+	protected function sql_count_where_build($table, $where_fields, $where_values)
 	{
 		if (!is_array($where_fields)) {
 			$where_fields = array($where_fields);
@@ -511,7 +529,7 @@ class Database
 			$where_values = array($where_values);
 		}
 
-		$sql = 'SELECT count(*) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
+		return 'SELECT count(*) FROM `'.$this->prefix. $this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values);
 
 		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 		return $result[0]['count(*)'];
@@ -636,6 +654,8 @@ class Database
 
 		$sql_start_time = microtime();
 
+		//Logging info
+		++ $this->site_sql_count;
 		$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
 
 		if($this->show_error_sql && $results['error'])
@@ -821,4 +841,5 @@ class Database
 		$this->sql_exe($this->sql_clean_input($sql));
 	}
 }
+
 ?>

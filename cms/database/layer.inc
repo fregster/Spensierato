@@ -4,7 +4,7 @@ class Database
 	private $options = array('allow_external_calls' => true);
 	private static $instance;
 	private $connected = false;
-	
+
 	private $prefix;
 	private $sql_db_type;
 	private $error_file = false;
@@ -31,7 +31,7 @@ class Database
 	 */
 	private $time;
 	private $microtime;
-	
+
 	public static function Singleton()
 	{
 	   if (!isset(self::$instance))
@@ -41,7 +41,7 @@ class Database
 			include(dirname(__FILE__).'/server_types/'.$GLOBALS['database_driver'].'.inc');
 	   		if(!class_exists($c))
 	   		{
-	   			die('Unable to create correct database layer type ('.$c.')');	
+	   			die('Unable to create correct database layer type ('.$c.')');
 	   		}
 
 		   self::$instance = new $c;
@@ -386,7 +386,7 @@ class Database
 		$sql = 'INSERT INTO '. $table . ' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 
 		$this->sql_exe($sql, NULL, true);
-		return $this->write->lastInsertID($table,'id');
+		return database_execution::Singleton()->write->lastInsertID($table,'id');
 	}
 
 	public function sql_delete_by_colum_equals($table, $col, $equals, $destroy_cache = false)
@@ -491,7 +491,7 @@ class Database
 		}
 		//Mysql search
 		$sql = 'SELECT '.$this->sql_build_select_string($select).', (MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.") * 10) AS score FROM `".$this->prefix. $this->sql_clean_input($table).'` WHERE ( MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.') '.$where.' ) ORDER BY score '.$order.' LIMIT '.$from.', '.$to;
-		
+
 		//MS SQL search
 		/*
 		 * SELECT * FROM Table WHERE FREETEXTTABLE (colname, 'value')
@@ -637,7 +637,7 @@ class Database
 		$sql_start_time = microtime();
 
 		$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
-		
+
 		if($this->show_error_sql && $results['error'])
 		{
 				$error .= 'From : '. $sql;

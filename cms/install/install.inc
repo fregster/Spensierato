@@ -174,7 +174,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$settings_file = $install_folder.'/../../spensierato_setup.inc';
 
 	//detect the server OS and set the doc root accordingly.
-	if(stripos(PHP_OS, 'win') !== FALSE){
+	if (stripos(PHP_OS, 'darwin') !== FALSE) {
+		$os = 'mac';
+		$doc_root_prefix = ''; //OSX has a unix-type folder structure
+	}
+	else if(stripos(PHP_OS, 'win') !== FALSE){
 		$os = 'windows';
 		$doc_root_prefix = $GLOBALS['site_root'].'/cms/';
 	}

@@ -1,15 +1,14 @@
 <?php
 class Database_mysql extends Database
 {
-	protected function sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions)
+	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
-		$sql = parent::sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions);
-		
+		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions);
 		if( ($limit != NULL) and (is_numeric($limit)) )
 		{
 			$sql = $sql	. ' LIMIT ' . $limit;
 		}
-		return $sql;
+		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 	}
 	
 	public function sql_search($table, $col, $query, $select = NULL, $boolean = false, $where_fields = array(), $where_values = array(), $from = 0 , $to = 100, $order = 'DESC', $score = 10)

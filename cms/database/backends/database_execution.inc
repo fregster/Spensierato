@@ -13,7 +13,6 @@ class database_execution
 	
 	public static function Singleton()
 	{
-		die(__FILE__.' '.__LINE__);
 	   if (!isset(self::$instance)) 
 	   {
 	   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = database_execution::$backends[0]; }

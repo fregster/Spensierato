@@ -116,7 +116,11 @@ class Database
 
 	public function sql_count()
 	{
-		$percent = 100 / $this->site_sql_count * $this->sql_cache_hits;
+		$percent = 0;
+		if($this->site_sql_count > 0)
+		{
+			$percent = 100 / $this->site_sql_count * $this->sql_cache_hits;
+		}
 		return array($this->site_sql_count, $percent, $this->sql_cache_hits);
 	}
 
@@ -277,13 +281,13 @@ class Database
 	//SQL Update time field query
 	public function sql_update_time($table, $id, $destroy_cache = false)
 	{
-		$sql = $this->sql_update_time($table, $id);
+		$sql = $this->sql_update_time_build($table, $id);
 
 		//Run the SQL
 		return $this->sql_update_exe($sql, null, $destroy_cache);
 	}
 	
-	protected function sql_update_time($table, $id)
+	protected function sql_update_time_build($table, $id)
 	{
 		return 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = \'' . $this->time . '\' WHERE id = \'' . $this->sql_clean_input($id) . '\'';
 	}

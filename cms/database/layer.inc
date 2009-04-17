@@ -3,7 +3,6 @@ class Database
 {
 	private $options = array('allow_external_calls' => true);
 	private static $instance;
-	private $connected = false;
 
 	private $prefix;
 	private $sql_db_type;
@@ -638,18 +637,10 @@ class Database
 		}
 	}
 
-	protected function sql_connect()
-	{
-		if(!$this->connected)
-		{
-			$this->connected = database_execution::Singleton()->sql_connect();
-		}
-	}
-
 	//$Values is for when I get around to implimenting MDB2 properly!
 	private function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{
-		$this->sql_connect();
+		database_execution::Singleton()->sql_connect();
 
 		if($destroy_cache)
 		{

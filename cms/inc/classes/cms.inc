@@ -151,7 +151,7 @@ class CMS
 		$percent = 0;
 		if($totaltime != 0 and $phptime != 0) { $percent = $phptime/$totaltime*100;}
 
-		$sql_string = $sql_info[0].' SQL Querys ('.round($sql_info[1]).'% Cached in '.$cache.')';
+		$sql_string = $sql_info[0].' SQL Querys ('.round($sql_info[1]).'% Cached in '.$cache.') through ('. strtoupper($GLOBALS['database_backend']) .')';
 
 		$runtime=('<div class="footer_text">Page generated in ' . round($totaltime, 4) . ' seconds<br /> ' . round($percent, 0) . '% php time and with ' .$sql_string.' using '.(memory_get_peak_usage(true) / (1024 * 1024)).' MB</div>');
 

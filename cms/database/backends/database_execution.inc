@@ -5,7 +5,7 @@ class database_execution
 	protected static $instance;
 
 	protected $read;
-	public $write = NULL;
+	public $write = NULL; //FIXME Temp hack from avi to allow the insert methods to get the last id, needs new method I think.
 	protected $connected = false;
 
 	private $dsn_default;

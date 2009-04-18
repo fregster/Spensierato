@@ -107,7 +107,7 @@ class user
 		else
 		{
 			warnings::Singleton()->register('Login Failed', 'Either your Username or Password was incorrect or you are not registered', 0);
-			Common::reload_with_vars(array('authfailed'), array($auth));
+			Common::redirect_inc_vars(implode('/', common::get_path_vars()), array('authfailed' => $auth));
 		}
 		Common::bounce_to_referer();
 	}

@@ -332,7 +332,7 @@ class elementDefault
 	protected function toggle_quickapprove(){
 		//TO FIX: currently this only approvs the most recent pending edit.
 		$approvalData = database::Singleton()->sql_select_first(array('user_id', 'ts', 'data', 'title'), 'tbl_elements_approve', array('element_id'), array($this->id), array('id'), array('DESC'));
-		$this->archive_data($approvealData['data']);
+		$this->archive_data($approvalData['data']);
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'approved', 'approver'), array($approvalData['ts'], $approvalData['user_id'], time(), User::Singleton()->id()));
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title','search'), array($approvalData['data'], $approvalData['title'], $this->generate_search($approvalData['data'])));
 		return database::Singleton()->sql_delete_where('tbl_elements_approve', array('element_id'), $this->id);
@@ -440,22 +440,11 @@ class elementDefault
 				}
 				else{
 					//check if there is aproval data
-					$whereFields = array('element_id');
-					$whereVals = array($this->id);
-					//for non-approvers, only show their own changes
-					if (!Security::Singleton()->can_do('approve')) {
-						array_push($whereFields, 'user_id');
-						array_push($whereVals, user::singleton()->id());
-					}
+					$whereFields = array('element_id', 'user_id');
+					$whereVals = array($this->id, user::singleton()->id());
+
 					$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_approve', $whereFields, $whereVals, array('id'), array('DESC'));
 					if (!is_null($data)) {
-						if (Security::Singleton()->can_do('approve')) {
-							//get text diff for approvers
-							$old = strip_tags($default_data['data']);
-							$new = strip_tags($data['data']);
-							$data['data'] = diffCompare::multi_diff($old, array($new));
-							//$data['data'] = $diff->render();
-						}
 						$final_data = array_merge($data, $general_info);
 					}
 				}

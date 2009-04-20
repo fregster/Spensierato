@@ -78,8 +78,6 @@ abstract class variables
 
 	protected static function is_set($input)
 	{
-		print_r($input);
-		die();
 		if($input != NULL and isset($input))
 		{
 			return true;

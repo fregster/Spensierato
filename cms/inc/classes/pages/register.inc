@@ -21,7 +21,7 @@ class cmspage_register extends cmspage_html
 				Error::do403();
 			}
 
-			if(get::variable('is_set','key'))
+			if(get::variable('key','is_set'))
 			{
 				register::singleton()->verify_register();
 				exit;

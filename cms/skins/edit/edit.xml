@@ -7,22 +7,24 @@
 			<xsl:attribute name="style">background: #FFFFFF;</xsl:attribute>
 			<div id="notifications" style="visibility: hidden;">Notifications</div>
 					<div id="page_edit">
-						<xsl:if test="//archive or //pending_approvals">
-							<div id="page_edit_versions">
-								<xsl:if test="//pending_approvals">
-									<p id="page_edit_approvals">
-										<xsl:call-template name="pending_approvals"/>
-									</p>
-								</xsl:if>
-								<xsl:if test="//archive">
-									<p id="page_edit_revisions">
-										<xsl:call-template name="revision_rollback"/>
-									</p>
-								</xsl:if>
-							</div>
-							<div id="page_edit_toggle" class="jsShow" onclick="jsToggleDisplay('page_edit_versions'); return false;">
-								-
-							</div>
+						<xsl:if test="/page/security/can_approve = 1">
+							<xsl:if test="//archive or //pending_approvals">
+								<div id="page_edit_versions">
+									<xsl:if test="//pending_approvals">
+										<p id="page_edit_approvals">
+											<xsl:call-template name="pending_approvals"/>
+										</p>
+									</xsl:if>
+									<xsl:if test="//archive">
+										<p id="page_edit_revisions">
+											<xsl:call-template name="revision_rollback"/>
+										</p>
+									</xsl:if>
+								</div>
+								<div id="page_edit_toggle" class="jsShow" onclick="jsToggleDisplay('page_edit_versions'); return false;">
+									-
+								</div>
+							</xsl:if>
 						</xsl:if>
 						<div id="page_edit_form">
 							<xsl:element name="form">

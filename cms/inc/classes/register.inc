@@ -80,7 +80,7 @@ class Register
 
 	public function verify_register()
 	{
-		$id = get::variable('int','id');
+		$id = get::variable('id','int');
 		$temp_details = database::Singleton()->sql_select_first(array('data', 'ts'), 'tbl_temp', array('id'), array($id));
 
 		if(!isset($temp_details['data'][1]))

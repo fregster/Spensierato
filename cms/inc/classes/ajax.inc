@@ -50,7 +50,7 @@ abstract class ajax
 			$approvals = array_reverse($approvals);
 			$data = diffCompare::multi_diff($data, $approvals);
 		}
-		die(html_entity_decode($data));
+		die($data);
 	}
 
 	private static function edit($id)

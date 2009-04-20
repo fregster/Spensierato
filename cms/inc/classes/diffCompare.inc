@@ -7,18 +7,21 @@ require_once("Text/Diff.php");
 
 abstract class diffCompare{
 
-	public static function multi_diff($base_text, $edits){
+	public static function multi_diff($base_text, $edits, $merge = FALSE){
 		if (empty($edits)) {
 			return $base_text;
 		}
 
-		$current_edit = array_shift($edits);
+		$current_edit = html_entity_decode(array_shift($edits));
 		while(!empty($edits)){
-			$current_edit = self::single_diff($current_edit, array_shift($edits));
+			$current_edit = self::single_diff($current_edit, html_entity_decode(array_shift($edits)));
 		}
 
 		$diff = new diffClass($base_text, $current_edit);
-		$result = $diff->render();
+
+		if (!$merge) { $result = $diff->render(); }
+		else { $result = $diff->merge($merge); }
+
 		unset($diff);
 		return $result;
 	}
@@ -68,20 +71,20 @@ class diffClass extends Text_MappedDiff {
 			} elseif ($op instanceof Text_Diff_Op_delete) {
 				// Text was deleted, add it to the rendered difference in red
 				$temp = implode('',$op->orig);
-				$temp = str_replace(htmlentities('</p><p>'), html_entity_decode('</span></p><p><span style="background-color: #FF0000;">'), $temp);
+				$temp = str_replace('</p><p>', '</span></p><p><span style="background-color: #FF0000;">', $temp);
 				$render .= '<span style="background-color: #FF0000;">' . $temp . '</span>';
 			} elseif ($op instanceof Text_Diff_Op_add) {
 				// Text was added, add it to the rendered difference in green
 				$temp = implode('',$op->final);
-				$temp = str_replace(htmlentities('</p><p>'), html_entity_decode('</span></p><p><span style="background-color: #00FF00;">'), $temp);
+				$temp = str_replace('</p><p>', '</span></p><p><span style="background-color: #00FF00;">', $temp);
 				$render .= '<span style="background-color: #00FF00;">' . $temp . '</span>';
 			} elseif ($op instanceof Text_Diff_Op_change) {
 				// Text was modified, add it to the rendered difference as if the original text was deleted and the new text was added
 				$temp = implode('',$op->orig);
-				$temp = str_replace(htmlentities('</p><p>'), html_entity_decode('</span></p><p><span style="background-color: #FF0000;">'), $temp);
+				$temp = str_replace('</p><p>', '</span></p><p><span style="background-color: #FF0000;">', $temp);
 				$render .= '<span style="background-color: #FF0000;">' . $temp . '</span>';
 				$temp = implode('',$op->final);
-				$temp = str_replace(htmlentities('</p><p>'), html_entity_decode('</span></p><p><span style="background-color: #00FF00;">'), $temp);
+				$temp = str_replace('</p><p>', '</span></p><p><span style="background-color: #00FF00;">', $temp);
 				$render .= '<span style="background-color: #00FF00;">' . $temp . '</span>';
 			}
 		}
@@ -90,13 +93,13 @@ class diffClass extends Text_MappedDiff {
 	}
 
 	public function merge(){
-		$difference = $this->getDiff();
+		$difference = $this->getDiff($delete = false);
 		$merge = '';
 		foreach ($difference as $op){
 			if ($op instanceof Text_Diff_Op_copy || $op instanceof Text_Diff_Op_add || $op instanceof Text_Diff_Op_change) {
 				$merge .= implode('', $op->final);
 			}
-			else if ($op instanceof Text_Diff_Op_delete) {
+			else if ($op instanceof Text_Diff_Op_delete || !$delete) {
 				$merge .= implode('', $op->orig);
 			}
 		}

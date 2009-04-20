@@ -24,6 +24,9 @@ class cmspage_edit extends cmspage
 			if ($this->value[1] == 'update') {
 				$this->update();
 			}
+			else if (post::variable('save_approvals', 'isset')) {
+				$this->save_approvals();
+			}
 			else $this->save();
 		}
 		else
@@ -45,6 +48,39 @@ class cmspage_edit extends cmspage
 		$element = Element::type($this->value[1]);
 		$element->build($this->value[1]);
 		Render::Singleton()->render_edit(Content::Singleton()->build());
+	}
+
+	private function save_approvals(){
+		$this->security_element_approve();
+
+		$element_data = database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->value[1]));
+		$data = $element_data['data'];
+		$approvals_list = post::variable('approvals');
+		if (!empty($approvals_list)) {
+			$approvals = array();
+			foreach ($approvals_list as $approval_id){
+				$result = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_approve', array('id'), array($approval_id));
+				$approvals[] = $result['data'];
+			}
+
+			$approvals = array_reverse($approvals);
+
+			$data = diffCompare::multi_diff($data, $approvals, TRUE);
+
+			$data = array('title' => $element_data['title'], 'html' => $data);
+
+			$element = Element::type($this->value[1]);
+			$element->build($this->value[1]);
+			$element->save(false, $data);
+
+			foreach ($approvals_list as $approval_id){
+				database::Singleton()->sql_update_by_id($approval_id, 'tbl_elements_approve', array('approved'), array('1'));
+			}
+
+		}
+
+		//reload the current element to continue editing
+		common::redirect('/'.implode('/', $this->value));
 	}
 
 	private function save(){

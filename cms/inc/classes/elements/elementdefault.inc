@@ -139,7 +139,7 @@ class elementDefault
 		return $dom->saveXML();
 	}
 
-	public function save($draft = true)
+	public function save($draft = true, $data = NULL)
 	{
 		if($this->attach_upload() == false)
 		{
@@ -148,7 +148,11 @@ class elementDefault
 		}
 		$extra = $this->attach_extra_data();
 
-		$details = array_merge($_POST, $extra);
+		if (is_null($data)) {
+			$data = $_POST;
+		}
+
+		$details = array_merge($data, $extra);
 
 		//get the title and remove it from the array so it
 		//doesn't get into the xml, since it isn't part of the data
@@ -165,12 +169,6 @@ class elementDefault
 			switch ($key)
 			{
 				case 'html':
-					//this section cleans out <span> tags used by the diff class before saving to the DB.
-					//the first replace deletes the "delete" text + span tags
-					//the second replace just deletes the tags, since the added text is meant to be saved
-					$value = preg_replace('~<span style="background-color: #FF0000;">.*?</span>~s', '', $value);
-					$value = preg_replace('~<span style="background-color: #00FF00;">(.*?)</span>~s', '$1', $value);
-
 					$value = Common::html($value);
 					break;
 
@@ -197,10 +195,7 @@ class elementDefault
 
 		if($draft)
 		{
-			//database::Singleton()->sql_update_or_insert('cms_tbl_elements_draft', array('element_id', 'user_id'), array($this->id,user::Singleton()->id()), array('data', 'ts'), array(common::sql_clean(strip_tags(htmlentities($data, ENT_QUOTES))), CMS::Singleton()->time()));
-			//database::Singleton()->sql_update_by_id($this->id, $table, $fields = array(), $values = array())
 			database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
-//database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
 			die('SAVED');
 		}
 		else
@@ -386,12 +381,12 @@ class elementDefault
 			}
 			if(isset($this->approved))
 			{
-				$this->element->setAttribute('approved', date(settings::singleton()->get_setting('date_format)'), $this->approved));
+				$this->element->setAttribute('approved', $this->approved);
 			}
 
 			if(isset($this->approver))
 			{
-				$this->element->setAttribute('approver', $this->approver);
+				$this->element->setAttribute('approver', date(settings::singleton()->get_setting('date_format'), $this->approver));
 			}
 
 			$this->element->setAttribute('revision', $this->revision);
@@ -440,8 +435,8 @@ class elementDefault
 				}
 				else{
 					//check if there is aproval data
-					$whereFields = array('element_id', 'user_id');
-					$whereVals = array($this->id, user::singleton()->id());
+					$whereFields = array('element_id', 'user_id', 'approved');
+					$whereVals = array($this->id, user::singleton()->id(), '0');
 
 					$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_approve', $whereFields, $whereVals, array('id'), array('DESC'));
 					if (!is_null($data)) {
@@ -520,11 +515,11 @@ class elementDefault
 	//seperated from arrange_data()
 	protected function check_pending_approval($return_list = FALSE){
 		if ($return_list) {
-			$approvals = database::Singleton()->sql_select(array('id', 'ts', 'user_id'), 'tbl_elements_approve', array('element_id'), array($this->id));
+			$approvals = database::Singleton()->sql_select(array('id', 'ts', 'user_id'), 'tbl_elements_approve', array('element_id', 'approved'), array($this->id, '0'));
 			return $approvals;
 		}
 		else{
-			$approvals = database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('element_id'), array($this->id));
+			$approvals = database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('element_id', 'approved'), array($this->id, '0'));
 			if (!is_null($approvals) && security::Singleton()->can_do('approve')) {
 				$this->approve = true;
 			}

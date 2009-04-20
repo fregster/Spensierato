@@ -230,7 +230,7 @@ Settings::Singleton()->new_setting('login_capthca_remember', true);
 //			2 Log SQL (All)
 //			5 Force Displaying SQL
 //			10 Save debug to file
-Settings::Singleton()->new_setting('debug', 0, false, true);
+Settings::Singleton()->new_setting('debug', 10, false, true);
 
 //Setting debug_log_folder
 //string path to the debug log folder
@@ -295,23 +295,28 @@ Settings::singleton()->new_setting('show_username_in_approvals', true, false, tr
 //Sets the GZip compression level set to 0 to disable
 Settings::singleton()->new_setting('output_compression_level', 9, false, true);
 
+//2 settings to control how long both saved and pending approvals
+//are saved in the elements_data_approve table
+Settings::singleton()->new_setting('approvals_saved_lifetime', 0, false, true);
+Settings::singleton()->new_setting('approvals_pending_lifetime', 0, false, true);
+
 if(!$install) //Settings that require the install to have been completed
 {
 	//Temporay uploads folder
 	Settings::Singleton()->new_setting('cms_folder_uploads', $GLOBALS['cms_folder_uploads'], false, true);
-	
+
 	//Permanant uploads folder
 	Settings::Singleton()->new_setting('cms_folder_downloads', $GLOBALS['cms_folder_downloads'], false, true);
-	
+
 	//Unscaled images
 	Settings::Singleton()->new_setting('cms_folder_orig_images', $GLOBALS['cms_folder_orig_images'], false, true);
-	
+
 	//Log files
 	Settings::Singleton()->new_setting('cms_folder_logs', $GLOBALS['cms_folder_logs'], false, true);
-	
+
 	//Load the random key into the settings singleton
 	Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key'], true, true);
-	
+
 	//Setting mod_rewrite
 	//Use mod_rewrite to clean the URL's
 	Settings::singleton()->new_setting('mod_rewrite', $GLOBALS['allow_rewrite'], false, true);

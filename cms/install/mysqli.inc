@@ -64,6 +64,7 @@ CREATE TABLE `cms_tbl_elements_approve` (
   `ts` varchar(64) NOT NULL,
   `title` varchar(128) NOT NULL default 'Please give the element a meaningful title',
   `data` longtext NOT NULL,
+  `approved` TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `User to Element` (`element_id`,`user_id`)
 ) ENGINE=".$default_table_engine.' DEFAULT CHARSET=latin1;';

@@ -30,7 +30,7 @@ class cmspage_login extends cmspage_html
 			}
 		}
 		else
-		{die(var_dump($_POST));
+		{
 			//Do login function
 			User::Singleton()->login();
 			Common::redirect($this->value);

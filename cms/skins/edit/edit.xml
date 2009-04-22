@@ -142,8 +142,8 @@
 			Edited by: <xsl:value-of select="/page/body/element/@editor" /> ( ) |
 			Revision: <xsl:value-of select="/page/body/element/@revision" /><br />
 			<xsl:if test="/page/body/element/@approved">
-				Last Aproved By: <xsl:value-of select="/page/body/element/@approved" /><br />
-				Approved On: <xsl:value-of select="/page/body/element/@approver" /><br />
+				Last Aproved By: <xsl:value-of select="/page/body/element/@approver" /><br />
+				Approved On: <xsl:value-of select="/page/body/element/@approved" /><br />
 			</xsl:if>
 		</xsl:if>
 	</div>
@@ -168,27 +168,46 @@
 	<form action="" method="post">
 		Select pending edits to view:<br />
 		<xsl:for-each select="//pending_approvals/approval">
-			<xsl:element name="input">
-				<xsl:attribute name="type">checkbox</xsl:attribute>
-				<xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
-				<xsl:attribute name="name">approvals[]</xsl:attribute>
-				<xsl:attribute name="id">approval_<xsl:value-of select="id" /></xsl:attribute>
-				<xsl:if test="checked">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-				</xsl:if>
-				<xsl:attribute name="onchange">get_diff(this.name);</xsl:attribute>
+			<xsl:element name="div">
+				<xsl:choose>
+					<xsl:when test="old">
+						<xsl:attribute name="name">old</xsl:attribute>
+						<xsl:if test="//pending_approvals/@show_old = 0">
+							<xsl:attribute name="style">display:none;</xsl:attribute>
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>new</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+
+				<xsl:element name="input">
+					<xsl:attribute name="type">checkbox</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
+					<xsl:attribute name="name">approvals[]</xsl:attribute>
+					<xsl:attribute name="id">approval_<xsl:value-of select="id" /></xsl:attribute>
+					<xsl:attribute name="onchange">get_diff(this.name);</xsl:attribute>
+				</xsl:element>
+				<xsl:element name="label">
+					<xsl:attribute name="for">approval_<xsl:value-of select="id" /></xsl:attribute>
+					<xsl:value-of select="date" />
+					<xsl:if test="username">
+						, by <xsl:value-of select="username" />
+					</xsl:if>
+				</xsl:element>
 			</xsl:element>
-			<xsl:element name="label">
-				<xsl:attribute name="for">approval_<xsl:value-of select="id" /></xsl:attribute>
-				<xsl:value-of select="date" />
-				<xsl:if test="username">
-					, by <xsl:value-of select="username" />
-				</xsl:if>
-			</xsl:element>
-			<br />
 		</xsl:for-each>
 		<input type="submit" name="save_approvals" value="Save Selected Approvals" />
 	</form>
+	<xsl:element name="input">
+		<xsl:attribute name="type">checkbox</xsl:attribute>
+		<xsl:attribute name="id">show_old_approvals</xsl:attribute>
+		<xsl:attribute name="onchange">show_old_approvals(this, 'old');</xsl:attribute>
+		<xsl:if test="//pending_approvals/@show_old = 1">
+			<xsl:attribute name="checked">checked</xsl:attribute>
+		</xsl:if>
+	</xsl:element>
+	<label for="show_old_approvals">Show old edits</label>
 </xsl:template>
 
 <xsl:template name="edit_footer">

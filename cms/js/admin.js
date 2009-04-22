@@ -103,3 +103,19 @@ function get_diff(name){
 		}
 	};
 }
+
+function show_old_approvals(toggle, name){
+	var old_approvals = document.getElementsByName(name);
+	var display_style;
+
+	if (toggle.checked == true) {
+		display_style = 'block';
+	}
+	else{
+		display_style = 'none';
+	}
+
+	for (i = 0; i < old_approvals.length; ++i){
+		old_approvals[i].style.display = display_style;
+	}
+}

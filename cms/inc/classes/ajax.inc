@@ -35,6 +35,7 @@ abstract class ajax
 		}
 	}
 
+	//code is duplicated in edit::save_approvals()
 	private static function approvals($element_id){
 		$element_id = str_replace('e_', '', $element_id);
 		$element_data = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($element_id));

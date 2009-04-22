@@ -139,7 +139,7 @@ class elementDefault
 		return $dom->saveXML();
 	}
 
-	public function save($draft = true, $data = NULL)
+	public function save($draft = true)
 	{
 		if($this->attach_upload() == false)
 		{
@@ -148,11 +148,7 @@ class elementDefault
 		}
 		$extra = $this->attach_extra_data();
 
-		if (is_null($data)) {
-			$data = $_POST;
-		}
-
-		$details = array_merge($data, $extra);
+		$details = array_merge($_POST, $extra);
 
 		//get the title and remove it from the array so it
 		//doesn't get into the xml, since it isn't part of the data
@@ -381,12 +377,12 @@ class elementDefault
 			}
 			if(isset($this->approved))
 			{
-				$this->element->setAttribute('approved', $this->approved);
+				$this->element->setAttribute('approved', date(settings::singleton()->get_setting('date_format'), $this->approved));
 			}
 
 			if(isset($this->approver))
 			{
-				$this->element->setAttribute('approver', date(settings::singleton()->get_setting('date_format'), $this->approver));
+				$this->element->setAttribute('approver', $this->approver);
 			}
 
 			$this->element->setAttribute('revision', $this->revision);
@@ -529,10 +525,17 @@ class elementDefault
 	protected function get_pending_approval_list(){
 		$approval_list = $this->check_pending_approval(TRUE);
 		if ($approval_list && options::singleton()->get_option('admin_mode')) {
-			$built_xml = '<pending_approvals>';
+
+			$latest_edit = ($this->approved < $this->edited)?$this->edited:$this->approved;
+			$show_old = settings::singleton()->get_setting('approvals_show_old');
+
+			$built_xml = '<pending_approvals show_old="'.$show_old.'">';
 			foreach ($approval_list as $key => $pending_approval){
 				$built_xml .= '<approval>';
 				$built_xml .= '<id>'.$pending_approval['id'].'</id>';
+				if ($pending_approval['ts'] < $latest_edit) {
+					$built_xml .= '<old />';
+				}
 				$built_xml .= '<date>'.date(settings::singleton()->get_setting('date_format'), $pending_approval['ts']).'</date>';
 				if (settings::singleton()->get_setting('show_username_in_approvals')) {
 					$user = database::Singleton()->sql_select_first(array('username'), 'tbl_users', array('id'), array($pending_approval['user_id']));

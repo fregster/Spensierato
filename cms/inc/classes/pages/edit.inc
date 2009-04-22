@@ -50,10 +50,16 @@ class cmspage_edit extends cmspage
 		Render::Singleton()->render_edit(Content::Singleton()->build());
 	}
 
+	//FIXME: most of the code in this method is duplicated from ajax::approvals(),
+	//and some from the element saving process.
 	private function save_approvals(){
 		$this->security_element_approve();
 
-		$element_data = database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->value[1]));
+		$element_data = database::singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->value[1]));
+
+		//archive old data
+		database::singleton()->sql_insert('tbl_elements_data_archive', array('data', 'title', 'ts', 'replaced_by', 'replaced_ts', 'element_id'), array($element_data['data'], $element_data['title'], time(), user::singleton()->id(), time(), $this->value[1]));
+
 		$data = $element_data['data'];
 		$approvals_list = post::variable('approvals');
 		if (!empty($approvals_list)) {
@@ -67,11 +73,10 @@ class cmspage_edit extends cmspage
 
 			$data = diffCompare::multi_diff($data, $approvals, TRUE);
 
-			$data = array('title' => $element_data['title'], 'html' => $data);
+			$data = '<html>'.utf8_encode(common::sql_clean(strip_tags(common::html($data)))).'</html>';
 
-			$element = Element::type($this->value[1]);
-			$element->build($this->value[1]);
-			$element->save(false, $data);
+			database::singleton()->sql_update_by_id($this->value[1], 'tbl_elements_data', array('data'), array($data));
+			database::singleton()->sql_update_by_id($this->value[1], 'tbl_elements', array('approved', 'approver'), array(time(), user::singleton()->id()));
 
 			foreach ($approvals_list as $approval_id){
 				database::Singleton()->sql_update_by_id($approval_id, 'tbl_elements_approve', array('approved'), array('1'));

@@ -300,6 +300,9 @@ Settings::singleton()->new_setting('output_compression_level', 9, false, true);
 Settings::singleton()->new_setting('approvals_saved_lifetime', 0, false, true);
 Settings::singleton()->new_setting('approvals_pending_lifetime', 0, false, true);
 
+//determine whether old approvals are visible (value = 1) or hidden (value = 0) by default
+Settings::singleton()->new_setting('approvals_show_old', 1, false, true);
+
 if(!$install) //Settings that require the install to have been completed
 {
 	//Temporay uploads folder

@@ -65,6 +65,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	if(post::variable('rewrite')) { $rewrite = 'true'; }
 	else { $rewrite = 'false'; }
 
+	//define $GLOBALS required by the database layer
+	$GLOBALS['database_driver'] = $driver;
+	$GLOBALS['database_user_readwrite'] = $user_rw;
+	$GLOBALS['database_user_read'] = $user_r;
+	$GLOBALS['database_password'] = $user_db_password;
+	$GLOBALS['database_host'] = $host;
+	$GLOBALS['database_name'] = $database;
+	$GLOBALS['table_prefix'] = $prefix.'_';
+
 	debug('Vars set');
 
 	/*
@@ -149,15 +158,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 			die($error);
 		}
 	}
-
-	//define $GLOBALS required by the force_write_user(), sql_insert() methods
-	$GLOBALS['database_driver'] = $driver;
-	$GLOBALS['database_user_readwrite'] = $user_rw;
-	$GLOBALS['database_user_read'] = $user_r;
-	$GLOBALS['database_password'] = $user_db_password;
-	$GLOBALS['database_host'] = $host;
-	$GLOBALS['database_name'] = $database;
-	$GLOBALS['table_prefix'] = $prefix.'_';
 
 	debug('Createing Homepage');
 	database::Singleton()->force_write_user();

@@ -14,8 +14,9 @@ class cmspage //This relies on CurentPage been loaded
 	{
 	   if (!isset(self::$instance))
 	   {
-			$c = 'cmspage_'.CMS::Singleton()->page_details['type'];
-	   		if(!class_exists($c))
+			$c = __CLASS__.'_'.CMS::Singleton()->page_details['type'];
+			
+	   		if(!load_extended_class(__CLASS__, $c))
 	   		{
 	   			$c = __CLASS__;
 	   		}

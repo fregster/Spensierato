@@ -15,4 +15,10 @@ foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings:
 	array_push($this->preload, basename($filename));
 }
 
+/**
+ * Does this template extend the default or completly overwrite it
+ */
+//Setting template_extend_default
+//Any new template should also include the templates from the default site
+//Settings::Singleton()->new_setting('template_dont_extend_default', true, false, true);
 ?>

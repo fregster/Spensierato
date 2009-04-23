@@ -18,7 +18,7 @@ class Database
 	private $memcached = false;
 
 	private $sql_log_array = array();
-	private $site_sql_count = 0;
+	protected $site_sql_count = 0;
 	private $sql_time = 0;
 
 	private $use_external_log = true;
@@ -651,7 +651,7 @@ class Database
 		$sql_start_time = microtime();
 
 		//Logging info
-		$this->site_sql_count++;
+		$this->site_sql_count ++;
 		$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
 
 		if($this->show_error_sql && isset($results['error']))

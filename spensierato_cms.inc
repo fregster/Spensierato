@@ -34,31 +34,8 @@ function __autoload($class_name)
 						$include_path.'/cms/inc/classes/optional/',
 					);
 
-	if(substr($class_name, 0, 7) == 'cmspage') //Quick hack for page types
-	{
-		$path = $include_path.'/cms/inc/classes/pages/';
-
-		if(isset($class_name[8]))
-		{
-			$class_name = substr($class_name, 8);
-		}
-		if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
-			require_once $path.$class_name.'.inc';
-		if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
-			return true;
-	}
-
 	if($class_name != '' and $class_name != null and !class_exists($class_name) and !isset($class_block_list[$class_name])) //Ensure we should be trying to load the class
 	{
-		if($class_name == 'database') //Quick check for DB class as its outside the normal classes dir
-		{
-			//Database files
-			if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
-				require_once($include_path.'/cms/database/database.inc');
-			if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
-				return true;
-		}
-
 		foreach($paths as $path) //Cycle through the includes dir in order of preference
 		{
 			if(file_exists($path.$class_name.'.inc')) //Check the file exists
@@ -73,6 +50,20 @@ function __autoload($class_name)
 		die('<p>Critical error: Class "'.$class_name.'" not defined</p>'); //A class has been called the can not be loaded
 	}
 	return false; //Should never really get here
+}
+
+function load_extended_class($base_class, $new_class)
+{
+	global $include_path;
+	$base_len = strlen($base_class)+1;
+	$class_filename = $new_class;
+	if(substr($new_class, 0, $base_len) == ($base_class.'_'))
+	{
+		$class_filename = substr($new_class, $base_len);
+	}
+
+	include_once($include_path.'/cms/inc/classes/'.$base_class.'/'.$class_filename.'.inc');
+	return class_exists($new_class);
 }
 
 set_exception_handler('exception_handler');

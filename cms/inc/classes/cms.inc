@@ -129,6 +129,15 @@ class CMS
 		User::Singleton()->start();
 	}
 
+	/**
+	 * Use this function after the inclusion of any custom files
+	 * This is the start of the main code flow
+	 * 
+	 * It stats by checking if there is any admin work to do
+	 * It then class the currentPage, this works out what the current page request is for and creates a cmspage object and initalises it
+	 * Finally run_cms() runs the page (Each page decides it's own security requirments and output)
+	 * @return unknown_type
+	 */
 	public function run_cms()
 	{
 		//Do any admin checks
@@ -141,6 +150,11 @@ class CMS
 		cmspage::singleton()->run();
 	}
 
+	/**
+	 * end_cms()
+	 * This is called by the render object to return a footer string if required.
+	 * @return string
+	 */
 	public function end_cms()
 	{
 		$this->time_finish = Common::time_with_microseconds();
@@ -263,6 +277,10 @@ class CMS
 		}
 	}
 
+	/**
+	 * Just some checks to do if were an admin user, like version_checking
+	 * @return true
+	 */
 	private function admin()
 	{
 		if(Options::singleton()->get_option('admin_mode'))
@@ -279,11 +297,22 @@ class CMS
 		}
 	}
 
+	/**
+	 * shutdown()
+	 * This is a shutdown method that can be called after the page has finished rendering.
+	 * Currently does nothing
+	 * @return unknown_type
+	 */
 	public function shutdown()
 	{
 
 	}
 
+	/**
+	 * If we have advanced session security we can if we wish lock the session to an IP,
+	 * this will not work behind a dynamic upstream poxy set ie AOL users
+	 * @return unknown_type
+	 */
 	private function session_ip_check()
 	{
 		if(Settings::Singleton()->get_setting('session_security_ip'))
@@ -334,6 +363,11 @@ class CMS
 </html>');
 	}
 
+	/**
+	 * TODO finish this, it should check a TXT record at spensierato.net for version information.
+	 * It should raise a warning if an updated release has been made.
+	 * @return unknown_type
+	 */
 	private function version_check()
 	{
 		$hostname = Settings::singleton()->get_setting('update_version_check');
@@ -400,6 +434,10 @@ class CMS
 		return false;
 	}
 
+	/**
+	 * Check to see if persistant cacheing is enabled
+	 * @return true / false
+	 */
 	private function persistant_cache()
 	{
 		return persistantcache::Singleton()->load();

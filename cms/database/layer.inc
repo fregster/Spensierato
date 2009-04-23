@@ -659,6 +659,10 @@ class Database
 				$error .= 'From : '. $sql;
 				$this->sql_error($results['error']);
 		}
+		else if(isset($results['error']))
+		{
+			$this->sql_error($results['error']);
+		}
 
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit, $results['resultset']);
 

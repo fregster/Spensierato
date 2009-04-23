@@ -105,7 +105,10 @@ class database_execution_mdb2 extends database_execution
 			$this->sql_error($e->getMessage());
 	    }
 		
-		return array('resultset' => $resultset, 'error' => $error);
+	    $final = array('resultset' => $resultset);
+	    if($error) { $final['error'] = $error; }
+	    
+		return $final;
 	}
 	
 	public function sql_select_exe_run($resultset)

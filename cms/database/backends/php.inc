@@ -28,7 +28,10 @@ class database_execution_php extends database_execution
 	  		$error = mysql_error();
 		}
 		
-		return array('resultset' => $result, 'error' => $error);
+		$final = array('resultset' => $result);
+	    if($error) { $final['error'] = $error; }
+	    
+		return $final;
 	}
 	
 	public function sql_select_exe_run($resultset)

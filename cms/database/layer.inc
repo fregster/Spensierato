@@ -654,7 +654,7 @@ class Database
 		$this->site_sql_count++;
 		$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
 
-		if($this->show_error_sql && $results['error'])
+		if($this->show_error_sql && isset($results['error']))
 		{
 				$error .= 'From : '. $sql;
 				$this->sql_error($results['error']);
@@ -662,6 +662,7 @@ class Database
 		else if(isset($results['error']))
 		{
 			$this->sql_error($results['error']);
+			exit;
 		}
 
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit, $results['resultset']);
@@ -674,8 +675,6 @@ class Database
 		$fh = fopen($this->error_file, 'r');
 		$theData = fread($fh, filesize($this->error_file));
 		fclose($fh);
-		var_dump($this);
-		var_dump(debug_backtrace());
 
 	    die(str_replace('***ERROR***', $message, $theData));
 	}

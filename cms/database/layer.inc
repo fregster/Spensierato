@@ -35,9 +35,8 @@ class Database
 	{
 	   if (!isset(self::$instance))
 	   {
-	   		if(!isset($GLOBALS['database_driver'])) { $GLOBALS['database_driver'] = database::$backends[0]; }
-			$c = 'database_'.$GLOBALS['database_driver'];
-			include(dirname(__FILE__).'/server_types/'.$GLOBALS['database_driver'].'.inc');
+			$c = 'database_'.DATABASE_DRIVER;
+			include(DATABASE_LAYER_PATH.'/server_types/'.DATABASE_DRIVER.'.inc');
 	   		if(!class_exists($c))
 	   		{
 	   			die('Unable to create correct database layer type ('.$c.')');
@@ -61,11 +60,11 @@ class Database
 	{
 		$this->time = time();
 		$this->microtime = microtime();
-		$this->prefix = $GLOBALS['table_prefix'];
+		$this->prefix = DATABASE_TABLE_PREFIX;
 
 		if(!$this->error_file)
 		{
-			$this->error_file = dirname(__FILE__).'/dberror.html';
+			$this->error_file = DATABASE_LAYER_PATH.'/dberror.html';
 		}
 
 	}

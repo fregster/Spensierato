@@ -16,15 +16,14 @@ class database_execution
 	   if (!isset(self::$instance))
 	   {
 	   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = database_execution::$backends[0]; }
-
-	   		if(file_exists(dirname(__FILE__).'/'.$GLOBALS['database_backend'].'.inc'))
+	   		if(file_exists(DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc'))
 	   		{
-	   			require_once(dirname(__FILE__).'/'.$GLOBALS['database_backend'].'.inc');
+	   			require_once(DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc');
 	   			$c = 'database_execution_'.$GLOBALS['database_backend'];
 	   		}
 	   		else
 	   		{
-			    die('Unable to build the requested database layer');
+			    die('Unable to build the requested database layer '.DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc');
 	   		}
 
 		   self::$instance = new $c;

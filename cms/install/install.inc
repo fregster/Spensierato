@@ -197,21 +197,24 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 //The DB layer suports 2 users read and readwrite
 //readwrite is used once logged in to provide another layer of prtection against sql injection.
 
-$GLOBALS[\'database_host\'] = \''. $host .'\';
-$GLOBALS[\'database_driver\'] = \''. $driver .'\';
-$GLOBALS[\'database_name\'] = \''. $database .'\';
-$GLOBALS[\'database_user_read\'] = \''. $user_r .'\';
-$GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\';
-$GLOBALS[\'database_password\'] = \''. $user_db_password .'\';
-$GLOBALS[\'table_prefix\'] = \''. $prefix .'_\';
-$GLOBALS[\'allow_rewrite\'] = '. $rewrite.';
+$GLOBALS[\'database_backend\'] = \'mdb2\'; //can be mdb2 (Default), pdo or php
+$GLOBALS[\'database_host\'] = \''. $host .'\'; //DB Host, prob localhost or 127.0.0.1
+$GLOBALS[\'database_driver\'] = \''. $driver .'\'; //DB connection driver, for mysql 4+ use mysqli
+$GLOBALS[\'database_name\'] = \''. $database .'\'; //DB name
+$GLOBALS[\'database_user_read\'] = \''. $user_r .'\'; //A standard db user with SELECT only!
+$GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\'; //A db user with SELECT, UPDATE, REPLACE and DELETE permissions, this user is only used when required to help prevent 0 day exploits
+$GLOBALS[\'database_password\'] = \''. $user_db_password .'\'; //A nice random string for the DB password
+$GLOBALS[\'table_prefix\'] = \''. $prefix .'_\'; //A random table prefix to help prevent 0 day exploits
+$GLOBALS[\'allow_rewrite\'] = '. $rewrite.'; //Apache + mod rewrite gives clean URL\'s anything else is untested
+$GLOBALS[\'random_key\'] = \''.post::variable('random_key').'\'; //A random key used for generating more secure hash\'s
+$GLOBALS[\'server_os\'] = \''.$os.'\'; //Should be unix, windows or osx
+
+//Paths to folders in the filesystem
 $GLOBALS[\'cms_folder_uploads\'] = \''.$doc_root_prefix.post::variable('cms_folder_uploads').'\';
 $GLOBALS[\'cms_folder_downloads\'] = \''.$doc_root_prefix.post::variable('cms_folder_downloads').'\';
 $GLOBALS[\'cms_folder_orig_images\'] = \''.$doc_root_prefix.post::variable('cms_folder_orig_images').'\';
 $GLOBALS[\'cms_folder_logs\'] = \''.$doc_root_prefix.post::variable('cms_folder_logs').'\';
 $GLOBALS[\'cms_folder_cache\'] = \''.$doc_root_prefix.post::variable('cms_folder_cache').'\';
-$GLOBALS[\'random_key\'] = \''.post::variable('random_key').'\';
-$GLOBALS[\'server_os\'] = \''.$os.'\';
 ?>';
 
 	/**

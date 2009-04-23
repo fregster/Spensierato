@@ -112,7 +112,7 @@ class database_execution
 	 * @param $mods
 	 * @return database object
 	 */
-	protected function connect($dsn, $options = NULL, $mods = NULL)
+	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
 
 	}

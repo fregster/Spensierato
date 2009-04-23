@@ -73,7 +73,7 @@ class Database
 	public static function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{
 		//A DSN has been set so create the connection with the specified options
-		return database::connect($dsn, $options, $mods);
+		return database_execution::singleton()->connect($dsn, $options, $mods);
 	}
 
 	/**
@@ -144,7 +144,7 @@ class Database
 	}
 
 	//SQL Logging function
-	private function sql_log($sql_count, $sql_query, $sql_start_time, $sql_cache_hit)
+	private function sql_log($sql_count, $sql_query, $sql_start_time, $sql_cache_hit, $sql_result = NULL)
 	{
 		if($this->options['allow_external_calls'])
 		{
@@ -162,6 +162,7 @@ class Database
 				if ( ($sql_cache_hit == false) or (Settings::Singleton()->get_setting('debug') > 1)	)
 				{
 					$details = array('count' => $sql_count, 'query' => $sql_query, 'time' => $sql_exc_time, 'cached' => $sql_cache_hit);
+					if($sql_result != NULL) { $details['result'] = $sql_result; }
 					array_push($this->sql_log_array, $details);
 					$this->sql_time = $this->sql_time + $sql_exc_time;
 
@@ -650,7 +651,7 @@ class Database
 		$sql_start_time = microtime();
 
 		//Logging info
-		++ $this->site_sql_count;
+		$this->site_sql_count++;
 		$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
 
 		if($this->show_error_sql && $results['error'])
@@ -659,7 +660,7 @@ class Database
 				$this->sql_error($results['error']);
 		}
 
-		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit);
+		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit, $results['resultset']);
 
 		return $results['resultset'];
 	}

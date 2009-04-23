@@ -1,7 +1,7 @@
 <?php
 class database_execution_mdb2 extends database_execution
 {	
-	protected function connect($dsn, $options = NULL, $mods = NULL)
+	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
 		//Load the MDB2 code
 		//Doing this here only loads the code if a DB query is actually going to be done

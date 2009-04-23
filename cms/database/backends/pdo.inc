@@ -1,7 +1,7 @@
 <?php
 class database_execution_pdo extends database_execution
 {
-	protected function connect($dsn, $options = NULL, $mods = NULL)
+	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
 		try {
 				$connection_String = 'mysql:host='.$dsn['hostspec'].';dbname='.$dsn['database'];
@@ -71,7 +71,7 @@ class database_execution_pdo extends database_execution
         {
        		$results[] = $row;
         }
-		return $results;
+		return $results; 
 	}
 }
 ?>

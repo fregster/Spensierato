@@ -1,7 +1,7 @@
 <?php
 class database_execution_php extends database_execution
 {
-	protected function connect($dsn, $options = NULL, $mods = NULL)
+	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
 		$db = @mysql_connect($dsn['hostspec'], $dsn['username'], $dsn['password']);
 		if(!$db) 

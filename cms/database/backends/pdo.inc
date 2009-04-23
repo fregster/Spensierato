@@ -5,7 +5,7 @@ class database_execution_pdo extends database_execution
 	{
 		try {
 				$connection_String = 'mysql:host='.$dsn['hostspec'].';dbname='.$dsn['database'];
-		    	$pdo = new PDO($connection_String, $dsn['username'], $dsn['password']);
+		    	$pdo = new PDO($connection_String, $dsn['username'], $dsn['password'], array(PDO::FETCH_ASSOC));
 		    }
 			catch(PDOException $e)
 		    {
@@ -67,10 +67,11 @@ class database_execution_pdo extends database_execution
 	{
 		$results = array();
 
-    	foreach ($resultset as $row)
-        {
-       		$results[] = $row;
-        }
+	    foreach ($resultset as $row)
+		{
+	      		$results[] = $row;
+	    }
+		
 		return $results; 
 	}
 }

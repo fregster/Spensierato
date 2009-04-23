@@ -134,7 +134,7 @@ class database_execution
 	 * @param $file
 	 * @return unknown_type
 	 */
-	private function sql_error($message, $line = NULL, $file = NULL)
+	protected function sql_error($message, $line = NULL, $file = NULL)
 	{
 		database::singleton()->sql_error($message, $line, $file);
 	}

@@ -665,7 +665,7 @@ class Database
 		return $results['resultset'];
 	}
 
-	protected function sql_error($message, $line = NULL, $file = NULL)
+	public function sql_error($message, $line = NULL, $file = NULL)
 	{
 		$fh = fopen($this->error_file, 'r');
 		$theData = fread($fh, filesize($this->error_file));

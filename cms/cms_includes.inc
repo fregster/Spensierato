@@ -13,8 +13,10 @@ function cms_root()
 //None
 
 //Include the Options file
-require_once('spensierato_options.inc');
-
+if(PHP_OS=='Darwin')
+	require_once('./spensierato_options.inc');
+else
+	require_once('spensierato_options.inc');
 //Custom includes
 //None
 ?>

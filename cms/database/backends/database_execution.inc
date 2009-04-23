@@ -127,6 +127,11 @@ class database_execution
 
 	}
 	
+	public function lastInsertID($table,$col)
+	{
+		
+	}
+	
 	/**
 	 * Proxy method back to the main db layer
 	 * @param $message

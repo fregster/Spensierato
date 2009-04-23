@@ -41,5 +41,10 @@ class database_execution_php extends database_execution
 		mysql_free_result($resultset);
 		return $results;
 	}
+	
+	public function lastInsertID($table,$col)
+	{
+		//TODO have a think about how to implement this as it depends on the driver etc
+	}
 }
 ?>

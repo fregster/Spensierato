@@ -119,5 +119,10 @@ class database_execution_mdb2 extends database_execution
 
 		return $results;
 	}
+	
+	public function lastInsertID($table,$col)
+	{
+		return $this->write->lastInsertId($table,$col);
+	}
 }
 ?>

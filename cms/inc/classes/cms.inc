@@ -84,7 +84,7 @@ class CMS
 
 	public function time()
 	{
-		return $this->time;
+		return Common::time_with_microseconds();
 	}
 
 	public function cms_root()

@@ -58,11 +58,11 @@ class Register
 
 	public function new_registration()
 	{
-		if(capthca::Code_check(post::variable('is_set','security_code')))
+		if(capthca::Code_check(post::variable('security_code','is_set')))
 		{
 		//build post data
-		$this->username = post::variable('string','username');
-		$this->email =  post::variable('string','email');
+		$this->username = post::variable('username','string');
+		$this->email =  post::variable('email','string');
 
 		//Generate a random password this makes the hash even more random
 		$this->salt = common::generate_random_string(16);
@@ -97,7 +97,7 @@ class Register
 		$data = common::xml_to_array($temp_details['data']);
 
 		//Compare hashes
-		if($data['hash'] == get::variable('string','key'))
+		if($data['hash'] == get::variable('key','string'))
 		{
 			database::Singleton()->force_write_user();
 			database::Singleton()->sql_delete_by_colum_equals('tbl_temp', 'id', $id);

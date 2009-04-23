@@ -10,7 +10,7 @@ if(!isset($GLOBALS['database_driver'])) { $GLOBALS['database_driver'] = $drivers
 define('DATABASE_DRIVER', $GLOBALS['database_driver']);
 
 //Set the database backend, if it's not set load it from the array of avaiable backends
-if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = $drivers[0]; }
+if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = $backends[0]; }
 define('DATABASE_BACKEND' , $GLOBALS['database_backend']);
 
 //Set the database table prefic, if it's not set load it blank

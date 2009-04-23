@@ -126,5 +126,17 @@ class database_execution
 	{
 
 	}
+	
+	/**
+	 * Proxy method back to the main db layer
+	 * @param $message
+	 * @param $line
+	 * @param $file
+	 * @return unknown_type
+	 */
+	private function sql_error($message, $line = NULL, $file = NULL)
+	{
+		database::singleton()->sql_error($message, $line, $file);
+	}
 }
 ?>

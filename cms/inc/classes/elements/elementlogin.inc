@@ -21,7 +21,7 @@ class elementLogin extends elementDefault
 			}
 			else
 			{
-				if(enhanced_login::singleton()->suported())
+				if(enhancedLogin::singleton()->suported())
 				{
 					$template = 'templates/login_enhanced.html';
 				}

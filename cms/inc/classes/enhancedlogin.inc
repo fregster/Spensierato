@@ -12,7 +12,7 @@
  * This is not a replacment for SSL but does prevent username and passwords showing up in proxy logs
  *
  */
-class enhanced_login extends user
+class enhancedLogin extends user
 {
 	private $required_hash_type = 'sha256';
 	private $key;

@@ -25,7 +25,7 @@ abstract class ajax
 				break;
 
 			case 'login':
-				enhanced_login::Singleton()->login();
+				enhancedLogin::Singleton()->login();
 				break;
 
 			default:

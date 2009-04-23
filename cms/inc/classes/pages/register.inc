@@ -20,13 +20,20 @@ class cmspage_register extends cmspage_html
 			{
 				Error::do403();
 			}
-
+			//process new registration 
+			if(post::variable('username','is_set'))
+			{		
+				register::singleton()->new_registration();
+				//TODO should show the registration is finished.
+				Common::redirect('');
+				exit;
+			}
+			//verify the registration by the address link in activation email
 			if(get::variable('key','is_set'))
 			{
 				register::singleton()->verify_register();
 				exit;
 			}
-			
 			//Check cookies are enabled first
 			Common::cookie_check();
 

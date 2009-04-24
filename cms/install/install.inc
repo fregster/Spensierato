@@ -199,7 +199,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 //The DB layer suports 2 users read and readwrite
 //readwrite is used once logged in to provide another layer of prtection against sql injection.
 
-$GLOBALS[\'database_backend\'] = \'mdb2\'; //can be mdb2 (Default), pdo or php
+$GLOBALS[\'database_backend\'] = \''.$layer.'\'; //can be mdb2 (Default), pdo or php
 $GLOBALS[\'database_host\'] = \''. $host .'\'; //DB Host, prob localhost or 127.0.0.1
 $GLOBALS[\'database_driver\'] = \''. $driver .'\'; //DB connection driver, for mysql 4+ use mysqli
 $GLOBALS[\'database_name\'] = \''. $database .'\'; //DB name

@@ -49,6 +49,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$password = post::variable('password');
 	$host = post::variable('host');
 	$driver =  post::variable('type');
+	$layer = post::variable('db-layer');
 
 	//Database to create
 	$database = post::variable('database');
@@ -67,6 +68,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 	//define $GLOBALS required by the database layer
 	$GLOBALS['database_driver'] = $driver;
+	$GLOBALS['database_backend'] = $layer;
 	$GLOBALS['database_user_readwrite'] = $user_rw;
 	$GLOBALS['database_user_read'] = $user_r;
 	$GLOBALS['database_password'] = $user_db_password;
@@ -80,11 +82,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	 * Create the db object
 	 */
 	$db = database::custom_db_object(array('phptype'  => $driver,
-		    											'username' => $username,
-													    'password' => $password,
-													    'hostspec' => $host),
-														NULL,
-														array('Manager'));
+		    								'username' => $username,
+											'password' => $password,
+											'hostspec' => $host),
+											NULL,
+											array('Manager'));
 	debug('db connected');
 	/*
 	 * Create the database

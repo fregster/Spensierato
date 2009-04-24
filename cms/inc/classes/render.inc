@@ -56,7 +56,12 @@ class Render
 		}
 		else if (user::singleton()->is_logged_in())
 		{
+			//If loged in do not allow proxies to cache the data
 			Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string(), false);
+		}
+		else
+		{
+			Cache::headers_allow_cache_dynamic(currentPage::Singleton()->id(), content::Singleton()->last_updated(), content::Singleton()->e_string());
 		}
 
 		$this->render(Template::Singleton()->load(), $xml);

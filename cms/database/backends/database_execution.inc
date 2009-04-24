@@ -120,11 +120,6 @@ class database_execution
 	{
 		
 	}
-	
-	public function sql_run_advanced($sql, $values, $writeuser)
-	{
-		return $this->sql_run($sql, $values, $writeuser);
-	}
 
 	public function sql_select_exe_run($resultset)
 	{

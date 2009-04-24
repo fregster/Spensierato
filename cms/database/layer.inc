@@ -638,7 +638,7 @@ class Database
 	}
 
 	//$Values is for when I get around to implimenting MDB2 properly!
-	private function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false, $alternative = false)
+	private function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{
 		database_execution::Singleton()->sql_connect();
 
@@ -651,14 +651,7 @@ class Database
 
 		//Logging info
 		$this->site_sql_count ++;
-		if($alternative)
-		{
-			$results = database_execution::Singleton()->sql_run_advanced($sql, $values, $writeuser);
-		}
-		else
-		{
-			$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
-		}
+		$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
 
 		if($this->show_error_sql && isset($results['error']))
 		{
@@ -687,7 +680,7 @@ class Database
 
 	protected function sql_update_exe($sql, $values = NULL, $destroy_cache = false)
 	{
-		return $this->sql_exe($sql, $values, true, $destroy_cache, true);
+		return $this->sql_exe($sql, $values, true, $destroy_cache);
 	}
 
 	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)

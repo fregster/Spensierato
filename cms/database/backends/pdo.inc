@@ -65,6 +65,42 @@ class database_execution_pdo extends database_execution
 	    
 		return $final;
 	}
+	
+	public function sql_run_advanced($sql, $values, $writeuser)
+	{
+		$error = false;
+
+		try
+		{
+			if($this->write != NULL) //Test the write user is set
+			{
+				if($values == NULL)
+				{
+					//Values have not been passed so do simple SQL exec
+					$resultset = $this->write->exec($sql);
+				}
+				else
+				{
+					//Do prepeared statment
+					$stmt = $this->write->prepare($sql);
+				}
+			}
+			else
+			{
+				$error = 'Failed update database, write user disabled<br />';
+				$this->sql_error($error);
+			}
+		}
+		catch(PDOException $e)
+	    {
+	   		$this->sql_error($e->getMessage());
+	    }
+
+		$final = array('resultset' => $resultset);
+	    if($error) { $final['error'] = $error; }
+	    
+		return $final;
+	}
 
 	public function sql_select_exe_run($resultset)
 	{

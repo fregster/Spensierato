@@ -638,7 +638,7 @@ class Database
 	}
 
 	//$Values is for when I get around to implimenting MDB2 properly!
-	private function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
+	private function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false, $alternative = false)
 	{
 		database_execution::Singleton()->sql_connect();
 
@@ -651,7 +651,14 @@ class Database
 
 		//Logging info
 		$this->site_sql_count ++;
-		$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
+		if($alternative)
+		{
+			$results = database_execution::Singleton()->sql_run_advanced($sql, $values, $writeuser);
+		}
+		else
+		{
+			$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
+		}
 
 		if($this->show_error_sql && isset($results['error']))
 		{
@@ -680,7 +687,7 @@ class Database
 
 	protected function sql_update_exe($sql, $values = NULL, $destroy_cache = false)
 	{
-		return $this->sql_exe($sql, $values, true, $destroy_cache);
+		return $this->sql_exe($sql, $values, true, $destroy_cache, true);
 	}
 
 	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)
@@ -798,7 +805,7 @@ class Database
 
 	public function create_database($database)
 	{
-		$this->sql_exe('CREATE DATABASE '.$this->sql_clean_input($database), NULL, true);
+		$this->sql_exe('CREATE DATABASE '.$this->sql_clean_input($database), NULL, true, true);
 	}
 
 	public function create_table($table, $database = NULL, $cols = array(), $types = array(), $length = array())
@@ -831,7 +838,7 @@ class Database
 			$i++;
 		}
 		$sql = rtrim($sql, ',') .')';
-		$this->sql_exe($sql);
+		$this->sql_exe($sql, NULL, true, true);
 	}
 
 	public function direct_sql($sql)

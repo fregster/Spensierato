@@ -5,7 +5,7 @@ class database_execution
 	protected static $instance;
 
 	protected $read;
-	public $write = NULL; //FIXME Temp hack from avi to allow the insert methods to get the last id, needs new method I think.
+	protected $write = NULL; //FIXME Temp hack from avi to allow the insert methods to get the last id, needs new method I think.
 	protected $connected = false;
 
 	private $dsn_default;
@@ -111,6 +111,13 @@ class database_execution
 	 * @param $mods
 	 * @return database object
 	 */
+	public function custom_db_object($dsn, $options = NULL, $mods = NULL)
+	{
+
+		$this->connect($dsn,$options,$mods);
+		return $this;
+	}
+	
 	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
 
@@ -127,6 +134,16 @@ class database_execution
 	}
 	
 	public function lastInsertID($table,$col)
+	{
+		
+	}
+	
+	public function createDatabase($database)
+	{
+		
+	}
+	
+	public function dropDatabase($database)
 	{
 		
 	}

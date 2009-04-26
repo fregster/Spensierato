@@ -230,7 +230,7 @@ Settings::Singleton()->new_setting('login_capthca_remember', true);
 //			2 Log SQL (All)
 //			5 Force Displaying SQL
 //			10 Save debug to file
-Settings::Singleton()->new_setting('debug', 10, false, true);
+Settings::Singleton()->new_setting('debug', 0, false, true);
 
 //Setting debug_log_folder
 //string path to the debug log folder

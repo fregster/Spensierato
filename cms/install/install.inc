@@ -133,7 +133,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		//Process sql
 		$sql_str = str_replace('cms_', $prefix.'_', $sql_str);
 		$resultset = $db->query($sql_str);
-
+		require_once('PEAR.php');
 		if(PEAR::isError($resultset))
 		{
 			$error = '<br/>Failed to issue query '.$i.', error message : ' . $resultset->getMessage().'<br />From : '. $sql_str;

@@ -7,20 +7,21 @@ class database_execution_mdb2 extends database_execution
 		//Doing this here only loads the code if a DB query is actually going to be done
 		require_once 'MDB2.php';
 
-		$mdb2 =& MDB2::singleton($dsn, $options);
-		if (PEAR::isError($mdb2) or (MDB2::isError($mdb2)))
+		$this->db_backend =& MDB2::singleton($dsn, $options);
+		if (PEAR::isError($this->db_backend) or (MDB2::isError($this->db_backend)))
 		{
-			$this->sql_error($mdb2->getMessage());
+			$this->sql_error($this->db_backend->getMessage());
 		}
 
 		if(isset($mods[0]))
 		{
 			foreach($mods as $mod)
 			{
-				$mdb2->loadModule($mod);
+				$this->db_backend->loadModule($mod);
 			}
 		}
-		return $mdb2;
+		
+		return $this->db_backend;
 	}
 	
 	public function sql_run($sql, $values, $writeuser)
@@ -123,9 +124,24 @@ class database_execution_mdb2 extends database_execution
 		return $results;
 	}
 	
+	public function query($sql_str)
+	{
+		return $this->db_backend->query($sql_str);
+	}
+	
 	public function lastInsertID($table,$col)
 	{
 		return $this->write->lastInsertId($table,$col);
+	}
+	
+	public function createDatabase($database)
+	{
+		$this->db_backend->createDatabase($database);
+	}
+	
+	public function dropDatabase($database)
+	{
+		$this->db_backend->dropDatabase($database);
 	}
 }
 ?>

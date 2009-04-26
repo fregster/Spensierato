@@ -72,7 +72,7 @@ class Database
 	public static function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{
 		//A DSN has been set so create the connection with the specified options
-		return database_execution::singleton()->connect($dsn, $options, $mods);
+		return database_execution::singleton()->custom_db_object($dsn, $options, $mods);
 	}
 
 	/**

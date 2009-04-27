@@ -121,33 +121,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		die('<br/>Unable to load install sql file '.$install_folder.'/'.$driver.'.inc');
 	}
 
+	require_once('PEAR.php');
 	debug('Loading setup file');
-	include($install_folder.'/'.$driver.'.inc');
 
 	//Execute sql
 	debug('Running...');
-
-	$i = 0;
-	foreach($sql as $sql_str)
-	{
-		//Process sql
-		$sql_str = str_replace('cms_', $prefix.'_', $sql_str);
-		$resultset = $db->query($sql_str);
-		require_once('PEAR.php');
-		if(PEAR::isError($resultset))
-		{
-			$error = '<br/>Failed to issue query '.$i.', error message : ' . $resultset->getMessage().'<br />From : '. $sql_str;
-			die($error);
-		}
-		++$i;
-	}
+	include($install_folder.'/'.$driver.'.inc');
 
 	//Create the DB users and give permissions over the database
 	//TODO allow connections from specified places
-	$user_create_sql = array('GRANT SELECT, INSERT, UPDATE, DELETE ON '.$database.'.*
-									TO \''.$user_rw. '\'@\'localhost\' IDENTIFIED BY \''.$user_db_password.'\'',
-							 'GRANT SELECT ON '.$database.'.*
-							 		TO \''. $user_r. '\'@\'localhost\' IDENTIFIED BY \''.$user_db_password.'\'');
+	$user_create_sql = array('GRANT SELECT, INSERT, UPDATE, DELETE ON '.$grant_db.'	TO '.$grant_user_rw,
+							 'GRANT SELECT ON '.$grant_db.'	TO '.$grant_user_r);
 
 	debug('Createing users and permissions');
 	foreach($user_create_sql as $sql)

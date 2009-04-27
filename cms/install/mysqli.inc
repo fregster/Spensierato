@@ -1,202 +1,176 @@
-<?php
+﻿<?php
+
+require_once 'generic.inc';
+
 /**
  * Default storage engine
  *
  * Use MyISAM for a small performance improvment over InnoDB in light situations
- *
  * Use InnoDB anywhere where you need clustering, caching data, higher concurrency, background flushes
- *
- * @var db type string
  */
-$default_table_engine = 'MyISAM';
-//$default_table_engine = 'InnoDB';
-//$archive_table_engine = 'ARCHIVE';
-$archive_table_engine = 'MyISAM';
-$full_text_search_table_engine = 'MyISAM';
 
+$default_table_engine = 'MYISAM';
+//$default_table_engine = 'INNODB';
+//$archive_table_engine = 'ARCHIVE';
+$archive_table_engine = 'MYISAM';
+$full_text_search_table_engine = 'MYISAM';
 $cache_table_engine = 'MEMORY';
 
-$sql = array();
+$default_charset = 'latin1';
 
-$sql_str = '
-CREATE TABLE `cms_tbl_commands` (
-  `command` varchar(32) NOT NULL,
-  `type` varchar(32) NOT NULL,
-  `instruction` varchar(256) NOT NULL,
-  PRIMARY KEY  (`command`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
-array_push($sql, $sql_str);
+/** this is where you add MySQL-specific data to the table definitions.
+ *  for example, storage engine and charset are defined here.
+ *  this is also where you can edit the table definitions to be mysql-compliant
+ *  where mysql doesn't conform to the sql standard. for example, change TEXT to LONGTEXT where required.
+ */
 
-$sql_str = "
-CREATE TABLE `cms_tbl_elements_data_archive` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `data` longtext,
-  `title` varchar(128) NOT NULL default 'Please give the element a meaningful title',
-  `ts` varchar(45) NOT NULL,
-  `replaced_by` int(10) unsigned NOT NULL,
-  `replaced_ts` varchar(45) NOT NULL,
-  `element_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=".$archive_table_engine." DEFAULT CHARSET=latin1;";
-array_push($sql, $sql_str);
+/** the 'keys' array should conform to these standards:
+ *
+ * () - choose 1 of the options
+ * [] - optional. leave blank if not required
+ * '' - place holder for a string
+ *
+ * array((KEY|INDEX|UNIQUE (KEY|INDEX)) =>
+ * 			array(['key_alias' =>]
+ * 					array('col_name1', 'col_name2', ...) can contain any amount of columns
+ * 			)
+ * 		)
+ */
 
-$sql_str = "
-CREATE TABLE `cms_tbl_elements` (
-  `id` int(11) NOT NULL auto_increment,
-  `type` varchar(32) NOT NULL,
-  `created` varchar(32) NOT NULL default '0',
-  `creator` int(11) NOT NULL,
-  `edited` varchar(32) default NULL,
-  `editor` int(11) default NULL,
-  `visible` tinyint(3) unsigned NOT NULL default '1',
-  `deleted` varchar(32) NOT NULL default '0',
-  `approved` varchar(32) default NULL,
-  `approver` int(10) unsigned default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=$default_table_engine DEFAULT CHARSET=latin1;";
-array_push($sql, $sql_str);
+$tables['tbl_commands']['engine'] = $default_table_engine;
+$tables['tbl_commands']['charset'] = $default_charset;
+$tables['tbl_commands']['keys'] = array();
 
-$sql_str = "
-CREATE TABLE `cms_tbl_elements_approve` (
-  `id` int(11) NOT NULL auto_increment,
-  `element_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `ts` varchar(64) NOT NULL,
-  `title` varchar(128) NOT NULL default 'Please give the element a meaningful title',
-  `data` longtext NOT NULL,
-  `approved` TINYINT(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `User to Element` (`element_id`,`user_id`)
-) ENGINE=".$default_table_engine.' DEFAULT CHARSET=latin1;';
-array_push($sql, $sql_str);
+$tables['tbl_elements_data_archive']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_elements_data_archive']['engine'] = $archive_table_engine;
+$tables['tbl_elements_data_archive']['charset'] = $default_charset;
+$tables['tbl_elements_data_archive']['keys'] = array();
 
-$sql_str = "
-CREATE TABLE `cms_tbl_elements_data` (
-  `id` int(11) NOT NULL,
-  `title` varchar(128) NOT NULL default 'Please give the element a meaningful title',
-  `data` longtext NOT NULL,
-  `search` longtext,
-  PRIMARY KEY  (`id`)
-) ENGINE=".$full_text_search_table_engine.' DEFAULT CHARSET=latin1;';
-array_push($sql, $sql_str);
+$tables['tbl_elements']['engine'] = $default_table_engine;
+$tables['tbl_elements']['charset'] = $default_charset;
+$tables['tbl_elements']['keys'] = array();
 
-$sql_str = "
-CREATE TABLE `cms_tbl_elements_draft` (
-  `id` int(11) NOT NULL auto_increment,
-  `element_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `ts` varchar(64) NOT NULL,
-  `title` varchar(128) NOT NULL default 'Please give the element a meaningful title',
-  `data` longtext NOT NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `User to Element` (`element_id`,`user_id`)
-) ENGINE=".$default_table_engine.' DEFAULT CHARSET=latin1;';
-array_push($sql, $sql_str);
+$tables['tbl_elements_approve']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_elements_approve']['engine'] = $default_table_engine;
+$tables['tbl_elements_approve']['charset'] = $default_charset;
+$tables['tbl_elements_approve']['keys'] = array('UNIQUE KEY' => array('user_to_element' => array('element_id', 'user_id')));
 
-$sql_str = '
-CREATE TABLE `cms_tbl_list_data` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(128) NOT NULL,
-  `valid_from` varchar(48) default NULL,
-  `valid_to` varchar(48) NOT NULL,
-  `created` varchar(48) NOT NULL,
-  `created_by` int(11) NOT NULL,
-  `edited` varchar(48) default NULL,
-  `edited_by` int(11) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
-array_push($sql, $sql_str);
+$tables['tbl_elements_data']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_elements_data']['cols_define']['search'] = 'LONGTEXT';
+$tables['tbl_elements_data']['engine'] = $full_text_search_table_engine;
+$tables['tbl_elements_data']['charset'] = $default_charset;
+$tables['tbl_elements_data']['keys'] = array();
 
-$sql_str = '
-CREATE TABLE `cms_tbl_list_membership` (
-  `user_id` int(11) NOT NULL,
-  `list_id` int(11) NOT NULL,
-  UNIQUE KEY `user_id` (`user_id`,`list_id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
-array_push($sql, $sql_str);
+$tables['tbl_elements_draft']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_elements_draft']['engine'] = $default_table_engine;
+$tables['tbl_elements_draft']['charset'] = $default_charset;
+$tables['tbl_elements_draft']['keys'] = array('UNIQUE KEY' => array('user_to_element' => array('element_id', 'user_id')));
 
-$sql_str = "
-CREATE TABLE `cms_tbl_page_elements` (
-  `id` int(11) NOT NULL auto_increment,
-  `page_id` int(11) NOT NULL,
-  `element_id` int(11) NOT NULL,
-  `sort` int(11) NOT NULL,
-  `main` tinyint(4) NOT NULL default '1',
-  `ts` varchar(32) NOT NULL,
-  `visible` tinyint(3) unsigned NOT NULL default '1',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `elements_to_page_link` (`page_id`,`element_id`),
-  UNIQUE KEY `only_one_main_element` (`element_id`,`main`)
-) ENGINE=$default_table_engine  DEFAULT CHARSET=latin1;";
-array_push($sql, $sql_str);
+$tables['tbl_list_data']['engine'] = $default_table_engine;
+$tables['tbl_list_data']['charset'] = $default_charset;
+$tables['tbl_list_data']['keys'] = array();
 
-$sql_str = "
-CREATE TABLE `cms_tbl_pages` (
-  `id` int(11) NOT NULL auto_increment,
-  `parent_id` int(11) NOT NULL,
-  `title` varchar(64) NOT NULL default 'New Page',
-  `visible` tinyint(4) NOT NULL default '0',
-  `deleted` tinyint(4) NOT NULL default '0',
-  `sort` int(11) default NULL,
-  `created` varchar(45) NOT NULL,
-  `creator` int(10) unsigned NOT NULL,
-  `edited` varchar(45) default NULL,
-  `editor` int(10) unsigned,
-  PRIMARY KEY  (`id`),
-  KEY `valid_child` (`visible`,`deleted`,`parent_id`)
-) ENGINE=$default_table_engine DEFAULT CHARSET=latin1;";
-array_push($sql, $sql_str);
+$tables['tbl_list_membership']['engine'] = $default_table_engine;
+$tables['tbl_list_membership']['charset'] = $default_charset;
+$tables['tbl_list_membership']['keys'] = array('UNIQUE KEY' => array('user_id' => array('user_id', 'list_id')));
 
-$sql_str = '
-CREATE TABLE `cms_tbl_security` (
-  `page_id` int(11) NOT NULL,
-  `data` longtext NOT NULL,
-  PRIMARY KEY  (`page_id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
-array_push($sql, $sql_str);
+$tables['tbl_page_elements']['engine'] = $default_table_engine;
+$tables['tbl_page_elements']['charset'] = $default_charset;
+$tables['tbl_page_elements']['keys'] = array('UNIQUE KEY' => array('elements_to_page_link' => array('page_id','element_id')), 'UNIQUE KEY' => array('only_one_main_element' => array('element_id','main')));
 
-$sql_str = '
-CREATE TABLE `cms_tbl_settings` (
-  `setting` varchar(32) NOT NULL,
-  `value` varchar(128) NOT NULL,
-  PRIMARY KEY  (`setting`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
-array_push($sql, $sql_str);
+$tables['tbl_pages']['engine'] = $default_table_engine;
+$tables['tbl_pages']['charset'] = $default_charset;
+$tables['tbl_pages']['keys'] = array('KEY' => array('valid_child' => array('visible','deleted','parent_id')));
 
-$sql_str = '
-CREATE TABLE `cms_tbl_temp` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `data` text NOT NULL,
-  `ts` varchar(45) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE='.$default_table_engine.' DEFAULT CHARSET=latin1;';
-array_push($sql, $sql_str);
+$tables['tbl_security']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_security']['engine'] = $default_table_engine;
+$tables['tbl_security']['charset'] = $default_charset;
+$tables['tbl_security']['keys'] = array();
 
-$sql_str = "
-CREATE TABLE `cms_tbl_users` (
-  `id` int(11) NOT NULL auto_increment,
-  `username` varchar(32) NOT NULL,
-  `password` varchar(64),
-  `hash_type` varchar(8),
-  `last_login` varchar(32),
-  `session_id` varchar(64),
-  `admin` tinyint(4) default '0' COMMENT 'Global site admin',
-  `login_attempts` tinyint(4) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `username` (`username`),
-  KEY `login` (`username`,`password`)
-) ENGINE=$default_table_engine DEFAULT CHARSET=latin1;";
-array_push($sql, $sql_str);
+$tables['tbl_settings']['engine'] = $default_table_engine;
+$tables['tbl_settings']['charset'] = $default_charset;
+$tables['tbl_settings']['keys'] = array();
 
-$sql_str = '
-CREATE TABLE `cms_tbl_users_data` (
-  `id` int(11) NOT NULL auto_increment,
-  `user_id` int(11) NOT NULL,
-  `data` longtext NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `id` (`user_id`)
-) ENGINE='.$default_table_engine.'  DEFAULT CHARSET=latin1;';
-array_push($sql, $sql_str);
+$tables['tbl_temp']['engine'] = $default_table_engine;
+$tables['tbl_temp']['charset'] = $default_charset;
+$tables['tbl_temp']['keys'] = array();
 
-unset($sql_str);
+$tables['tbl_users']['engine'] = $default_table_engine;
+$tables['tbl_users']['charset'] = $default_charset;
+$tables['tbl_users']['keys'] = array('UNIQUE KEY' => array('username' => array('username')), 'KEY' => array('login' => array('username','password')));
+
+$tables['tbl_users_data']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_users_data']['engine'] = $default_table_engine;
+$tables['tbl_users_data']['charset'] = $default_charset;
+$tables['tbl_users_data']['keys'] = array('KEY' => array('id' => array('user_id')));
+
+/** build sql strings and execute the table creation.
+ *  this code is MySQL specific.
+ */
+foreach ($tables as $table => $data){
+
+	//prefix the table with the unique string submitted by the user
+	$table = $prefix.'_'.$table;
+
+	//build the column definitions
+	$cols = array();
+	foreach ($data['cols_define'] as $col_name => $definition){
+		$cols[] = $col_name.' '.$definition;
+	}
+	unset($col_name, $definition);
+	$cols = implode(', ', $cols);
+
+	//add a column as the primary key, only if it is a column in cols_define
+	$primary_key = '';
+	if (!is_null($data['primary_key'])) {
+		if (array_key_exists($data['primary_key'], $data['cols_define'])) {
+			$primary_key = ", PRIMARY KEY ({$data['primary_key']})";
+		}
+	}
+
+	//build non-primary key definitions
+	$keys = array();
+	foreach ($data['keys'] as $key_type => $key_data){
+		$alias = key($key_data);
+		$keys[] = $key_type.' '.$alias.' ('.implode(', ', $key_data[$alias]).')';
+	}
+	unset($key_type, $key_data);
+	if (!empty($keys)) {
+		$keys = ', '.implode(', ', $keys);
+	}
+	else{
+		$keys = '';
+	}
+
+
+	//add storage engine if exists
+	$engine = '';
+	if (!is_null($data['engine'])) {
+		$engine = "ENGINE='{$data['engine']}'";
+	}
+
+	//add table charset if exists
+	$charset = '';
+	if (!is_null($data['charset'])) {
+		$charset = "DEFAULT CHARSET='{$data['charset']}'";
+	}
+
+	//construct sql string
+	$sql = "CREATE TABLE IF NOT EXISTS $table ($cols $primary_key $keys) $engine $charset;";
+
+	//execute sql
+	$result = $db->query($sql);
+
+	if(PEAR::isError($result))
+	{
+		$error = '<br/>Failed to create table '.$table.'. The associated error message : ' . $result->getMessage().'<br />From : '. $sql;
+		die($error);
+	}
+}
+unset($table, $data);
+
+//set the db name and the user info in a mysql-compliant manner fot use in the GRANT queries.
+$grant_db = "$database.*";
+$grant_user_rw = "'$user_rw'@'localhost' IDENTIFIED BY '$user_db_password'";
+$grant_user_r = "'$user_r'@'localhost' IDENTIFIED BY '$user_db_password'";
 ?>

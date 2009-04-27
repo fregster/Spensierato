@@ -30,7 +30,7 @@ $default_charset = 'latin1';
  * [] - optional. leave blank if not required
  * '' - place holder for a string
  *
- * array((KEY|INDEX|UNIQUE (KEY|INDEX)) =>
+ * array((KEY|INDEX|UNIQUE [(KEY|INDEX)]) =>
  * 			array(['key_alias' =>]
  * 					array('col_name1', 'col_name2', ...) can contain any amount of columns
  * 			)
@@ -126,13 +126,24 @@ foreach ($tables as $table => $data){
 		if (array_key_exists($data['primary_key'], $data['cols_define'])) {
 			$primary_key = ", PRIMARY KEY ({$data['primary_key']})";
 		}
+		else{
+			die('<br />Failed to create table '.$table.' due to an invalid primary key: '.$data['primary_key']);
+		}
 	}
 
-	//build non-primary key definitions
+	//build non-primary key definitions, only if all key columns exist in cols_define
 	$keys = array();
 	foreach ($data['keys'] as $key_type => $key_data){
-		$alias = key($key_data);
-		$keys[] = $key_type.' '.$alias.' ('.implode(', ', $key_data[$alias]).')';
+		$alias_key = key($key_data);
+		if (is_string(key($key_data))) {
+			$alias = $key_data;
+		}
+		foreach ($key_data[$alias_key] as $column){
+			if (!array_key_exists($column, $data['cols_define'])) {
+				die('<br />Failed to create table '.$table.' due to an invalid '.$key_type.': '.$column);
+			}
+		}
+		$keys[] = $key_type.' '.$alias.' ('.implode(', ', $key_data[$alias_key]).')';
 	}
 	unset($key_type, $key_data);
 	if (!empty($keys)) {
@@ -141,7 +152,6 @@ foreach ($tables as $table => $data){
 	else{
 		$keys = '';
 	}
-
 
 	//add storage engine if exists
 	$engine = '';

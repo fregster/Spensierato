@@ -135,8 +135,8 @@ foreach ($tables as $table => $data){
 	$keys = array();
 	foreach ($data['keys'] as $key_type => $key_data){
 		$alias_key = key($key_data);
-		if (is_string(key($key_data))) {
-			$alias = $key_data;
+		if (is_string($alias_key)) {
+			$alias = $alias_key;
 		}
 		foreach ($key_data[$alias_key] as $column){
 			if (!array_key_exists($column, $data['cols_define'])) {

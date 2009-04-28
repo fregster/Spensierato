@@ -171,9 +171,9 @@ foreach ($tables as $table => $data){
 	//execute sql
 	$result = $db->query($sql);
 
-	if(PEAR::isError($result))
+	if($result < 1) //true == 1, false == 0, and pear errors are all <= -1
 	{
-		$error = '<br/>Failed to create table '.$table.'. The associated error message : ' . $result->getMessage().'<br />From : '. $sql;
+		$error = '<br/>Failed to create table '.$table.'. The sql that triggered the error:<br />'. $sql;
 		die($error);
 	}
 }

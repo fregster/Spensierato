@@ -121,7 +121,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		die('<br/>Unable to load install sql file '.$install_folder.'/'.$driver.'.inc');
 	}
 
-	require_once('PEAR.php');
 	debug('Loading setup file');
 
 	//Execute sql
@@ -138,7 +137,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		$resultset = $db->query($sql);
 
-		if(PEAR::isError($resultset))
+		if($resultset < 1) //true == 1, false == 0, and pear errors are all <= -1
 		{
 			$error = '<br/>Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
 			die($error);

@@ -65,7 +65,7 @@ class database_execution_pdo extends database_execution
 
 		$final = array('resultset' => $resultset);
 	    if($error) { $final['error'] = $error; }
-	    
+
 		return $final;
 	}
 
@@ -77,29 +77,30 @@ class database_execution_pdo extends database_execution
 		{
 	      		$results[] = $row;
 	    }
-		
-		return $results; 
+
+		return $results;
 	}
-	
+
 	public function lastInsertID($table,$col)
 	{
 		return $this->write->lastInsertId();
 	}
-	
+
 	public function createDatabase($database)
 	{
 		$create_db_sql = 'create database '.$database;
 		$this->db_backend->query($create_db_sql);
 	}
-	
+
 	public function dropDatabase($database)
 	{
 		$drop_db_sql = 'drop database '.$database;
 		$this->db_backend->query($drop_db_sql);
 	}
+
 	public function query($sql_str)
 	{
-		$this->db_backend->query($sql_str);
+		return $this->db_backend->query($sql_str);
 	}
 }
 ?>

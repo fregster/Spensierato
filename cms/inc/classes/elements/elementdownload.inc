@@ -9,10 +9,11 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			parent::__construct();
 			$this->type = __CLASS__;
 			$this->allowed_tags(array('file' => 'file', 'filename' => 'auto', 'filesize' => 'auto', 'mime' => 'auto', 'description' => 'html', 'linktext' => 'auto'));
-			$this->type = __CLASS__;
 			$this->name = 'File Download';
-			$this->admin_mode_data['image'] = 'disk';
-			$this->admin_mode_data['image_edit'] = '';
+			if (options::singleton()->get_option('admin_mode')) {
+				$this->admin_mode_data['image'] = 'disk';
+				$this->admin_mode_data['image_edit'] = '';
+			}
 		}
 
 		protected function attach_extra_data()

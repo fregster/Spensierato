@@ -7,8 +7,10 @@ class elementRegister extends elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'Registration Box Element';
 		$this->title = 'Register';
-		$this->admin_mode_data['image'] = 'login.png';
-		$this->admin_mode_data['image_edit'] = '';
+		if (options::singleton()->get_option('admin_mode')) {
+			$this->admin_mode_data['image'] = 'login.png';
+			$this->admin_mode_data['image_edit'] = '';
+		}
 	}
 
 	protected function get_data()

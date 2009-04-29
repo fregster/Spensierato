@@ -14,9 +14,11 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			$this->type = __CLASS__;
 			$this->name = 'Video Download';
 			$this->allowed_tags(array('movietitle', 'rate', 'height', 'width', 'duration', 'copyright'));
-			$this->video_extended_details = array();
-			$this->admin_mode_data['image'] = 'page_white';
-			$this->admin_mode_data['image_edit'] = 'page_edit';
+			if (options::singleton()->get_option('admin_mode')) {
+				$this->video_extended_details = array();
+				$this->admin_mode_data['image'] = 'page_white';
+				$this->admin_mode_data['image_edit'] = 'page_edit';
+			}
 		}
 
 		protected function add_header()

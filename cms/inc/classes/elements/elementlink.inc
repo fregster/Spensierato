@@ -9,8 +9,10 @@ class elementLink extends elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'Link';
 		$this->allowed_tags(array('text' => 'text', 'href' => 'href'));
-		$this->admin_mode_data['image'] = 'link';
-		$this->admin_mode_data['image_edit'] = 'link_edit';
+		if (options::singleton()->get_option('admin_mode')) {
+			$this->admin_mode_data['image'] = 'link';
+			$this->admin_mode_data['image_edit'] = 'link_edit';
+		}
 	}
 
 }

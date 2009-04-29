@@ -10,8 +10,10 @@ if(class_exists('elementDownload'))
 			$this->type = __CLASS__;
 			$this->name = 'Image';
 			$this->allowed_tags(array('href' => 'href'));
-			$this->admin_mode_data['image'] = 'image';
-			$this->admin_mode_data['image_edit'] = 'image_edit';
+			if (options::singleton()->get_option('admin_mode')) {
+				$this->admin_mode_data['image'] = 'image';
+				$this->admin_mode_data['image_edit'] = 'image_edit';
+			}
 		}
 
 		protected function attach_upload()

@@ -8,8 +8,10 @@ class elementText extends elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'Text Article';
 		$this->allowed_tags(array('html' => 'html'));
-		$this->admin_mode_data['image'] = 'book_white';
-		$this->admin_mode_data['image_edit'] = 'book_edit';
+		if (options::singleton()->get_option('admin_mode')) {
+			$this->admin_mode_data['image'] = 'book_white';
+			$this->admin_mode_data['image_edit'] = 'book_edit';
+		}
 	}
 
 }

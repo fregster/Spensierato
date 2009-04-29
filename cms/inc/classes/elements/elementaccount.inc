@@ -6,9 +6,11 @@ class elementAccount extends elementDefault
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Account Information Element';
-		$this->admin_mode_data['image'] = 'account.png';
-		$this->admin_mode_data['image_edit'] = '';
-		$this->admin_mode_data['edit_height'] = 600;
+		if (options::singleton()->get_option('admin_mode')) {
+			$this->admin_mode_data['image'] = 'account.png';
+			$this->admin_mode_data['image_edit'] = '';
+			$this->admin_mode_data['edit_height'] = 600;
+		}
 	}
 
 	protected function get_data()

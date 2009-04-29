@@ -7,8 +7,10 @@ class elementLogin extends elementDefault
 		$this->type = __CLASS__;
 		$this->name = 'Login Box Element';
 		$this->title = 'Login';
-		$this->admin_mode_data['image'] = 'login.png';
-		$this->admin_mode_data['image_edit'] = '';
+		if (options::singleton()->get_option('admin_mode')) {
+			$this->admin_mode_data['image'] = 'login.png';
+			$this->admin_mode_data['image_edit'] = '';
+		}
 	}
 
 	protected function get_data()

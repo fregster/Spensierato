@@ -65,7 +65,7 @@ class FileTransfer
 			}
 
 			$file_info = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array(basename($file)));
-			$file_info = common::xml_to_array('<data>'.$file_info['data'].'</data>');
+			$file_info = json_decode($file_info['data'], TRUE);
 
 			if(!isset($file_info['filename']))
 			{

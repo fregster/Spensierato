@@ -76,21 +76,21 @@ abstract class ajax
 		return $element->save(true);
 	}
 
-	private static function edit_load($id, $data = NULL)
+	private static function edit_load($id)
 	{
 		$element = Element::type($id);
-		$element->build($id, $data);
+		$element->build($id);
 		return $element->ajax_edit();
 	}
 
+	//FIXME: make the rollback also restore timestamps, not just content data
 	private static function revision($rev_id, $element_id){
 		$element_id = str_replace('e_', '', $element_id);
-		$element_revs = database::singleton()->sql_select_first(array('data'), 'tbl_elements_data_archive', array('element_id'), array($element_id));
-		$revision_data = $element_revs[($rev_id - 1)]['data'];
+		$element_revs = database::singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data_archive', array('element_id'), array($element_id));
 		$element = Element::type($element_id);
-		$element->build($element_id, $revision_data);
+		$element->build($element_id, $element_revs);
 		$element->save();
-		echo $revision_data; //change to $element->ajax_edit() after elementDefault cleanup
+		$element->ajax_edit();
 	}
 }
 ?>

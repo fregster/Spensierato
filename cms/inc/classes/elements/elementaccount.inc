@@ -1,14 +1,14 @@
 <?php
 class elementAccount extends elementDefault
 {
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Account Information Element';
-		$this->image = 'account.png';
-		$this->image_edit = '';
-		$this->edit_height = 600;
+		$this->admin_mode_data['image'] = 'account.png';
+		$this->admin_mode_data['image_edit'] = '';
+		$this->admin_mode_data['edit_height'] = 600;
 	}
 
 	protected function get_data()
@@ -18,7 +18,7 @@ class elementAccount extends elementDefault
 		$this->data = '<data>'. htmlentities($html, ENT_QUOTES, Settings::Singleton()->get_setting('char_set')) .'</data>';
 		$this->search = NULL;
 		*/
-		
+
 		$this->data = '
 		<data>
 			<lists>

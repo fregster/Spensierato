@@ -3,17 +3,17 @@ if(class_exists('elementDownload'))
 {
 	element::register('Image', 'elementImage');
 	class elementImage extends elementDownload
-	{	
-		function __construct()
+	{
+		public function __construct()
 		{
 			parent::__construct();
 			$this->type = __CLASS__;
 			$this->name = 'Image';
-			$this->image = 'image';
-			$this->image_edit = 'image_edit';
 			$this->allowed_tags(array('href' => 'href'));
+			$this->admin_mode_data['image'] = 'image';
+			$this->admin_mode_data['image_edit'] = 'image_edit';
 		}
-		
+
 		protected function attach_upload()
 		{
 			if(parent::attach_upload())
@@ -23,10 +23,10 @@ if(class_exists('elementDownload'))
 				return $this->save_preview();
 			}
 		}
-		
+
 		protected function save_preview()
 		{
-			return image::generate_thumb($this->id.'-'.$this->revision);
+			return image::generate_thumb($this->id.'-'.$this->admin_mode_data['revision']);
 		}
 	}
 }

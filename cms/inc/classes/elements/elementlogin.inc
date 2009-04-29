@@ -1,16 +1,16 @@
 <?php
 class elementLogin extends elementDefault
 {
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Login Box Element';
-		$this->image = 'login.png';
-		$this->image_edit = '';
 		$this->title = 'Login';
+		$this->admin_mode_data['image'] = 'login.png';
+		$this->admin_mode_data['image_edit'] = '';
 	}
-	
+
 	protected function get_data()
 	{
 		if(Settings::Singleton()->get_setting('login_capthca'))
@@ -35,20 +35,20 @@ class elementLogin extends elementDefault
 		{
 			$template = 'templates/login.html';
 		}
-		
+
 		if(cookie::Singleton()->get_cookie_value('username') != NULL)
 		{
 			$checked = "checked=\"checked\"";
 		}
 		else
 		{
-			$checked = NULL;	
+			$checked = NULL;
 		}
 
 		$html = '<div id="login_background">'.str_replace('**CMS**username', cookie::Singleton()->get_cookie_value('username'), Template::Singleton()->get_file_content($template)).'</div>';
 
 		$html = str_replace('**CMS**remembered', $checked, $html);
-		
+
 		$this->data = '<data>'. Common::html($html) .'</data>';
 		$this->search = NULL;
 	}

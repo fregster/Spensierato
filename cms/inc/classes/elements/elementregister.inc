@@ -1,14 +1,14 @@
 <?php
 class elementRegister extends elementDefault
 {
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Registration Box Element';
-		$this->image = 'login.png';
-		$this->image_edit = '';
 		$this->title = 'Register';
+		$this->admin_mode_data['image'] = 'login.png';
+		$this->admin_mode_data['image_edit'] = '';
 	}
 
 	protected function get_data()

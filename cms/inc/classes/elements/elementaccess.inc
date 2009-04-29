@@ -1,15 +1,15 @@
 <?php
 class elementAccess extends elementDefault
 {
-	function construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Accessability Element';
-		$this->image = 'access.png';
-		$this->image_edit = '';
+		$this->admin_mode_data['image'] = 'access.png';
+		$this->admin_mode_data['image_edit'] = '';
 	}
-	
+
 	protected function get_data()
 	{
 			$html = 'Accessability <strong>information</strong>';

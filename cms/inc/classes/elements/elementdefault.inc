@@ -1,43 +1,33 @@
 <?php
 class elementDefault
 {
+	//useful when not in admin mode
 	protected $id;
 	protected $data;
-	protected $details;
 	protected $type;
 	protected $name;
-	protected $title;
-	protected $image;
-	protected $image_edit;
-	protected $edit_height;
-	protected $edit_width;
-	protected $visible;
-	protected $deleted;
-	protected $created;
-	protected $creator;
-	protected $edited;
-	protected $editor;
-	protected $approved;
-	protected $approver;
-	protected $revision;
-	protected $draft;
-	protected $approve;
-	protected $revision_history;
-	protected $approvals_list;
-
-	protected $error = 'There was an error comitting your save';
+	protected $title = 'Please give the element a meaningful title';
 
 	private $tags = array('title' => 'text');
 	private $element;
+
+	//useful only in admin mode
+	//put all vars which are only used in admin mode in this array to conserve RAM when not in admin mode
+	protected $admin_mode_data = array();
 
 	public function __construct()
 	{
 		$this->type = __CLASS__;
 		$this->name = 'Default Element';
-		$this->image = 'accept';
-		$this->image_edit = 'page_edit';
-		$this->edit_height = 400;
-		$this->edit_width = 725;
+
+		if (options::singleton()->get_option('admin_mode')) {
+			$this->admin_mode_data['image'] = 'accept';
+			$this->admin_mode_data['image_edit'] = 'page_edit';
+			$this->admin_mode_data['edit_height'] = 400;
+			$this->admin_mode_data['edit_width'] = 725;
+
+			$this->admin_mode_data['error'] = 'There was an error comitting your save';
+		}
 
 		$this->add_header();
 	}
@@ -58,7 +48,7 @@ class elementDefault
 		$sort = database::Singleton()->sql_max_field('tbl_page_elements', 'sort', array('page_id'), array($main_page));
 
 		database::Singleton()->sql_insert('tbl_page_elements', array('page_id', 'element_id', 'main','ts', 'sort'), array($main_page, $this->id, 1, $time, $sort+1));
-		database::Singleton()->sql_insert('tbl_elements_data', array('id', 'data'), array($this->id, '<null />'));
+		database::Singleton()->sql_insert('tbl_elements_data', array('id', 'data'), array($this->id, '[]'));
 		if($redirect)
 		{
 			common::redirect($main_page);
@@ -66,9 +56,10 @@ class elementDefault
 		return true;
 	}
 
-	public function build($id, $data = NULL, $link = NULL)
+	public function build($id, $data = array(), $link = NULL)
 	{
 		$this->id = $id;
+
 		if($link == NULL)
 		{
 			$this->link = Database::Singleton()->sql_select_first(array('*'), 'tbl_page_elements', array('element_id', 'main'), array($id, 1));
@@ -78,8 +69,15 @@ class elementDefault
 			$this->link = $link;
 		}
 
-		$this->get_data($data);
-		$this->check_pending_approval();
+		if (empty($data) && !empty($_POST)) {
+			$data = $_POST;
+		}
+
+		$this->data = $data;
+		$this->get_data();
+
+		$this->init_admin_data();
+
 		Content::Singleton()->attach_content($this->render());
 	}
 
@@ -99,12 +97,9 @@ class elementDefault
 		$this->element->setAttribute('id', $this->id);
 		$this->element->setAttribute('type', $this->type);
 		$this->element->setAttribute('etype', $this->name);
-		$this->element->setAttribute('eh', $this->edit_height);
-		$this->element->setAttribute('ew', $this->edit_width);
-		$this->element->setAttribute('image', $this->image);
 		$this->element->setAttribute('title', $this->title);
 
-		$this->admin();
+		$this->admin(&$dom);
 
 		//Transform the data field
 		$this->transform_data();
@@ -116,95 +111,11 @@ class elementDefault
 		$element_data->appendXML($this->data);
 		$this->element->appendChild($element_data);
 
-		//attach the archive data if exists
-		$this->get_revision_history();
-		if ($this->revision_history) {
-			$archive_data = $dom->createDocumentFragment();
-			$archive_data->appendXML($this->revision_history);
-			$this->element->appendChild($archive_data);
-		}
-
-		//attach the pending approvals data if exist
-		$this->get_pending_approval_list();
-		if ($this->approvals_list) {
-			$approvals_list = $dom->createDocumentFragment();
-			$approvals_list->appendXML($this->approvals_list);
-			$this->element->appendChild($approvals_list);
-		}
-
 		//Attach the element to the root dom
 		$dom->appendChild($this->element);
 
 		//Return the completed XML of the document
 		return $dom->saveXML();
-	}
-
-	public function save($draft = true)
-	{
-		if($this->attach_upload() == false)
-		{
-			die($this->error);
-			return false;
-		}
-		$extra = $this->attach_extra_data();
-
-		$details = array_merge($_POST, $extra);
-
-		//get the title and remove it from the array so it
-		//doesn't get into the xml, since it isn't part of the data
-		if ($details['title'] == 'Please give the element a meaningful title') {
-			$details['title'] = NULL;
-		}
-		$title = $details['title'];
-		unset($details['title']);
-
-		//get the data that will be saved in the 'data' field in the db and construct it as xml
-		$xml = '';
-		foreach($details as $key => $value)
-		{
-			switch ($key)
-			{
-				case 'html':
-					$value = Common::html($value);
-					break;
-
-				case 'href':
-					//matches http://, https://, ftp://.
-					//to add more protocols, add them to the |-seperated list in the ()
-					if(preg_match('#^(https?|ftp)://#', $value)){  }
-					else
-					{	//delete any protocol in the url and prefix with http://
-						$value = preg_replace('#^[a-z]*://#', '', $value);
-						$value = 'http://'.$value;
-					}
-					break;
-
-				case 'email':
-					if (!common::email_address_check($value)) {
-						//do something about invalid emails
-						$value = NULL;
-					}
-					break;
-			}
-			$xml .= "<$key>".utf8_encode(common::sql_clean(strip_tags($value)))."</$key>";
-		}
-
-		if($draft)
-		{
-			database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
-			die('SAVED');
-		}
-		else
-		{
-			database::Singleton()->sql_delete_where('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
-			if($this->process_save($xml, $title));
-			{
-				return true;
-			}
-
-			return false;
-		}
-
 	}
 
 	protected function attach_upload()
@@ -220,7 +131,7 @@ class elementDefault
 				if($file_size <= $max_size)
 				{
 					$path = $_FILES['uploadedfile']['tmp_name'];
-					$target = Settings::singleton()->get_setting('cms_folder_uploads').$this->id.'-'.$this->revision;
+					$target = Settings::singleton()->get_setting('cms_folder_uploads').$this->id.'-'.$this->admin_mode_data['revision'];
 					return(filetransfer::move_file($path, $target));
 				}
 			}
@@ -230,38 +141,38 @@ class elementDefault
 				switch ($_FILES['uploadedfile']['error'])
 				{
 					case 1:
-						$this->error = 'The uploaded file exceeds the upload_max_filesize directive in php.ini. ';
-					break;
+						$this->admin_mode_data['error'] = 'The uploaded file exceeds the upload_max_filesize directive in php.ini. ';
+						break;
 
 					case 2:
-						$this->error = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. ';
-					break;
+						$this->admin_mode_data['error'] = 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form. ';
+						break;
 
 					case 3:
-						$this->error = 'The uploaded file was only partially uploaded. ';
-					break;
+						$this->admin_mode_data['error'] = 'The uploaded file was only partially uploaded. ';
+						break;
 
 					case 4:
 						//This is not an error so return true and escape
-						$this->error = 'No file was uploaded';
+						$this->admin_mode_data['error'] = 'No file was uploaded';
 						return true;
-					break;
+						break;
 
 					case 6:
-						$this->error = 'Missing a temporary upload folder.';
-					break;
+						$this->admin_mode_data['error'] = 'Missing a temporary upload folder.';
+						break;
 
 					case 7:
-						$this->error = 'Failed to write file to disk.';
-					break;
+						$this->admin_mode_data['error'] = 'Failed to write file to disk.';
+						break;
 
 					case 8:
-						$this->error = 'File upload stopped by extension.';
-					break;
+						$this->admin_mode_data['error'] = 'File upload stopped by extension.';
+						break;
 
 					default:
-						$this->error = 'Unknow upload error';
-					break;
+						$this->admin_mode_data['error'] = 'Unknow upload error';
+						break;
 				}
 			}
 
@@ -277,8 +188,9 @@ class elementDefault
 	{
 		if(isset($this->tags['file']))
 		{
-			return filetransfer::singleton()->save_file($this->id, $this->revision);
+			return filetransfer::singleton()->save_file($this->id, $this->admin_mode_data['revision']);
 		}
+		return TRUE;
 	}
 
 	public function toggle($what)
@@ -335,24 +247,6 @@ class elementDefault
 		return strip_tags($input);
 	}
 
-	protected function process_save($xml, $title)
-	{
-		$this->save_upload();
-
-		//save if has permissions
-		if (security::Singleton()->can_do('approve')) {
-			$this->archive_data($xml);
-			database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor'), array(time(), User::Singleton()->id()));
-			database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title', 'search'), array($xml, $title, $this->generate_search($xml)));
-		}
-		//else submit for approval
-		else {
-			database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $xml, CMS::Singleton()->time(), $title));
-		}
-
-		return true;
-	}
-
 	protected function archive_data($xml){
 		$archive_data = database::Singleton()->sql_select_first(array('id', 'title', 'data'), 'tbl_elements_data', array('id'), array($this->id));
 		if ($archive_data && ($archive_data['data'] != '<null />') && ($archive_data['data'] != $xml)) {
@@ -363,149 +257,76 @@ class elementDefault
 	}
 
 	//add extra data when in admin mode
-	public function admin()
+	public function admin($dom)
 	{
 		if(options::Singleton()->get_option('admin_mode'))
 		{
+			$this->element->setAttribute('created', $this->admin_mode_data['created']);
+			$this->element->setAttribute('creator', $this->admin_mode_data['creator']);
+
+			if($this->admin_mode_data['edited'] != NULL)
+			{
+				$this->element->setAttribute('edited', $this->admin_mode_data['edited']);
+				$this->element->setAttribute('editor', $this->admin_mode_data['editor']);
+			}
+
 			$this->get_revision();
-			$this->element->setAttribute('created', $this->created);
-			$this->element->setAttribute('creator', $this->creator);
-			if($this->edited != NULL)
-			{
-				$this->element->setAttribute('edited', $this->edited);
-				$this->element->setAttribute('editor', $this->editor);
-			}
-			if(isset($this->approved))
-			{
-				$this->element->setAttribute('approved', date(settings::singleton()->get_setting('date_format'), $this->approved));
+
+			//only get revisions list and approvals if the user is an approver
+			if (security::singleton()->can_approve()) {
+				//attach the archive data if exists
+				if ($this->admin_mode_data['revision']) {
+					$rev_history = $this->get_revision_history();
+					if (!empty($rev_history)) {
+						$archive_data = $dom->createDocumentFragment();
+						$archive_data->appendXML($rev_history);
+						$this->element->appendChild($archive_data);
+					}
+				}
+
+				//attach the pending approvals data if exist
+				if($this->check_pending_approval()){
+					$approvals_list = $this->get_pending_approval_list();
+					if (!empty($approvals_list)) {
+						$approvals = $dom->createDocumentFragment();
+						$approvals->appendXML($approvals_list);
+						$this->element->appendChild($approvals);
+					}
+				}
+				$this->element->setAttribute('new_v_available', $this->admin_mode_data['approve']);
 			}
 
-			if(isset($this->approver))
+			if(isset($this->admin_mode_data['approved']))
 			{
-				$this->element->setAttribute('approver', $this->approver);
+				$this->element->setAttribute('approved', date(settings::singleton()->get_setting('date_format'), $this->admin_mode_data['approved']));
 			}
 
-			$this->element->setAttribute('revision', $this->revision);
-			$this->element->setAttribute('draft_available', $this->draft);
-			$this->element->setAttribute('new_v_available', $this->approve);
-			$this->element->setAttribute('image_edit', $this->image_edit);
-			$this->element->setAttribute('visible', $this->visible);
-			$this->element->setAttribute('deleted', $this->deleted);
+			if(isset($this->admin_mode_data['approver']))
+			{
+				$this->element->setAttribute('approver', $this->admin_mode_data['approver']);
+			}
+
+			$this->element->setAttribute('visible', $this->admin_mode_data['visible']);
+			$this->element->setAttribute('deleted', $this->admin_mode_data['deleted']);
+			$this->element->setAttribute('eh', $this->admin_mode_data['edit_height']);
+			$this->element->setAttribute('ew', $this->admin_mode_data['edit_width']);
+			$this->element->setAttribute('image', $this->admin_mode_data['image']);
+			$this->element->setAttribute('image_edit', $this->admin_mode_data['image_edit']);
+			$this->element->setAttribute('draft_available', $this->admin_mode_data['draft']);
+			$this->element->setAttribute('revision', $this->admin_mode_data['revision']);
 		}
 	}
 
 	public function ajax_edit()
 	{
 		database::Singleton()->sql_delete_where('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
-		$this->get_data();
-		return common::node_from_xml($this->data, '/data/html');
+		return html_entity_decode($this->admin_mode_data['save_data']['html']);
 	}
 
-	//Over right this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor
+	//Overwrite this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor
 	protected function transform_data()
 	{
-		//$this->data = $this->data;
-	}
 
-	//select the correct data to display
-	protected function get_data($data = NULL){
-
-		$general_info = database::Singleton()->sql_select_first(array('visible', 'deleted', 'created', 'creator', 'edited', 'editor', 'approved', 'approver'), 'tbl_elements', array('id'), array($this->id));
-		$default_data = database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->id));
-		$final_data = array();
-		$type = NULL;
-
-		//display plain text when not editing
-		if (is_null(CMS::Singleton()->path_vars(0)) || is_numeric(CMS::Singleton()->path_vars(0))) {
-			if (!is_null($data)) {
-				$final_data = array_merge(array('data' => $data, 'title' => $default_data['title']), $general_info);
-			}
-		}
-		else{
-			if (options::Singleton()->get_option('admin_mode')) {
-				//check if there is a saved draft for the user
-				$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
-				if (!is_null($data)) {
-					$final_data = array_merge($data, $general_info);
-					$type = 'draft';
-				}
-				else{
-					//check if there is aproval data
-					$whereFields = array('element_id', 'user_id', 'approved');
-					$whereVals = array($this->id, user::singleton()->id(), '0');
-
-					$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_approve', $whereFields, $whereVals, array('id'), array('DESC'));
-					if (!is_null($data)) {
-						$final_data = array_merge($data, $general_info);
-					}
-				}
-			}
-		}
-
-		//if no data was set yet, just get the element data from the db
-		if (empty($final_data)) {
-			if(!empty($default_data) && !empty($general_info)) { $final_data = array_merge($default_data, $general_info); }
-			else
-			{ $final_data &= $default_data; }
-		}
-
-		$this->arrange_data($final_data, $type);
-	}
-
-	//this is what used to be get_data, now only arranges the data as xml
-	protected function arrange_data($data, $type = NULL)
-	{
-		$dbxml = '<data>'.$data['data'].'</data>';
-
-		if(options::Singleton()->get_option('admin_mode'))
-		{
-
-			if(isset($data['ts']) && $type == 'draft')
-			{
-				$this->draft = $data['ts'];
-			}
-
-			$built_xml = '<data>';
-			foreach($this->tags as $key => $value)
-			{
-				switch ($key)
-				{
-					case 'title':
-						$this->visible = $data['visible'];
-						$this->deleted = $data['deleted'];
-						$this->created = $data['created'];
-						$this->creator = $data['creator'];
-						$this->edited = $data['edited'];
-						$this->editor = $data['editor'];
-						$this->approved = $data['approved'];
-						$this->approver = $data['approver'];
-						$data_content = $data['title'];
-						break;
-
-					case 'html':
-						$data_content = Common::html(html_entity_decode($data['data']));
-						break;
-
-					default:
-						$data_content = common::node_from_xml($dbxml, '/data/'.$key);
-						break;
-				}
-
-				$data_content = utf8_decode(strip_tags($data_content));
-				$built_xml .= '<'.$key.' type="'.$value.'">'.$data_content.'</'.$key.'>';
-			}
-			$built_xml .= '</data>';
-			$this->data = $built_xml;
-		}
-		else
-		{
-			$this->data = $dbxml;
-		}
-
-		if(empty($data['title'])) { $this->title = 'Please give the element a meaningful title'; }
-		else { $this->title = $data['title']; }
-
-		$this->search = $this->generate_search($data['data']);
 	}
 
 	//seperated from arrange_data()
@@ -516,10 +337,12 @@ class elementDefault
 		}
 		else{
 			$approvals = database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('element_id', 'approved'), array($this->id, '0'));
-			if (!is_null($approvals) && security::Singleton()->can_do('approve')) {
-				$this->approve = true;
+			if ($approvals != NULL && security::Singleton()->can_do('approve')) {
+				$this->admin_mode_data['approve'] = TRUE;
 			}
+			else $this->admin_mode_data['approve'] = FALSE;
 		}
+		return $this->admin_mode_data['approve'];
 	}
 
 	protected function get_pending_approval_list(){
@@ -547,14 +370,14 @@ class elementDefault
 				$built_xml .= '</approval>';
 			}
 			$built_xml .= '</pending_approvals>';
-			$this->approvals_list = $built_xml;
+			return $built_xml;
 		}
 	}
 
 	protected function get_revision()
 	{
-		$this->revision = Database::Singleton()->sql_count_where('tbl_elements_data_archive', 'element_id', $this->id, options::Singleton()->get_option('admin_mode'));
-		return $this->revision;
+		$this->admin_mode_data['revision'] = Database::Singleton()->sql_count_where('tbl_elements_data_archive', 'element_id', $this->id, options::Singleton()->get_option('admin_mode'));
+		return is_null($this->admin_mode_data['revision'])?FALSE:TRUE;
 	}
 
 	protected function get_revision_history()
@@ -581,7 +404,7 @@ class elementDefault
 				}
 				$built_xml .= '</archive>';
 			}
-			$this->revision_history = $built_xml;
+			return $built_xml;
 		}
 	}
 
@@ -595,5 +418,169 @@ class elementDefault
 		return array();
 	}
 
+	protected function get_data(){
+		//if there is no preset data, get data from the DB
+		if (empty($this->data)) {
+			$data = NULL;
+
+			if (options::Singleton()->get_option('admin_mode')) {
+
+				//check if there is a saved draft for the user
+				$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
+
+				//if there is a draft, set the draft timestamp
+				if ($data != NULL) {
+					$this->admin_mode_data['draft'] = $data['ts'];
+				}
+				//if there is no draft, and the user is not an approver,
+				//check if there is approval data for this user
+				else if (security::singleton()->can_edit() && !security::singleton()->can_approve()) {
+					$data = database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_approve', array('element_id', 'user_id', 'approved'), array($this->id, user::singleton()->id(), '0'), array('id'), array('DESC'));
+				}
+			}
+
+			//if no data was set yet, just get the default element data
+			if ($data == NULL) {
+				$data = database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->id));
+			}
+
+			$this->data = json_decode($data['data'], TRUE);
+
+			//put the title in the data array
+			$this->data['title'] = $data['title'];
+		}
+		else if (is_string($this->data)) {
+			$this->data = json_decode($this->data, TRUE);
+		}
+
+		//make sure the data conforms to the element data schema
+		foreach ($this->tags as $key => $value){
+			if (!isset($this->data[$key])) {
+				$this->data[$key] = '';
+			}
+		}
+
+		//delete any data that is not in the element data schema
+		foreach ($this->data as $key => $value){
+			if (!array_key_exists($key, $this->tags)) {
+				unset($this->data[$key]);
+			}
+		}
+
+		//save the title
+		if (array_key_exists('title', $this->data)) {
+			if (empty($this->data['title'])) {
+				$this->data['title'] = $this->title; //delete this line when we finish moving title from node to attribute
+			}
+			else{
+				$this->title = $this->data['title'];
+			}
+			//unset($this->data['title']); //uncomment this when we finish moving title from node to attribute
+		}
+
+		//if admin mode is on, save array for saving process before converting to xml
+		if (options::singleton()->get_option('admin_mode')){
+			$this->admin_mode_data['save_data'] = $this->data;
+		}
+
+		$this->build_data_xml();
+	}
+
+	protected function build_data_xml(){
+		$this->data = common::array_to_xml_simple($this->data, 'data');
+
+		//FIXME: try to come up with a better way to add attributes to xml from arrays
+		foreach ($this->tags as $tag => $type){
+			$this->data = str_replace("<$tag>", "<$tag type=\"$type\">", $this->data);
+		}
+	}
+
+	public function save($draft = TRUE){
+
+		if(!$this->attach_upload())
+		{
+			die($this->admin_mode_data['error']);
+		}
+
+		$details = array_merge($this->admin_mode_data['save_data'], $this->attach_extra_data());
+
+		//process the data being saved
+		foreach($details as $key => &$value)
+		{
+			switch ($key)
+			{
+				case 'html':
+					$value = Common::html($value);
+					break;
+
+				case 'href':
+					//matches http://, https://, ftp://.
+					//to add more protocols, add them to the |-seperated list in the ()
+					if(preg_match('#^(https?|ftp)://#', $value)){  }
+					else
+					{	//delete any protocol in the url and prefix with http://
+						$value = preg_replace('#^[a-z]*://#', '', $value);
+						$value = 'http://'.$value;
+					}
+					break;
+
+				case 'email':
+					if (!common::email_address_check($value)) {
+						//do something about invalid emails
+						$value = NULL;
+					}
+					break;
+			}
+		}
+
+		$data = json_encode($details);
+
+		if($draft)
+		{
+			database::Singleton()->sql_update_or_insert('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $data, CMS::Singleton()->time(), $this->title));
+			die('SAVED');
+		}
+		else
+		{
+			database::Singleton()->sql_delete_where('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
+
+			if ($this->save_upload()) {
+				//save if has permissions
+				if (security::Singleton()->can_do('approve')) {
+					$this->archive_data($data);
+					database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor'), array(time(), User::Singleton()->id()));
+					database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title', 'search'), array($data, $this->title, $this->generate_search($this->data)));
+				}
+				//else submit for approval
+				else {
+					database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $data, CMS::Singleton()->time(), $this->title));
+				}
+				return TRUE;
+			}
+			return FALSE;
+		}
+	}
+
+	protected function init_admin_data(){
+		if (options::singleton()->get_option('admin_mode')) {
+			$element_details = database::Singleton()->sql_select_first(array('*'), 'tbl_elements', array('id'), array($this->id));
+
+			//save admin_mode data
+			$this->admin_mode_data['created'] = $element_details['created'];
+			$this->admin_mode_data['creator'] = $element_details['creator'];
+			$this->admin_mode_data['edited'] = $element_details['edited'];
+			$this->admin_mode_data['editor'] = $element_details['editor'];
+			$this->admin_mode_data['approved'] = $element_details['approved'];
+			$this->admin_mode_data['approver'] = $element_details['approver'];
+			$this->admin_mode_data['visible'] = $element_details['visible'];
+			$this->admin_mode_data['deleted'] = $element_details['deleted'];
+			unset($element_details);
+
+			//initialize admin_mode data not present in the DB
+			$this->admin_mode_data['revision'] = NULL;
+			$this->admin_mode_data['draft'] = NULL;
+			$this->admin_mode_data['approve'] = NULL;
+		}
+	}
 }
 ?>

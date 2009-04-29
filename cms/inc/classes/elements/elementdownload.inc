@@ -4,17 +4,17 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 	element::register('File Download', 'elementDownload');
 	class elementDownload extends elementDefault
 	{
-		function __construct()
+		public function __construct()
 		{
 			parent::__construct();
 			$this->type = __CLASS__;
 			$this->allowed_tags(array('file' => 'file', 'filename' => 'auto', 'filesize' => 'auto', 'mime' => 'auto', 'description' => 'html', 'linktext' => 'auto'));
 			$this->type = __CLASS__;
 			$this->name = 'File Download';
-			$this->image = 'disk';
-			$this->image_edit = '';
+			$this->admin_mode_data['image'] = 'disk';
+			$this->admin_mode_data['image_edit'] = '';
 		}
-		
+
 		protected function attach_extra_data()
 		{
 			$extra = array('linktext' => $_POST['title']);
@@ -26,16 +26,16 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			}
 			else
 			{
-				$data = Database::Singleton()->sql_select_first(array('*'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
-				$data = '<data>'.$data['data'].'</data>';
-				
-				$extra['filename'] = common::node_from_xml($data, '/data/filename');
-				$extra['filesize'] = common::node_from_xml($data, '/data/filesize');
-				$extra['mime'] = common::node_from_xml($data, '/data/mime');				
+				$data = Database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
+				$data = json_decode($data['data'], TRUE);
+
+				$extra['filename'] = $data['filename'];
+				$extra['filesize'] = $data['filesize'];
+				$extra['mime'] = $data['mime'];
 			}
 			return $extra;
 		}
-	
+
 		protected function attach_upload()
 		{
 			return parent::attach_upload();

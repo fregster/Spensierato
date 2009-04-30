@@ -198,19 +198,17 @@ class elementDefault
 		switch ($what)
 		{
 			case 'visibility':
-				return( $this->toggle_visibility());
-				break;
+				return $this->toggle_visibility();
 
 			case 'delete':
-				return( $this->toggle_deleted());
-				break;
-			case 'quickapprove':
-				return( $this->toggle_quickapprove());
-				break;
-		default:
-			return false;
-		}
+				return $this->toggle_deleted();
 
+			case 'quickapprove':
+				return $this->approve();
+
+			default:
+				return false;
+		}
 	}
 
 	protected function toggle_visibility()
@@ -232,27 +230,18 @@ class elementDefault
 		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('deleted'), array($this->deleted));
 	}
 
-	protected function toggle_quickapprove(){
-		//TO FIX: currently this only approvs the most recent pending edit.
-		$approvalData = database::Singleton()->sql_select_first(array('user_id', 'ts', 'data', 'title'), 'tbl_elements_approve', array('element_id'), array($this->id), array('id'), array('DESC'));
-		$this->archive_data($approvalData['data']);
-		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'approved', 'approver'), array($approvalData['ts'], $approvalData['user_id'], time(), User::Singleton()->id()));
-		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title','search'), array($approvalData['data'], $approvalData['title'], $this->generate_search($approvalData['data'])));
-		return database::Singleton()->sql_delete_where('tbl_elements_approve', array('element_id'), $this->id);
-	}
-
 	protected function generate_search($input)
 	{	//exchange </tag><tag> couples with spaces
 		$input = preg_replace('#</\w+><\w+>#', ' ', html_entity_decode($input));
 		return strip_tags($input);
 	}
 
-	protected function archive_data($xml){
-		$archive_data = database::Singleton()->sql_select_first(array('id', 'title', 'data'), 'tbl_elements_data', array('id'), array($this->id));
-		if ($archive_data && ($archive_data['data'] != '<null />') && ($archive_data['data'] != $xml)) {
+	protected function archive_data($new_data){
+//		$archive_data = database::Singleton()->sql_select_first(array('id', 'title', 'data', 'approved'), 'tbl_elements_data', array('id'), array($this->id));
+		if ($archive_data && ($this->data != '[]') && ($this->data != $new_data)) {
 			database::Singleton()->sql_insert('tbl_elements_data_archive',
 									array('data', 'title', 'ts', 'replaced_by', 'replaced_ts', 'element_id'),
-									array($archive_data['data'], $archive_data['title'], time(), user::Singleton()->id(), time(), $archive_data['id']));
+									array($this->data, $this->title, $this->admin_mode_data['approved'], user::Singleton()->id(), time(), $this->id));
 		}
 	}
 
@@ -330,23 +319,34 @@ class elementDefault
 	}
 
 	//seperated from arrange_data()
-	protected function check_pending_approval($return_list = FALSE){
-		if ($return_list) {
-			$approvals = database::Singleton()->sql_select(array('id', 'ts', 'user_id'), 'tbl_elements_approve', array('element_id', 'approved'), array($this->id, '0'));
-			return $approvals;
-		}
-		else{
-			$approvals = database::Singleton()->sql_select_first(array('id'), 'tbl_elements_approve', array('element_id', 'approved'), array($this->id, '0'));
-			if ($approvals != NULL && security::Singleton()->can_do('approve')) {
+	protected function check_pending_approval(){
+		$approvals = database::Singleton()->sql_select(array('id', 'ts', 'user_id', 'approved'), 'tbl_elements_approve', array('element_id'), array($this->id), array('ts'), array('DESC'));
+
+		if ($approvals != NULL) {
+
+			if ($approvals[0]['approved']) {
+				$this->admin_mode_data['approve'] = FALSE;
+			}
+			else{
 				$this->admin_mode_data['approve'] = TRUE;
 			}
-			else $this->admin_mode_data['approve'] = FALSE;
+
+			//only save un-approved edits as available approvals
+			foreach ($approvals as $key => $approval){
+				if ($approval['approved']) {
+					unset($approvals[$key]);
+				}
+			}
+			$this->admin_mode_data['approvals_list'] = $approvals;
+
+			return $this->admin_mode_data['approve'];
 		}
-		return $this->admin_mode_data['approve'];
+
+		return NULL;
 	}
 
 	protected function get_pending_approval_list(){
-		$approval_list = $this->check_pending_approval(TRUE);
+		$approval_list = $this->admin_mode_data['approvals_list'];
 		if ($approval_list && options::singleton()->get_option('admin_mode')) {
 
 			$latest_edit = ($this->approved < $this->edited)?$this->edited:$this->approved;
@@ -545,16 +545,14 @@ class elementDefault
 			database::Singleton()->sql_delete_where('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
 
 			if ($this->save_upload()) {
+
+				database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $data, CMS::Singleton()->time(), $this->title));
+
 				//save if has permissions
-				if (security::Singleton()->can_do('approve')) {
-					$this->archive_data($data);
-					database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor'), array(time(), User::Singleton()->id()));
-					database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title', 'search'), array($data, $this->title, $this->generate_search($this->data)));
+				if (User::singleton()->is_admin() || (settings::singleton()->get_setting('content_auto_publish') && security::Singleton()->can_do('approve'))) {
+					$this->approve();
 				}
-				//else submit for approval
-				else {
-					database::Singleton()->sql_update_or_insert('tbl_elements_approve', array('element_id', 'user_id'), array($this->id, User::Singleton()->id()), array('user_id', 'element_id', 'data', 'ts', 'title'), array(User::Singleton()->id(), $this->id, $data, CMS::Singleton()->time(), $this->title));
-				}
+
 				return TRUE;
 			}
 			return FALSE;
@@ -581,6 +579,28 @@ class elementDefault
 			$this->admin_mode_data['draft'] = NULL;
 			$this->admin_mode_data['approve'] = NULL;
 		}
+	}
+
+	//TODO: make this work for multiple approvals
+	public function approve($approval_id = NULL){
+
+		$where_data = array('fields' => array('element_id'), 'values' => array($this->id));
+
+		if (is_numeric($approval_id)) {
+			$where_data['fields'][] = 'id';
+			$where_data['values'][] = $approvals_id;
+		}
+
+		$approved_data = database::Singleton()->sql_select_first(array('id', 'user_id', 'ts', 'data', 'title'), 'tbl_elements_approve', array('element_id'), array($this->id), array('id'), array('DESC'));
+
+		$this->archive_data($data);
+
+		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'approved', 'approver'), array($approved_data['ts'], $approved_data['user_id'], time(), User::Singleton()->id()));
+		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title','search'), array($approved_data['data'], $approved_data['title'], $this->generate_search($approved_data['data'])));
+
+		database::Singleton()->sql_update_by_id($approved_data['id'], 'tbl_elements_approve', array('approved'), array('1'));
+
+		return TRUE;
 	}
 }
 ?>

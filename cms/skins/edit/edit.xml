@@ -150,18 +150,22 @@
 </xsl:template>
 
 <xsl:template name="revision_rollback">
-	Rollback changes to older version:
-	<xsl:element name="select">
-		<xsl:attribute name="id">revision_list</xsl:attribute>
-		<xsl:attribute name="onchange">ajaxLoad(this.value);</xsl:attribute>
-		<option value="0"></option>
-		<xsl:for-each select="//archive/revision">
-			<xsl:element name="option">
-				<attribute name="value"><xsl:value-of select="id" /></attribute>
-				<xsl:value-of select="id" /> <xsl:value-of select="title" /> <xsl:value-of select="user" /> <xsl:value-of select="date" />
-			</xsl:element>
-		</xsl:for-each>
-	</xsl:element>
+	<form action="" method="post">
+		Rollback changes to an older version:
+		<select id="revision_list" name="revision_list" onchange="ajaxLoad(this.value);">
+			<option value="0">...</option>
+			<xsl:for-each select="/page/body/element/archive/revision">
+				<xsl:element name="option">
+					<xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
+					<xsl:value-of select="id" />)<xsl:text> </xsl:text>
+					<xsl:value-of select="title" /><xsl:text> </xsl:text>
+					<xsl:value-of select="user" /><xsl:text> </xsl:text>
+					<xsl:value-of select="date" />
+				</xsl:element>
+			</xsl:for-each>
+		</select><br />
+		<input type="submit" name="rollback" value="Rollback" />
+	</form>
 </xsl:template>
 
 <xsl:template name="pending_approvals">

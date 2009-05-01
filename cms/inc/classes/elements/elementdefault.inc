@@ -454,36 +454,42 @@ class elementDefault
 		}
 
 		//make sure the data conforms to the element data schema
-		foreach ($this->tags as $key => $value){
-			if (!isset($this->data[$key])) {
-				$this->data[$key] = '';
+		if(isset($this->tags[0]))
+		{
+			foreach ($this->tags as $key => $value){
+				if (!isset($this->data[$key])) {
+					$this->data[$key] = '';
+				}
 			}
 		}
 
-		//delete any data that is not in the element data schema
-		foreach ($this->data as $key => $value){
-			if (!array_key_exists($key, $this->tags)) {
-				unset($this->data[$key]);
+		if(is_array($this->data)) //Only process the data if there is actually any data else blank pages error
+		{
+			//delete any data that is not in the element data schema
+			foreach ($this->data as $key => $value){
+				if (!array_key_exists($key, $this->tags)) {
+					unset($this->data[$key]);
+				}
 			}
-		}
 
-		//save the title
-		if (array_key_exists('title', $this->data)) {
-			if (empty($this->data['title'])) {
-				$this->data['title'] = $this->title; //delete this line when we finish moving title from node to attribute
+			//save the title
+			if (array_key_exists('title', $this->data)) {
+				if (empty($this->data['title'])) {
+					$this->data['title'] = $this->title; //delete this line when we finish moving title from node to attribute
+				}
+				else{
+					$this->title = $this->data['title'];
+				}
+				//unset($this->data['title']); //uncomment this when we finish moving title from node to attribute
 			}
-			else{
-				$this->title = $this->data['title'];
+	
+			//if admin mode is on, save array for saving process before converting to xml
+			if (options::singleton()->get_option('admin_mode')){
+				$this->admin_mode_data['save_data'] = $this->data;
 			}
-			//unset($this->data['title']); //uncomment this when we finish moving title from node to attribute
+	
+			$this->build_data_xml();
 		}
-
-		//if admin mode is on, save array for saving process before converting to xml
-		if (options::singleton()->get_option('admin_mode')){
-			$this->admin_mode_data['save_data'] = $this->data;
-		}
-
-		$this->build_data_xml();
 	}
 
 	protected function build_data_xml(){

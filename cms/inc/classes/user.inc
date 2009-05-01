@@ -70,26 +70,26 @@ class user
 	public function create($username, $email, $password = NULL, $admin = false)
 	{
 		database::Singleton()->force_write_user();
-			$cols = array('username');
-			$data = array($username);
+		$cols = array('username');
+		$data = array($username);
 
-			if($admin)
-			{
-				array_push($cols, 'admin');
-				array_push($data, 1);
-			}
-			$this->userid = database::singleton()->sql_insert('tbl_users', $cols, $data);
+		if($admin)
+		{
+			array_push($cols, 'admin');
+			array_push($data, 1);
+		}
+		$this->userid = database::singleton()->sql_insert('tbl_users', $cols, $data);
 
-			database::singleton()->sql_insert('tbl_users_data', array('data', 'user_id'), array('<email>'.$email.'</email>', $this->userid));
-			$this->set_user_details();
-			if($admin)
-			{
-				return $this->create_password($password);
-			}
-			else
-			{
-				$this->reset_password();
-			}
+		database::singleton()->sql_insert('tbl_users_data', array('data', 'user_id'), array('{"email":"'.$email.'"}', $this->userid));
+		$this->set_user_details();
+		if($admin)
+		{
+			return $this->create_password($password);
+		}
+		else
+		{
+			$this->reset_password();
+		}
 		database::Singleton()->destroy_write_user();
 
 		$this->do_login();
@@ -125,16 +125,9 @@ class user
 						'email' => post::variable('email')
 					);
 
-		$xml = '';
-		foreach($values as $key => $value)
-		{
-			if($value != '')
-			{
-				$xml .= '<'.$key.'>'.common::html($value).'</'.$key.'>';
-			}
-		}
+		$data = json_encode($values);
 
-		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array($xml), true);
+		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array($data), true);
 		$this->set_user_details(true); //Reload the users details
 	}
 
@@ -189,20 +182,11 @@ class user
 
 	private function set_user_details($force = false)
 	{
-		$user_data = Database::Singleton()->sql_select(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
+		$user_data = Database::Singleton()->sql_select_first(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
 
-		if(isset($user_data[0]))
+		if($user_data != NULL)
 		{
-			foreach($user_data as $data)
-			{
-				$data = '<xml>'.$data['data'].'</xml>';
-				$xml = simplexml_load_string($data);
-
-				foreach ($xml->children() as $child)
-				{
-					$this->user_details[$child->getName()] = strip_tags($child->saveXML());
-				}
-			}
+			$this->user_details = json_decode($user_data['data'], TRUE);
 		}
 
 		$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));

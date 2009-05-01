@@ -15,7 +15,8 @@ function find_item_by_id($id, $id_col, $array){
 	return false;
 }
 
-function check_dates($date1, $date2){ //temporary date checking function to get the tool working
+//temporary date checking function to get the tool working
+function check_dates($date1, $date2){
 	$ts1 = strtotime($date1);
 	$ts2 = strtotime($date2);
 

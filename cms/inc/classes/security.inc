@@ -190,17 +190,18 @@ class Security
 			return $cache;
 		}
 
-		$page_security_xml = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
+		$page_security_data = Database::Singleton()->sql_select(array('data'), 'tbl_security', array('page_id'), array($page_ids));
 
-		$security_array = Common::xml_to_array($this->default_security_xml());
-		if(isset($page_security_xml[0]['data']))
+		$security_array = $this->default_security();
+
+		if($page_security_data != NULL)
 		{
 			//Security has been set
-			foreach($page_security_xml as $xml)
+			foreach($page_security_data as $data)
 			{
-				if(strlen($xml['data']) > 0)
+				if(strlen($data['data']) > 0)
 				{
-					$security_array = array_merge_recursive($security_array, Common::xml_to_array($xml['data']));
+					$security_array = array_merge_recursive($security_array, json_decode($data['data'], TRUE));
 				}
 			}
 		}
@@ -305,7 +306,7 @@ class Security
 
 	public function can_view_link($page)
 	{
-		if(isnumeric($page))
+		if(is_numeric($page))
 		{
 //			return Database::singleton()->database($GLOBALS['cms_db_name'])->table('tbl_pages')->get_record_by_id($page);
 		}
@@ -322,9 +323,18 @@ class Security
 		return $this->can_do('view', $element_id);
 	}
 
-	public function default_security_xml()
+	public function default_security()
 	{
-		return '<security><view><user/><group/></view><edit><user/><group/></edit><approve><user/><group/></approve><blocked><user/><group/></blocked></security>';
+		$default_security = array(
+								'security' =>
+									array(
+										'view' => array('user' => array(), 'group' => array()),
+										'edit' => array('user' => array(), 'group' => array()),
+										'approve' => array('user' => array(), 'group' => array()),
+										'blocked' => array('user' => array(), 'group' => array())
+									)
+								);
+		return $default_security;
 	}
 
 	private function is_level($what)

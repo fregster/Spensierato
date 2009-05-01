@@ -14,81 +14,17 @@ function find_user_by_id($id, $array){
 	}
 }
 
-function clean_xml($xml){
-	$xml = trim(preg_replace('#<\?.*\?>#', '', $xml));
-	$xml = preg_replace('#(<user/>|<group/>)#', '', $xml);
-	return $xml;
-}
-
-function get_permission_types($xml){
+function get_permission_types($array){
 	$types = array();
 
-	$xmlObj = new SimpleXMLElement($xml);
-	foreach ($xmlObj->children() as $child){
-		$types[] = $child->getName();
+	foreach ($array as $type => $data){
+		$types[] = $type;
 	}
-	unset($child, $xmlObj);
+	unset($type, $data);
 
 	$types[] = 'remove';
 
 	return $types;
-}
-
-function update_permissions($xml){
-	$permissions = array(
-					'user' => array(),
-					'group' => array()
-					);
-
-	$xmlObj = new SimpleXMLElement($xml);
-
-	//populate $pemissions with the security data
-	foreach ($xmlObj->children() as $child){
-		foreach ($child->children() as $element){
-			if (strip_tags($element->asXML()) != ''){
-				if ($element->getName() == 'user')
-					$permissions['user'][strip_tags($element->asXML())] = $child->getName();
-				else if ($element->getName() == 'group')
-					$permissions['group'][strip_tags($element->asXML())] = $child->getName();
-			}
-		}
-	}
-	unset($child, $xmlObj);
-
-	return $permissions;
-}
-
-function change_user_permission($userId, $group, $permLvl, $xmlStr){
-
-	$dom = new DOMDocument();
-	$dom->loadXML($xmlStr);
-
-	//first remove the user from the old permission
-	$x = new DomXPath($dom);
-	$userList=$x->query("//{$group}[text()='{$userId}']");
-
-	foreach ($userList as $domElement){
-		$domNode = $dom->importNode($domElement, true);
-		$parent = $domNode->parentNode;
-		$parent->removeChild($domNode);
-	}
-
-	//now place it in the new permission
-	if ($permLvl != 'remove') {
-		$x = new DomXPath($dom);
-		$permissionList=$x->query("//{$permLvl}");
-
-		foreach ($permissionList as $domElement){
-			$permissionNode = $dom->importNode($domElement, true);
-			foreach ($userList as $domElement){
-				$domNode = $dom->importNode($domElement, true);
-				$permissionNode->appendChild($domNode);
-			}
-		}
-		unset($domElement);
-	}
-
-	return $dom->saveXML();
 }
 
 
@@ -107,97 +43,76 @@ $lists = database::Singleton()->sql_select(array('id', 'name'), 'tbl_list_data')
 //get permissions for this page from DB
 $securityData = database::Singleton()->sql_select_first(array('data'), 'tbl_security', array('page_id'), array($pageId));
 
-if(is_null($securityData['data'])){
-	$securityData['data'] = security::singleton()->default_security_xml();
+if($securityData['data'] == NULL){
+	$permissions = security::singleton()->default_security();
 }
+else {
+	$permissions = json_decode($securityData['data'], TRUE);
+}
+$permissions = $permissions['security']; //get rid of the top level array, which is only there for xml reasons
 
-$types = get_permission_types($securityData['data']);
-$permissions = update_permissions($securityData['data']);
+$types = get_permission_types($permissions);
 
 
 ####################
 # save posted data #
 ####################
 
-$postVars = new post;
+if (post::variable('savePerm')) {
 
-if ($postVars->variable('savePerm')) {
+	foreach ($_POST as $member => $new_perm){
+		if ($new_perm != 'Save') {
+			$member_data = explode('_', $member); //index 0 == group/user, index 1 == id
 
-	$xmlStr = $securityData['data'];
+			//find and delete the user/group from old permission
+			foreach ($permissions as &$permission){
+				$user_key = array_search($member_data[1], $permission[$member_data[0]]);
+				if ($user_key !== FALSE) {
+					unset($permission[$member_data[0]][$user_key]);
+					break;
+				}
+			}
+			unset($permission);
 
-	foreach ($permissions as $group => $allUsers){
-		foreach ($allUsers as $user => $permission){
-			if ($permission != $postVars->variable($user)){
-				$xmlStr = change_user_permission($user, $group, $postVars->variable($user), $xmlStr);
+			if ($new_perm != 'remove') {
+				//assign the user to new permission and reset the array keys for json compliance
+				$permissions[$new_perm][$member_data[0]][] = $member_data[1];
+				$permissions[$new_perm][$member_data[0]] = array_values($permissions[$new_perm][$member_data[0]]);
 			}
 		}
-		unset($user, $permission);
 	}
-	unset($group, $allUsers);
+	unset($member, $new_perm);
 
-	$securityData = clean_xml($xmlStr);
-
-	database::Singleton()->sql_update_by_col('tbl_security', array('page_id'), array($pageId), array('data'), array($securityData));
-
-	//update permissions so the html form is updated
-	$permissions = update_permissions($securityData);
+	database::Singleton()->sql_update_by_col('tbl_security', array('page_id'), array($pageId), array('data'), array(json_encode(array('security' => $permissions))));
 }
-else if ($postVars->variable('addUser')) {
-
-	$securityXML = new SimpleXMLElement($securityData['data']);
+else if (post::variable('addUser')) {
 
 	//get the users/lists to add
-	if ($postVars->variable('userList'))
-		$userList = $postVars->variable('userList');
+	if (post::variable('userList'))
+		$userList = post::variable('userList');
 	else{
-		if ($postVars->variable('groupType')) {
-			$user = database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('username'), array($postVars->variable('userSearch')));
-			$userList = 'user-'.$user['id'];
+		if (post::variable('groupType')) {
+			$user = database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('username'), array(post::variable('userSearch')));
+			$userList = 'user_'.$user['id'];
 		}
 		else{
-			$user = database::Singleton()->sql_select_first(array('id'), 'tbl_list_data', array('name'), array($postVars->variable('userSearch')));
-			$userList = 'group-'.$user['id'];
+			$user = database::Singleton()->sql_select_first(array('id'), 'tbl_list_data', array('name'), array(post::variable('userSearch')));
+			$userList = 'group_'.$user['id'];
 		}
 	}
 
-	//get the users/lists to be added from post data
-	$userArray = array();
 	if (is_array($userList)) {
 		foreach ($userList as $user){
-			$postValues = explode('-', $user); //index 0 = group, index 1 = user
-			//only add users that don't exist
-			if (!isset($permissions[$postValues[0]][$postValues[1]]))
-				$userArray[$postValues[1]] = $postValues[0];
+			$user_details = explode('_', $user); //index 0 == user/group, index 1 == id
+			$permissions[$types[0]][$user_details[0]][] = $user_details[1];
+			array_unique($permissions[$types[0]][$user_details[0]]); //ensure the user exists only once
 		}
 		unset($user);
 	}
-	else{
-		$postValues = explode('-', $userList);
-		//only add users that don't exist
-		if (!isset($permissions[$postValues[0]][$postValues[1]]))
-			$userArray[$postValues[1]] = $postValues[0];
-	}
-	unset($postValues, $userList);
-
-	//set the user as a user. default permissions is the first option in the list
-	foreach ($userArray as $user => $group){
-		foreach ($securityXML->children() as $child){
-			$child->addChild($group, $user);
-			break;
-		}
-	}
-
-	//convert xml object to string and drop the xml header
-	$securityData = clean_xml($securityXML->asXML());
 
 	//save the new security in the DB
-	database::Singleton()->sql_update_or_insert('tbl_security', array('page_id'), array($pageId), array('page_id', 'data'), array($pageId, $securityData));
-
-	//update permissions so the form is updated
-	$permissions = update_permissions($securityData);
+	database::Singleton()->sql_update_or_insert('tbl_security', array('page_id'), array($pageId), array('page_id', 'data'), array($pageId, json_encode(array('security' => $permissions))));
 }
-
-unset($postVars, $securityData, $securityXML);
 
 
 #######################
@@ -206,44 +121,61 @@ unset($postVars, $securityData, $securityXML);
 
 $radioTemplate = '<label for="***NAME******TYPE***">***TYPE***</label><input type="radio" name="***NAME***" id="***NAME******TYPE***" value="***TYPE***" ***CHECKED*** />';
 
-$htmlArray = array('<div id="permList"><form method="post" action="">');
+$groupDivs = array();
 
-foreach ($permissions as $group => $allUsers){
-	array_push($htmlArray, $group.' permissions:', '<div id="'.$group.'">');
-	foreach ($allUsers as $user => $permission){
-		if ($group == 'user')
-			$name = $users[find_user_by_id($user, $users)]['username'];
-		else if ($group == 'group')
-			$name = $lists[find_user_by_id($user, $lists)]['name'];
-
-		$htmlArray[] = '<div><strong>'.$name.':</strong> ';
-		$userTemplate = str_replace('***NAME***', $user, $radioTemplate);
-		foreach ($types as $type){
-			if (!strcasecmp($permission, $type)) {
-				$finalTemplate = str_replace('***CHECKED***', 'checked', $userTemplate);
+foreach ($permissions as $permission => $data){
+	foreach ($data as $group => $members){
+		if (!empty($members)) {
+			if (!isset($groupDivs[$group])) {
+				$groupDivs[$group][] = ucfirst($group).' permissions:<div id="'.$group.'">';
 			}
-			else $finalTemplate = str_replace('***CHECKED***', '', $userTemplate);
-			$htmlArray[] =  str_replace('***TYPE***', $type, $finalTemplate);
+
+			foreach ($members as $member){
+				if ($group == 'user')
+					$name = $users[find_user_by_id($member, $users)]['username'];
+				else if ($group == 'group')
+					$name = $lists[find_user_by_id($member, $lists)]['name'];
+
+				$groupDivs[$group][] = '<div><strong>'.$name.':</strong> ';
+				$userTemplate = str_replace('***NAME***', $group.'_'.$member, $radioTemplate);
+				foreach ($types as $type){
+					if (!strcasecmp($permission, $type)) {
+						$finalTemplate = str_replace('***CHECKED***', 'checked', $userTemplate);
+					}
+					else $finalTemplate = str_replace('***CHECKED***', '', $userTemplate);
+					$groupDivs[$group][] =  str_replace('***TYPE***', $type, $finalTemplate);
+				}
+				unset($type);
+				$groupDivs[$group][] = '</div>';
+			}
+			unset($member);
 		}
-		unset($type);
-		$htmlArray[] = '</div>';
 	}
-	unset($permission, $user);
-	$htmlArray[] = '</div>';
+	unset($group, $members);
 }
-unset($group, $allUsers);
+unset($types, $data);
 
-array_push($htmlArray, '<input type="submit" name="savePerm" value="Save" />', '</form></div>');
-
-if (count($permissions['user']) || count($permissions['group']))
-	$htmlList = implode('', $htmlArray);
-else $htmlList = '';
+if(!empty($groupDivs)){
+	foreach ($groupDivs as &$div){
+		$div[] = '</div>';
+		$div = implode('', $div);
+	}
+	$htmlList = '<div id="permList">
+					<form method="post" action="">
+						'.implode('', $groupDivs).'
+						<input type="submit" name="savePerm" value="Save" />
+					</form>
+				 </div>';
+}
+else{
+	$htmlList = '';
+}
 
 $userOptions = '';
 if ($users) {
 	$userList = array('<optgroup label="Users">');
 	foreach ($users as $user){
-		$userList[] = '<option value="user-'.$user['id'].'">'.$user['username'].'</option>';
+		$userList[] = '<option value="user_'.$user['id'].'">'.$user['username'].'</option>';
 	}
 	$userList[] = '</optgroup>';
 	$userOptions = implode('', $userList);
@@ -253,7 +185,7 @@ $listOptions = '';
 if ($lists) {
 	$listList = array('<optgroup label="Lists">');
 	foreach ($lists as $list){
-		$listList[] = '<option value="group-'.$list['id'].'">'.$list['name'].'</option>';
+		$listList[] = '<option value="group_'.$list['id'].'">'.$list['name'].'</option>';
 	}
 	$listList[] = '</optgroup>';
 	$listOptions = implode('', $listList);

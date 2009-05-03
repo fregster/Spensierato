@@ -5,7 +5,7 @@ ed.setProgressState(1);
 var url = '';
 if (typeof revision != 'undefined')
 {
-url = ajax_host + "/ajax/rev/" + revision + "/";
+url = ajax_host + "/ajax/revision/" + revision + "/";
 }else{
 url = ajax_host + "/ajax/edit/";
 }

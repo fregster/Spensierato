@@ -10,7 +10,7 @@ abstract class ajax
 				break;
 
 			case 'revision':
-				ajax::revision($vars[2], $vars[3]);
+				ajax::get_revision($vars[2], $vars[3]);
 				break;
 
 			case 'approvals':
@@ -35,20 +35,38 @@ abstract class ajax
 		}
 	}
 
-	//code is duplicated in edit::save_approvals()
+	//FIXME: code is duplicated in edit::save_approvals()
 	private static function approvals($element_id){
 		$element_id = str_replace('e_', '', $element_id);
+
 		$element_data = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($element_id));
-		$data = $element_data['data'];
+		$data = json_decode($element_data['data'], TRUE);
+
+		if (empty($data)) {
+			$data = '';
+		}
+		else{
+			$data = $data['html'];
+		}
+
 		$approvals_list = post::variable('approvals');
 		if (!empty($approvals_list)) {
 			$approvals = array();
+
 			foreach ($approvals_list as $approval_id){
-				$result = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_approve', array('id'), array($approval_id));
-				$approvals[] = $result['data'];
+				$result = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_approve', array('id'), array($approval_id), array('id'), array('ASC'));
+				$result = json_decode($result['data'], TRUE);
+
+				if (empty($result)) {
+					$result = '';
+				}
+				else{
+					$result = $result['html'];
+				}
+
+				$approvals[] = $result;
 			}
 
-			$approvals = array_reverse($approvals);
 			$data = diffCompare::multi_diff($data, $approvals);
 		}
 		die($data);
@@ -80,17 +98,27 @@ abstract class ajax
 	{
 		$element = Element::type($id);
 		$element->build($id);
-		return $element->ajax_edit();
+		$data = $element->reload_element_data();
+
+		if ($data != NULL) {
+			$data = json_decode(html_entity_decode($data['data']), TRUE);
+			$data = $data['html'];
+		}
+		return $data;
 	}
 
-	//FIXME: make the rollback also restore timestamps, not just content data
-	private static function revision($rev_id, $element_id){
+	//FIXME: make get_revision display the title as well as the content
+	private static function get_revision($rev_id, $element_id){
 		$element_id = str_replace('e_', '', $element_id);
-		$element_revs = database::singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data_archive', array('element_id'), array($element_id));
-		$element = Element::type($element_id);
-		$element->build($element_id, $element_revs);
-		$element->save();
-		$element->ajax_edit();
+		$element_revs = database::singleton()->sql_select_first(array('data'), 'tbl_elements_data_archive', array('id', 'element_id'), array($rev_id, $element_id));
+
+		if ($element_revs == NULL) {
+			die(ajax::edit_load($element_id));
+		}
+		else{
+			$rev_data = json_decode($element_revs['data'], TRUE);
+			die(html_entity_decode($rev_data['html']));
+		}
 	}
 }
 ?>

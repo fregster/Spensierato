@@ -237,11 +237,11 @@ class elementDefault
 	}
 
 	protected function archive_data($new_data){
-//		$archive_data = database::Singleton()->sql_select_first(array('id', 'title', 'data', 'approved'), 'tbl_elements_data', array('id'), array($this->id));
-		if ($archive_data && ($this->data != '[]') && ($this->data != $new_data)) {
+		$old_data = $this->reload_element_data(array('data', 'title'));
+		if ($old_data != NULL && ($old_data['data'] != '[]') && ($old_data['data'] != $new_data)) {
 			database::Singleton()->sql_insert('tbl_elements_data_archive',
 									array('data', 'title', 'ts', 'replaced_by', 'replaced_ts', 'element_id'),
-									array($this->data, $this->title, $this->admin_mode_data['approved'], user::Singleton()->id(), time(), $this->id));
+									array($old_data['data'], $old_data['title'], $this->admin_mode_data['approved'], user::Singleton()->id(), time(), $this->id));
 		}
 	}
 
@@ -306,10 +306,13 @@ class elementDefault
 		}
 	}
 
-	public function ajax_edit()
+	public function reload_element_data($columns = array('data'))
 	{
 		database::Singleton()->sql_delete_where('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
-		return html_entity_decode($this->admin_mode_data['save_data']['html']);
+
+		$data = database::singleton()->sql_select_first($columns, 'tbl_elements_data', array('id'), $this->id);
+
+		return $data;
 	}
 
 	//Overwrite this function in each element to transform the data XML to what ever needs to be sent to the XSLT processor
@@ -426,7 +429,7 @@ class elementDefault
 			if (options::Singleton()->get_option('admin_mode')) {
 
 				//check if there is a saved draft for the user
-				$data = database::Singleton()->sql_select_first(array('data', 'title', 'ts'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
+				$data = database::Singleton()->sql_select_first(array('title', 'data', 'ts'), 'tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
 
 				//if there is a draft, set the draft timestamp
 				if ($data != NULL) {
@@ -435,13 +438,13 @@ class elementDefault
 				//if there is no draft, and the user is not an approver,
 				//check if there is approval data for this user
 				else if (security::singleton()->can_edit() && !security::singleton()->can_approve()) {
-					$data = database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_approve', array('element_id', 'user_id', 'approved'), array($this->id, user::singleton()->id(), '0'), array('id'), array('DESC'));
+					$data = database::Singleton()->sql_select_first(array('title', 'data'), 'tbl_elements_approve', array('element_id', 'user_id', 'approved'), array($this->id, user::singleton()->id(), '0'), array('id'), array('DESC'));
 				}
 			}
 
 			//if no data was set yet, just get the default element data
 			if ($data == NULL) {
-				$data = database::Singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->id));
+				$data = database::Singleton()->sql_select_first(array('title', 'data'), 'tbl_elements_data', array('id'), array($this->id));
 			}
 
 			$this->data = json_decode($data['data'], TRUE);
@@ -452,10 +455,13 @@ class elementDefault
 		else if (is_string($this->data)) {
 			$this->data = json_decode($this->data, TRUE);
 		}
+		else if (isset($this->data['data'])) {
+			$html = json_decode($this->data['data'], TRUE);
+			$this->data = array_merge($this->data, $html);
+		}
 
 		//make sure the data conforms to the element data schema
-		if(isset($this->tags[0]))
-		{
+		if (!empty($this->tags)) {
 			foreach ($this->tags as $key => $value){
 				if (!isset($this->data[$key])) {
 					$this->data[$key] = '';
@@ -463,8 +469,9 @@ class elementDefault
 			}
 		}
 
-		if(is_array($this->data)) //Only process the data if there is actually any data else blank pages error
-		{
+		//Only process the data if there is actually any data else blank pages error
+		if(is_array($this->data)){
+
 			//delete any data that is not in the element data schema
 			foreach ($this->data as $key => $value){
 				if (!array_key_exists($key, $this->tags)) {
@@ -481,13 +488,18 @@ class elementDefault
 					$this->title = $this->data['title'];
 				}
 				//unset($this->data['title']); //uncomment this when we finish moving title from node to attribute
+
+				//this is a temporary hack to make the title appear in the right place in the editor
+				//delete this when Paul moves title from element to attribute in edit.xml
+				unset($this->data['title']);
+				$this->data = array_merge(array('title' => $this->title), $this->data);
 			}
-	
+
 			//if admin mode is on, save array for saving process before converting to xml
 			if (options::singleton()->get_option('admin_mode')){
 				$this->admin_mode_data['save_data'] = $this->data;
 			}
-	
+
 			$this->build_data_xml();
 		}
 	}
@@ -509,6 +521,11 @@ class elementDefault
 		}
 
 		$details = array_merge($this->admin_mode_data['save_data'], $this->attach_extra_data());
+
+		//delete this conditional when we finish moving title from element to attribute
+		if (isset($details['title'])) {
+			unset($details['title']);
+		}
 
 		//process the data being saved
 		foreach($details as $key => &$value)
@@ -599,7 +616,7 @@ class elementDefault
 
 		$approved_data = database::Singleton()->sql_select_first(array('id', 'user_id', 'ts', 'data', 'title'), 'tbl_elements_approve', array('element_id'), array($this->id), array('id'), array('DESC'));
 
-		$this->archive_data($data);
+		$this->archive_data($approved_data['data']);
 
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('edited', 'editor', 'approved', 'approver'), array($approved_data['ts'], $approved_data['user_id'], time(), User::Singleton()->id()));
 		database::Singleton()->sql_update_by_id($this->id, 'tbl_elements_data', array('data', 'title','search'), array($approved_data['data'], $approved_data['title'], $this->generate_search($approved_data['data'])));

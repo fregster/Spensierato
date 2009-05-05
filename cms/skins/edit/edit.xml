@@ -146,6 +146,13 @@
 				Approved On: <xsl:value-of select="/page/body/element/@approved" /><br />
 			</xsl:if>
 		</xsl:if>
+		<div>
+		Title:  <xsl:element name="input">
+		<xsl:attribute name="name">title</xsl:attribute>
+		<xsl:attribute name="id">title</xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="/page/body/element/@title" /></xsl:attribute>
+		</xsl:element>
+	</div>
 	</div>
 </xsl:template>
 

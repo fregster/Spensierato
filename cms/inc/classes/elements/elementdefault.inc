@@ -448,9 +448,8 @@ class elementDefault
 			}
 
 			$this->data = json_decode($data['data'], TRUE);
-
-			//put the title in the data array
-			$this->data['title'] = $data['title'];
+			$this->title = $this->data['title'];
+			unset($this->data['title']);
 		}
 		else if (is_string($this->data)) {
 			$this->data = json_decode($this->data, TRUE);
@@ -484,18 +483,8 @@ class elementDefault
 
 			//save the title
 			if (array_key_exists('title', $this->data)) {
-				if (empty($this->data['title'])) {
-					$this->data['title'] = $this->title; //delete this line when we finish moving title from node to attribute
-				}
-				else{
-					$this->title = $this->data['title'];
-				}
-				//unset($this->data['title']); //uncomment this when we finish moving title from node to attribute
-
-				//this is a temporary hack to make the title appear in the right place in the editor
-				//delete this when Paul moves title from element to attribute in edit.xml
-				unset($this->data['title']);
-				$this->data = array_merge(array('title' => $this->title), $this->data);
+				$this->title = $this->data['title'];
+				unset($this->data['title']); //uncomment this when we finish moving title from node to attribute
 			}
 
 			//if admin mode is on, save array for saving process before converting to xml

@@ -8,7 +8,7 @@ class elementDefault
 	protected $name;
 	protected $title = 'Please give the element a meaningful title';
 
-	private $tags = array('title' => 'text');
+	private $tags = array();
 	private $element;
 
 	//useful only in admin mode
@@ -448,19 +448,18 @@ class elementDefault
 			}
 
 			$this->data = json_decode($data['data'], TRUE);
-			if(isset($this->data['title']))
-			{
-				$this->title = $this->data['title'];
-				unset($this->data['title']);
+
+			if ($data['title'] != NULL) {
+				$this->title = $data['title'];
 			}
+
 		}
 		else if (is_string($this->data)) {
 			$this->data = json_decode($this->data, TRUE);
 		}
 		else if (isset($this->data['data'])) {
 			$html = json_decode($this->data['data'], TRUE);
-			if(is_array($html))  //Tried isset($html[0]) but still raised a notice
-			{
+			if($html != NULL)	{
 				$this->data = array_merge($this->data, $html);
 			}
 		}
@@ -477,17 +476,19 @@ class elementDefault
 		//Only process the data if there is actually any data else blank pages error
 		if(is_array($this->data)){
 
+			//save the title
+			if (array_key_exists('title', $this->data)) {
+				if (!empty($this->data['title'])) {
+					$this->title = $this->data['title'];
+				}
+				unset($this->data['title']);
+			}
+
 			//delete any data that is not in the element data schema
 			foreach ($this->data as $key => $value){
 				if (!array_key_exists($key, $this->tags)) {
 					unset($this->data[$key]);
 				}
-			}
-
-			//save the title
-			if (array_key_exists('title', $this->data)) {
-				$this->title = $this->data['title'];
-				unset($this->data['title']); //uncomment this when we finish moving title from node to attribute
 			}
 
 			//if admin mode is on, save array for saving process before converting to xml
@@ -496,6 +497,7 @@ class elementDefault
 			}
 
 			$this->build_data_xml();
+
 		}
 	}
 
@@ -516,11 +518,6 @@ class elementDefault
 		}
 
 		$details = array_merge($this->admin_mode_data['save_data'], $this->attach_extra_data());
-
-		//delete this conditional when we finish moving title from element to attribute
-		if (isset($details['title'])) {
-			unset($details['title']);
-		}
 
 		//process the data being saved
 		foreach($details as $key => &$value)

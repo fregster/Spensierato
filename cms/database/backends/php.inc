@@ -54,6 +54,16 @@ class database_execution_php extends database_execution
 	public function lastInsertID($table,$col)
 	{
 		//TODO have a think about how to implement this as it depends on the driver etc
+
+		//temp solution to get installer working with mysql
+		$table = $GLOBALS['table_prefix'].$table;
+		$sql = "SELECT $col FROM $table ORDER BY $col DESC LIMIT 1";
+		$resultset = mysql_query($sql, $this->read);
+		$id = mysql_fetch_assoc($resultset);
+		if (!$id) {
+			die(mysql_error());
+		}
+		else return $id[$col];
 	}
 
 	public function createDatabase($database)

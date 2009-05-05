@@ -35,6 +35,8 @@ abstract class ajax
 		}
 	}
 
+	/* functionality to be added in alpha 2
+
 	//FIXME: code is duplicated in edit::save_approvals()
 	private static function approvals($element_id){
 		$element_id = str_replace('e_', '', $element_id);
@@ -71,6 +73,7 @@ abstract class ajax
 		}
 		die($data);
 	}
+	*/
 
 	private static function edit($id)
 	{
@@ -107,6 +110,7 @@ abstract class ajax
 		return $data;
 	}
 
+	/* functionality to be added in alpha 2
 	//FIXME: make get_revision display the title as well as the content
 	private static function get_revision($rev_id, $element_id){
 		$element_id = str_replace('e_', '', $element_id);
@@ -119,6 +123,6 @@ abstract class ajax
 			$rev_data = json_decode($element_revs['data'], TRUE);
 			die(html_entity_decode($rev_data['html']));
 		}
-	}
+	} */
 }
 ?>

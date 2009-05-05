@@ -349,6 +349,9 @@ class elementDefault
 	}
 
 	protected function get_pending_approval_list(){
+
+		/* functionality to be added in aplha 2
+
 		$approval_list = $this->admin_mode_data['approvals_list'];
 		if ($approval_list && options::singleton()->get_option('admin_mode')) {
 
@@ -374,7 +377,7 @@ class elementDefault
 			}
 			$built_xml .= '</pending_approvals>';
 			return $built_xml;
-		}
+		}*/
 	}
 
 	protected function get_revision()
@@ -385,6 +388,8 @@ class elementDefault
 
 	protected function get_revision_history()
 	{
+		/* functionality to be added in aplha 2
+
 		if(options::Singleton()->get_option('admin_mode'))
 		{
 			$built_xml = '';
@@ -408,7 +413,7 @@ class elementDefault
 				$built_xml .= '</archive>';
 			}
 			return $built_xml;
-		}
+		}*/
 	}
 
 	protected function add_header()

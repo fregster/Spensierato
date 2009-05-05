@@ -41,7 +41,6 @@ class cmspage_edit extends cmspage
 
 	private function edit(){
 
-
 		//Edit render element
 		$this->security_element_edit();
 
@@ -49,6 +48,9 @@ class cmspage_edit extends cmspage
 		$element->build($this->value[1]);
 		Render::Singleton()->render_edit(Content::Singleton()->build());
 	}
+
+	/* this functionality will be added in alpha 2
+
 
 	//FIXME: most of the code in this method is duplicated from ajax::approvals(),
 	//and some from the element saving process.
@@ -86,7 +88,7 @@ class cmspage_edit extends cmspage
 
 		//reload the current element to continue editing
 		common::redirect('/'.implode('/', $this->value));
-	}
+	}*/
 
 	private function save(){
 		//Is this an update or createing a new element

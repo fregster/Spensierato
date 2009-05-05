@@ -3,44 +3,44 @@
 			<xsl:call-template name="header"/>
 
 			<xsl:element name="body">
-			<xsl:attribute name="onload">init();</xsl:attribute>
-			<xsl:attribute name="style">background: #FFFFFF;</xsl:attribute>
-			<div id="notifications" style="visibility: hidden;">Notifications</div>
-					<div id="page_edit">
-						<xsl:if test="/page/security/can_approve = 1">
-							<xsl:if test="//archive or //pending_approvals">
-								<div id="page_edit_versions">
-									<xsl:if test="//pending_approvals">
-										<p id="page_edit_approvals">
-											<xsl:call-template name="pending_approvals"/>
-										</p>
-									</xsl:if>
-									<xsl:if test="//archive">
-										<p id="page_edit_revisions">
-											<xsl:call-template name="revision_rollback"/>
-										</p>
-									</xsl:if>
-								</div>
-								<div id="page_edit_toggle" class="jsShow" onclick="jsToggleDisplay('page_edit_versions'); return false;">
-									-
-								</div>
-							</xsl:if>
+				<xsl:attribute name="onload">init();</xsl:attribute>
+				<xsl:attribute name="style">background: #FFFFFF;</xsl:attribute>
+				<div id="notifications" style="visibility: hidden;">Notifications</div>
+				<div id="page_edit">
+					<!--<xsl:if test="/page/security/can_approve = 1">
+						<xsl:if test="//archive or //pending_approvals">
+							<div id="page_edit_versions">
+								<xsl:if test="//pending_approvals">
+									<p id="page_edit_approvals">
+										<xsl:call-template name="pending_approvals"/>
+									</p>
+								</xsl:if>
+								<xsl:if test="//archive">
+									<p id="page_edit_revisions">
+										<xsl:call-template name="revision_rollback"/>
+									</p>
+								</xsl:if>
+							</div>
+							<div id="page_edit_toggle" class="jsShow" onclick="jsToggleDisplay('page_edit_versions'); return false;">
+								-
+							</div>
 						</xsl:if>
-						<div id="page_edit_form">
-							<xsl:element name="form">
-								<xsl:attribute name="action"></xsl:attribute>
-								<xsl:attribute name="method">post</xsl:attribute>
+					</xsl:if> -->
+					<div id="page_edit_form">
+						<xsl:element name="form">
+							<xsl:attribute name="action"></xsl:attribute>
+							<xsl:attribute name="method">post</xsl:attribute>
 
-								<!-- test if we might upload a file and if so add the multipart attribute -->
-								<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+							<!-- test if we might upload a file and if so add the multipart attribute -->
+							<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 
-								<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
-								<xsl:call-template name="edit_header"/>
-								<xsl:apply-templates select="/page/body/element/data"/>
-								<xsl:call-template name="edit_footer"/>
-							</xsl:element>
-						</div>
+							<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
+							<xsl:call-template name="edit_header"/>
+							<xsl:apply-templates select="/page/body/element/data"/>
+							<xsl:call-template name="edit_footer"/>
+						</xsl:element>
 					</div>
+				</div>
 			</xsl:element>
         </html>
 </xsl:template>
@@ -270,19 +270,19 @@
 						window.top.document.body.innerHTML = '';
 					    window.top.location = document_root+'/'+current_page;
 					}
-					
+
 					var js = document.createElement('script');
 					var h = document.getElementsByTagName('head')[0];
-					
+
 					js.src = '<xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js';
 					h.appendChild(js);
-					
+
 					js.src = '<xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce_gzip.js';
 					h.appendChild(js);
-					
-					
+
+
 				</script>
-				
+
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
 					<!-- <xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>-->

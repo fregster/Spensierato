@@ -18,37 +18,31 @@
 					}
 				</script>
 		
-			<xsl:choose>
-							
+				<script type="text/javascript">
+					var js = document.createElement('script');
+			<xsl:choose>					
 				<xsl:when test="/page/user/id != 0">
 				<!-- User logged in -->
 					<xsl:choose>
 						<xsl:when test="/page/options/admin_mode = 1">
-						<!-- User logged in and in admin mode-->
-							<xsl:element name="script">
-								<xsl:attribute name="type">text/javascript</xsl:attribute>
-								<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js,admin.js</xsl:attribute> &#032; //js
-							</xsl:element>
+							<!-- User logged in and in admin mode-->
+							js.src = '<xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js,admin.js';
 						</xsl:when>
 					
 						<xsl:otherwise>
-						<!-- User logged in and NOT in admin mode-->
-							<xsl:element name="script">
-								<xsl:attribute name="type">text/javascript</xsl:attribute>
-								<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js</xsl:attribute>&#032;  //js
-							</xsl:element>
+							<!-- User logged in and NOT in admin mode-->
+							js.src = '<xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js';
 					</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
 				
 				<xsl:otherwise>
-				<!-- User Not logged in -->
-				
-					<xsl:element name="script">
-						<xsl:attribute name="type">text/javascript</xsl:attribute>
-						<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js</xsl:attribute>&#032;  //js
-					</xsl:element>
+					<!-- User Not logged in -->
+					js.src = '<xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js';
 				</xsl:otherwise>
 				
 				</xsl:choose>
+					var h = document.getElementsByTagName('head')[0];
+					h.appendChild(js);
+				</script>
 		</xsl:template>

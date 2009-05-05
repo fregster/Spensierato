@@ -448,8 +448,11 @@ class elementDefault
 			}
 
 			$this->data = json_decode($data['data'], TRUE);
-			$this->title = $this->data['title'];
-			unset($this->data['title']);
+			if(isset($this->data['title']))
+			{
+				$this->title = $this->data['title'];
+				unset($this->data['title']);
+			}
 		}
 		else if (is_string($this->data)) {
 			$this->data = json_decode($this->data, TRUE);

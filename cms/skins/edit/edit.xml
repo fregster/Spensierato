@@ -270,20 +270,24 @@
 						window.top.document.body.innerHTML = '';
 					    window.top.location = document_root+'/'+current_page;
 					}
+					
+					var js = document.createElement('script');
+					var h = document.getElementsByTagName('head')[0];
+					
+					js.src = '<xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js';
+					h.appendChild(js);
+					
+					js.src = '<xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce_gzip.js';
+					h.appendChild(js);
+					
+					
 				</script>
-
-				<xsl:element name="script">
-					<xsl:attribute name="type">text/javascript</xsl:attribute>
-					<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js</xsl:attribute>//load
-				</xsl:element>
-
+				
 				<xsl:element name="script">
 					<xsl:attribute name="type">text/javascript</xsl:attribute>
 					<!-- <xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>-->
 					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce_gzip.js</xsl:attribute>//load
 				</xsl:element>
-
-
 
 				<script type="text/javascript">
 				tinyMCE_GZ.init({

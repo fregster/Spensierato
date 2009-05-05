@@ -98,9 +98,19 @@ class database_execution_pdo extends database_execution
 		$this->db_backend->query($drop_db_sql);
 	}
 
+	//since this method is used only at install time, we don't need to return objects,
+	//just success or fail
 	public function query($sql_str)
 	{
-		return $this->db_backend->query($sql_str);
+		try{
+			$this->db_backend->query($sql_str);
+			$result = TRUE;
+		}
+		catch(PDOException $e){
+			$result = FALSE;
+		}
+
+		return $result;
 	}
 }
 ?>

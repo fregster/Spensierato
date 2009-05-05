@@ -1,6 +1,6 @@
 <?php
 class database_execution_mdb2 extends database_execution
-{	
+{
 	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
 		//Load the MDB2 code
@@ -20,21 +20,21 @@ class database_execution_mdb2 extends database_execution
 				$this->db_backend->loadModule($mod);
 			}
 		}
-		
+
 		return $this->db_backend;
 	}
-	
+
 	public function sql_run($sql, $values, $writeuser)
 	{
 		$error = false;
 		//Query the database Object
-		
+
 //		$db &= $this->read;
 //		if($writeuser == true)
 //		{
 //			$db &= $this->write;
 //		}
-//		
+//
 //		if($values == NULL)
 //		{
 //			//Values have not been passed so do simple SQL exec
@@ -81,7 +81,7 @@ class database_execution_mdb2 extends database_execution
 					$stmt = $this->read->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
 				}
 			}
-	
+
 			if(isset($stmt))
 			{
 				if (PEAR::isError($stmt))
@@ -95,7 +95,7 @@ class database_execution_mdb2 extends database_execution
 				}
 				$resultset = $stmt->execute($values);
 			}
-			
+
 			if (PEAR::isError($resultset))
 			{
 				$error = 'Failed to issue query, error message : ' . $resultset->getMessage().', '. $resultset->getDebugInfo().'<br />';
@@ -105,13 +105,13 @@ class database_execution_mdb2 extends database_execution
 	    {
 			$this->sql_error($e->getMessage());
 	    }
-		
+
 	    $final = array('resultset' => $resultset);
 	    if($error) { $final['error'] = $error; }
-	    
+
 		return $final;
 	}
-	
+
 	public function sql_select_exe_run($resultset)
 	{
 		$results = array();
@@ -123,22 +123,28 @@ class database_execution_mdb2 extends database_execution
 
 		return $results;
 	}
-	
+
+	//since this method is used only at install time, we don't need to return objects,
+	//just success or fail
 	public function query($sql_str)
 	{
-		return $this->db_backend->query($sql_str);
+		$result = $this->db_backend->query($sql_str);
+		if (PEAR::isError($result)) {
+			return FALSE;
+		}
+		else return TRUE;
 	}
-	
+
 	public function lastInsertID($table,$col)
 	{
 		return $this->write->lastInsertId($table,$col);
 	}
-	
+
 	public function createDatabase($database)
 	{
 		$this->db_backend->createDatabase($database);
 	}
-	
+
 	public function dropDatabase($database)
 	{
 		$this->db_backend->dropDatabase($database);

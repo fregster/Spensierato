@@ -171,7 +171,7 @@ foreach ($tables as $table => $data){
 	//execute sql
 	$result = $db->query($sql);
 
-	if($result < 1) //true == 1, false == 0, and pear errors are all <= -1
+	if(!$result)
 	{
 		$error = '<br/>Failed to create table '.$table.'. The sql that triggered the error:<br />'. $sql;
 		die($error);

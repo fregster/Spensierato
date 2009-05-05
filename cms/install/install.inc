@@ -135,12 +135,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	debug('Createing users and permissions');
 	foreach($user_create_sql as $sql)
 	{
-		$resultset = $db->query($sql);
+		$result = $db->query($sql);
 
-		if($resultset < 1) //true == 1, false == 0, and pear errors are all <= -1
+		if(!$result)
 		{
-			$error = '<br/>Failed to issue query, error message : ' . $resultset->getMessage().'<br />From :'. $sql;
-			die($error);
+			die('An error occured while attempting to create database user.<br />
+				The SQL statement associated with this error: '.$sql);
 		}
 	}
 

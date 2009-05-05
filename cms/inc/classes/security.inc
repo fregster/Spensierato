@@ -199,9 +199,12 @@ class Security
 			//Security has been set
 			foreach($page_security_data as $data)
 			{
-				if(strlen($data['data']) > 0)
+				$security_data = json_decode($data['data'], TRUE);
+//				if(strlen($data['data']) > 0) //Tried isset($security_data[0]) but still raised a notice
+				if(is_array($security_data))
 				{
-					$security_array = array_merge_recursive($security_array, json_decode($data['data'], TRUE));
+
+					$security_array = array_merge_recursive($security_array, $security_data);
 				}
 			}
 		}

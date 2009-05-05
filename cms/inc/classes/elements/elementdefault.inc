@@ -457,7 +457,10 @@ class elementDefault
 		}
 		else if (isset($this->data['data'])) {
 			$html = json_decode($this->data['data'], TRUE);
-			$this->data = array_merge($this->data, $html);
+			if(is_array($html))  //Tried isset($html[0]) but still raised a notice
+			{
+				$this->data = array_merge($this->data, $html);
+			}
 		}
 
 		//make sure the data conforms to the element data schema

@@ -253,11 +253,14 @@ class Content
 				{
 					foreach($data as $key => $data)
 					{
-						$element = Element::type($data['type']);
-						$element->build($elements[$key]['element_id'], $element_data[$key]);
-
-						$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $elements[$key]['ts']);
-						$this->e_string .=$elements[$key]['element_id'];
+						if(isset($element_data[$key]) && $element_data[$key] != NULL)
+						{
+							$element = Element::type($data['type']);
+							$element->build($elements[$key]['element_id'], $element_data[$key]);
+	
+							$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $elements[$key]['ts']);
+							$this->e_string .=$elements[$key]['element_id'];
+						}
 					}
 				}
 			}

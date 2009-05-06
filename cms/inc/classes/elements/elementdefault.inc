@@ -108,9 +108,11 @@ class elementDefault
 		$element_data = $dom->createDocumentFragment();
 
 		//Attach the data
-		$element_data->appendXML($this->data);
-		$this->element->appendChild($element_data);
-
+		if(strlen($this->data) > 0)
+		{
+			$element_data->appendXML($this->data);
+			$this->element->appendChild($element_data);
+		}
 		//Attach the element to the root dom
 		$dom->appendChild($this->element);
 
@@ -464,7 +466,7 @@ class elementDefault
 		}
 		else if (isset($this->data['data'])) {
 			$html = json_decode($this->data['data'], TRUE);
-			if($html != NULL)	{
+			if($html != NULL && is_array($html))	{
 				$this->data = array_merge($this->data, $html);
 			}
 		}

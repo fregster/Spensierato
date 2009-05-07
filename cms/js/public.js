@@ -364,3 +364,4 @@ hex+=("0"+parseInt(_4f[i]).toString(16)).slice(-2);
 return "#"+hex;
 };
 
+init();

@@ -38,5 +38,6 @@ js.src = js_local+'mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-y
 				
 				</xsl:choose>
 h.appendChild(js);
+<xsl:if test="/page/options/display_warnings = 1"><xsl:if test="/page/warnings/warning"> notification('The site has configuration problems');</xsl:if></xsl:if>
 				</script>
 		</xsl:template>

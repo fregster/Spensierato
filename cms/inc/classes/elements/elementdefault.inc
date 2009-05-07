@@ -477,14 +477,15 @@ class elementDefault
 				}
 			}
 		}
-
+		//FIXME sort out the DB layer to remove escaping slashes then drop them from here.
+		
 		//Only process the data if there is actually any data else blank pages error
 		if(is_array($this->data)){
 
 			//save the title
 			if (array_key_exists('title', $this->data)) {
 				if (!empty($this->data['title'])) {
-					$this->title = $this->data['title'];
+					$this->title = stripslashes($this->data['title']);
 				}
 				unset($this->data['title']);
 			}
@@ -494,6 +495,14 @@ class elementDefault
 				if (!array_key_exists($key, $this->tags)) {
 					unset($this->data[$key]);
 				}
+			}
+			
+			if (array_key_exists('html', $this->data)) { //Due to the update in the DB layer to allow quotes they are been escaped so quickly stip them to fix html elements
+				$this->data['html'] = stripslashes($value);
+			}
+			
+			if (array_key_exists('text', $this->data)) {
+				$this->data['text'] = stripslashes($value);
 			}
 
 			//if admin mode is on, save array for saving process before converting to xml

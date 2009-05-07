@@ -9,7 +9,6 @@ class cmspage_login extends cmspage_html
 
 	public function run()
 	{
-//		print_r($this); die();
 		//CMS Login
 
 		//Check cookies are enabled first
@@ -26,6 +25,7 @@ class cmspage_login extends cmspage_html
 				//Load CMS Login box
 				$element = Element::type('elementLogin');
 				$element->build('login');
+				$element->render();
 				Render::Singleton()->render_html(Content::Singleton()->build());
 			}
 		}

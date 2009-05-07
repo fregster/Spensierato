@@ -46,6 +46,7 @@ class cmspage_edit extends cmspage
 
 		$element = Element::type($this->value[1]);
 		$element->build($this->value[1]);
+		$element->render();
 		Render::Singleton()->render_edit(Content::Singleton()->build());
 	}
 

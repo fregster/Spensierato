@@ -77,8 +77,6 @@ class elementDefault
 		$this->get_data();
 
 		$this->init_admin_data();
-
-		Content::Singleton()->attach_content($this->render());
 	}
 
 	public function main()
@@ -116,8 +114,8 @@ class elementDefault
 		//Attach the element to the root dom
 		$dom->appendChild($this->element);
 
-		//Return the completed XML of the document
-		return $dom->saveXML();
+		//attach the element to the rest of the page
+		Content::Singleton()->attach_content($dom->saveXML());
 	}
 
 	protected function attach_upload()
@@ -215,21 +213,21 @@ class elementDefault
 
 	protected function toggle_visibility()
 	{
-		$new_visibility = ($this->visible - 1)*(-1);
+		$new_visibility = ($this->admin_mode_data['visible'] - 1)*(-1);
 		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('visible'), array($new_visibility));
 	}
 
 	protected function toggle_deleted()
 	{
-		if($this->deleted == (NULL or 0))
+		if($this->admin_mode_data['deleted'] == (NULL or 0))
 		{
-			$this->deleted = CMS::Singleton()->time();
+			$this->admin_mode_data['deleted'] = CMS::Singleton()->time();
 		}
 		else
 		{
-			$this->deleted = 0;
+			$this->admin_mode_data['deleted'] = 0;
 		}
-		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('deleted'), array($this->deleted));
+		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('deleted'), array($this->admin_mode_data['deleted']));
 	}
 
 	protected function generate_search($input)

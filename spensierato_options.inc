@@ -288,7 +288,7 @@ Settings::singleton()->new_setting('date_format', 'd/m/Y', false, true);
 
 //setting show_username_in_approvals
 //this determines whether to show the username in the pending approvals list in element editing
-Settings::singleton()->new_setting('show_username_in_approvals', true, false, true);
+Settings::singleton()->new_setting('approvals_show_revisor', true);
 
 
 //output_compression_level
@@ -301,7 +301,7 @@ Settings::singleton()->new_setting('approvals_saved_lifetime', 0, false, true);
 Settings::singleton()->new_setting('approvals_pending_lifetime', 0, false, true);
 
 //determine whether old approvals are visible (value = 1) or hidden (value = 0) by default
-Settings::singleton()->new_setting('approvals_show_old', 1, false, true);
+Settings::singleton()->new_setting('approvals_show_old', true);
 
 if(!$install) //Settings that require the install to have been completed
 {

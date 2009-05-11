@@ -115,9 +115,9 @@ class Database
 	public function sql_count()
 	{
 		$percent = 0;
-		if($this->site_sql_count > 0)
+		if($this->site_sql_count > 0 && $this->sql_cache_hits > 0)
 		{
-			$percent = 100 / $this->site_sql_count * $this->sql_cache_hits;
+			$percent = 100 / ($this->site_sql_count + $this->sql_cache_hits) * $this->sql_cache_hits;
 		}
 		return array($this->site_sql_count, $percent, $this->sql_cache_hits);
 	}
@@ -349,7 +349,8 @@ class Database
 		 */
 
 		$exsists = $this->sql_select_first(array($where_fields[0]), $table, $where_fields, $where_values);
-		if(isset($exsists))
+
+		if($exsists != NULL)
 		{
 			return $this->sql_update_by_col($table, array($where_fields[0]), array($exsists[$where_fields[0]]), $fields, $values);
 		}
@@ -732,11 +733,11 @@ class Database
 					return false;
 				}
 
-				if($result['time'] >= ($this->time - 30) )
+				if($result['time'] >= ($this->time - $this->sql_cache_max_time) )
 				{
 					//Result cached and current
 					$this->sql_cache_hit = true;
-					$this->sql_cache_hits++;
+					++$this->sql_cache_hits;
 					$this->sql_log($this->site_sql_count, $sql, 0, true);
 
 					if(!$result['result']) { $result['result'] = NULL; }
@@ -757,7 +758,7 @@ class Database
 				}
 			}
 		}
-		//Result not caches
+		//Result not cached
 		return false;
 	}
 

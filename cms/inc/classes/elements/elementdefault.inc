@@ -60,6 +60,8 @@ class elementDefault
 	{
 		$this->id = $id;
 
+		$this->init_admin_data();
+
 		if($link == NULL)
 		{
 			$this->link = Database::Singleton()->sql_select_first(array('*'), 'tbl_page_elements', array('element_id', 'main'), array($id, 1));
@@ -77,6 +79,7 @@ class elementDefault
 		$this->get_data();
 
 		$this->init_admin_data();
+		Content::Singleton()->attach_content($this->render());
 	}
 
 	public function main()
@@ -204,7 +207,7 @@ class elementDefault
 				return $this->toggle_deleted();
 
 			case 'quickapprove':
-				return $this->approve();
+				return revisions::approve_revision($this->admin_mode_data['approve']);
 
 			default:
 				return false;
@@ -236,15 +239,6 @@ class elementDefault
 		return strip_tags($input);
 	}
 
-	protected function archive_data($new_data){
-		$old_data = $this->reload_element_data(array('data', 'title'));
-		if ($old_data != NULL && ($old_data['data'] != '[]') && ($old_data['data'] != $new_data)) {
-			database::Singleton()->sql_insert('tbl_elements_data_archive',
-									array('data', 'title', 'ts', 'replaced_by', 'replaced_ts', 'element_id'),
-									array($old_data['data'], $old_data['title'], $this->admin_mode_data['approved'], user::Singleton()->id(), time(), $this->id));
-		}
-	}
-
 	//add extra data when in admin mode
 	public function admin($dom)
 	{
@@ -259,13 +253,13 @@ class elementDefault
 				$this->element->setAttribute('editor', $this->admin_mode_data['editor']);
 			}
 
-			$this->get_revision();
+			$build_rollback = $this->get_revision();
 
 			//only get revisions list and approvals if the user is an approver
 			if (security::singleton()->can_approve()) {
 				//attach the archive data if exists
-				if ($this->admin_mode_data['revision']) {
-					$rev_history = $this->get_revision_history();
+				if ($build_rollback) {
+					$rev_history = revisions::get_revisions_list('archive', array('id', 'title', 'revisor', 'revised'), array('approved'), array('1'));
 					if (!empty($rev_history)) {
 						$archive_data = $dom->createDocumentFragment();
 						$archive_data->appendXML($rev_history);
@@ -275,7 +269,7 @@ class elementDefault
 
 				//attach the pending approvals data if exist
 				if($this->check_pending_approval()){
-					$approvals_list = $this->get_pending_approval_list();
+					$approvals_list = revisions::get_revisions_list('approval', array('id', 'revisor', 'revised'), array('approved'), array('0'));
 					if (!empty($approvals_list)) {
 						$approvals = $dom->createDocumentFragment();
 						$approvals->appendXML($approvals_list);
@@ -323,97 +317,32 @@ class elementDefault
 
 	//seperated from arrange_data()
 	protected function check_pending_approval(){
-		$approvals = database::Singleton()->sql_select(array('id', 'ts', 'user_id', 'approved'), 'tbl_elements_approve', array('element_id'), array($this->id), array('ts'), array('DESC'));
+		$pending_id = database::Singleton()->sql_select_first(array('id'), 'tbl_elements_revisions', array('element_id', 'approved'), array($this->id, '0'), array('id'), array('DESC'));
 
-		if ($approvals != NULL) {
-
-			if ($approvals[0]['approved']) {
-				$this->admin_mode_data['approve'] = FALSE;
-			}
-			else{
-				$this->admin_mode_data['approve'] = TRUE;
-			}
-
-			//only save un-approved edits as available approvals
-			foreach ($approvals as $key => $approval){
-				if ($approval['approved']) {
-					unset($approvals[$key]);
-				}
-			}
-			$this->admin_mode_data['approvals_list'] = $approvals;
-
-			return $this->admin_mode_data['approve'];
+		if ($pending_id != NULL) {
+			$this->admin_mode_data['approve'] = $pending_id['id'];
 		}
 
-		return NULL;
-	}
-
-	protected function get_pending_approval_list(){
-
-		/* functionality to be added in aplha 2
-
-		$approval_list = $this->admin_mode_data['approvals_list'];
-		if ($approval_list && options::singleton()->get_option('admin_mode')) {
-
-			$latest_edit = ($this->approved < $this->edited)?$this->edited:$this->approved;
-			$show_old = settings::singleton()->get_setting('approvals_show_old');
-
-			$built_xml = '<pending_approvals show_old="'.$show_old.'">';
-			foreach ($approval_list as $key => $pending_approval){
-				$built_xml .= '<approval>';
-				$built_xml .= '<id>'.$pending_approval['id'].'</id>';
-				if ($pending_approval['ts'] < $latest_edit) {
-					$built_xml .= '<old />';
-				}
-				$built_xml .= '<date>'.date(settings::singleton()->get_setting('date_format'), $pending_approval['ts']).'</date>';
-				if (settings::singleton()->get_setting('show_username_in_approvals')) {
-					$user = database::Singleton()->sql_select_first(array('username'), 'tbl_users', array('id'), array($pending_approval['user_id']));
-					$built_xml .= '<username>'.$user['username'].'</username>';
-				}
-				if ($key === 0) {
-					$built_xml .= '<checked />';
-				}
-				$built_xml .= '</approval>';
-			}
-			$built_xml .= '</pending_approvals>';
-			return $built_xml;
-		}*/
+		return $this->admin_mode_data['approve'];
 	}
 
 	protected function get_revision()
 	{
-		$this->admin_mode_data['revision'] = Database::Singleton()->sql_count_where('tbl_elements_data_archive', 'element_id', $this->id, options::Singleton()->get_option('admin_mode'));
-		return is_null($this->admin_mode_data['revision'])?FALSE:TRUE;
-	}
+		$rev_id = Database::Singleton()->sql_select(array('active_revision'), 'tbl_elements', array('id'), array($this->id), array('id'), array('DESC'));
+		if ($rev_id != NULL) {
+			//get the highest approved revision id
+			//this is at index 0 because of "ORDER BY `id` DESC" in the qiery
+			$this->admin_mode_data['revision'] = $rev_id[0]['active_revision'];
+		}
 
-	protected function get_revision_history()
-	{
-		/* functionality to be added in aplha 2
-
-		if(options::Singleton()->get_option('admin_mode'))
-		{
-			$built_xml = '';
-			$revisions = database::Singleton()->sql_select(array('title', 'replaced_ts', 'replaced_by'), 'tbl_elements_data_archive', array('element_id'), array($this->id));
-			if ($revisions) {
-				$built_xml .= '<archive>';
-				foreach ($revisions as $revision_num => $data){
-					$user = database::Singleton()->sql_select_first(array('username'), 'tbl_users', array('id'), array($data['replaced_by']));
-					$built_xml .= '<revision>';
-					$built_xml .= '<id>'.($revision_num + 1).'</id>';
-
-					if (strlen($data['title']) > 5) {
-						$data['title'] = substr($data['title'], 0, 4).'...';
-					}
-
-					$built_xml .= '<title>'.$data['title'].'</title>';
-					$built_xml .= '<user>'.$user['username'].'</user>';
-					$built_xml .= '<date>'.date(settings::singleton()->get_setting('date_format'), $data['replaced_ts']).'</date>';
-					$built_xml .= '</revision>';
-				}
-				$built_xml .= '</archive>';
-			}
-			return $built_xml;
-		}*/
+		//this return controls whether we display rollback interface or not.
+		//we only want to do this if there are > 1 revisions
+		if (count($rev_id) > 1) {
+			return TRUE;
+		}
+		else{
+			return FALSE;
+		}
 	}
 
 	protected function add_header()
@@ -443,7 +372,7 @@ class elementDefault
 				//if there is no draft, and the user is not an approver,
 				//check if there is approval data for this user
 				else if (security::singleton()->can_edit() && !security::singleton()->can_approve()) {
-					$data = database::Singleton()->sql_select_first(array('title', 'data'), 'tbl_elements_approve', array('element_id', 'user_id', 'approved'), array($this->id, user::singleton()->id(), '0'), array('id'), array('DESC'));
+					$data = database::Singleton()->sql_select_first(array('title', 'data'), 'tbl_elements_revisions', array('element_id', 'revisor', 'approved'), array($this->id, user::singleton()->id(), '0'), array('id'), array('DESC'));
 				}
 			}
 

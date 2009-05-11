@@ -41,19 +41,13 @@ $tables['tbl_commands']['engine'] = $default_table_engine;
 $tables['tbl_commands']['charset'] = $default_charset;
 $tables['tbl_commands']['keys'] = array();
 
-$tables['tbl_elements_data_archive']['cols_define']['data'] = 'LONGTEXT';
-$tables['tbl_elements_data_archive']['engine'] = $archive_table_engine;
-$tables['tbl_elements_data_archive']['charset'] = $default_charset;
-$tables['tbl_elements_data_archive']['keys'] = array();
+$tables['tbl_elements_revisions']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_elements_revisions']['engine'] = $default_table_engine;
+$tables['tbl_elements_revisions']['charset'] = $default_charset;
 
 $tables['tbl_elements']['engine'] = $default_table_engine;
 $tables['tbl_elements']['charset'] = $default_charset;
 $tables['tbl_elements']['keys'] = array();
-
-$tables['tbl_elements_approve']['cols_define']['data'] = 'LONGTEXT';
-$tables['tbl_elements_approve']['engine'] = $default_table_engine;
-$tables['tbl_elements_approve']['charset'] = $default_charset;
-$tables['tbl_elements_approve']['keys'] = array('UNIQUE KEY' => array('user_to_element' => array('element_id', 'user_id')));
 
 $tables['tbl_elements_data']['cols_define']['data'] = 'LONGTEXT';
 $tables['tbl_elements_data']['cols_define']['search'] = 'LONGTEXT';

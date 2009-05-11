@@ -6,15 +6,15 @@ abstract class ajax
 		switch ($vars[1])
 		{
 			case 'edit':
-				ajax::edit($vars[2]);
+				self::edit($vars[2]);
 				break;
 
 			case 'revision':
-				ajax::get_revision($vars[2], $vars[3]);
+				self::get_revision($vars[2], $vars[3]);
 				break;
 
 			case 'approvals':
-				ajax::approvals($vars[2]);
+				self::view_approvals($vars[2]);
 				break;
 
 			case 'register':
@@ -35,45 +35,16 @@ abstract class ajax
 		}
 	}
 
-	/* functionality to be added in alpha 2
-
-	//FIXME: code is duplicated in edit::save_approvals()
-	private static function approvals($element_id){
+	private static function view_approvals($element_id){
 		$element_id = str_replace('e_', '', $element_id);
+		$revision_ids = post::variable('approvals');
 
-		$element_data = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($element_id));
-		$data = json_decode($element_data['data'], TRUE);
+		$revisions = database::singleton()->sql_select(array('*'), 'tbl_elements_revisions', array('id', 'element_id'), array($revision_ids, $element_id));
 
-		if (empty($data)) {
-			$data = '';
-		}
-		else{
-			$data = $data['html'];
-		}
+		$data = revisions::diff_data($element_id, $revisions);
 
-		$approvals_list = post::variable('approvals');
-		if (!empty($approvals_list)) {
-			$approvals = array();
-
-			foreach ($approvals_list as $approval_id){
-				$result = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_approve', array('id'), array($approval_id), array('id'), array('ASC'));
-				$result = json_decode($result['data'], TRUE);
-
-				if (empty($result)) {
-					$result = '';
-				}
-				else{
-					$result = $result['html'];
-				}
-
-				$approvals[] = $result;
-			}
-
-			$data = diffCompare::multi_diff($data, $approvals);
-		}
 		die($data);
 	}
-	*/
 
 	private static function edit($id)
 	{
@@ -110,11 +81,10 @@ abstract class ajax
 		return $data;
 	}
 
-	/* functionality to be added in alpha 2
 	//FIXME: make get_revision display the title as well as the content
 	private static function get_revision($rev_id, $element_id){
 		$element_id = str_replace('e_', '', $element_id);
-		$element_revs = database::singleton()->sql_select_first(array('data'), 'tbl_elements_data_archive', array('id', 'element_id'), array($rev_id, $element_id));
+		$element_revs = database::singleton()->sql_select_first(array('data'), 'tbl_elements_revisions', array('id', 'element_id'), array($rev_id, $element_id));
 
 		if ($element_revs == NULL) {
 			die(ajax::edit_load($element_id));
@@ -123,6 +93,6 @@ abstract class ajax
 			$rev_data = json_decode($element_revs['data'], TRUE);
 			die(html_entity_decode($rev_data['html']));
 		}
-	} */
+	}
 }
 ?>

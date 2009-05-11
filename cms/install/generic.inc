@@ -25,16 +25,16 @@ $tables['tbl_commands'] = array(
 								'primary_key' => 'command',
 								);
 
-$tables['tbl_elements_data_archive'] = array(
+$tables['tbl_elements_revisions'] = array(
 											'cols_define' =>
 												array(
 													'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
 													'element_id' => 'INT UNSIGNED NOT NULL',
 													'data' => 'TEXT',
 													'title' => 'VARCHAR(128) NOT NULL',
-													'ts' => 'INT UNSIGNED NOT NULL',
-													'replaced_by' => 'INT UNSIGNED NOT NULL',
-													'replaced_ts' => 'INT UNSIGNED NOT NULL',
+													'revisor' => 'INT UNSIGNED NOT NULL',
+													'revised' => 'INT UNSIGNED NOT NULL',
+													'approved' => "TINYINT DEFAULT '0'"
 												),
 											'primary_key' => 'id',
 											);
@@ -51,24 +51,11 @@ $tables['tbl_elements'] = array(
 										'visible' => "TINYINT UNSIGNED DEFAULT '1'",
 										'deleted' => "INT UNSIGNED DEFAULT '0'",
 										'approved' => 'INT UNSIGNED',
-										'approver' => 'INT UNSIGNED'
+										'approver' => 'INT UNSIGNED',
+										'active_revision' => 'INT UNSIGNED'
 									),
 								'primary_key' => 'id',
 								);
-
-$tables['tbl_elements_approve'] = array(
-										'cols_define' =>
-											array(
-												'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
-												'element_id' => 'INT UNSIGNED NOT NULL',
-												'user_id' => 'INT UNSIGNED NOT NULL',
-												'ts' => 'INT UNSIGNED NOT NULL',
-												'title' => 'VARCHAR(128) NOT NULL',
-												'data' => 'TEXT NOT NULL',
-												'approved' => "TINYINT UNSIGNED DEFAULT '0'"
-											),
-										'primary_key' => 'id',
-										);
 
 $tables['tbl_elements_data'] = array(
 									'cols_define' =>

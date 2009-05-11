@@ -44,6 +44,7 @@ $tables['tbl_commands']['keys'] = array();
 $tables['tbl_elements_revisions']['cols_define']['data'] = 'LONGTEXT';
 $tables['tbl_elements_revisions']['engine'] = $default_table_engine;
 $tables['tbl_elements_revisions']['charset'] = $default_charset;
+$tables['tbl_elements_revisions']['keys'] = array();
 
 $tables['tbl_elements']['engine'] = $default_table_engine;
 $tables['tbl_elements']['charset'] = $default_charset;

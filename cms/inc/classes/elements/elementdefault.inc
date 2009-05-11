@@ -79,7 +79,6 @@ class elementDefault
 		$this->get_data();
 
 		$this->init_admin_data();
-		Content::Singleton()->attach_content($this->render());
 	}
 
 	public function main()
@@ -407,7 +406,7 @@ class elementDefault
 			}
 		}
 		//FIXME sort out the DB layer to remove escaping slashes then drop them from here.
-		
+
 		//Only process the data if there is actually any data else blank pages error
 		if(is_array($this->data)){
 
@@ -425,11 +424,11 @@ class elementDefault
 					unset($this->data[$key]);
 				}
 			}
-			
+
 			if (array_key_exists('html', $this->data)) { //Due to the update in the DB layer to allow quotes they are been escaped so quickly stip them to fix html elements
 				$this->data['html'] = stripslashes($value);
 			}
-			
+
 			if (array_key_exists('text', $this->data)) {
 				$this->data['text'] = stripslashes($value);
 			}

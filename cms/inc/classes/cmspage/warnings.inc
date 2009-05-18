@@ -6,12 +6,11 @@ class cmspage_warnings extends cmspage
 		$this->value = CMS::Singleton()->path_vars(1);
 		return true;
 	}
-
+	
 	public function run()
 	{
 		$element = Element::type('elementWarnings');
 		$element->build('Warnings');
-		$element->render();
 		Render::Singleton()->render_edit(Content::Singleton()->build());
 	}
 }

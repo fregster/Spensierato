@@ -1,4 +1,4 @@
-﻿﻿<?php
+﻿<?php
 
 /** A class for handeling revision-related actions */
 

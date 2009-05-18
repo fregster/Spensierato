@@ -257,8 +257,7 @@ class Content
 						{
 							$element = Element::type($data['type']);
 							$element->build($elements[$key]['element_id'], $element_data[$key]);
-							$element->render();
-
+	
 							$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $elements[$key]['ts']);
 							$this->e_string .=$elements[$key]['element_id'];
 						}
@@ -272,7 +271,6 @@ class Content
 					//$this->insert_xml(Render::Singleton()->render_element('STRING', 'There are no elements on this page yet'));
 					$element = Element::type('elementText');
 					$element->build('blank');
-					$element->render();
 				}
 			}
 			$this->set_attribute('lastmodified', $this->lastmodified);

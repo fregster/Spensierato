@@ -6,7 +6,7 @@ class cmspage_register extends cmspage_html
 		$this->value = CMS::Singleton()->path_vars(1);
 		return parent::initalise();
 	}
-
+	
 	public function run()
 	{
 		//If not loged in load box else redirect to $this->page_details['value']
@@ -20,19 +20,19 @@ class cmspage_register extends cmspage_html
 			{
 				Error::do403();
 			}
-			//process new registration
+			//process new registration 
 			if(post::variable('username','is_set'))
-			{
+			{		
 				register::singleton()->new_registration();
 				//TODO should show the registration is finished.
 				Common::redirect('');
 				exit;
 			}
 			//verify the registration by the address link in activation email
-			//process new registration
+			//process new registration 
 			if(post::variable('username','is_set'))
 			{
-
+				
 				register::singleton()->new_registration();
 				//TODO should show the registration is finished.
 				Common::redirect('');
@@ -50,7 +50,6 @@ class cmspage_register extends cmspage_html
 			//Load CMS Registration box
 			$element = Element::type('elementRegister');
 			$element->build('Register');
-			$element->render();
 			Render::Singleton()->render_html(Content::Singleton()->build());
 		}
 	}

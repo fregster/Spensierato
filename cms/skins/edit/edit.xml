@@ -1,0 +1,347 @@
+<xsl:template match="/">
+        <html>
+			<xsl:call-template name="header"/>
+
+			<xsl:element name="body">
+				<xsl:attribute name="onload">init();</xsl:attribute>
+				<xsl:attribute name="style">background: #FFFFFF;</xsl:attribute>
+				<div id="notifications" style="visibility: hidden;">Notifications</div>
+				<div id="page_edit">
+					<xsl:if test="/page/security/can_approve = 1">
+						<xsl:if test="//archives or //approvals">
+							<div id="page_edit_versions">
+								<xsl:if test="//approvals">
+									<p id="page_edit_approvals">
+										<xsl:call-template name="pending_approvals"/>
+									</p>
+								</xsl:if>
+								<xsl:if test="//archives">
+									<p id="page_edit_revisions">
+										<xsl:call-template name="revision_rollback"/>
+									</p>
+								</xsl:if>
+							</div>
+							<div id="page_edit_toggle" class="jsShow" onclick="jsToggleDisplay('page_edit_versions'); return false;">
+								-
+							</div>
+						</xsl:if>
+					</xsl:if>
+					<div id="page_edit_form">
+						<xsl:element name="form">
+							<xsl:attribute name="action"></xsl:attribute>
+							<xsl:attribute name="method">post</xsl:attribute>
+
+							<!-- test if we might upload a file and if so add the multipart attribute -->
+							<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+
+							<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
+							<xsl:call-template name="edit_header"/>
+							<xsl:apply-templates select="/page/body/element/data"/>
+							<xsl:call-template name="edit_footer"/>
+						</xsl:element>
+					</div>
+				</div>
+			</xsl:element>
+        </html>
+</xsl:template>
+
+<xsl:template match="*[@type = 'html']">
+
+	<div>
+		<xsl:element name="textarea">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="style">width:100%</xsl:attribute>
+		<xsl:attribute name="cols">20</xsl:attribute>
+		<xsl:attribute name="rows">15</xsl:attribute>
+		<xsl:attribute name="id">content</xsl:attribute>
+		<xsl:choose>
+			<xsl:when test="name() = 'html'">
+				<xsl:attribute name="class">mceAdvanced</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+			<xsl:attribute name="class">mceSimple</xsl:attribute>
+			</xsl:otherwise>
+		</xsl:choose>
+
+		<xsl:value-of select="." />
+		<xsl:if test="string-length(.) = 0">Enter your text here</xsl:if>
+		</xsl:element>
+	</div>
+
+</xsl:template>
+
+<xsl:template match="*[@type = 'text']">
+	<div>
+		<xsl:value-of select="name()" />: <xsl:element name="input">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="." /></xsl:attribute>
+		</xsl:element>
+	</div>
+</xsl:template>
+
+<xsl:template match="*[@type = 'file']">
+	<div>
+		<xsl:element name="input">
+			<xsl:attribute name="type">hidden</xsl:attribute>
+			<xsl:attribute name="name">MAX_FILE_SIZE</xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="/page/settings/max_file_size" /></xsl:attribute>
+		</xsl:element>
+		Choose a file to upload: <input name="uploadedfile" type="file" /><br />
+	</div>
+</xsl:template>
+
+<xsl:template match="*[@type = 'warning']">
+	<div>
+		<xsl:value-of select="./title" /><em><xsl:value-of select="./description" /></em>
+	</div>
+</xsl:template>
+
+<xsl:template match="*[@type = 'auto']">
+	<xsl:if test="string(.)">
+		<div>
+			<xsl:value-of select="name()" />: <xsl:value-of select="." />
+		</div>
+	</xsl:if>
+</xsl:template>
+
+<xsl:template match="*[@type = 'href']">
+	<div>
+		<xsl:value-of select="name()" />: <xsl:element name="input">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="." /></xsl:attribute>
+		</xsl:element>
+	</div>
+</xsl:template>
+
+<xsl:template match="*[@type = 'numeric']">
+	<div>
+		<xsl:value-of select="name()" />: <xsl:element name="input">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="." /></xsl:attribute>
+		</xsl:element>
+	</div>
+</xsl:template>
+
+<xsl:template match="*[@type = 'email']">
+	<div>
+		<xsl:value-of select="name()" />: <xsl:element name="input">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="." /></xsl:attribute>
+		</xsl:element>
+	</div>
+</xsl:template>
+
+<xsl:template name="edit_header">
+	<div id="edit_header">
+		Created By: <xsl:value-of select="/page/body/element/@creator" /> ( ) |
+		<xsl:if test="/page/body/element/@editor">
+			Edited by: <xsl:value-of select="/page/body/element/@editor" /> ( ) |
+			Revision: <xsl:value-of select="/page/body/element/@revision" /><br />
+			<xsl:if test="/page/body/element/@approved">
+				Last Aproved By: <xsl:value-of select="/page/body/element/@approver" /><br />
+				Approved On: <xsl:value-of select="/page/body/element/@approved" /><br />
+			</xsl:if>
+		</xsl:if>
+		<div>
+		Title:  <xsl:element name="input">
+		<xsl:attribute name="name">title</xsl:attribute>
+		<xsl:attribute name="id">title</xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="/page/body/element/@title" /></xsl:attribute>
+		</xsl:element>
+	</div>
+	</div>
+</xsl:template>
+
+<xsl:template name="revision_rollback">
+	<form action="" method="post">
+		Rollback changes to an older version:
+		<select id="revision_list" name="revision_list" onchange="ajaxLoad(this.value);">
+			<xsl:variable name="current_revision" select="/page/body/element/@revision" />
+			<xsl:for-each select="/page/body/element/archives/archive">
+				<xsl:element name="option">
+					<xsl:if test="id = $current_revision">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+					<xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
+					<xsl:value-of select="id" />)<xsl:text> </xsl:text>
+					<xsl:value-of select="title" /><xsl:text> </xsl:text>
+					<xsl:value-of select="revisor" /><xsl:text> </xsl:text>
+					<xsl:value-of select="revised" />
+				</xsl:element>
+			</xsl:for-each>
+		</select><br />
+		<input type="submit" name="rollback_revision" value="Rollback" />
+	</form>
+</xsl:template>
+
+<xsl:template name="pending_approvals">
+	<form action="" method="post">
+		Select pending edits to view:<br />
+		<xsl:variable name="current_revision" select="/page/body/element/@revision" />
+		<xsl:for-each select="//approvals/approval">
+			<xsl:element name="div">
+				<xsl:choose>
+					<xsl:when test="id &lt; $current_revision">
+						<xsl:attribute name="name">old</xsl:attribute>
+						<xsl:if test="not(/page/settings/approvals_show_old)">
+							<xsl:attribute name="style">display:none;</xsl:attribute>
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>new</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+
+				<xsl:element name="input">
+					<xsl:attribute name="type">checkbox</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
+					<xsl:attribute name="name">approvals[]</xsl:attribute>
+					<xsl:attribute name="id">approval_<xsl:value-of select="id" /></xsl:attribute>
+					<xsl:attribute name="onchange">get_diff(this.name);</xsl:attribute>
+				</xsl:element>
+				<xsl:element name="label">
+					<xsl:attribute name="for">approval_<xsl:value-of select="id" /></xsl:attribute>
+					<xsl:value-of select="revised" />
+					<xsl:if test="/page/settings/approvals_show_revisor">
+						, by <xsl:value-of select="revisor" />
+					</xsl:if>
+				</xsl:element>
+			</xsl:element>
+		</xsl:for-each>
+		<input type="submit" name="save_approvals" value="Save Selected Approvals" />
+	</form>
+	<xsl:element name="input">
+		<xsl:attribute name="type">checkbox</xsl:attribute>
+		<xsl:attribute name="id">show_old_approvals</xsl:attribute>
+		<xsl:attribute name="onchange">show_old_approvals(this, 'old');</xsl:attribute>
+		<xsl:if test="/page/settings/approvals_show_old">
+			<xsl:attribute name="checked">checked</xsl:attribute>
+		</xsl:if>
+	</xsl:element>
+	<label for="show_old_approvals">Show old edits</label>
+</xsl:template>
+
+<xsl:template name="edit_footer">
+	<div id="edit_footer">
+		<xsl:element name="input">
+			<xsl:attribute name="type">button</xsl:attribute>
+			<xsl:attribute name="value">Re-Load</xsl:attribute>
+			<xsl:attribute name="onclick">ajaxLoad();</xsl:attribute>
+		</xsl:element>
+		<xsl:element name="input">
+			<xsl:attribute name="type">submit</xsl:attribute>
+			<xsl:choose>
+				<xsl:when test="/page/security/can_approve = 1"><xsl:attribute name="value">Save and Close</xsl:attribute></xsl:when>
+				<xsl:otherwise><xsl:attribute name="value">Submit for Approval and Close</xsl:attribute></xsl:otherwise>
+			</xsl:choose>
+		</xsl:element>
+	</div>
+</xsl:template>
+
+<xsl:template name="header">
+			<head>
+				<xsl:element name="title"><xsl:value-of select="/page/settings/site_name_short" /> | Content Editor</xsl:element>
+
+				<xsl:element name="meta">
+					<xsl:attribute name="name">keywords</xsl:attribute>
+					<xsl:attribute name="content">Stylesheets</xsl:attribute>
+				</xsl:element>
+
+				<xsl:element name="link">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css</xsl:attribute>
+					<xsl:attribute name="type">text/css</xsl:attribute>
+					<xsl:attribute name="rel">stylesheet</xsl:attribute>
+				</xsl:element>
+
+				<script type="text/javascript">
+					var document_root = '<xsl:value-of select="/page/settings/document_root" />';
+					var js_host = '<xsl:value-of select="/page/settings/static_host_js" />';
+					var ajax_host = '<xsl:value-of select="/page/settings/static_host_ajax" />';
+					var current_page = '<xsl:value-of select="/page/@id" />';
+
+					<xsl:if test="count(/page/settings/pre_load_images/setting) > 0">
+					// set pre-loading image list
+				       var images = new Array();
+				       <xsl:for-each select="/page/settings/pre_load_images/setting">images[<xsl:value-of select="position() -1" />]="<xsl:value-of select="/page/settings/document_root" />/skin/pre-load-images/<xsl:value-of select="."/>"
+				     </xsl:for-each>
+					</xsl:if>
+					function returnRefresh()
+					{
+						window.top.document.body.innerHTML = '';
+					    window.top.location = document_root+'/'+current_page;
+					}
+
+					var js = document.createElement('script');
+					var h = document.getElementsByTagName('head')[0];
+
+					js.src = '<xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js';
+					h.appendChild(js);
+
+					js.src = '<xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce_gzip.js';
+					h.appendChild(js);
+
+
+				</script>
+
+				<xsl:element name="script">
+					<xsl:attribute name="type">text/javascript</xsl:attribute>
+					<!-- <xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce.js</xsl:attribute>-->
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce_gzip.js</xsl:attribute>//load
+				</xsl:element>
+
+				<script type="text/javascript">
+				tinyMCE_GZ.init({
+					plugins : 'safari,paste,fullscreen,spellchecker,inlinepopups',
+					themes : 'simple,advanced',
+					languages : 'en',
+					disk_cache : false,
+					debug : true
+				});
+				</script>
+
+				<script type="text/javascript">
+				tinyMCE.init({
+						mode : "textareas",
+						theme : "simple",
+						force_br_newlines : true,
+						editor_selector : "mceSimple",
+						button_tile_map : true
+                        });
+				tinyMCE.init({
+						mode : "textareas",
+						<!-- init_instance_callback : 'resizeEditorBox',-->
+						theme:"advanced",
+						width:"100%",
+						editor_selector : "mceAdvanced",
+						theme_advanced_buttons1:"undo,redo,|,pasteword,pastetext,removeformat,|,justifyleft,justifycenter,justifyfull,justifyright,|,spellchecker,|,bold,italic,underline,strikethrough,forecolor,formatselect,charmap|,fullscreen",
+						theme_advanced_buttons2:"outdent,indent,|,link,unlink|,bullist,numlist,blockquote,|",
+						theme_advanced_buttons3:"",
+						language:"en",
+						spellchecker_languages:"+English=en",
+						theme_advanced_toolbar_location:"top",
+						theme_advanced_toolbar_align:"left",
+						theme_advanced_statusbar_location:"bottom",
+						theme_advanced_resizing:"1",
+						dialog_type:"modal",
+						relative_urls:"",
+						remove_script_host:"",
+						convert_urls:"",
+						apply_source_formatting:"",
+						remove_linebreaks:"1",
+						paste_convert_middot_lists:"1",
+						paste_remove_spans:"1",
+						paste_remove_styles:"1",
+						gecko_spellcheck:"1",
+						plugins:"safari,paste,fullscreen,spellchecker,inlinepopups",
+
+						button_tile_map : true,
+						setup : function(ed) { ed.onKeyUp.add(function(ed, e) { delayedSave(); })	}
+					      });
+				element_id = 'e_<xsl:value-of select="/page/body/element/@id" />';
+				</script>
+			</head>
+	</xsl:template>

@@ -45,6 +45,11 @@ class Template
 		}
 		$this->xslt = $this->build_xslt_template($this->load_xslt_template());
 	}
+	
+	public function path()
+	{
+		return $this->template_path;
+	}
 
 	public function get_file_content($file)
 	{

@@ -83,6 +83,9 @@ notes=$("notifications");
 rounded();
 jsShow();
 jsHide();
+if(typeof(window['n']) != "undefined"){
+notification(n);
+}
 if(typeof window.imageFlowLoad == 'function'){
 imageFlowLoad();
 }

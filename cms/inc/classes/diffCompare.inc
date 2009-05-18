@@ -8,6 +8,8 @@ require_once("Text/Diff.php");
 abstract class diffCompare{
 
 	public static function multi_diff($base_text, $edits, $merge = FALSE){
+		$base_text = html_entity_decode($base_text);
+
 		if (empty($edits)) {
 			return $base_text;
 		}
@@ -20,7 +22,7 @@ abstract class diffCompare{
 		$diff = new diffClass($base_text, $current_edit);
 
 		if (!$merge) { $result = $diff->render(); }
-		else { $result = $diff->merge($merge); }
+		else { $result = $diff->merge(); }
 
 		unset($diff);
 		return $result;
@@ -93,14 +95,11 @@ class diffClass extends Text_MappedDiff {
 	}
 
 	public function merge(){
-		$difference = $this->getDiff($delete = false);
+		$difference = $this->getDiff();
 		$merge = '';
 		foreach ($difference as $op){
 			if ($op instanceof Text_Diff_Op_copy || $op instanceof Text_Diff_Op_add || $op instanceof Text_Diff_Op_change) {
 				$merge .= implode('', $op->final);
-			}
-			else if ($op instanceof Text_Diff_Op_delete || !$delete) {
-				$merge .= implode('', $op->orig);
 			}
 		}
 		return $merge;

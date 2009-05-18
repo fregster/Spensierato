@@ -7,15 +7,15 @@
 				<xsl:attribute name="style">background: #FFFFFF;</xsl:attribute>
 				<div id="notifications" style="visibility: hidden;">Notifications</div>
 				<div id="page_edit">
-					<!--<xsl:if test="/page/security/can_approve = 1">
-						<xsl:if test="//archive or //pending_approvals">
+					<xsl:if test="/page/security/can_approve = 1">
+						<xsl:if test="//archives or //approvals">
 							<div id="page_edit_versions">
-								<xsl:if test="//pending_approvals">
+								<xsl:if test="//approvals">
 									<p id="page_edit_approvals">
 										<xsl:call-template name="pending_approvals"/>
 									</p>
 								</xsl:if>
-								<xsl:if test="//archive">
+								<xsl:if test="//archives">
 									<p id="page_edit_revisions">
 										<xsl:call-template name="revision_rollback"/>
 									</p>
@@ -25,7 +25,7 @@
 								-
 							</div>
 						</xsl:if>
-					</xsl:if> -->
+					</xsl:if>
 					<div id="page_edit_form">
 						<xsl:element name="form">
 							<xsl:attribute name="action"></xsl:attribute>
@@ -160,30 +160,34 @@
 	<form action="" method="post">
 		Rollback changes to an older version:
 		<select id="revision_list" name="revision_list" onchange="ajaxLoad(this.value);">
-			<option value="0">...</option>
-			<xsl:for-each select="/page/body/element/archive/revision">
+			<xsl:variable name="current_revision" select="/page/body/element/@revision" />
+			<xsl:for-each select="/page/body/element/archives/archive">
 				<xsl:element name="option">
+					<xsl:if test="id = $current_revision">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
 					<xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
 					<xsl:value-of select="id" />)<xsl:text> </xsl:text>
 					<xsl:value-of select="title" /><xsl:text> </xsl:text>
-					<xsl:value-of select="user" /><xsl:text> </xsl:text>
-					<xsl:value-of select="date" />
+					<xsl:value-of select="revisor" /><xsl:text> </xsl:text>
+					<xsl:value-of select="revised" />
 				</xsl:element>
 			</xsl:for-each>
 		</select><br />
-		<input type="submit" name="rollback" value="Rollback" />
+		<input type="submit" name="rollback_revision" value="Rollback" />
 	</form>
 </xsl:template>
 
 <xsl:template name="pending_approvals">
 	<form action="" method="post">
 		Select pending edits to view:<br />
-		<xsl:for-each select="//pending_approvals/approval">
+		<xsl:variable name="current_revision" select="/page/body/element/@revision" />
+		<xsl:for-each select="//approvals/approval">
 			<xsl:element name="div">
 				<xsl:choose>
-					<xsl:when test="old">
+					<xsl:when test="id &lt; $current_revision">
 						<xsl:attribute name="name">old</xsl:attribute>
-						<xsl:if test="//pending_approvals/@show_old = 0">
+						<xsl:if test="not(/page/settings/approvals_show_old)">
 							<xsl:attribute name="style">display:none;</xsl:attribute>
 						</xsl:if>
 					</xsl:when>
@@ -201,9 +205,9 @@
 				</xsl:element>
 				<xsl:element name="label">
 					<xsl:attribute name="for">approval_<xsl:value-of select="id" /></xsl:attribute>
-					<xsl:value-of select="date" />
-					<xsl:if test="username">
-						, by <xsl:value-of select="username" />
+					<xsl:value-of select="revised" />
+					<xsl:if test="/page/settings/approvals_show_revisor">
+						, by <xsl:value-of select="revisor" />
 					</xsl:if>
 				</xsl:element>
 			</xsl:element>
@@ -214,7 +218,7 @@
 		<xsl:attribute name="type">checkbox</xsl:attribute>
 		<xsl:attribute name="id">show_old_approvals</xsl:attribute>
 		<xsl:attribute name="onchange">show_old_approvals(this, 'old');</xsl:attribute>
-		<xsl:if test="//pending_approvals/@show_old = 1">
+		<xsl:if test="/page/settings/approvals_show_old">
 			<xsl:attribute name="checked">checked</xsl:attribute>
 		</xsl:if>
 	</xsl:element>

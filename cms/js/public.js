@@ -134,6 +134,7 @@ notes.fade(-0,0.8);
 _d=setTimeout("notes.fade(0.8, 0)",3000);
 return false;
 };
+var fxSlideHorizontal = new Fx.Slide(null, {mode: 'horizontal'})();
 function increaseFontSize(){
 stepFontSize(1);
 };

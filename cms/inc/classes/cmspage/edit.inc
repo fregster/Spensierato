@@ -27,6 +27,9 @@ class cmspage_edit extends cmspage
 			else if (post::variable('save_approvals', 'isset')) {
 				$this->save_approvals();
 			}
+			else if (post::variable('rollback_revision', 'isset')) {
+				$this->rollback_revision();
+			}
 			else $this->save();
 		}
 		else
@@ -50,46 +53,26 @@ class cmspage_edit extends cmspage
 		Render::Singleton()->render_edit(Content::Singleton()->build());
 	}
 
-	/* this functionality will be added in alpha 2
+	private function rollback_revision(){
+		$rollback_target_id = post::variable('revision_list');
 
-
-	//FIXME: most of the code in this method is duplicated from ajax::approvals(),
-	//and some from the element saving process.
-	private function save_approvals(){
-		$this->security_element_approve();
-
-		$element_data = database::singleton()->sql_select_first(array('data', 'title'), 'tbl_elements_data', array('id'), array($this->value[1]));
-
-		//archive old data
-		database::singleton()->sql_insert('tbl_elements_data_archive', array('data', 'title', 'ts', 'replaced_by', 'replaced_ts', 'element_id'), array($element_data['data'], $element_data['title'], time(), user::singleton()->id(), time(), $this->value[1]));
-
-		$data = $element_data['data'];
-		$approvals_list = post::variable('approvals');
-		if (!empty($approvals_list)) {
-			$approvals = array();
-			foreach ($approvals_list as $approval_id){
-				$result = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_approve', array('id'), array($approval_id));
-				$approvals[] = $result['data'];
-			}
-
-			$approvals = array_reverse($approvals);
-
-			$data = diffCompare::multi_diff($data, $approvals, TRUE);
-
-			$data = '<html>'.utf8_encode(common::sql_clean(strip_tags(common::html($data)))).'</html>';
-
-			database::singleton()->sql_update_by_id($this->value[1], 'tbl_elements_data', array('data'), array($data));
-			database::singleton()->sql_update_by_id($this->value[1], 'tbl_elements', array('approved', 'approver'), array(time(), user::singleton()->id()));
-
-			foreach ($approvals_list as $approval_id){
-				database::Singleton()->sql_update_by_id($approval_id, 'tbl_elements_approve', array('approved'), array('1'));
-			}
-
-		}
+		database::Singleton()->sql_update_by_id($rollback_target_id, 'tbl_elements_revisions', array('approved'), array('0'));
+		revisions::approve_revision($rollback_target_id);
 
 		//reload the current element to continue editing
 		common::redirect('/'.implode('/', $this->value));
-	}*/
+	}
+
+	private function save_approvals(){
+		$this->security_element_approve();
+
+		$revisions_list = post::variable('approvals');
+
+		revisions::approve_revision($revisions_list);
+
+		//reload the current element to continue editing
+		common::redirect('/'.implode('/', $this->value));
+	}
 
 	private function save(){
 		//Is this an update or createing a new element

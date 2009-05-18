@@ -370,8 +370,12 @@ abstract class Common
 		}
 	}
 
-	public static function html($input)
+	public static function html($input, $decode = false)
 	{
+		if($decode)
+		{
+			return (html_entity_decode($input, ENT_QUOTES, Settings::singleton()->get_setting('char_set')));
+		}
 		return htmlentities($input, ENT_QUOTES, Settings::singleton()->get_setting('char_set'));
 	}
 

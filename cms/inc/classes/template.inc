@@ -25,7 +25,15 @@ class Template
 
 	protected function __construct()
 	{
-		$this->template_path = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin');
+		if(Settings::Singleton()->get_setting('use_external_skins') === true)
+		{
+			$this->template_path = file_root().'/skins/'.Settings::Singleton()->get_setting('skin');
+		}
+		else
+		{
+			$this->template_path = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin');
+		}
+		
 		$this->default_path = Settings::Singleton()->get_setting('cms_root').'/skins/default';
 
 		$templateinc = $this->template_path.'/template.inc';
@@ -89,8 +97,6 @@ class Template
 
 	public function css_path()
 	{
-//		print_r(CMS::Singleton()->path_vars(1));
-//		die('css');
 		$path_vars = CMS::Singleton()->path_vars(1);
 		switch ($path_vars)
 		{

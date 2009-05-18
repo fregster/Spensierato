@@ -9,7 +9,7 @@ abstract class Cache
 			Cache::headers_check_304($path); 
 			}
 			
-			$mtime = filemtime($path);
+			@$mtime = filemtime($path);
 			$gmdate_mod = gmdate('D, d M Y H:i:s', $mtime) . ' GMT';
 			header('Last-Modified: ' . $gmdate_mod);
 			if(Settings::Singleton()->get_setting('cache_use_ETags'))
@@ -80,7 +80,7 @@ abstract class Cache
 	private static function generate_etag($path)
 	{
 		// Inode
-		$ETag = dechex(fileinode($path));
+		$ETag = @dechex(fileinode($path));
 		
 		//Quick check that the Inode worked
 		if($ETag != 0)
@@ -116,7 +116,7 @@ abstract class Cache
 	public static function headers_check_304($path)
 	{
 		//File modification time
-		$gmdate_mod = gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT';
+		$gmdate_mod = @gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT';
 		
 		//File ETag
 		$ETag = Cache::generate_etag($path);

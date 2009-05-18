@@ -1,0 +1,14 @@
+<div id="login_box">
+<div class="login_welcome">Login Box</div>
+<form method="post" action="" id="login" onsubmit="javascript:jsSecureLogin(); return false;">
+<div>Username: </div><div><input type="text" id="username" name="username" value="**CMS**username" /></div>
+<div>Password: </div><div><input type="password" id="password" name="password" /></div>
+<div>Security Code: <br /><img src="**CMS**DocumentRoot/capthca" alt="Security Image" /></div>
+<div><input id="security_code" name="security_code" type="text" /></div>
+<div class="login_button"><input type="submit" value="Login" onclick="javascript:jsSecureLogin(); return false;"/></div>
+<div class="js-show" style="background-color: khaki;"><img src="**CMS**DocumentRoot/skin/transparent-gif.gif" alt="Padlock logo" class="sprite sprite-lock" /> Using Enhanced Secure Login</div>
+<div>Remember my username: <input id="login_rememberme" name="login_rememberme" type="checkbox" value="true" **CMS**remembered /></div>
+<p><strong>Do not use remember me on a public computer</strong></p>
+</form>
+<p>If you can not read the security image reload the page</p>
+</div>

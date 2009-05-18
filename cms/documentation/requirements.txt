@@ -1,0 +1,37 @@
+This CMS currently requires
+
+//PHP related
+	
+	PHP 5.2 ish
+	PECL / PEAR
+	MDB2
+	
+	Strongly Recomended
+	XML/Serializer.php
+	PHP xsltProcessor	
+	GD and FreeType libraries
+	
+	Recomeded
+	Tidy
+	mcrypt
+	text_diff
+	
+	Optional
+	Hash
+	php-ffmpeg and ffmpeg //Optional, Pref if you want to suport multiple video codec types and createing video thumbnails
+	
+	
+//An included proxy class is included to ffmpeg but it is much less efficent than installing php-ffmpeg as a PHP extension 
+
+//Database related
+MySQL (or SQL server that supports the LIMIT call untill the DB layer can be updated)
+
+
+
+In Debian
+apt-get install php-xml-serializer php-xml-parser php5-xsl php5-mysql php5-ffmpeg
+
+pear install MDB2
+pear install pear/MDB2#MySQLi
+
+pear install text_diff etc

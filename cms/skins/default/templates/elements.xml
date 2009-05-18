@@ -1,0 +1,203 @@
+
+	<xsl:template match="element[@type = 'elementText']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+			<xsl:value-of select="./data/html" />
+		</xsl:element>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+
+	<xsl:template match="element[@type = 'elementContact']">
+		<xsl:call-template name="element_admin_header"/>
+
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+			<xsl:value-of select="./@title" /> - <xsl:element name="a">
+			<!--<xsl:attribute name="class">submodal</xsl:attribute>
+				<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/contact/<xsl:value-of select="./@id" /></xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="string-length(./data/userid) != 0">
+						<xsl:attribute name="href">mailto:<xsl:value-of select="./data/userid" /></xsl:attribute>
+					</xsl:when>
+
+					<xsl:otherwise>-->
+						<xsl:attribute name="href">mailto:<xsl:value-of select="./data/email" /></xsl:attribute>
+					<!--</xsl:otherwise>
+				</xsl:choose>-->
+				<xsl:value-of select="./data/name" />
+			</xsl:element>
+		</xsl:element>
+
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+
+	<xsl:template match="element[@type = 'elementVideo']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:if test="./data/filesize > 0">
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+			<xsl:call-template name="mediaplayer"/>
+		</xsl:element>
+		</xsl:if>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+
+	<xsl:template match="element[@type = 'elementGallery']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+			<xsl:call-template name="imagegallery"/>
+		</xsl:element>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+
+	<xsl:template match="element[@type = 'elementImage']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:if test="./data/filesize > 0">
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+				<xsl:element name="a">
+				<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="./@id" /></xsl:attribute>
+					<xsl:element name="img">
+						<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/preview/<xsl:value-of select="./@id" /></xsl:attribute>
+						<xsl:attribute name="class">image</xsl:attribute>
+						<xsl:attribute name="alt"><xsl:value-of select="./data/linktext" /> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)</xsl:attribute>
+					</xsl:element>
+			</xsl:element>
+		</xsl:element>
+		</xsl:if>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+
+	<xsl:template match="element[@type = 'elementDownload']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:if test="./data/filesize > 0">
+			<xsl:element name="div">
+				<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+				<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+				<xsl:attribute name="class"><xsl:value-of select="./@type" /> rounded</xsl:attribute>
+				<xsl:element name="a">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="./@id" /></xsl:attribute>
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:attribute name="class">sprite sprite-attach</xsl:attribute>
+							<xsl:attribute name="alt">Icon</xsl:attribute>
+						</xsl:element> Download:
+					<xsl:value-of select="./data/linktext" /> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)
+				</xsl:element>
+			</xsl:element>
+		</xsl:if>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+
+	<xsl:template match="element[@type = 'elementFlash']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+
+			<xsl:if test="./data/filesize > 0">
+				<script type="text/javascript">
+					swfobject.embedSWF("<xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="./@id" />", "flashcontent", "100%", "100%", "9.0.0", "<xsl:value-of select="/page/settings/document_root" />/files/expressinstall.swf", false, {salign:"t"});
+				</script>
+
+				<div style="height: 500px; vertical-align: text-top;" id="flashcontent">You do not have Adobe Flash player installed.</div>
+			</xsl:if>
+
+		</xsl:element>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+
+	<xsl:template match="element[@type = 'elementLink']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+			<xsl:element name="a">
+				<xsl:attribute name="href"><xsl:value-of select="./data/href" /></xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="string-length(./data/text) != 0">
+						<xsl:value-of select="./data/text" />
+					</xsl:when>
+
+					<xsl:otherwise>
+						<xsl:value-of select="./data/href" />
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:element>
+		</xsl:element>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+
+	<xsl:template match="element[@type = 'elementAccount']">
+		<div id="account_personal_details">
+		<xsl:if test="/user/administrator =1">You are set as a site Admin you have global edit permissions and have the ability to change site options</xsl:if>
+			<div id="account_personal_details_title">Personal Details for <xsl:value-of select="/page/user/username" /></div>
+			<xsl:element name="form">
+				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/account</xsl:attribute>
+				<xsl:attribute name="method">post</xsl:attribute>
+				<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
+			<div>
+				<div class="account_title">Nickname: </div>
+				<div class="account_detail">
+					<xsl:element name="input">
+						<xsl:attribute name="type">text</xsl:attribute>
+						<xsl:attribute name="name">nickname</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/user/nickname" /></xsl:attribute>
+					</xsl:element>
+				</div>
+			</div>
+			<div>
+				<div class="account_title">Forename: </div>
+				<div class="account_detail">
+					<xsl:element name="input">
+						<xsl:attribute name="type">text</xsl:attribute>
+						<xsl:attribute name="name">forename</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/user/forename" /></xsl:attribute>
+					</xsl:element>
+
+			</div>
+			</div>
+				<div class="account_title">Surname: </div>
+				<div class="account_detail">
+					<xsl:element name="input">
+						<xsl:attribute name="type">text</xsl:attribute>
+						<xsl:attribute name="name">surname</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/user/surname" /></xsl:attribute>
+					</xsl:element>
+
+			</div>
+			<div>
+				<div class="account_title">E-Mail: </div>
+				<div class="account_detail">
+					<xsl:element name="input">
+						<xsl:attribute name="type">text</xsl:attribute>
+						<xsl:attribute name="name">email</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/user/email" /></xsl:attribute>
+					</xsl:element>
+				</div>
+			<input type="submit" value="Update" />
+			</div>
+			</xsl:element>
+			<div id="account_change_password_link">
+			<xsl:element name="a">
+				<xsl:attribute name="class">submodal</xsl:attribute>
+				<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/changepassword</xsl:attribute>
+				<span>Change Password</span>
+			</xsl:element>
+			</div>
+		</div>
+	</xsl:template>

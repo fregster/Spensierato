@@ -1,0 +1,47 @@
+
+		<xsl:template name="banner_submenu">
+			<div id="page_section_banner_submenu">
+			
+			<xsl:if test="/page/user/id = 0">
+				<xsl:element name="a">
+					<xsl:attribute name="class">link</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/login/<xsl:value-of select="page/@id" /></xsl:attribute>Login</xsl:element> |
+					<xsl:if test="/page/settings/allow_registration != 0">
+						<xsl:element name="a">
+						<xsl:attribute name="class">link</xsl:attribute>
+						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/register/<xsl:value-of select="page/@id" /></xsl:attribute>Register</xsl:element> |
+					</xsl:if>
+			</xsl:if>
+			<xsl:if test="/page/user/id != 0">
+	Welcome back <xsl:value-of select="page/user/nickname" /> [<xsl:element name="a">
+					<xsl:attribute name="class">link</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/logout/<xsl:value-of select="page/@id" /></xsl:attribute>Logout</xsl:element>] [<xsl:element name="a"><xsl:attribute name="class">link</xsl:attribute><xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/account/<xsl:value-of select="page/@id" /></xsl:attribute>My Account</xsl:element>] | </xsl:if>
+			<xsl:if test="/page/settings/show_help != 0">	 
+				<xsl:element name="a">
+					<xsl:attribute name="class">link</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/help/<xsl:value-of select="page/@id" /></xsl:attribute>Help</xsl:element> |
+			</xsl:if>
+			<xsl:if test="/page/settings/show_access != 0"> 
+				<xsl:element name="a">
+					<xsl:attribute name="class">link</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/access/<xsl:value-of select="page/@id" /></xsl:attribute>Accessability</xsl:element>
+			</xsl:if>
+			
+			<a href="javascript:decreaseFontSize();">
+				<xsl:element name="img">
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/font-dec.gif</xsl:attribute>
+					<xsl:attribute name="alt">Decrease Font Size</xsl:attribute>
+					<xsl:attribute name="style">border:0px;</xsl:attribute>
+				</xsl:element>
+			</a>
+			
+			<a href="javascript:increaseFontSize();">
+				<xsl:element name="img">
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/font-inc.gif</xsl:attribute>
+					<xsl:attribute name="alt">Increase Font Size</xsl:attribute>
+					<xsl:attribute name="style">border:0px;</xsl:attribute>
+				</xsl:element>
+			</a>
+			
+			</div>	
+		</xsl:template>

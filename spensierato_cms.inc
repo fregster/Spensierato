@@ -128,14 +128,14 @@ try
 	$install = true;
 
 	//Include the Site setup code
-	if(is_file('./spensierato_setup.inc'))
+	if(is_file($include_path.'/spensierato_setup.inc'))
 	{
-		require_once('./spensierato_setup.inc');
+		require_once($include_path.'/spensierato_setup.inc');
 		$install = false; //cancel the install directive
 	}
 
 	//Include the CMS
-	require_once('./cms/cms_includes.inc');
+	require_once($include_path.'/cms/cms_includes.inc');
 
 	//uncomment to force an install
 //	$install = true;
@@ -143,7 +143,7 @@ try
 	//run the installation
 	if($install)
 	{
-		include('./cms/install/install.inc');
+		include($include_path.'/cms/install/install.inc');
 		die();
 	}
 
@@ -151,7 +151,7 @@ try
 	CMS::Singleton()->start();
 
 	//Make any custom changes here after the CMS code has loaded but before the site is ran
-	if(is_file('custom.inc')) { include('custom.inc'); }
+	if(is_file($include_path.'/custom.inc')) { include($include_path.'/custom.inc'); }
 
 	//Run the CMS
 	CMS::Singleton()->run_cms();

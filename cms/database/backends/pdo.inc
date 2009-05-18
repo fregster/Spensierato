@@ -72,11 +72,13 @@ class database_execution_pdo extends database_execution
 	public function sql_select_exe_run($resultset)
 	{
 		$results = array();
-
-	    foreach ($resultset as $row)
+		if(is_array($resultset))
 		{
-	      		$results[] = $row;
-	    }
+		    foreach ($resultset as $row)
+			{
+		      		$results[] = $row;
+		    }
+		}
 
 		return $results;
 	}

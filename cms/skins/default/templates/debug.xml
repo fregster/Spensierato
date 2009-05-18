@@ -1,7 +1,0 @@
-
-	<xsl:template name="debug">
-		<div id="debug_text">
-			<p>Debug</p>
-			<xsl:value-of select="/" />
-		</div>
-	</xsl:template>

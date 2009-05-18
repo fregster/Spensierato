@@ -1,3 +1,0 @@
-SubModal
-Used in DHTML edit window
-http://groups.google.com/group/subModal

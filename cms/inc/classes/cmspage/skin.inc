@@ -18,9 +18,9 @@ class cmspage_skin extends cmspage
 		 */
 
 		$file_search = array(
-		Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin').'/'.$this->value,
-		Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/graphics/'.$this->value,
-		Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin') .'/pre-load-images/'.$this->value,
+		Template::Singleton()->path().'/'.$this->value,
+		Template::Singleton()->path().'/graphics/'.$this->value,
+		Template::Singleton()->path().'/pre-load-images/'.$this->value,
 		Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/'.$this->value,
 		Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/'.$this->value,
 		Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$this->value,

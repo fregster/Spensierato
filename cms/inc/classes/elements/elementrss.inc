@@ -38,8 +38,8 @@ class elementRSS extends elementDefault
 		<xsl:for-each select="//item">
 			<xsl:sort select="pubDate"/>
 			<div>
-				<div><xsl:value-of select="./title"/></div>
-				<div><xsl:value-of select="./description"/></div>
+				<div class="rss_item_title"><xsl:value-of select="./title"/></div>
+				<div class="rss_item_description"><xsl:value-of select="./description"/></div>
 			</div>
 		</xsl:for-each>
 	</xsl:template>

@@ -253,7 +253,13 @@ class Database
 	{
 		$sql = $this->sql_max_field_build($table, $field, $where_fields, $where_values);
 		$result = $this->sql_select_exe($sql, NULL, TRUE);
-		return $result[0]['max( sort )'];
+		if ($result == NULL) {
+			return 0;
+		}
+		else{
+			return $result[0]['max( sort )'];
+		}
+
 	}
 
 	protected function sql_max_field_build($table, $field, $where_fields = NULL, $where_values = NULL)

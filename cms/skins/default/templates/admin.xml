@@ -122,6 +122,17 @@
 										<xsl:attribute name="alt">Page Security</xsl:attribute>
 										<xsl:attribute name="title">Page Security</xsl:attribute>
 									</xsl:element>
+							</xsl:element> | 
+							
+							<xsl:element name="a">
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/page_security/<xsl:value-of select="/page/@id" /></xsl:attribute>
+									<xsl:attribute name="class">submodal-450-500</xsl:attribute>
+									<xsl:element name="img">
+										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+										<xsl:attribute name="class">sprite sprite-page_white_add</xsl:attribute>
+										<xsl:attribute name="alt">Add Child Page</xsl:attribute>
+										<xsl:attribute name="title">Add Child Page</xsl:attribute>
+									</xsl:element>
 							</xsl:element>
 							</xsl:element>
 						</xsl:element>

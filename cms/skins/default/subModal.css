@@ -5,7 +5,7 @@
 	left:0;
 	width:100%;
 	height:100%;
-	z-index:200;
+	z-index:2000;
 	background-color:#000;
 	-moz-opacity: 0.55;
 	opacity:.55;
@@ -13,7 +13,7 @@
 }
 #popupContainer {
 	position: absolute;
-	z-index: 201;
+	z-index: 2001;
 	top: 0px;
 	left: 0px;
 	display:none;
@@ -28,7 +28,7 @@
 	width: 100%;
 	height: 100%;
 	position: relative;
-	z-index: 202;
+	z-index: 2002;
 }
 #popupTitleBar {
 	background-color: #333344;
@@ -41,7 +41,7 @@
 	border-left: 1px solid #78A3F2;
 	border-right: 1px solid #204095;
 	position: relative;
-	z-index: 203;
+	z-index: 2003;
 }
 #popupTitle {
 	float:left;

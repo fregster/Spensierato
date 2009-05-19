@@ -156,5 +156,30 @@ class FileTransfer
 
 		return false;
 	}
+	
+	public static function load_file_as_string($id)
+	{
+		$path = Settings::singleton()->get_setting('cms_folder_downloads').$id;
+		
+		$file_info = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array(basename($file)));
+		$file_info = json_decode($file_info['data'], TRUE);
+
+		if(!isset($file_info['filename']))
+		{
+			$filename = basename($file);
+		}
+		else
+		{
+			$filename = $file_info['filename'];
+		}
+
+		$mime = common::returnMIMEType($filename);
+
+		if($work_out_mime and function_exists('mime_content_type') or $mime === false)
+		{
+			$mime = mime_content_type($file);
+		}
+		return file_get_contents($path);	
+	}
 }
 ?>

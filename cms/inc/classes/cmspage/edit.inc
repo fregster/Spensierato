@@ -38,6 +38,10 @@ class cmspage_edit extends cmspage
 			{
 				$this->toggle();
 			}
+			if($this->value[1] == 'new_page')
+			{
+				$this->toggle();
+			}
 			else $this->edit();
 		}
 	}
@@ -208,7 +212,7 @@ class cmspage_edit extends cmspage
 			<p>
 			Your updates have been saved.<br />
 			You should be redirected back the page the element you changed is on in a few seconds<br/>
-			If not click <a href="'.common::document_root().'/'.$main.'">here</a>
+			If not click <a href="'.common::document_root().'/'.urlencode($main).'">here</a>
 			</p>
 
 			</body>

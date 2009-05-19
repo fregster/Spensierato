@@ -135,6 +135,19 @@
 	</div>
 </xsl:template>
 
+<xsl:template match="*[@type = 'checkbox']">
+	<div>
+		<xsl:value-of select="name()" />: <xsl:element name="input">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="type">checkbox</xsl:attribute>
+		<xsl:if test="string-length(.) > 0">
+			<xsl:attribute name="checked">checked</xsl:attribute>
+		</xsl:if>
+		</xsl:element>
+	</div>
+</xsl:template>
+
 <xsl:template name="edit_header">
 	<div id="edit_header">
 		Created By: <xsl:value-of select="/page/body/element/@creator" /> ( ) |

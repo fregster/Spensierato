@@ -141,7 +141,7 @@ try
 //	$install = true;
 
 	//run the installation
-	if($install)
+	if($install || isset($force_install))
 	{
 		include($include_path.'/cms/install/install.inc');
 		die();
@@ -151,7 +151,8 @@ try
 	CMS::Singleton()->start();
 
 	//Make any custom changes here after the CMS code has loaded but before the site is ran
-	if(is_file($include_path.'/custom.inc')) { include($include_path.'/custom.inc'); }
+	
+	if(is_file(file_root().'/custom.inc')) { include(file_root().'/custom.inc'); }
 
 	//Run the CMS
 	CMS::Singleton()->run_cms();

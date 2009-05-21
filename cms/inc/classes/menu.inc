@@ -11,6 +11,8 @@ class Menu
 	private $current_page_details = array();
 	private $working_page_id; //id
 	private $parents = array();
+	
+	private $options = array('get_full_menu' => false, 'top_menu_depth' => 1);
 
 	public static function Singleton()
 	{
@@ -25,6 +27,19 @@ class Menu
 	protected function __construct()
 	{
 		//Setup vars
+	}
+	/**
+	 * set_option is a method to force the menu class to do specific things
+	 * Currently supported options
+	 * top_menu_depth = int //Forces the menu class to get the top X level of results
+	 * get_full_menu = bool //Foces the menu class to populate the XML with the complete menu (Useful for small sites and debuging)
+	 */
+	public function set_options($options)
+	{
+		if(isset($options) && is_array($options))
+		{
+			$this->options = array_merge($this->options, $options);
+		}
 	}
 
 	//Build the xml for the menu
@@ -73,6 +88,8 @@ class Menu
 			$menu_array['parallel'] = $this->get_parallel_links();
 			$menu_array['current'] = $this->current_page_details;
 		}
+		$menu_array['full_menu'] = $this->get_full_menu();
+		$menu_array['top_menu'] = $this->get_top_menu();
 
 		$menu_array['children'] = $this->children;
 
@@ -183,7 +200,6 @@ class Menu
 	private function get_page_details($id)
 	{
 		return Database::Singleton()->sql_select_first(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('id'), array($id));
-
 	}
 
 	private function get_children_of($id = 0)
@@ -239,6 +255,39 @@ class Menu
 			}
 		}
 		return $details;
+	}
+	
+	private function get_full_menu()
+	{
+		if($this->options['get_full_menu'])
+		{
+			return Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages');
+		}
+	}
+	
+	private function get_top_menu()
+	{
+		if($this->options['top_menu_depth'] > 1)
+		{
+			$menu = array();
+			$ids = array(0);
+			$i=1;
+			while($i <= $this->options['top_menu_depth'])
+			{
+				$result = Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('parent_id'), array($ids));
+				$ids = array();
+				foreach($result as $res)
+				{
+					$ids[] = $res['id'];
+				}
+				
+				$result['level'] = $i;
+				$menu[] = $result;
+				
+				++$i;
+			}
+			return $menu;
+		}
 	}
 }
 ?>

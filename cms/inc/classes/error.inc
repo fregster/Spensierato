@@ -24,11 +24,13 @@ abstract class error
 
 	public static function do403()
 	{
+		header('HTTP/1.1 403 Forbidden');
 		die('403 Forbiden');
 	}
 	
 	public static function do404()
 	{
+		header('HTTP/1.1 404 Forbidden');
 		die('404 File not found');
 	}
 	

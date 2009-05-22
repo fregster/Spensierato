@@ -53,7 +53,7 @@ abstract class Common
 	}
 	public static function clean_path($path)
 	{
-		return(str_ireplace('..', '',  $path));
+		return(str_ireplace('../', '',  $path));
 	}
 
 	public static function time_with_microseconds()

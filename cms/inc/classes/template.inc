@@ -181,7 +181,6 @@ class Template
 		$path = $this->default_path .'/templates/*.xml';
 		$files = array();
 		$list_of_files = glob($path);
-
 		foreach ($list_of_files as $filepath)
 		{
 			$filename = basename($filepath);

@@ -1,121 +1,28 @@
 <?php
+//uncomment to force an install
+//	$force_install = true;
+
 function exception_handler($exception)
 {
   echo 'Uncaught exception: ' , $exception->getMessage(), "\n";
 }
 
-/**
- * Auto class loading function
- * $class_block_list are for elements or classes that are not ready for production
- * Uncoment them for testing
- *
- * @param string $class_name
- */
 $class_block_list = array(
 //'elementvideo' => 1,
 //'elementgallery' => 1,
 //'elementlink' => 1,
 );
 $include_path = dirname(__FILE__);
-$class_profile_use_true_memory = false;
-$class_profile = array(array('class' => 'inital code', 'mem_diff' => (memory_get_usage($class_profile_use_true_memory))));
-function __autoload($class_name)
-{
-	global $class_block_list;
-	global $include_path;
-	global $class_profile;
-	global $class_profile_use_true_memory;
-	$trace = false;
-	$paths = array();
 
-	if($class_name != '' and $class_name != null and !class_exists($class_name) and !isset($class_block_list[$class_name])) //Ensure we should be trying to load the class
-	{
-		$class_name = strtolower($class_name);
-		$class_filename = $class_name;
-		$exploded_class = explode('_', $class_name);
-		if(isset($exploded_class[1])) 
-		{ 
-			$paths[] = $include_path.'/cms/inc/classes/'.$exploded_class[0].'/';
-			$class_filename = $exploded_class[1];
-		 }
-		
-		$paths[] =	$include_path.'/cms/inc/classes/';
-		$paths[] =	$include_path.'/cms/inc/classes/elements/';
-		$paths[] =	$include_path.'/cms/inc/classes/optional/';
-					
-		foreach($paths as $path) //Cycle through the includes dir in order of preference
-		{
-			if(file_exists($path.$class_filename.'.inc')) //Check the file exists
-			{
-				if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
-					require_once $path.$class_filename.'.inc';
-				if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
-					return true;
-			}
-		}
-		
-		die('<p>Critical error: Class "'.$class_name.'" not defined</p>'); //A class has been called the can not be loaded
-	}
-	return false; //Should never really get here
-}
-
-function get_extended_class_path($base_class, $new_class)
-{
-	global $include_path;
-	
-	$base_len = strlen($base_class)+1;
-	$class_filename = $new_class;
-	if(substr($new_class, 0, $base_len) == ($base_class.'_'))
-	{
-		$class_filename = substr($new_class, $base_len);
-	}
-
-	return($include_path.'/cms/inc/classes/'.$base_class.'/'.$class_filename.'.inc');
-}
+require_once($include_path.'/cms/inc/static/autoloader.inc');
+require_once($include_path.'/cms/inc/static/functions.inc');
 
 set_exception_handler('exception_handler');
 try
 {
 	//Include all the options for the CMS
 	//Functions requires by globals
-	function get_site_document_root()
-	{
-    	$document_root = $GLOBALS['document_root_folder_only'];
-
-    	if(!Common::rewrite_enabled() && $GLOBALS['allow_rewrite']) //We use the globals here as the settings class might not be loaded
-    	{
-    		$document_root .= '/index.php';
-    	}
-
-		return $document_root;
-	}
-
-	function get_site_document_root_folder_only() //This does NOT work if we have a front end proxy, needs thought on a possible solution.
-    {
-    	$a = substr($_SERVER['PHP_SELF'], 0 , strripos($_SERVER['PHP_SELF'], '.php'));
-    	$document_root = substr($a, 0, strripos($a, '/'));
-    	if($document_root == '')
-    	{
-    		$proto = 'http://';
-    		if(isset($_SERVER['HTTPS']))
-    		{
-	    		if( ($_SERVER['HTTPS'] != '') && ($_SERVER['HTTPS'] != 'off') )
-	    		{
-	    			$proto = 'https://';
-	    		}
-    		}
-    		$document_root = $proto . $_SERVER['SERVER_NAME'];
-
-    	}
-		return $document_root;
-    }
-
-	function get_file_root()
-	{
-		$ext = substr($_SERVER['SCRIPT_FILENAME'], -4 , 4);
-		$a = substr($_SERVER['SCRIPT_FILENAME'], 0 , strripos($_SERVER['SCRIPT_FILENAME'], $ext));
-		return substr($a, 0, strripos($a, '/'));
-	}
+	
 
 	//document root is the URL root ie spensierato.net
 	$GLOBALS['document_root_folder_only'] = get_site_document_root_folder_only();
@@ -128,17 +35,15 @@ try
 	$install = true;
 
 	//Include the Site setup code
-	if(is_file($include_path.'/spensierato_setup.inc'))
+	if(is_file(file_root().'/spensierato_setup.inc'))
 	{
-		require_once($include_path.'/spensierato_setup.inc');
+		require_once(file_root().'/spensierato_setup.inc');
 		$install = false; //cancel the install directive
 	}
-
-	//Include the CMS
-	require_once($include_path.'/cms/cms_includes.inc');
-
-	//uncomment to force an install
-//	$install = true;
+	
+	//Has the site extended the spensierato options?
+	require_once($include_path.'/spensierato_options.inc');
+	if(is_file(file_root().'/spensierato_options.inc')) { require_once(file_root().'/spensierato_options.inc'); }
 
 	//run the installation
 	if($install || isset($force_install))
@@ -146,9 +51,9 @@ try
 		include($include_path.'/cms/install/install.inc');
 		die();
 	}
-
+	
 	//Start site
-	CMS::Singleton()->start();
+	CMS::Singleton()->start(); 
 
 	//Make any custom changes here after the CMS code has loaded but before the site is ran
 	

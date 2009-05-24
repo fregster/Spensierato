@@ -69,7 +69,13 @@ class cookie
 	public function load()
 	{
 		if (isset($this->cookie_information['data'])) {
-			$this->cookie_array = unserialize($this->decrypt($this->cookie_information['data']));
+			$this->cookie_array = @unserialize($this->decrypt($this->cookie_information['data']));
+			if($this->cookie_array === false)
+			{
+				//The cookie was corupt so delete it
+				$this->cookie_update = true;
+				$this->save();
+			}
 		}
 		else $this->cookie_array = array();
 	}
@@ -128,6 +134,7 @@ class cookie
 
 			// save the cookie array
 			setcookie($this->cookie_name, $cookie_information_new, time()+$this->cookie_life , Settings::Singleton()->get_setting('document_root'), FALSE, FALSE, TRUE);
+			$this->cookie_update = false;
 		}
 	}
 

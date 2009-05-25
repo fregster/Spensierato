@@ -48,8 +48,9 @@ class Template
 			include($templateinc);
 			$this->load_template_options();
 		}
+		$this->working_template_path = $this->template_path;
 		$this->inherited_template_paths[] = $this->template_path;
-		$this->xslt = $this->build_xslt_template($this->load_xslt_template());
+		$this->build_template();		
 	}
 	
 	public function path()
@@ -75,6 +76,11 @@ class Template
 
 	public function load()
 	{
+		if(!isset($this->xslt))
+		{
+			$this->xslt = $this->build_xslt_template($this->load_xslt_template());
+		}
+		
 		return $this->xslt;
 	}
 
@@ -191,23 +197,8 @@ class Template
 	}
 
 	private function load_xslt_template()
-	{
-		$path = $this->template_path .'/templates/*.xml';
-		$files = glob($path);
-		
-		foreach($files as $filepath)
-		{
-			$this->filenames[basename($filepath)] = $filepath;
-			$this->lastmodified = max($this->lastmodified, filemtime($filepath));
-		}
-		
-		$this->working_template_path = $this->template_path;
-		$this->build_and_extend_template();
-		
-//		print_r($this->filenames);
-//		die();
-		
-//		$xslt = persistantcache::Singleton()->get('template_xslt');
+	{		
+		$xslt = persistantcache::Singleton()->get('template_xslt');
 
 		if(!isset($xslt['mtime']) || $xslt['mtime'] != $this->lastmodified)
 		{
@@ -227,7 +218,21 @@ class Template
 		return $xslt;
 	}
 	
-	private function build_and_extend_template()
+	private function build_template()
+	{
+		$path = $this->template_path .'/templates/*.xml';
+		$files = glob($path);
+		
+		foreach($files as $filepath)
+		{
+			$this->filenames[basename($filepath)] = $filepath;
+			$this->lastmodified = max($this->lastmodified, filemtime($filepath));
+		}
+		
+		$this->extend_template();
+	}
+	
+	private function extend_template()
 	{
 		$old_template = $this->working_template_path;
 		if(file_exists($this->working_template_path.'/template.inc'))
@@ -264,7 +269,7 @@ class Template
 						}
 					}
 					$this->inherited_template_paths[] = $this->working_template_path;
-					$this->build_and_extend_template();
+					$this->extend_template();
 				}
 			}
 		}

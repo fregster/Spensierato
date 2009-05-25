@@ -1,0 +1,30 @@
+<xsl:template match="/">
+        <html>
+			<xsl:call-template name="header"/>
+				
+			<xsl:element name="body">
+			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>
+			<div id="notifications" style="visibility: hidden; background-color: red;">Notifications</div>
+
+			<div id="site_frame">
+				<xsl:call-template name="banner"/>
+				<div id="wrapper">
+					<div id="block_1">
+						<xsl:call-template name="menu"/>
+						<div id="page_section_left_utilities">
+							<xsl:call-template name="search"/>
+						</div>
+					</div>
+					<div id="block_2">
+						<div id="page_section_main">
+							<xsl:call-template name="menu_tabs"/>
+							<a name="contents" />
+							<xsl:call-template name="body"/>
+						</div>
+						<div class="verticalalign"><p>643 Volunteer Gliding Squadron - RAF Syerston. Registered Charity No: 1558/76.</p></div>
+					</div>
+				</div>
+			</div>
+			</xsl:element>
+        </html>
+</xsl:template>

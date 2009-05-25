@@ -1,0 +1,19 @@
+	<xsl:template name="banner">
+		<xsl:element name="div">
+			<xsl:attribute name="id">page_section_banner</xsl:attribute>
+				<xsl:call-template name="admin_bar"/>
+					<span style="width:150px;">
+						Company Logo
+					</span>
+				
+					<span style="width:500px;">
+						Site Title
+					</span>	
+												
+					<span style="width:150px;">	
+						More Logos
+					</xsl:element>
+				</span>
+			<div id="banner_submenu"><xsl:call-template name="banner_submenu"/></div>
+		</xsl:element>
+	</xsl:template>

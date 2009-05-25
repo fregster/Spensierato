@@ -1,0 +1,121 @@
+		<xsl:template name="menu_link">
+		<xsl:element name="a">
+			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="./id" /></xsl:attribute>
+			<xsl:attribute name="class">link_menu</xsl:attribute>
+			<xsl:choose>
+			<xsl:when test="/page/options/admin_mode = 1">
+				<xsl:if test="visible != '1'">
+				<em>
+					<xsl:if test="./deleted = '1'">
+						<!-- Hidden and deleted -->
+						<s><xsl:value-of select="translate(title, $lowercase, $uppercase)" /> [Hidden]</s>
+					</xsl:if>
+					<xsl:if test="./deleted != '1'">
+						<!-- Hidden and NOT Deleted -->
+						<xsl:value-of select="translate(title, $lowercase, $uppercase)" /> [Hidden]
+					</xsl:if>
+				</em>
+				</xsl:if>
+
+				<xsl:if test="visible = '1'">
+					<xsl:if test="./deleted = '1'">
+						<!-- NOT hidden but IS deleted -->
+						<s><xsl:value-of select="translate(title, $lowercase, $uppercase)" /></s>
+					</xsl:if>
+
+					<xsl:if test="./deleted != '1'">
+						<!-- NOT hidden and NOT deleted -->
+						<xsl:value-of select="translate(title, $lowercase, $uppercase)" />
+					</xsl:if>
+				</xsl:if>
+			</xsl:when>
+
+			<xsl:otherwise>
+				<xsl:value-of select="translate(title, $lowercase, $uppercase)" />
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template name="menu">
+		<div id="page_section_left_menu">
+			<xsl:for-each select="/page/menu/menu/top_menu/menu_item//menu_item">
+				<xsl:choose>
+					<xsl:when test="./id = /page/menu/menu/current/id">
+						<div id="menu_top_selected"><xsl:call-template name="menu_link"/></div>
+					</xsl:when>
+					<xsl:when test="./id = /page/menu/menu/parents//id">
+						<div id="menu_tab_selected"><xsl:call-template name="menu_link"/></div>
+					</xsl:when>
+					<xsl:otherwise>
+						<div class="menu_top"><xsl:call-template name="menu_link"/></div>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+
+	
+	<xsl:template name="menu_tabs">
+		<div id="page_section_tabs">
+			<xsl:for-each select="/page/menu/menu/parents/menu_item">
+					<div class="menu_tab_parent"><xsl:call-template name="menu_link"/></div>
+			</xsl:for-each>
+		
+		
+		
+			<xsl:if test="/page/menu/menu/current and not(/page/menu/menu/current/id = /page/menu/menu/top_menu/menu_item//id)">
+				<div id="menu_tab_selected">
+					<xsl:choose>
+						<xsl:when test="/page/options/admin_mode = 1">
+							<xsl:if test="/page/menu/menu/current/visible != '1'">
+							<em>
+								<xsl:if test="/page/menu/menu/current/deleted = '1'">
+									<!-- Hidden and deleted -->
+									<s><xsl:value-of select="translate(/page/menu/menu/current/title, $lowercase, $uppercase)" /> [Hidden]</s>
+								</xsl:if>
+								<xsl:if test="/page/menu/menu/current/deleted != '1'">
+									<!-- Hidden and NOT Deleted -->
+									<xsl:value-of select="translate(/page/menu/menu/current/title, $lowercase, $uppercase)" /> [Hidden]
+								</xsl:if>
+							</em>
+							</xsl:if>
+			
+							<xsl:if test="/page/menu/menu/current/visible = '1'">
+								<xsl:if test="/page/menu/menu/current/deleted = '1'">
+									<!-- NOT hidden but IS deleted -->
+									<s><xsl:value-of select="translate(/page/menu/menu/current/title, $lowercase, $uppercase)" /></s>
+								</xsl:if>
+			
+								<xsl:if test="/page/menu/menu/current/deleted != '1'">
+									<!-- NOT hidden and NOT deleted -->
+									<xsl:value-of select="translate(/page/menu/menu/current/title, $lowercase, $uppercase)" />
+								</xsl:if>
+							</xsl:if>
+						</xsl:when>
+			
+						<xsl:otherwise>
+							<xsl:value-of select="translate(/page/menu/menu/current/title, $lowercase, $uppercase)" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</xsl:if>
+			<xsl:if test="/page/menu/menu/children/menu_item">
+					<xsl:for-each select="/page/menu/menu/children/menu_item">
+						<xsl:if test="not(./id = /page/menu/menu/top_menu/menu_item//id)">
+							<xsl:choose>
+								<xsl:when test="selected">
+									<div id="menu_tab_selected"><xsl:call-template name="menu_link"/></div>
+								</xsl:when>
+								<xsl:when test="id = /page/menu/menu/parents//id">
+									<div id="menu_tab_selected"><xsl:call-template name="menu_link"/></div>
+								</xsl:when>
+								<xsl:otherwise>
+									<div class="menu_tab"><xsl:call-template name="menu_link"/></div>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:if>
+					</xsl:for-each>
+			</xsl:if>
+		</div>
+	</xsl:template>

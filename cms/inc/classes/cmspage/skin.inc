@@ -18,15 +18,14 @@ class cmspage_skin extends cmspage
 		 * Check the related page details
 		 * call file transfer retrieve
 		 */
-
-		$file_search = array(
-		Template::Singleton()->path().'/'.$this->value,
-		Template::Singleton()->path().'/graphics/'.$this->value,
-		Template::Singleton()->path().'/pre-load-images/'.$this->value,
-		Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/'.$this->value,
-		Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/'.$this->value,
-		Settings::Singleton()->get_setting('cms_root').'/skins/default/graphics/'.$this->value,
-		);
+		
+		$path = Template::Singleton()->inhearited_paths();
+		$file_search = array();
+		foreach($path as $p){
+			$file_search[] = $p.'/'.$this->value;
+			$file_search[] = $p.'/graphics/'.$this->value;
+			$file_search[] = $p.'/pre-load-images/'.$this->value;
+		}
 
 		foreach($file_search as $file)
 		{

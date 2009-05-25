@@ -57,6 +57,11 @@ class Template
 	{
 		return $this->template_path;
 	}
+	
+	public function inhearited_paths()
+	{
+		return $this->inherited_template_paths;
+	}
 
 	public function get_file_content($file)
 	{

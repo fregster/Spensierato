@@ -43,6 +43,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	$install_folder = dirname(__FILE__);
+	$site_root = file_root();
 
 	//SQL connection settings
 	$username = post::variable('username');
@@ -156,7 +157,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true);
 
 	//set the path for the settings file
-	$settings_file = $install_folder.'/../../spensierato_setup.inc';
+	$settings_file = $site_root.'/spensierato_setup.inc';
 
 	//detect the server OS and set the doc root accordingly.
 	if (stripos(PHP_OS, 'darwin') !== FALSE) {

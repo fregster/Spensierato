@@ -16,9 +16,14 @@ foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings:
 }
 
 /**
- * Does this template extend the default or completly overwrite it
+ * Does this template extend another template?
  */
-//Setting template_extend_default
-//Any new template should also include the templates from the default site
+//Setting template_extends
 //Settings::Singleton()->new_setting('template_extends', 'default', false, true);
+
+/**
+ * Should the template also inherits any CSS files?
+ */
+//Setting template_inherits_css
+//Settings::Singleton()->new_setting('template_inherits_css', true, false, true);
 ?>

@@ -3,16 +3,24 @@
 			<xsl:attribute name="id">page_section_banner</xsl:attribute>
 				<xsl:call-template name="admin_bar"/>
 					<span style="width:150px;">
-						Company Logo
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/<xsl:value-of select="/page/settings/template_header_graphic_left" /></xsl:attribute>
+							<xsl:attribute name="alt">Logo</xsl:attribute>
+						</xsl:element>
 					</span>
 				
 					<span style="width:500px;">
-						Site Title
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/<xsl:value-of select="/page/settings/template_header_graphic_background" /></xsl:attribute>
+							<xsl:attribute name="alt">Title Background</xsl:attribute>
+						</xsl:element>
 					</span>	
 												
 					<span style="width:150px;">	
-						More Logos
-					</xsl:element>
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/<xsl:value-of select="/page/settings/template_header_graphic_right" /></xsl:attribute>
+							<xsl:attribute name="alt">Logo</xsl:attribute>
+						</xsl:element>
 				</span>
 			<div id="banner_submenu"><xsl:call-template name="banner_submenu"/></div>
 		</xsl:element>

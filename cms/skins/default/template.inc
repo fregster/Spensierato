@@ -20,5 +20,5 @@ foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings:
  */
 //Setting template_extend_default
 //Any new template should also include the templates from the default site
-//Settings::Singleton()->new_setting('template_dont_extend_default', true, false, true);
+//Settings::Singleton()->new_setting('template_extends', 'default', false, true);
 ?>

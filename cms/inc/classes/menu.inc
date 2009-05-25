@@ -276,14 +276,16 @@ class Menu
 			{
 				$result = Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('parent_id'), array($ids));
 				$ids = array();
-				foreach($result as $res)
+				if(isset($result[0]))
 				{
-					$ids[] = $res['id'];
+					foreach($result as $res)
+					{
+						$ids[] = $res['id'];
+					}
+					
+					$result['level'] = $i;
+					$menu[] = $result;
 				}
-				
-				$result['level'] = $i;
-				$menu[] = $result;
-				
 				++$i;
 			}
 			return $menu;

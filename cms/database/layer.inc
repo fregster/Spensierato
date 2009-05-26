@@ -130,7 +130,7 @@ class Database
 		}
 	}
 
-	private function sql_clean_input($var)
+	protected function sql_clean_input($var)
 	{
 		//If the input is just a number just return it
 		if(is_numeric($var)) { return $var; }
@@ -541,7 +541,7 @@ class Database
 		return $result[0]['count(*)'];
 	}
 
-	private function sql_build_select_string($fields)
+	protected function sql_build_select_string($fields)
 	{
 		if($fields == NULL)
 		{
@@ -570,7 +570,7 @@ class Database
 		return $sql_temp_select;
 	}
 
-	private function sql_build_where_string($where_fields, $where_values)
+	protected function sql_build_where_string($where_fields, $where_values)
 	{
 		$part = $this->sql_build_where_string_part($where_fields, $where_values);
 		if(strlen($part) > 0)
@@ -579,7 +579,7 @@ class Database
 		}
 	}
 
-	private function sql_build_where_string_part($where_fields, $where_values)
+	protected function sql_build_where_string_part($where_fields, $where_values)
 	{
 		//Include Where clause into sql if set
 		$count_where = count($where_values) - 1;
@@ -641,7 +641,7 @@ class Database
 	}
 
 	//$Values is for when I get around to implimenting MDB2 properly!
-	private function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
+	protected function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{
 		database_execution::Singleton()->sql_connect();
 

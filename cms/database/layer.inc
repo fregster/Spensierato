@@ -592,27 +592,35 @@ class Database
 
 			while($i <= ($count_where))
 			{
+				$skip = false;
 				//Check if this is an or statment
 				if(is_array($where_values[$i]))
 				{
-					$j = 0;
-					$count_or = count($where_values[$i]) -1;
-					$sql_temp_where_or = '';
-					while($j <= ($count_or))
+					$count_or = count($where_values[$i]) -1;	
+					if($count_or > 0) //Skip if an empty array has been passed in
 					{
-						$sql_temp_where_or .= '`'.$this->sql_clean_input($where_fields[$i]) .'` = ';
-						//Quote non numeric values
-						if(is_numeric($where_values[$i][$j])) {	$sql_temp_where_or .= $where_values[$i][$j]; }else{ $sql_temp_where_or .= '"'. $this->sql_clean_input($where_values[$i][$j]) .'"'; }
-
-						$j++;
-						if(isset($where_values[$i][$j]))
+						$j = 0;
+						$sql_temp_where_or = '';
+						while($j <= ($count_or))
 						{
-							$sql_temp_where_or .= ' OR ';
+							$sql_temp_where_or .= '`'.$this->sql_clean_input($where_fields[$i]) .'` = ';
+							//Quote non numeric values
+							if(is_numeric($where_values[$i][$j])) {	$sql_temp_where_or .= $where_values[$i][$j]; }else{ $sql_temp_where_or .= '"'. $this->sql_clean_input($where_values[$i][$j]) .'"'; }
+	
+							$j++;
+							if(isset($where_values[$i][$j]))
+							{
+								$sql_temp_where_or .= ' OR ';
+							}
+	
 						}
-
+	
+						$sql_temp_where .= ' (' . $sql_temp_where_or . ') ';
 					}
-
-					$sql_temp_where .= ' (' . $sql_temp_where_or . ') ';
+					else
+					{
+						unset($skip);
+					}
 				}
 				else
 				{
@@ -630,7 +638,7 @@ class Database
 				}
 
 				$i++;
-				if(isset($where_values[$i]))
+				if(isset($where_values[$i]) && isset($skip))
 				{
 					$sql_temp_where .= ' AND ';
 				}

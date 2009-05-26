@@ -839,7 +839,7 @@ class Database
 
 	public function direct_sql($sql)
 	{
-		$this->sql_exe($this->sql_clean_input($sql));
+		$this->sql_exe($this->sql_clean_input($sql), NULL);
 	}
 }
 

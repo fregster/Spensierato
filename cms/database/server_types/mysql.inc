@@ -38,8 +38,7 @@ class Database_mysql extends Database
 		//Mysql search
 		$sql = 'SELECT '.$this->sql_build_select_string($select).', (MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.") * 10) AS score FROM `".$this->prefix. $this->sql_clean_input($table).'` WHERE ( MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.') '.$where.' ) ORDER BY score '.$order.' LIMIT '.$from.', '.$to;
 		
-		$result = $this->sql_exe($sql, NULL);
-		return $result;
+		return database_execution::singleton()->sql_select_exe_run($this->sql_exe($sql, NULL));
 	}
 }
 ?>

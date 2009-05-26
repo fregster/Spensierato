@@ -48,11 +48,10 @@ _6=http.responseXML;
 return _6;
 };
 function searchFunction(){
-ajaxGet(ajax_host+"/search?s=",document.forms.searchform.elements.searchtext.value);
-document.forms.searchform.elements.searchtext.value="";
+ajaxGet(ajax_host+"/search?searchtext=",document.forms.searchform.elements.searchtext.value);
 http.onreadystatechange=function(){
-if(http.readyState==4){
-document.getElementById("page_section_main").innerHTML=http.responseText;
+if(http.readyState==4){	
+document.getElementById("ajaxSearchResults").innerHTML=http.responseText;
 }
 };
 };
@@ -366,6 +365,11 @@ for(i=1;i<4;i++){
 hex+=("0"+parseInt(_4f[i]).toString(16)).slice(-2);
 }
 return "#"+hex;
+};
+var t;
+function delayedSearch(){
+clearTimeout(t);
+t=setTimeout("searchFunction()",1000);
 };
 
 init();

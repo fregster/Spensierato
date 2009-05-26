@@ -3,11 +3,13 @@
 		<xsl:if test="page/settings/search = '1'">
 			<form action="/643/search" id="searchform" method="GET">
 				<div id="search">
-					<input type="text" id="searchtext" name="searchtext" />
+					<input type="text" id="searchtext" name="searchtext" onkeyup="delayedSearch();"/>
 					<!-- <input type="button" id="searchbutton" name="searchbutton" value="Find" onclick="javascript:searchFunction();" /> -->
 					<input type="submit" id="searchbutton" name="searchbutton" value="Find" />
 				</div>
 			</form>
+			<div id="ajaxSearchResults">
+			</div>
 		</xsl:if>
 	</xsl:template>
 	

@@ -30,7 +30,7 @@ abstract class ajax
 				
 			case 'search':
 				header('content-type: text/xml');
-				die(search::singleton()->search(get::variable('searchtext')));
+				die(search::singleton()->search(get::variable('searchtext'), null, 5));
 
 			default:
 				print_r($vars);

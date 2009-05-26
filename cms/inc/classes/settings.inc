@@ -21,7 +21,7 @@ class Settings
 	{
 		//Force some default settings
 		$document_root = Common::document_root();
-		$this->new_setting('static_host_ajax', $document_root);
+		$this->new_setting('static_host_ajax', $document_root.'/ajax');
 
 		$this->new_setting('static_host_skin', $document_root);
 

@@ -38,8 +38,7 @@ class Search
 	}
 
 	function __construct(){
-		$this->time = time();
-		$this->drop = $this->page * $this->results_per_page;
+		
 	}
 
 	public function __clone()
@@ -56,13 +55,19 @@ class Search
 	 */
 	public function search($string, $element_types = NULL, $results_per_page = 20, $page = 0, $boolean = false)
 	{
-		$this->results_per_page = $results_per_page;
-		$this->boolean = $boolean;
-		$this->string = strtolower($string);
-		$this->tokens = explode(' ', $this->string);		
-		$this->get_results();
-		$this->highlight();
-		return($this->build_xml());
+		if(Settings::singleton()->get_setting('search'))
+		{
+			$this->time = time();
+			$this->results_per_page = $results_per_page;
+			$this->page = $page;
+			$this->drop = $this->page * $this->results_per_page;
+			$this->boolean = $boolean;
+			$this->string = strtolower($string);
+			$this->tokens = explode(' ', $this->string);		
+			$this->get_results();
+			$this->highlight();
+			return($this->build_xml());
+		}
 	}
 
 	private function highlight()
@@ -160,10 +165,6 @@ class Search
 				$this->element_to_page[$page['element_id']][] = $page['page_id'];
 			}
 		}
-//		print_r($this->element_to_page);
-//		print_r($this->page_to_elements);
-//		print_r($pages);
-//		die();
 	}
 	
 	private function process_search_text($result)

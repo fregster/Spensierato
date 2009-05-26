@@ -340,6 +340,7 @@ class Security
 		return $default_security;
 	}
 	
+	//TODO Write this method!!
 	public function bulk_page_security_check($page_ids = array())
 	{
 		$result = array();

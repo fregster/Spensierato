@@ -597,7 +597,7 @@ class Database
 				if(is_array($where_values[$i]))
 				{
 					$count_or = count($where_values[$i]) -1;	
-					if($count_or > 0) //Skip if an empty array has been passed in
+					if($count_or >= 0) //Skip if an empty array has been passed in
 					{
 						$j = 0;
 						$sql_temp_where_or = '';

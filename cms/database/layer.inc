@@ -4,7 +4,7 @@ class Database
 	private $options = array('allow_external_calls' => true);
 	private static $instance;
 
-	private $prefix;
+	protected $prefix;
 	private $sql_db_type;
 	private $error_file = false;
 

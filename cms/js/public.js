@@ -48,7 +48,7 @@ _6=http.responseXML;
 return _6;
 };
 function searchFunction(){
-ajaxGet(ajax_host+"/tools/search?s=",document.forms.searchform.elements.searchtext.value);
+ajaxGet(ajax_host+"/search?s=",document.forms.searchform.elements.searchtext.value);
 document.forms.searchform.elements.searchtext.value="";
 http.onreadystatechange=function(){
 if(http.readyState==4){

@@ -471,110 +471,6 @@ abstract class Common
 	public static  function returnMIMEType($filename)
     {
      	return mimetypegetter::get($filename);
-//    	preg_match("|\.([a-z0-9]{2,4})$|i", $filename, $fileSuffix);
-//
-//        switch(strtolower($fileSuffix[1]))
-//        {
-//            case "js" :
-//                return "application/x-javascript";
-//
-//            case "json" :
-//                return "application/json";
-//
-//            case "jpg" :
-//            case "jpeg" :
-//            case "jpe" :
-//                return "image/jpg";
-//
-//            case "png" :
-//            case "gif" :
-//            case "bmp" :
-//            case "tiff" :
-//                return "image/".strtolower($fileSuffix[1]);
-//
-//            case "css" :
-//                return "text/css";
-//
-//            case "xml" :
-//                return "application/xml";
-//
-//            case "doc" :
-//            case "docx" :
-//                return "application/msword";
-//
-//            case "xls" :
-//            case "xlt" :
-//            case "xlm" :
-//            case "xld" :
-//            case "xla" :
-//            case "xlc" :
-//            case "xlw" :
-//            case "xll" :
-//                return "application/vnd.ms-excel";
-//
-//            case "ppt" :
-//            case "pps" :
-//                return "application/vnd.ms-powerpoint";
-//
-//            case "rtf" :
-//                return "application/rtf";
-//
-//            case "pdf" :
-//                return "application/pdf";
-//
-//            case "html" :
-//            case "htm" :
-//            case "php" :
-//                return "text/html";
-//
-//            case "txt" :
-//                return "text/plain";
-//
-//            case "mpeg" :
-//            case "mpg" :
-//            case "mpe" :
-//                return "video/mpeg";
-//
-//            case "mp3" :
-//                return "audio/mpeg3";
-//
-//            case "wav" :
-//                return "audio/wav";
-//
-//            case "aiff" :
-//            case "aif" :
-//                return "audio/aiff";
-//
-//            case "avi" :
-//                return "video/msvideo";
-//
-//            case "wmv" :
-//                return "video/x-ms-wmv";
-//
-//            case "mov" :
-//                return "video/quicktime";
-//
-//            case "zip" :
-//                return "application/zip";
-//
-//            case "tar" :
-//                return "application/x-tar";
-//
-//            case "swf" :
-//                return "application/x-shockwave-flash";
-//
-//             case "flv" :
-//                return "video/x-flv";
-//
-//            default :
-//            if(function_exists("mime_content_type"))
-//            {
-//                $fileSuffix = mime_content_type($filename);
-//            }
-//
-////            return "unknown/" . trim($fileSuffix[0], ".");
-//			return false;
-//        }
     }
 
     public static function rewrite_enabled()
@@ -600,6 +496,38 @@ abstract class Common
 	public static function mysql_stop_words_array()
 	{
 		return explode(', ', common::mysql_stop_words_string());
+	}
+	
+	public static function strip_external_xml_decleration($xml)
+	{
+		$stylesheet='<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+			<xsl:output omit-xml-declaration="yes" indent="yes"/>
+			<xsl:strip-space elements="*" />
+			
+				<xsl:template match="/">
+					 <xsl:copy-of select="*"/>
+				</xsl:template>
+		</xsl:stylesheet>';
+		
+		return render::singleton()->transform_xml_with_xslt($xml, $stylesheet);
+	}
+	
+	public static function spellcheck_array($words = array())
+	{
+		foreach($words as $key => $term)
+		{
+			$corrected = Common::spellcheck($term);
+			if($corrected != $term)
+			{
+				$words[$key] = $corrected;
+			}
+		}
+		return $words;
+	}
+	
+	public static function spellcheck($word)
+	{
+		
 	}
 }
 ?>

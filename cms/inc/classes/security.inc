@@ -339,6 +339,22 @@ class Security
 								);
 		return $default_security;
 	}
+	
+	public function bulk_page_security_check($page_ids = array())
+	{
+		$result = array();
+		//Get the securiy XML for each page we want
+		$security = '';
+		
+		//Run through each page and define the security set
+		foreach($page_ids as $id)
+		{
+			$result[$id] = 'view';
+		}
+		
+		//Return the array as page_id => security_level
+		return $result;
+	}
 
 	private function is_level($what)
 	{

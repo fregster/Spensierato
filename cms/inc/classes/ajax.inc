@@ -27,6 +27,10 @@ abstract class ajax
 			case 'login':
 				enhancedLogin::Singleton()->login();
 				break;
+				
+			case 'search':
+				header('content-type: text/xml');
+				die(search::singleton()->search(get::variable('searchtext')));
 
 			default:
 				print_r($vars);

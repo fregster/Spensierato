@@ -84,22 +84,8 @@ class elementRSS extends elementDefault
 			$x=simplexml_load_string($this->data);
 			$rss= $x->addChild('rss', ($this->rss_html));
 			$rss->addAttribute('type', 'html');
-			$this->data = $this->strip_external_xml_decleration($x->asXML()); 
+			$this->data = common::strip_external_xml_decleration($x->asXML()); 
 		}
-	}
-	
-	private function strip_external_xml_decleration($xml)
-	{
-		$stylesheet='<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-			<xsl:output omit-xml-declaration="yes" indent="yes"/>
-			<xsl:strip-space elements="*" />
-			
-				<xsl:template match="/">
-					 <xsl:copy-of select="*"/>
-				</xsl:template>
-		</xsl:stylesheet>';
-		
-		return render::singleton()->transform_xml_with_xslt($xml, $stylesheet);
 	}
 	
 	private function get_url_contents($url){

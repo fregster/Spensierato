@@ -274,7 +274,7 @@ class Menu
 			$i=1;
 			while($i <= $this->options['top_menu_depth'])
 			{
-				$result = Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('parent_id'), array($ids));
+				$result = Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('parent_id'), $ids);
 				$ids = array();
 				if(isset($result[0]))
 				{

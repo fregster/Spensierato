@@ -212,3 +212,32 @@
 		</xsl:element>
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
+	
+	<xsl:template match="element[@type = 'elementSearchResults']">
+		<xsl:for-each select="search/results/result">
+			<xsl:element name="div">
+				<xsl:attribute name="id">eid_<xsl:value-of select="id" /></xsl:attribute>
+				<xsl:attribute name="class">search_result</xsl:attribute>
+				
+				<div class="search_title">
+					<xsl:value-of select="position" /> : 
+					<xsl:element name="a">
+						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="page/result" /></xsl:attribute>
+						<xsl:value-of select="title" />
+					</xsl:element>
+				</div>
+				<div>
+					<xsl:value-of select="html" />
+					<br />
+					Score: <xsl:value-of select="score" /> features on 
+					<xsl:for-each select="page/result">
+						<xsl:element name="a">
+							<xsl:attribute name="class">search_link</xsl:attribute>
+							<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="." /></xsl:attribute>
+							<xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="." />
+						</xsl:element>
+					</xsl:for-each>
+				</div>
+			</xsl:element>
+		</xsl:for-each>
+	</xsl:template>

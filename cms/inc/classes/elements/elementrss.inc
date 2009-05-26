@@ -31,7 +31,7 @@ class elementRSS extends elementDefault
 		{
 			$this->xslt = @simplexml_load_string('<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
-<xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes" output omit-xml-declaration="yes"/>
+<xsl:output omit-xml-declaration="yes" encoding="UTF-8" indent="yes" />
 
 	<xsl:template match="/">
 		<div class="rss_title"><xsl:value-of select="//title"/></div>

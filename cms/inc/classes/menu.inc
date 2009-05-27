@@ -278,9 +278,13 @@ class Menu
 				$ids = array();
 				if(isset($result[0]))
 				{
-					foreach($result as $res)
+					foreach($result as $key => $res)
 					{
 						$ids[] = $res['id'];
+						if(isset($res['id']) && in_array($res['id'], $this->path))
+						{
+							$result[$key]['selected'] = true;
+						}
 					}
 					
 					$result['level'] = $i;

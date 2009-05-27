@@ -6,4 +6,5 @@ Settings::Singleton()->new_setting('template_header_graphic_right', 'prity-picut
 Settings::Singleton()->new_setting('template_header_graphic_background', 'prity-background.png');
 
 Settings::Singleton()->overwrite_setting('template_extends', 'default', false, true);
+
 ?>

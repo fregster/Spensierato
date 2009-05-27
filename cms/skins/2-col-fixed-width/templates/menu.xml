@@ -41,11 +41,11 @@
 		<div id="page_section_left_menu">
 			<xsl:for-each select="/page/menu/menu/top_menu/menu_item//menu_item">
 				<xsl:choose>
-					<xsl:when test="./id = /page/menu/menu/current/id">
+					<xsl:when test="id = /page/menu/menu/current/id">
 						<div id="menu_top_selected"><xsl:call-template name="menu_link"/></div>
 					</xsl:when>
-					<xsl:when test="./id = /page/menu/menu/parents//id">
-						<div id="menu_tab_selected"><xsl:call-template name="menu_link"/></div>
+					<xsl:when test="selected = 1">
+						<div id="menu_top_parent"><xsl:call-template name="menu_link"/></div>
 					</xsl:when>
 					<xsl:otherwise>
 						<div class="menu_top"><xsl:call-template name="menu_link"/></div>

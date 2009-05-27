@@ -119,7 +119,7 @@ class Register
 	private function send_registration()
 	{
 		$link = 'http://'.$_SERVER['SERVER_NAME'].Settings::singleton()->get_setting('document_root').'/register?id='.$this->id.'&key='.$this->hash;
-		$to =  post::variable('string','username').'<'. post::variable('string','email').'>';
+		$to =  post::variable('username','string').'<'. post::variable('email','string').'>';
 		$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
 
 		$subject = 'Registration at '.settings::singleton()->get_setting('site_name_long');

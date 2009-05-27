@@ -399,12 +399,11 @@ abstract class Common
 				}
 			}
 		}
-		else
-		{
+		else if (is_string($to)) {
 			$to_string = $to;
 		}
 
-		if(!isset($to_string))
+		if(!isset($to_string) || empty($to_string))
 		{
 			return false;
 		}
@@ -497,21 +496,21 @@ abstract class Common
 	{
 		return explode(', ', common::mysql_stop_words_string());
 	}
-	
+
 	public static function strip_external_xml_decleration($xml)
 	{
 		$stylesheet='<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 			<xsl:output omit-xml-declaration="yes" indent="yes"/>
 			<xsl:strip-space elements="*" />
-			
+
 				<xsl:template match="/">
 					 <xsl:copy-of select="*"/>
 				</xsl:template>
 		</xsl:stylesheet>';
-		
+
 		return render::singleton()->transform_xml_with_xslt($xml, $stylesheet);
 	}
-	
+
 	public static function spellcheck_array($words = array())
 	{
 		foreach($words as $key => $term)
@@ -524,10 +523,10 @@ abstract class Common
 		}
 		return $words;
 	}
-	
+
 	public static function spellcheck($word)
 	{
-		
+
 	}
 }
 ?>

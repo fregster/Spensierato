@@ -30,7 +30,7 @@ $default_charset = 'latin1';
  * [] - optional. leave blank if not required
  * '' - place holder for a string
  *
- * array((KEY|INDEX|UNIQUE [(KEY|INDEX)]) =>
+ * array((KEY|INDEX|UNIQUE|FULLTEXT [(KEY|INDEX)]) =>
  * 			array(['key_alias' =>]
  * 					array('col_name1', 'col_name2', ...) can contain any amount of columns
  * 			)
@@ -54,7 +54,7 @@ $tables['tbl_elements_data']['cols_define']['data'] = 'LONGTEXT';
 $tables['tbl_elements_data']['cols_define']['search'] = 'LONGTEXT';
 $tables['tbl_elements_data']['engine'] = $full_text_search_table_engine;
 $tables['tbl_elements_data']['charset'] = $default_charset;
-$tables['tbl_elements_data']['keys'] = array();
+$tables['tbl_elements_data']['keys'] = array('FULLTEXT' => array(array('search')));
 
 $tables['tbl_elements_draft']['cols_define']['data'] = 'LONGTEXT';
 $tables['tbl_elements_draft']['engine'] = $default_table_engine;

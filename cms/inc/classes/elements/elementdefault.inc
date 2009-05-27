@@ -232,12 +232,6 @@ class elementDefault
 		return database::Singleton()->sql_update_by_id($this->id, 'tbl_elements', array('deleted'), array($this->admin_mode_data['deleted']));
 	}
 
-	protected function generate_search($input)
-	{	//exchange </tag><tag> couples with spaces
-		$input = preg_replace('#</\w+><\w+>#', ' ', html_entity_decode($input));
-		return strip_tags($input);
-	}
-
 	//add extra data when in admin mode
 	public function admin($dom)
 	{

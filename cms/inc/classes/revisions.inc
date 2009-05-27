@@ -30,10 +30,12 @@ abstract class revisions{
 			//multi revisions get approved in revisions::multi_approve()
 			if (isset($data['id'])) {
 				database::singleton()->sql_update_by_id($data['id'], 'tbl_elements_revisions', array('approved'), array('1'));
+				$json_data = json_decode($data['data'], TRUE);
+				$data['search'] = self::generate_search($json_data['html']);
 			}
 
 			database::singleton()->sql_update_by_id($data['element_id'], 'tbl_elements', array('editor', 'edited', 'approver', 'approved', 'active_revision'), array($data['revisor'], $data['revised'], user::singleton()->id(), time(), $data['id']));
-			database::singleton()->sql_update_by_id($data['element_id'], 'tbl_elements_data', array('title', 'data'), array($data['title'], $data['data']));
+			database::singleton()->sql_update_by_id($data['element_id'], 'tbl_elements_data', array('title', 'data', 'search'), array($data['title'], $data['data'], $data['search']));
 		}
 	}
 
@@ -145,6 +147,12 @@ abstract class revisions{
 			}
 		}
 		return NULL;
+	}
+
+	private static function generate_search($input)
+	{	//exchange </tag><tag> couples with spaces
+		$input = preg_replace('#</\w+><\w+>#', ' ', html_entity_decode($input));
+		return strip_tags($input);
 	}
 }
 

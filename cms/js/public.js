@@ -50,26 +50,24 @@ return _6;
 function searchFunction(){
 ajaxGet(ajax_host+"/search?searchtext=",document.forms.searchform.elements.searchtext.value);
 http.onreadystatechange=function(){
-if(http.readyState==4){	
-/*document.getElementById("ajaxSearchResults").innerHTML=http.responseText;*/
+if(http.readyState==4){
 var txt='<div>Quick Search Results</div>';
 x=http.responseXML.documentElement.getElementsByTagName("result");
 for (i=0;i<x.length;i++)
-  {
-  xx=x[i].getElementsByTagName("title");
-    {
-    try
-      {
-    	alink=x[i].getElementsByTagName("page");
-    	alink=x[i].getElementsByTagName("result");
-      txt=txt + '<div class="search_title"><a href="'+alink[0].firstChild.nodeValue +'">' + xx[0].firstChild.nodeValue + "</a></div>";
-      }
-    catch (er)
-      {
-
-      }
-    }
-  }
+{
+xx=x[i].getElementsByTagName("title");
+{
+try
+{
+al=x[i].getElementsByTagName("page");
+al=x[i].getElementsByTagName("result");
+txt=txt + '<div class="search_title"><a href="'+al[0].firstChild.nodeValue +'">' + xx[0].firstChild.nodeValue + "</a></div>";
+}
+catch (er)
+{
+}
+}
+}
 document.getElementById("ajaxSearchResults").innerHTML=txt;
 }
 };

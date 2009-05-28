@@ -175,6 +175,19 @@ class Search
 		}
 	}
 
+	/**
+	 * process_search_text($result)
+	 * 
+	 * This processes each results search text from the database
+	 * It goes through the text looking for each key word and builds an array of there positions
+	 * It then goes through the text to each term, goes back X chars and then to the previous space (To get the complete word)
+	 * It then goes forwards from the term X letters, if it comes accross another term it goes X letters from that term until the string is complete
+	 * The string is then stored and the number of terms in that string is also sotred so that the most term rich strings can be displayed first
+	 * The final string is built by concaternation the relevent strings and escaped if it goes over the escape output length and is hard cut off at the max output length
+	 * 
+	 * @param $result
+	 * @return string
+	 */
 	private function process_search_text($result)
 	{
 		$number_of_letters = 40;
@@ -190,7 +203,7 @@ class Search
 
 		if($max_length >= $number_of_letters)
 		{
-			foreach($this->tokens as $term)
+			foreach($this->tokens as $term) //Run through the term and find the position of each term in the string
 			{
 				$termlen = strlen($term);
 				$pos=-1;
@@ -207,7 +220,7 @@ class Search
 			$end_position = 0;
 
 
-			foreach($word_position as $pos => $len)
+			foreach($word_position as $pos => $len) //For each word in the string
 			{
 				//Number of key words used in this sentance
 				$key_words = 1;
@@ -217,7 +230,7 @@ class Search
 				if($start_position < 0) { $start_position = 0; }
 
 				$current_char = '';
-				while($current_char != ' ' && $start_position > 0)
+				while($current_char != ' ' && $start_position > 0) //Keep steping back from the term in the string untill we get to a space (Complete word)
 				{
 					$current_char = $result[$start_position--];
 				}
@@ -225,12 +238,12 @@ class Search
 
 				$current_char = '';
 				$temp_position = $start_position;
-				while($current_char != '. ' && $temp_position < $pos)
+				while($current_char != '. ' && $temp_position < $pos) //Step forwards untill we get to the end of a sentance
 				{
 					$current_char = $result[$temp_position].$result[++$temp_position];
 				}
 				if($current_char == '. ') { $start_position = $temp_position; }
-				if($start_position < $end_position)
+				if($start_position < $end_position) //Check it does not turn out that were actually extending the previous string
 				{
 					//Trim the last three . from the output text as this is part of the same sentance
 					//TODO This might need some thinking about now we re-order the output.

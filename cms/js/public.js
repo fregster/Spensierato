@@ -51,7 +51,29 @@ function searchFunction(){
 ajaxGet(ajax_host+"/search?searchtext=",document.forms.searchform.elements.searchtext.value);
 http.onreadystatechange=function(){
 if(http.readyState==4){	
-document.getElementById("ajaxSearchResults").innerHTML=http.responseText;
+/*document.getElementById("ajaxSearchResults").innerHTML=http.responseText;*/
+
+txt="<div id=\"ajax_results\">";
+x=http.responseXML.documentElement.getElementsByTagName("result");
+for (i=0;i<x.length;i++)
+  {
+  txt=txt + "<div>";
+  xx=x[i].getElementsByTagName("title");
+    {
+    try
+      {
+    	alink=x[i].getElementsByTagName("page");
+      txt=txt + '<div class="search_title"><a href="'+alink[0].firstChild.nodeValue +'">' + xx[0].firstChild.nodeValue + "</a></div>";
+      }
+    catch (er)
+      {
+
+      }
+    }
+  txt=txt + "</div>";
+  }
+txt=txt + "</div>";
+document.getElementById("ajaxSearchResults").innerHTML.innerHTML=txt;
 }
 };
 };

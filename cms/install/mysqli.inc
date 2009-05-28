@@ -133,6 +133,9 @@ foreach ($tables as $table => $data){
 		if (is_string($alias_key)) {
 			$alias = $alias_key;
 		}
+		else{
+			$alias = '';
+		}
 		foreach ($key_data[$alias_key] as $column){
 			if (!array_key_exists($column, $data['cols_define'])) {
 				die('<br />Failed to create table '.$table.' due to an invalid '.$key_type.': '.$column);

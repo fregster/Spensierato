@@ -12,6 +12,7 @@ class Search
 	private $page; //Are we after a specific page of results. set in search() method
 	private $drop; //Do we need to drop X results? Used in paging ie $result_per_pag X $page
 	private $results_per_page; //set in search() method
+	private $return_summary;
 
 	//Vars used in processing
 	private	$droped;
@@ -62,17 +63,21 @@ class Search
 	 * 					1 = not documents
 	 * 					2 = elements with files only
 	 */
-	public function search($string, $element_types = NULL, $results_per_page = 20, $page = 0, $boolean = false)
+	public function search($string, $element_types = NULL, $results_per_page = 20, $page = 0, $boolean = false, $return_summery = true)
 	{
 		$this->time = time();
 		$this->results_per_page = $results_per_page;
+		$this->return_summary = $return_summery;
 		$this->page = $page;
 		$this->drop = $this->page * $this->results_per_page;
 		$this->boolean = $boolean;
 		$this->string = strtolower($string);
 		$this->tokens = explode(' ', $this->string);
 		$this->get_results();
-		$this->highlight();
+		if($this->return_summary)
+		{
+			$this->highlight();
+		}
 		return($this->build_xml());
 	}
 
@@ -103,7 +108,9 @@ class Search
 
 	private function get_results()
 	{
-		$results = Database::singleton()->sql_search('tbl_elements_data', 'search', $this->string, array('id', 'search', 'title'), $this->boolean, null, null, $this->drop, $this->max_results_per_query);
+		$pull = array('id', 'title');
+		if($this->return_summary) { $pull[] = 'search'; }
+		$results = Database::singleton()->sql_search('tbl_elements_data', 'search', $this->string, $pull, $this->boolean, null, null, $this->drop, $this->max_results_per_query);
 
 		//FIXME there must be a quick way to get all the id's from this associate array but for the time been...
 		foreach($results as $r)

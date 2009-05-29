@@ -162,12 +162,7 @@ class Template
 	public function send_css()
 	{
 		if(is_file($this->css_path()))
-		{
-			// send the requisite header information and character set
-			Cache::headers_allow_cache($this->css_path(), true);
-			header ('Content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
-
-			
+		{			
 			$css_m_time = 0;
 			$css_files = Settings::Singleton()->get_setting('template_inherits_css');
 			if(!isset($css_files[0])){
@@ -175,13 +170,16 @@ class Template
 			}
 			$css_files[] = $this->css_path();
 			$css_paths = array();
+			$estring = '';
 			
 			foreach($css_files as $file)
 			{
 				$path = $this->get_file_path(basename($file));
 				$css_paths[] = $path;
+				$estring .= $path;
 				$css_m_time = max($css_m_time, filemtime($path));
 			}
+			$estring = md5($estring);
 
 			
 			$css = persistantcache::Singleton()->get('template_css');
@@ -197,6 +195,11 @@ class Template
 				
 				persistantcache::Singleton()->save('template_css', $css);
 			}
+			
+			// send the requisite header information and character set
+
+			header ('Content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
+			Cache::headers_allow_cache_dynamic('css', $css_m_time, $estring, true, 31536000, 31536000);
 
 			if(Settings::singleton()->get_setting('css_minify'))
 			{

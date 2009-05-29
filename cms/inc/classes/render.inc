@@ -156,7 +156,7 @@ class Render
 
 	public function send_css()
 	{
-		Cache::headers_allow_cache(Template::Singleton()->css_path(), true);
+//		Cache::headers_allow_cache(Template::Singleton()->css_path(), true);
 		$this->final_output(Template::Singleton()->send_css());
 		exit;
 	}

@@ -23,6 +23,7 @@ foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings:
 
 /**
  * Should the template also inherits any CSS files?
+ * array of css file names ie array('common.css', 'standard_sprite.css');
  */
 //Setting template_inherits_css
 //Settings::Singleton()->new_setting('template_inherits_css', true, false, true);

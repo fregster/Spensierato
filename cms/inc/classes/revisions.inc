@@ -152,7 +152,7 @@ abstract class revisions{
 	private static function generate_search($input)
 	{	//exchange </tag><tag> couples with spaces
 		$input = preg_replace('#</\w+><\w+>#', ' ', html_entity_decode($input));
-		return strip_tags($input);
+		return common::strip_non_alpha_numeric(strip_tags($input));
 	}
 }
 

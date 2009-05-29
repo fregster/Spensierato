@@ -36,7 +36,7 @@ class persistantcache
 {
 	private $encrypt_data = false;
 	private $encryption_key = 'mnbvcfde4567890poiuytrazsxv';
-	protected $max_cache_time = 30;
+	protected $max_cache_time = 300;
 	protected $max_object_size = 20480; //The string length of the serialized array
 	protected static $retry_time = 30; //Time in seconds before reworking out the best cache type
 

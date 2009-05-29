@@ -51,8 +51,10 @@ function searchFunction(){
 ajaxGet(ajax_host+"/search?searchtext=",document.forms.searchform.elements.searchtext.value);
 http.onreadystatechange=function(){
 if(http.readyState==4){
-var txt='<div>Quick Search Results</div>';
 x=http.responseXML.documentElement.getElementsByTagName("result");
+if(x.length>0)
+{
+var txt='<div>Quick Search Results</div>';
 for (i=0;i<x.length;i++)
 {
 xx=x[i].getElementsByTagName("title");
@@ -67,6 +69,9 @@ catch (er)
 {
 }
 }
+}
+}else{
+var txt='<div>No Search Results</div>';
 }
 document.getElementById("ajaxSearchResults").innerHTML=txt;
 }

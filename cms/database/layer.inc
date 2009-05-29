@@ -686,7 +686,12 @@ class Database
 		$theData = fread($fh, filesize($this->error_file));
 		fclose($fh);
 
-	    die(str_replace('***ERROR***', $message, $theData));
+		header('Content-Type: text/html');
+		header('HTTP/1.0 500 Internal Server Error (Database)', true, 500);
+		
+		$strip_from_message = array($this->prefix); //Expand with usernames, hosts etc
+		
+	    die(str_replace('***ERROR***', $message, str_replace($strip_from_message, '', $theData)));
 	}
 
 	protected function sql_update_exe($sql, $values = NULL, $destroy_cache = false)
@@ -780,7 +785,7 @@ class Database
 	{
 		if($this->memcached)
 		{
-			persistantcache::Singleton()->save($sql, array('time' => $this->time, 'result' => $result), 30);
+			persistantcache::Singleton()->save($sql, array('time' => $this->time, 'result' => $result), $this->sql_cache_max_time);
 		}
 		else
 		{

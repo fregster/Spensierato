@@ -429,7 +429,7 @@ class elementDefault
 	}
 
 	protected function build_data_xml(){
-		$this->data = common::array_to_xml_simple($this->data, 'data');
+		$this->data = stripslashes(common::array_to_xml_simple($this->data, 'data'));  //FIXME Should not need strip slashes here the database should return the data as we saved it
 
 		//FIXME: try to come up with a better way to add attributes to xml from arrays
 		foreach ($this->tags as $tag => $type){

@@ -97,11 +97,13 @@ class Search
 
 		$xml .= '
 <search starting="'.($this->drop +1).'" finishing="'.($this->drop + $this->results_in_set).'" page="'.($this->page+1).'" rpp="'.$this->results_per_page.'">
-	<string>'.$this->string.'</string><start>'.$this->time.'</start>';
+	<string>'.$this->string.'</string>';
+		
+//		$xml .= '<number_of_results>'.$this->results_in_set.'</number_of_results>';
 
 		$xml .= common::array_to_xml_simple($this->results, 'results', 'result');
 
-		$xml .= '<end>'.time().'</end></search>';
+		$xml .= '<time>'.(time()-$this->time).'</time></search>';
 
 		return $xml;
 	}

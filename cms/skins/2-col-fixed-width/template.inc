@@ -7,4 +7,5 @@ Settings::Singleton()->new_setting('template_header_graphic_background', 'prity-
 
 Settings::Singleton()->overwrite_setting('template_extends', 'default', false, true);
 
+Settings::Singleton()->new_setting('template_inherits_css', array('common.css', 'standard_sprite.css'), false, true);
 ?>

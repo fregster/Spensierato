@@ -65,18 +65,25 @@ class Template
 
 	public function get_file_content($file)
 	{
-		if(is_file($this->template_path.'/'.$file))
+		$path = $this->get_file_path($file);
+		if($path)
 		{
-			return Common::get_file_contents_as_string($this->template_path.'/'.$file);
-		}
-		else
-		{
-			if(is_file($this->default_path.'/'.$file))
-			{
-				return Common::get_file_contents_as_string($this->default_path.'/'.$file);
-			}
+			return Common::get_file_contents_as_string($path);
 		}
 		return '';
+	}
+	
+	public function get_file_path($file)
+	{
+		foreach($this->inherited_template_paths as $pos_path)
+		{
+			$path = $pos_path .'/'.$file;
+			if(file_exists($path))
+			{
+				return $path;
+			}
+		}
+		return false;
 	}
 
 	public function load()
@@ -160,10 +167,34 @@ class Template
 			Cache::headers_allow_cache($this->css_path(), true);
 			header ('Content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
 
-			$css = persistantcache::Singleton()->get('template_css');
-			if(!isset($css['mtime']) || $css['mtime'] != filemtime($this->css_path()))
+			
+			$css_m_time = 0;
+			$css_files = Settings::Singleton()->get_setting('template_inherits_css');
+			if(!isset($css_files[0])){
+				$css_files = array();
+			}
+			$css_files[] = $this->css_path();
+			$css_paths = array();
+			
+			foreach($css_files as $file)
 			{
-				$css = array('css' => file_get_contents($this->css_path()), 'mtime' => filemtime($this->css_path()));
+				$path = $this->get_file_path(basename($file));
+				$css_paths[] = $path;
+				$css_m_time = max($css_m_time, filemtime($path));
+			}
+
+			
+			$css = persistantcache::Singleton()->get('template_css');
+			
+			if(!isset($css['mtime']) || $css['mtime'] != $css_m_time || $css['paths'] != $css_paths)
+			{
+				$css = '@CHARSET "UTF-8";';
+				foreach($css_paths as $path)
+				{
+					$css .= str_replace('@CHARSET "UTF-8";', '', file_get_contents($path));
+				}
+				$css = array('css' => $css, 'mtime' => $css_m_time, 'paths' => $css_paths);
+				
 				persistantcache::Singleton()->save('template_css', $css);
 			}
 

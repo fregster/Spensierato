@@ -1,13 +1,16 @@
 
 	<xsl:template name="search">
 		<xsl:if test="page/settings/search = '1'">
-			<form action="/643/search" id="searchform" method="GET">
+			<xsl:element name="form">
+				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/search</xsl:attribute>
+				<xsl:attribute name="method">GET</xsl:attribute>
+				<xsl:attribute name="id">searchform</xsl:attribute>
 				<div id="search">
 					<input type="text" id="searchtext" name="searchtext" onkeyup="delayedSearch();"/>
 					<!-- <input type="button" id="searchbutton" name="searchbutton" value="Find" onclick="javascript:searchFunction();" /> -->
 					<input type="submit" id="searchbutton" name="searchbutton" value="Find" />
 				</div>
-			</form>
+			</xsl:element>
 			<div id="ajaxSearchResults">
 			</div>
 		</xsl:if>

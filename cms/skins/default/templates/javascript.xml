@@ -1,43 +1,26 @@
-		<xsl:template name="javascript">
-			<script type="text/javascript">
-var document_root = '<xsl:value-of select="/page/settings/document_root" />';
-var js_host = '<xsl:value-of select="/page/settings/static_host_js" />';
-var js_local = '<xsl:value-of select="/page/settings/site_folder_js" />';
-var ajax_host = '<xsl:value-of select="/page/settings/static_host_ajax" />';
-var img_host = document_root+'/skin/pre-load-images/';
-var current_page = '<xsl:value-of select="/page/@id" />';
-var js = document.createElement('script');
-var h = document.getElementsByTagName('head')[0];	
-					<xsl:if test="count(/page/settings/pre_load_images/setting) > 0"><!-- set pre-loading image list -->
-var i = new Array();
-<xsl:for-each select="/page/settings/pre_load_images/setting">i[<xsl:value-of select="position() -1" />]=img_host+'<xsl:value-of select="."/>';
-</xsl:for-each>
-					</xsl:if>
+<xsl:template name="javascript-external">
+
+<xsl:element name="script">
+<xsl:attribute name="type">text/javascript</xsl:attribute>
+<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" /><xsl:choose>					
+<xsl:when test="/page/user/id != 0">
+<!-- User logged in -->
+<xsl:choose>
+<xsl:when test="/page/options/admin_mode = 1"><!-- User logged in and in admin mode-->mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js,admin.js</xsl:when>
+<xsl:otherwise><!-- User logged in and NOT in admin mode-->mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js</xsl:otherwise>
+</xsl:choose>
+</xsl:when>
+<xsl:otherwise><!-- User Not logged in -->mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js</xsl:otherwise>
+</xsl:choose>
+</xsl:attribute>
+</xsl:element>
+</xsl:template>
+
+<xsl:template name="javascript-inline">
+<script type="text/javascript">
+var document_root = '<xsl:value-of select="/page/settings/document_root" />'; var js_host = '<xsl:value-of select="/page/settings/static_host_js" />'; var js_local = '<xsl:value-of select="/page/settings/site_folder_js" />'; var ajax_host = '<xsl:value-of select="/page/settings/static_host_ajax" />'; var img_host = document_root+'/skin/pre-load-images/'; var current_page = '<xsl:value-of select="/page/@id" />'; 
+<xsl:if test="count(/page/settings/pre_load_images/setting) > 0"><!-- set pre-loading image list --> var i = new Array(); <xsl:for-each select="/page/settings/pre_load_images/setting">i[<xsl:value-of select="position() -1" />]=img_host+'<xsl:value-of select="."/>'; </xsl:for-each></xsl:if>
 function returnRefresh(){ window.top.document.body.innerHTML = ''; window.top.location = document_root+'/'+current_page; };
-				
-			<xsl:choose>					
-				<xsl:when test="/page/user/id != 0">
-				<!-- User logged in -->
-					<xsl:choose>
-						<xsl:when test="/page/options/admin_mode = 1">
-							<!-- User logged in and in admin mode-->
-js.src = js_local+'mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js,admin.js';
-						</xsl:when>
-					
-						<xsl:otherwise>
-							<!-- User logged in and NOT in admin mode-->
-js.src = js_local+'mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js,logged_in.js';
-					</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				
-				<xsl:otherwise>
-					<!-- User Not logged in -->
-js.src = js_local+'mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more-yc.js,public.js';
-				</xsl:otherwise>
-				
-				</xsl:choose>
-h.appendChild(js);
-<xsl:if test="/page/options/display_warnings = 1"><xsl:if test="/page/warnings/warning">var n='The site has configuration problems';</xsl:if></xsl:if>
-				</script>
-		</xsl:template>
+<xsl:if test="/page/options/display_warnings = 1"><xsl:if test="/page/warnings/warning">var n='The site has configuration problems';</xsl:if></xsl:if>	
+</script>
+</xsl:template>

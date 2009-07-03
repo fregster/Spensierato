@@ -225,6 +225,10 @@ class Template
 		{
 			$footer = '<div id="page_section_footer">Page rendered client side</div>';
 		}
+		else if(Settings::singleton()->get_setting('template_footer_text'))
+		{
+			$footer = Settings::singleton()->get_setting('template_footer_text');
+		}
 		else
 		{
 			/* call end CMS CMS::Singleton()->end_cms() to work out page generation times and replace the footer text */

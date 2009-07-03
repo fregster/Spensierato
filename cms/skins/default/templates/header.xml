@@ -20,9 +20,9 @@
 				</xsl:element>
 				</xsl:if>
 	
-				<xsl:call-template name="javascript"/>
-				
+				<xsl:call-template name="javascript-inline"/>
 				<xsl:call-template name="stylesheet"/>
+				<xsl:call-template name="javascript-external"/>
 				
 				<xsl:for-each select="/page/settings/header_extra/setting">
 					 <xsl:element name="{tag}">

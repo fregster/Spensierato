@@ -38,7 +38,7 @@ class warnings
 		//Check paths are writable
 		$paths = array( Settings::singleton()->get_setting('cms_folder_uploads'),
 						Settings::singleton()->get_setting('cms_folder_downloads'),
-						Settings::singleton()->get_setting('cms_folder_orig_images')
+						Settings::singleton()->get_setting('cms_folder_orig_images'),
 					);
 
 		foreach($paths as $path)

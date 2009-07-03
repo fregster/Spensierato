@@ -130,6 +130,12 @@ Settings::Singleton()->new_setting('css_minify', true, false, true);
 //true / false
 Settings::Singleton()->new_setting('search', true);
 
+//Setting use_lucence_search
+//Allow the use of the zend version of lucence which is a filesystem based index, oftern faster and more reliable than MySQL 
+//Does not require any specific database code so is more cross platform complient
+//true / false
+Settings::Singleton()->new_setting('use_lucence_search', true, false, true);
+
 //Setting related_pages
 //Allow site related_pages searching
 //true / false

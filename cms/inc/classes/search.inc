@@ -2,6 +2,7 @@
 class Search
 {
 	private static $instance;
+	private $lucene_search = false;
 
 	private $tokens = array(); //Array of search words
 	private $max_results = 20; //Maximum number of result the method will return
@@ -43,12 +44,38 @@ class Search
 			return NULL; //should we return false here?
 		}
 	}
+	
+	public static function lucence()
+	{
+		//Can we use lucene search?
+		if(Settings::singleton()->get_setting('use_lucence_search'))
+		{
+			if(is_readable(Settings::singleton()->get_setting('cms_folder_logs').'search_index/segments.gen'))
+			{
+	    		return true;
+			}
+			else if (is_writable(Settings::singleton()->get_setting('cms_folder_logs')))
+			{
+				if(Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index', true))
+				{
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 
 	private function __construct(){
 		//these values must be initialized to 0!
 		//Do not change these!
 		$this->dropped = 0;
 		$this->results_in_set = 0;
+		
+		if(search::lucence())
+		{
+			$this->lucene_search = new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index');
+		}
 	}
 
 	public function __clone()
@@ -84,18 +111,14 @@ class Search
 	private function highlight()
 	{
 		foreach($this->results as $key => $result){
-			$this->results[$key]['html'] = $this->process_search_text($result['search']);
+			$this->results[$key]['html'] = $this->process_search_text(stripslashes($result['search']));
 			unset($this->results[$key]['search']);
 		}
 	}
 
 	private function build_xml()
 	{
-		$xml = '';
-
-		$xml .= '<?xml version="1.0" encoding="utf-8"?>';
-
-		$xml .= '
+		$xml = '<?xml version="1.0" encoding="utf-8"?>
 <search starting="'.($this->drop +1).'" finishing="'.($this->drop + $this->results_in_set).'" page="'.($this->page+1).'" rpp="'.$this->results_per_page.'">
 	<string>'.$this->string.'</string>';
 		
@@ -109,18 +132,9 @@ class Search
 	}
 
 	private function get_results()
-	{
-		$pull = array('id', 'title');
-		if($this->return_summary) { $pull[] = 'search'; }
-		$results = Database::singleton()->sql_search('tbl_elements_data', 'search', $this->string, $pull, $this->boolean, null, null, $this->drop, $this->max_results_per_query);
-
-		//FIXME there must be a quick way to get all the id's from this associate array but for the time been...
-		foreach($results as $r)
-		{
-			$this->ids[] = $r['id'];
-		}
+	{		
+		$results = $this->get_results_from_index();
 		$this->build_link_array();
-
 		$security = security::Singleton()->bulk_page_security_check($this->ids);
 
 		//FIXME why have I forgoten how to work array's? anyway for PoC
@@ -157,6 +171,46 @@ class Search
 		{
 			$this->get_results();
 		}
+	}
+	
+	private function get_results_from_index()
+	{		
+		if($this->lucene_search !== false)
+		{
+			return $this->get_results_from_index_lucene();
+		}
+		
+		//Fall back to simple sql search
+		return get_results_from_index_sql();
+	}
+	
+	private function get_results_from_index_sql()
+	{
+		$pull = array('id', 'title');
+		if($this->return_summary) { $pull[] = 'search'; }
+		$results = Database::singleton()->sql_search('tbl_elements_data', 'search', $this->string, $pull, $this->boolean, null, null, $this->drop, $this->max_results_per_query);
+		
+	//FIXME there must be a quick way to get all the id's from this associate array but for the time been...
+		foreach($results as $r)
+		{
+			$this->ids[] = $r['id'];
+		}
+		return $results;
+	}
+	
+	private function get_results_from_index_lucene()
+	{
+		$results = array(); 
+		
+		foreach($this->lucene_search->find($this->string) as $r) //Loop through the results to format them in the required array style
+		{
+			$this->ids[] = $r->element_id;
+			$result = array('id' => $r->element_id, 'score' => $r->score, 'title' => $r->title);
+			if($this->return_summary) { $result['search'] = $r->search;}
+			$results[] = $result;
+		}
+		unset($result);
+		return $results;
 	}
 
 	private function build_link_array()

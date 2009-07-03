@@ -24,11 +24,26 @@ function __autoload($class_name)
 		$class_name = strtolower($class_name);
 		$class_filename = $class_name;
 		$exploded_class = explode('_', $class_name);
-		if(isset($exploded_class[1])) 
+		if(isset($exploded_class[1])) //The class is in a folder 
 		{ 
-			$paths[] = $include_path.'/cms/inc/classes/'.$exploded_class[0].'/';
-			$class_filename = $exploded_class[1];
+			$folder_count = count($exploded_class) -1;
+			$temp_path = $include_path.'/cms/inc/classes/';
+			$temp_path_ucfirst = $include_path.'/cms/inc/external/'; //For Zend plugins etc
+			$class_filename = $exploded_class[($folder_count)];
+			array_pop($exploded_class);
+			foreach($exploded_class as $folder)
+			{
+				$temp_path .= $folder . '/'; //Spensieratos default filesystem in always lowercase
+				$temp_path_ucfirst .= ucfirst($folder) . '/'; //Useful for Zend plugins
+			}
+			$paths[] = $temp_path;
+			$paths[] = $temp_path_ucfirst;
+			
+			unset($temp_path);
+			unset($temp_path_ucfirst);
+			unset($folder_count);
 		 }
+		 unset($exploded_class);
 		
 		$paths[] =	$include_path.'/cms/inc/classes/';
 		$paths[] =	$include_path.'/cms/inc/classes/elements/';
@@ -36,15 +51,27 @@ function __autoload($class_name)
 					
 		foreach($paths as $path) //Cycle through the includes dir in order of preference
 		{
-			if(file_exists($path.$class_filename.'.inc')) //Check the file exists
+			$file_ext = array('inc', 'php');
+			foreach($file_ext as $ext)
 			{
-				if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
-					require_once $path.$class_filename.'.inc';
-				if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
-					return true;
+				if(file_exists($path.$class_filename.'.'.$ext)) //Check the file exists
+				{
+					if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
+						require_once $path.$class_filename.'.'.$ext;
+					if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
+						return true;
+				}
+				else if(file_exists($path.ucfirst($class_filename).'.'.$ext)) //Really for Zend stuff
+				{
+					if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
+						require_once $path.ucfirst($class_filename).'.'.$ext;
+					if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
+						return true;
+				}
 			}
 		}
-		
+		print_r($paths);
+		echo($class_filename);
 		die('<p>Critical error: Class "'.$class_name.'" not defined</p>'); //A class has been called the can not be loaded
 	}
 	return false; //Should never really get here
@@ -63,4 +90,25 @@ function get_extended_class_path($base_class, $new_class)
 
 	return($include_path.'/cms/inc/classes/'.$base_class.'/'.$class_filename.'.inc');
 }
+
+
+$extra_include_paths = array($include_path . '/cms/inc/external/');
+
+foreach ($extra_include_paths AS $path)
+{
+	if (!file_exists($path) OR (file_exists($path) && filetype($path) !== 'dir'))
+	{
+		trigger_error("Include path '{$path}' not exists", E_USER_WARNING);
+		continue;
+	}
+       
+	$paths = explode(PATH_SEPARATOR, get_include_path());
+		
+	if (array_search($path, $paths) === false)
+		array_push($paths, $path);
+       
+	set_include_path(implode(PATH_SEPARATOR, $paths));
+}
+unset($extra_include_paths);
+
 ?>

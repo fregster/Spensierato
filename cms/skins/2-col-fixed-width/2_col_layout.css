@@ -1,0 +1,36 @@
+body{height:100%;}
+#block_1{float:left; width:200px; text-align:left}
+#block_2{float:left; width:700px; min-height:500px; text-align:left}
+#block_1, #block_2{padding-bottom:32767px !important; margin-bottom:-32767px !important}
+.verticalalign{position:absolute; bottom:0}
+#block_1 .verticalalign{width:200px}
+#block_2 .verticalalign{width:700px}
+@media all and (min-width:0px){.verticalalign{width:100% !important}
+div[id^="wrapper"] #block_1 .verticalalign{width:200px !important}
+div[id^="wrapper"] #block_2 .verticalalign{width:700px !important}
+}
+* html .verticalalign{width:100% !important}
+.verticalalign p{position:absolute; bottom:0px; left:0px; margin:0px; padding:0px}
+#wrapper{margin-left:auto; margin-right:auto; width:900px; border:1px solid #ddd; position:relative; overflow:hidden}
+#wrapper{float:left; float:none}
+#wrapper:after{content:'[DO NOT LEAVE IT IS NOT REAL]'; display:block; height:0; clear:both; visibility:hidden}
+#wrapper{display:inline-block}
+#wrapper{display:block}
+#footer{clear:both}
+#header, #footer{width:900px}
+* >#footer, * >form, * >#notes, * >.output{position:relative; z-index:400}
+#site_frame{margin-left:auto; margin-right:auto; align:center; text-align:center; background-color:#FFF; width:902px}
+#page_section_left_menu{margin-left:4px; margin-right:4px; text-align:center; color:black}
+#banner_submenu{position:absoloute; bottom:3px; right:10px; margin-right:3px; text-align:right}
+#jump_to_contents{display:none}
+a.link_menu{color:black; text-decoration:none}
+a.link_menu:visited{}
+a.link_menu:hover{text-decoration:underline; color:#06F}
+#page_section_banner{width:900px; margin-left:auto; margin-right:auto; border:1px solid #ddd; border-bottom:none}
+#menu_children, .menu_children{border:#666; border:#333; border-collapse:collapse; border:1px; min-height:25px; font-variant: small-caps;}
+#menu_top_selected, .menu_top_selected{background-color:#CCC; border:#666; border-collapse:collapse; border:thin; min-height:25px; font-variant: small-caps;}
+#menu_top_parent, .menu_top_parent{background-color:#EEE; border:#666; border-collapse:collapse; border:thin; min-height:25px; font-variant: small-caps;}
+#menu_current{background-color:#DDD; border:#666; border-collapse:collapse; border:thin; min-height:30px; font-variant: small-caps;}
+#menu_tab, #menu_tab_selected, .menu_tab_selected, .menu_tab_parent, #menu_tab_parent{display:inline; min-height:25px; padding-left:5px; font-variant: small-caps}
+#menu_tab_selected{background-color:#CCC; padding-right:5px; min-width:50px}
+#menu_tab_parent{margin-right:5px; border:#DDD; border-top:1px; border-bottom:1px}

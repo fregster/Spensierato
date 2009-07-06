@@ -133,20 +133,23 @@ foreach ($tables as $table => $data){
 
 	//build non-primary key definitions, only if all key columns exist in cols_define
 	$keys = array();
-	foreach ($data['keys'] as $key_type => $key_data){
-		$alias_key = key($key_data);
-		if (is_string($alias_key)) {
-			$alias = $alias_key;
-		}
-		else{
-			$alias = '';
-		}
-		foreach ($key_data[$alias_key] as $column){
-			if (!array_key_exists($column, $data['cols_define'])) {
-				die('<br />Failed to create table '.$table.' due to an invalid '.$key_type.': '.$column);
+	if(isset($data['keys']))
+	{
+		foreach ($data['keys'] as $key_type => $key_data){
+			$alias_key = key($key_data);
+			if (is_string($alias_key)) {
+				$alias = $alias_key;
 			}
+			else{
+				$alias = '';
+			}
+			foreach ($key_data[$alias_key] as $column){
+				if (!array_key_exists($column, $data['cols_define'])) {
+					die('<br />Failed to create table '.$table.' due to an invalid '.$key_type.': '.$column);
+				}
+			}
+			$keys[] = $key_type.' '.$alias.' ('.implode(', ', $key_data[$alias_key]).')';
 		}
-		$keys[] = $key_type.' '.$alias.' ('.implode(', ', $key_data[$alias_key]).')';
 	}
 	unset($key_type, $key_data);
 	if (!empty($keys)) {

@@ -71,6 +71,7 @@ $tables['tbl_search'] = array(
 									'cols_define' =>
 										array(
 											'id' => 'INT UNSIGNED NOT NULL',
+											'title' => 'VARCHAR(128) NOT NULL',
 											'search' => 'TEXT NOT NULL',
 											'keywords' => 'TEXT',
 											'indexed' => "INT UNSIGNED DEFAULT '0'",

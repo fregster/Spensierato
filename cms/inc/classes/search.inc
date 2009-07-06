@@ -181,14 +181,14 @@ class Search
 		}
 		
 		//Fall back to simple sql search
-		return get_results_from_index_sql();
+		return $this->get_results_from_index_sql();
 	}
 	
 	private function get_results_from_index_sql()
 	{
 		$pull = array('id', 'title');
 		if($this->return_summary) { $pull[] = 'search'; }
-		$results = Database::singleton()->sql_search('tbl_elements_data', 'search', $this->string, $pull, $this->boolean, null, null, $this->drop, $this->max_results_per_query);
+		$results = Database::singleton()->sql_search('tbl_search', 'search', $this->string, $pull, $this->boolean, null, null, $this->drop, $this->max_results_per_query);
 		
 	//FIXME there must be a quick way to get all the id's from this associate array but for the time been...
 		foreach($results as $r)

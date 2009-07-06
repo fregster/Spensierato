@@ -50,11 +50,16 @@ $tables['tbl_elements']['engine'] = $default_table_engine;
 $tables['tbl_elements']['charset'] = $default_charset;
 $tables['tbl_elements']['keys'] = array();
 
-$tables['tbl_elements_data']['cols_define']['data'] = 'LONGTEXT';
-$tables['tbl_elements_data']['cols_define']['search'] = 'LONGTEXT';
-$tables['tbl_elements_data']['engine'] = $full_text_search_table_engine;
+$tables['tbl_elements_data']['engine'] = $default_table_engine;
 $tables['tbl_elements_data']['charset'] = $default_charset;
-$tables['tbl_elements_data']['keys'] = array('FULLTEXT' => array(array('search')));
+$tables['tbl_elements_data']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_temp']['keys'] = array();
+
+$tables['tbl_search']['engine'] = $full_text_search_table_engine;
+$tables['tbl_search']['charset'] = $default_charset;
+$tables['tbl_search']['cols_define']['search'] = 'LONGTEXT';
+$tables['tbl_search']['cols_define']['keywords'] = 'LONGTEXT';
+$tables['tbl_search']['keys'] = array('FULLTEXT' => array(array('search')));
 
 $tables['tbl_elements_draft']['cols_define']['data'] = 'LONGTEXT';
 $tables['tbl_elements_draft']['engine'] = $default_table_engine;

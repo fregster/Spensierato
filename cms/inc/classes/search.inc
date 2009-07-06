@@ -467,6 +467,41 @@ class Search
 
 	    return $text;
 	}
+	
+	public function add_to_index($id, $title, $text, $keywords = false)
+	{
+		/**
+		 * If were using the lucence search index update it now
+		 */
+		$lucence_indexed = 0;
+		if($this->lucene_search !== false)
+		{
+			$l_id = $this->lucene_search->find('element_id:' . $id);
+			if(is_numeric($l_id->id)) { $this->lucene_search->delete($l_id->id); }//Ensure we delete the old record
+		
+			$doc = new Zend_Search_Lucene_Document();
+			$doc->addField(Zend_Search_Lucene_Field::Keyword('element_id', $id));
+			$doc->addField(Zend_Search_Lucene_Field::Text('title', $title));
+			$doc->addField(Zend_Search_Lucene_Field::Text('search', $text));
+		
+			$fields = array('id', 'title', 'search', 'indexed');
+			$values = array($id, $title, $text, $lucence_indexed);
+			if($keywords !== false)
+			{
+				$doc->addField(Zend_Search_Lucene_Field::Text('keywords', $keywords));
+				$fields[] = 'keywords';
+				$values[] = $keywords;
+			}
+			$this->lucene_search->addDocument($doc);
+			
+			$lucence_indexed = 1;
+		}
+		
+		/**
+		 * Update the SQL search text
+		 */
+		database::singleton()->sql_update_or_insert('tbl_search', array('id'), array($id), $fields, $values);
+	}
 
 }
 ?>

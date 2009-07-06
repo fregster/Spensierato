@@ -31,11 +31,15 @@ abstract class revisions{
 			if (isset($data['id'])) {
 				database::singleton()->sql_update_by_id($data['id'], 'tbl_elements_revisions', array('approved'), array('1'));
 				$json_data = json_decode($data['data'], TRUE);
-				$data['search'] = self::generate_search($json_data['html']);
+//				$data['search'] = self::generate_search($data['search']);
 			}
 
 			database::singleton()->sql_update_by_id($data['element_id'], 'tbl_elements', array('editor', 'edited', 'approver', 'approved', 'active_revision'), array($data['revisor'], $data['revised'], user::singleton()->id(), time(), $data['id']));
-			database::singleton()->sql_update_by_id($data['element_id'], 'tbl_elements_data', array('title', 'data', 'search'), array($data['title'], $data['data'], $data['search']));
+			database::singleton()->sql_update_by_id($data['element_id'], 'tbl_elements_data', array('title', 'data'), array($data['title'], $data['data']));
+			if($data['search'])
+			{
+				search::singleton()->add_to_index($data['element_id'], $data['title'], $data['search']);
+			}
 		}
 	}
 

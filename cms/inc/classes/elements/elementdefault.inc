@@ -445,7 +445,7 @@ class elementDefault
 		}
 
 		$details = array_merge($this->admin_mode_data['save_data'], $this->attach_extra_data());
-
+		$search = $this->build_search_text($details);
 		//process the data being saved
 		foreach($details as $key => &$value)
 		{
@@ -475,7 +475,10 @@ class elementDefault
 			}
 		}
 
+//		$details['search'] &= $search;
 		$data = json_encode($details);
+		unset($details);
+//		unset($search);
 
 		if($draft)
 		{
@@ -488,7 +491,7 @@ class elementDefault
 
 			if ($this->save_upload()) {
 
-				$revision_id = database::Singleton()->sql_update_or_insert('tbl_elements_revisions', array('element_id', 'revisor', 'approved'), array($this->id, User::Singleton()->id(), '0'), array('element_id', 'data', 'title', 'revisor', 'revised'), array($this->id, $data, $this->title, User::Singleton()->id(), CMS::Singleton()->time()));
+				$revision_id = database::Singleton()->sql_update_or_insert('tbl_elements_revisions', array('element_id', 'revisor', 'approved'), array($this->id, User::Singleton()->id(), '0'), array('element_id', 'data', 'title', 'revisor', 'revised', 'search'), array($this->id, $data, $this->title, User::Singleton()->id(), CMS::Singleton()->time(), $search));
 
 				//save if has permissions
 				if (User::singleton()->is_admin() || (settings::singleton()->get_setting('content_auto_publish') && security::Singleton()->can_do('approve'))) {
@@ -521,6 +524,19 @@ class elementDefault
 			$this->admin_mode_data['draft'] = NULL;
 			$this->admin_mode_data['approve'] = NULL;
 		}
+	}
+	
+	/**
+	 * Generate the searchable text, this is done here as each element type might want to extend this
+	 * @param $details
+	 * @return unknown_type
+	 */
+	protected function build_search_text($details){
+		if(isset($this->allowed_tags['html']) and isset($details['html']))
+		{
+			return strip_tags($details['html']);
+		}
+		return false;
 	}
 }
 ?>

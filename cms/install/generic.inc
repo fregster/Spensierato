@@ -63,10 +63,20 @@ $tables['tbl_elements_data'] = array(
 											'id' => 'INT UNSIGNED NOT NULL',
 											'title' => 'VARCHAR(128) NOT NULL',
 											'data' => 'TEXT NOT NULL',
-											'search' => 'TEXT'
 											),
 									'primary_key' => 'id',
 									);
+
+$tables['tbl_search'] = array(
+									'cols_define' =>
+										array(
+											'id' => 'INT UNSIGNED NOT NULL',
+											'search' => 'TEXT NOT NULL',
+											'keywords' => 'TEXT',
+											'indexed' => "INT UNSIGNED DEFAULT '0'",
+											),
+									'primary_key' => 'id',
+									);							
 
 $tables['tbl_elements_draft'] = array(
 									'cols_define' =>

@@ -34,7 +34,8 @@ $tables['tbl_elements_revisions'] = array(
 													'title' => 'VARCHAR(128) NOT NULL',
 													'revisor' => 'INT UNSIGNED NOT NULL',
 													'revised' => 'INT UNSIGNED NOT NULL',
-													'approved' => "TINYINT DEFAULT '0'"
+													'approved' => "TINYINT DEFAULT '0'",
+													'search' => 'TEXT',
 												),
 											'primary_key' => 'id',
 											);

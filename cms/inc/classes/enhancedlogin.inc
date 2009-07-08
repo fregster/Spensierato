@@ -47,11 +47,11 @@ class enhancedLogin extends user
 		if($this->site_auth())
 		{
 			$this->do_login();
-			die('true');
+			die('1');
 		}
 
 		CMS::Singleton()->delete_session();
-		die('false');
+		die('0');
 	}
 
 	private function site_auth()

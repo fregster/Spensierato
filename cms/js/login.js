@@ -12,7 +12,7 @@ function jsSecureLogin() {
    	{
        	if(http.readyState==4)
 		{
-			if(http.responseText=='true')
+			if(http.responseText=='1')
 			{
 				window.location = document_root+'/'+current_page;
 			}

@@ -3,7 +3,7 @@ abstract class ajax
 {
 	public static function process($vars)
 	{
-		switch ($vars[1])
+		switch ($vars[2])
 		{
 			case 'edit':
 				self::edit($vars[2]);

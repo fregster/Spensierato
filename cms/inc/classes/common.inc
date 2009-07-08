@@ -528,5 +528,13 @@ abstract class Common
 	{
 
 	}
+	
+	public static function requires_session()
+	{
+		if(!common::cookie_check())
+		{
+			error::error('Cookies are required, please enable cookies and try again');
+		}
+	}
 }
 ?>

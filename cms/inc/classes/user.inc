@@ -99,7 +99,6 @@ class user
 	public function login()
 	{
 		$auth = $this->site_auth();
-
 		if($auth === true)
 		{
 			$this->do_login();

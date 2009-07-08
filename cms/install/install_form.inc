@@ -169,6 +169,13 @@ if(!Common::rewrite_enabled())
 			<div>Enable URL re-writing, <input type="checkbox" name="rewrite" checked="checked" /><br/>Ensure your server has this enabled for this host either by AllowOverride all in the directory config to load the htaccess file or by defining the URL rewriting directly in the directory config</div>
 		<?php } ?>
 		</div>
+		
+		<div id="email-options">
+			<div>SMTP Host: <input type="text" name="smtp_host" value="localhost" /></div>
+			<div>SMTP Port: <input type="text" name="smtp_port" value="25" /></div>
+			<div>SMTP Username: <input type="text" name="smtp_username" value="null" /></div>
+			<div>SMTP Password: <input type="text" name="smtp_password" value="null" /></div>
+		</div>
 	</div>
 
 	<div id="create"><input type="submit" value="Create Site" /></div>

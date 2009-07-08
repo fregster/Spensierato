@@ -195,6 +195,13 @@ $GLOBALS[\'allow_rewrite\'] = '. $rewrite.'; //Apache + mod rewrite gives clean 
 $GLOBALS[\'random_key\'] = \''.post::variable('random_key').'\'; //A random key used for generating more secure hash\'s
 $GLOBALS[\'server_os\'] = \''.$os.'\'; //Should be unix, windows or osx
 
+
+//Settings for email
+$GLOBALS[\'smtp_server\'] = '. post::variable('smtp_host').'; //Where should email submissions be sent
+$GLOBALS[\'smtp_port\'] = '. post::variable('smtp_port').';
+$GLOBALS[\'smtp_username\'] = '. post::variable('smtp_username').';
+$GLOBALS[\'smtp_password\'] = '. post::variable('smtp_password').';
+
 //Paths to folders in the filesystem
 $GLOBALS[\'cms_folder_uploads\'] = \''.$doc_root_prefix.post::variable('cms_folder_uploads').'\';
 $GLOBALS[\'cms_folder_downloads\'] = \''.$doc_root_prefix.post::variable('cms_folder_downloads').'\';

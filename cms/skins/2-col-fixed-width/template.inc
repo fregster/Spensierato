@@ -8,7 +8,7 @@ Settings::Singleton()->new_setting('template_header_graphic_background', 'prity-
 Settings::Singleton()->overwrite_setting('template_extends', 'default', false, true);
 
 $inherirted_css = Settings::Singleton()->get_setting('template_inherits_css');
-$include = array('common.css', 'sprite-minimal.css', '2_col_layout.css');
+$include = array('common.css', 'standard_sprite.css', '2_col_layout.css');
 if($inherirted_css)
 {
 	if(is_array($inherirted_css))

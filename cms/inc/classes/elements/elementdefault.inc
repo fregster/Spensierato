@@ -489,8 +489,8 @@ class elementDefault
 		{
 			database::Singleton()->sql_delete_where('tbl_elements_draft', array('element_id', 'user_id'), array($this->id, user::Singleton()->id()));
 
-			if ($this->save_upload()) {
-
+			if ($this->save_upload()) 
+			{
 				$revision_id = database::Singleton()->sql_update_or_insert('tbl_elements_revisions', array('element_id', 'revisor', 'approved'), array($this->id, User::Singleton()->id(), '0'), array('element_id', 'data', 'title', 'revisor', 'revised', 'search'), array($this->id, $data, $this->title, User::Singleton()->id(), CMS::Singleton()->time(), $search));
 
 				//save if has permissions
@@ -532,9 +532,9 @@ class elementDefault
 	 * @return unknown_type
 	 */
 	protected function build_search_text($details){
-		if(isset($this->allowed_tags['html']) and isset($details['html']))
+		if(isset($this->tags['html']) and isset($details['html']))
 		{
-			return strip_tags($details['html']);
+			return common::strip_non_alpha_numeric(strip_tags($details['html']));
 		}
 		return false;
 	}

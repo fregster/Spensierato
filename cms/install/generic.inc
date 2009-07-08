@@ -75,6 +75,7 @@ $tables['tbl_search'] = array(
 											'search' => 'TEXT NOT NULL',
 											'keywords' => 'TEXT',
 											'indexed' => "INT UNSIGNED DEFAULT '0'",
+											'file' => "INT UNSIGNED DEFAULT '0'",
 											),
 									'primary_key' => 'id',
 									);							

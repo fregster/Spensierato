@@ -171,7 +171,6 @@ class Template
 			$css_files[] = $this->css_path();
 			$css_paths = array();
 			$estring = '';
-			
 			foreach($css_files as $file)
 			{
 				$path = $this->get_file_path(basename($file));
@@ -179,9 +178,7 @@ class Template
 				$estring .= $path;
 				$css_m_time = max($css_m_time, filemtime($path));
 			}
-			$estring = md5($estring);
-
-			
+			$estring = md5($estring);			
 			$css = persistantcache::Singleton()->get('template_css');
 			
 			if(!isset($css['mtime']) || $css['mtime'] != $css_m_time || $css['paths'] != $css_paths)

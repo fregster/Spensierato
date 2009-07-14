@@ -1,6 +1,5 @@
 <?php
 if (!user::Singleton()->is_admin()) common::bounce_to_referer();
-die('Out of date');
 if(is_writable(Settings::singleton()->get_setting('cms_folder_logs'))) //Is the log folder writable
 {
 	//Can we use lucene search?
@@ -13,40 +12,15 @@ if(is_writable(Settings::singleton()->get_setting('cms_folder_logs'))) //Is the 
 
 	
 	echo('<p>Creating New Index</p>');
-	$lucene_search = new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index', true);
+	new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index', true);
 	
-	if($_GET['purge'])
+	$pages = Database::Singleton()->sql_select(array('page_id'), 'tbl_page_elements', array('element_id'), array($id));
+	foreach($pages as $page)
 	{
-		for ($count = 0; $count < $lucene_search->maxDoc(); $count++)
-		{
-			$lucene_search->delete($count);
-		    if($lucene_search->isDeleted($count)) 
-		    {
-		        echo "Document #$count is deleted.\n";
-		    }
-		}
+		$this->build_page_index($page['page_id']);
 	}
 	
-	//Get all the search text from the db
-	$result = database::singleton()->sql_select(array('id', 'file', 'title', 'search'), 'tbl_search');
-	foreach($result as $item)
-	{
-		$doc = new Zend_Search_Lucene_Document();
-		$doc->addField(Zend_Search_Lucene_Field::Keyword('search_id', $item['id']));
-		$doc->addField(Zend_Search_Lucene_Field::Text('title', $item['title']));
-		$doc->addField(Zend_Search_Lucene_Field::Text('search', $item['search']));
-		$doc->addField(Zend_Search_Lucene_Field::Text('file', $item['file']));
-		
-		$l_id = $lucene_search->find('search_id:' . $item['id']);
-		if(is_numeric($l_id->id)) { $lucene_search->delete($l_id->id); }//Ensure we delete the old record
-		
-		$lucene_search->addDocument($doc);
-		database::singleton()->sql_update_or_insert('tbl_search', array('id'), array($item['id']), array('indexed'), array(1));
-	}
-	
-	$lucene_search->optimize();
-	
-	common::bounce_to_referer();
+//	common::bounce_to_referer();
 	die('done');
 	
 }

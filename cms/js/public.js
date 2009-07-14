@@ -62,7 +62,6 @@ xx=x[i].getElementsByTagName("title");
 try
 {
 al=x[i].getElementsByTagName("page");
-al=x[i].getElementsByTagName("result");
 txt=txt + '<div class="search_title"><a href="'+al[0].firstChild.nodeValue +'">' + xx[0].firstChild.nodeValue + "</a></div>";
 }
 catch (er)

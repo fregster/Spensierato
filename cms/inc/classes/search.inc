@@ -134,7 +134,7 @@ class Search
 	private function get_results()
 	{		
 		$results = $this->get_results_from_index();
-		$this->build_link_array();
+//		$this->build_link_array();
 		$security = security::Singleton()->bulk_page_security_check($this->ids);
 
 		//FIXME why have I forgoten how to work array's? anyway for PoC
@@ -156,7 +156,6 @@ class Search
 					//We do have permission to view it so push the result into the final results array
 					$results[$key]['score'] = round($results[$key]['score'], 1); //Tidy up the result score
 					$results[$key]['position'] = $key + $this->drop + 1;
-					$results[$key]['page'] = $this->element_to_page[$id];
 					$this->results[] = $results[$key];
 					++$this->results_in_set;
 					if($this->results_in_set >= $this->results_per_page)
@@ -190,7 +189,7 @@ class Search
 		if($this->return_summary) { $pull[] = 'search'; }
 		$results = Database::singleton()->sql_search('tbl_search', 'search', $this->string, $pull, $this->boolean, null, null, $this->drop, $this->max_results_per_query);
 
-	//FIXME there must be a quick way to get all the id's from this associate array but for the time been...
+		//FIXME there must be a quick way to get all the id's from this associate array but for the time been...
 		foreach($results as $r)
 		{
 			$this->ids[] = $r['id'];
@@ -204,8 +203,16 @@ class Search
 		
 		foreach($this->lucene_search->find($this->string) as $r) //Loop through the results to format them in the required array style
 		{
-			$this->ids[] = $r->element_id;
+			$page = $r->element_id;
 			$result = array('id' => $r->element_id, 'score' => $r->score, 'title' => $r->title);
+			if(@$r->file) //If this result is a file
+			{
+				$result = database::singleton()->sql_select_first(array('page_id'), 'tbl_page_elements', array('element_id'), array($r->element_id), array('main'));
+				$page = $result['page_id'];
+				$result['file'] = true;
+			}
+			$this->ids[] = $page;
+			$result['page'] = $page;
 			if($this->return_summary) { $result['search'] = $r->search;}
 			$results[] = $result;
 		}
@@ -549,17 +556,13 @@ class Search
 		return $text;
 	}
 	
-	private function add_to_lucene($id, $file, $title, $text)
+	private function add_to_lucene($id, $file, $title, $text, $keywords = false)
 	{
 		if($this->lucene_search !== false)
 		{
-			$keyword = 'page_id';
-			if($file == 1)
-			{
-				$keyword = 'file';
-			}
 			$doc = new Zend_Search_Lucene_Document();
-			$doc->addField(Zend_Search_Lucene_Field::Keyword($keyword, $id));
+			$doc->addField(Zend_Search_Lucene_Field::Keyword('element_id', $id));
+			$doc->addField(Zend_Search_Lucene_Field::Text('file', $file));
 			$doc->addField(Zend_Search_Lucene_Field::Text('title', $title));
 			$doc->addField(Zend_Search_Lucene_Field::Text('search', $text));
 		

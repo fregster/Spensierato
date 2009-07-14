@@ -853,10 +853,21 @@ class Database
 		$sql = rtrim($sql, ',') .')';
 		$this->sql_exe($sql, NULL, true, true);
 	}
-
+	
+	/**
+	 * 
+	 */
 	public function direct_sql($sql)
 	{
 		$this->sql_exe($this->sql_clean_input($sql), NULL);
+	}
+	
+	/**
+	 * 
+	 */
+	public function get_schema()
+	{
+
 	}
 }
 

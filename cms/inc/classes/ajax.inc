@@ -33,7 +33,6 @@ abstract class ajax
 				die(search::singleton()->search(get::variable('searchtext'), null, 5, 0, false, false));
 
 			default:
-				print_r($vars);
 				die();
 				break;
 		}

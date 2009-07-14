@@ -40,17 +40,19 @@
 
 	<xsl:template name="menu">
 		<div id="page_section_left_menu" class="rounded">
-			<xsl:for-each select="/page/menu/menu/top/menu_item">
-				<xsl:choose>
-					<xsl:when test="selected">
-						<div id="menu_top_selected" class="rounded"><xsl:call-template name="menu_link"/></div>
-						<xsl:call-template name="menu_parents"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<div class="menu_top"><xsl:call-template name="menu_link"/></div>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:for-each>
+			<ul>
+				<xsl:for-each select="/page/menu/menu/top/menu_item">
+					<xsl:choose>
+						<xsl:when test="selected">
+							<li id="menu_top_selected" class="rounded"><xsl:call-template name="menu_link"/></li>
+							<xsl:call-template name="menu_parents"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<li class="menu_top"><xsl:call-template name="menu_link"/></li>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</ul>
 		</div>
 	</xsl:template>
 

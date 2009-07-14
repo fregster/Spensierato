@@ -138,7 +138,9 @@ $tables['tbl_pages'] = array(
 							array(
 								'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
 								'parent_id' => 'INT UNSIGNED NOT NULL',
+								'menu_type' => "TINYINT DEFAULT '0'",
 								'title' => 'VARCHAR(64) NOT NULL',
+								'icon' => 'TINYINT UNSIGNED',
 								'visible' => 'TINYINT UNSIGNED NOT NULL',
 								'deleted' => 'TINYINT UNSIGNED NOT NULL',
 								'sort' => 'INT(11) UNSIGNED NOT NULL',

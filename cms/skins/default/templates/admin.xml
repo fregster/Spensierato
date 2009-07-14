@@ -11,7 +11,17 @@
 								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/toggle/admin_mode</xsl:attribute>
 								Switch off Admin Mode
 							</xsl:element>
-							<xsl:if test="/page/user/administrator =1"> | Edit Site details | Edit Site Structure |
+							<xsl:if test="/page/user/administrator =1"> | 
+							<xsl:element name="a">
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/site_details</xsl:attribute>
+									<xsl:attribute name="class">submodal-500-600</xsl:attribute>
+									Edit Site details
+								</xsl:element> | 
+								<xsl:element name="a">
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/site_structure</xsl:attribute>
+									<xsl:attribute name="class">submodal-500-600</xsl:attribute>
+									Edit Site Structure
+								</xsl:element> |
 								<xsl:element name="img">
 										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 										<xsl:attribute name="class">sprite sprite-lock_edit</xsl:attribute>
@@ -44,7 +54,7 @@
 							</xsl:element>
 								<xsl:element name="a">
 									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/warnings</xsl:attribute>
-									<xsl:attribute name="class">submodal</xsl:attribute>
+									<xsl:attribute name="class">submodal-700-450</xsl:attribute>
 									View warnings
 								</xsl:element>
 
@@ -70,12 +80,14 @@
 				<xsl:when test="/page/@id != ''">
 				<xsl:if test="/page/@type = 'html'">
 					<xsl:if test="/page/security/can_approve =1">
+					<xsl:element name="div">
+								<xsl:attribute name="class">element_header rounded</xsl:attribute>
 						<xsl:element name="form">
+							<xsl:attribute name="style">display:inline;</xsl:attribute>
 							<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/update/<xsl:value-of select="/page/@id" /></xsl:attribute>
 							<xsl:attribute name="method">post</xsl:attribute>
 							<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
-							<xsl:element name="div">
-								<xsl:attribute name="class">element_header rounded</xsl:attribute>
+							<div style="display: inline">
 								Page Title
 								<xsl:element name="input">
 									<xsl:attribute name="type">text</xsl:attribute>
@@ -122,20 +134,32 @@
 										<xsl:attribute name="alt">Page Security</xsl:attribute>
 										<xsl:attribute name="title">Page Security</xsl:attribute>
 									</xsl:element>
-							</xsl:element> | 
-							
-							<xsl:element name="a">
-									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/page_security/<xsl:value-of select="/page/@id" /></xsl:attribute>
-									<xsl:attribute name="class">submodal-450-500</xsl:attribute>
-									<xsl:element name="img">
+							</xsl:element></div>
+							</xsl:element>
+							<xsl:if test="/page/security/can_approve = 1">
+							<div style="display:inline;">
+							<xsl:element name="form">
+								<xsl:attribute name="style">display:inline;</xsl:attribute>
+								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
+								<xsl:attribute name="method">post</xsl:attribute>
+								<xsl:attribute name="id">new_page_<xsl:value-of select="/page/@id" /></xsl:attribute>
+									<div style="display:inline;"><xsl:element name="input">
+										<xsl:attribute name="type">hidden</xsl:attribute>
+										<xsl:attribute name="value">newPage</xsl:attribute>
+										<xsl:attribute name="name">new_type</xsl:attribute>
+									</xsl:element> | 
+									<xsl:element name="input">
+										<xsl:attribute name="type">image</xsl:attribute>
 										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 										<xsl:attribute name="class">sprite sprite-page_white_add</xsl:attribute>
+										<xsl:attribute name="style">display:inline;</xsl:attribute>
 										<xsl:attribute name="alt">Add Child Page</xsl:attribute>
-										<xsl:attribute name="title">Add Child Page</xsl:attribute>
-									</xsl:element>
+									</xsl:element></div>
 							</xsl:element>
-							</xsl:element>
-						</xsl:element>
+							</div>
+						</xsl:if>
+						</xsl:element>					
+						
 						</xsl:if>
 						<xsl:element name="div">
 
@@ -166,7 +190,6 @@
 
 		<xsl:template name="new_element">
 			<select name="new_type">
-			<xsl:if test="/page/security/can_approve = 1"><option value="newPage">Child Page</option></xsl:if>
 				<xsl:for-each select="/page/settings/elementTypes/setting">
 					<xsl:element name="option">
 						<xsl:attribute name="value"><xsl:value-of select="./class" /></xsl:attribute>

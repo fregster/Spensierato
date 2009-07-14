@@ -1,7 +1,7 @@
 		<xsl:template name="menu_link">
 		<xsl:element name="a">
 			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="./id" /></xsl:attribute>
-			<xsl:attribute name="class">link_menu</xsl:attribute>
+			<xsl:attribute name="class">link_item</xsl:attribute>
 			<xsl:choose>
 			<xsl:when test="/page/options/admin_mode = 1">
 				<xsl:if test="visible != '1'">
@@ -39,19 +39,21 @@
 
 	<xsl:template name="menu">
 		<div id="page_section_left_menu">
-			<xsl:for-each select="/page/menu/menu/top_menu/menu_item//menu_item">
-				<xsl:choose>
-					<xsl:when test="id = /page/menu/menu/current/id">
-						<div id="menu_top_selected"><xsl:call-template name="menu_link"/></div>
-					</xsl:when>
-					<xsl:when test="selected = 1">
-						<div id="menu_top_parent"><xsl:call-template name="menu_link"/></div>
-					</xsl:when>
-					<xsl:otherwise>
-						<div class="menu_top"><xsl:call-template name="menu_link"/></div>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:for-each>
+			<ul class="link_menu">
+				<xsl:for-each select="/page/menu/menu/top_menu/menu_item//menu_item">
+					<xsl:choose>
+						<xsl:when test="id = /page/menu/menu/current/id">
+							<li id="menu_top_selected"><xsl:call-template name="menu_link"/></li>
+						</xsl:when>
+						<xsl:when test="selected = 1">
+							<li id="menu_top_parent"><xsl:call-template name="menu_link"/></li>
+						</xsl:when>
+						<xsl:otherwise>
+							<li class="menu_top"><xsl:call-template name="menu_link"/></li>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</ul>
 		</div>
 	</xsl:template>
 

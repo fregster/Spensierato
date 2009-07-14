@@ -77,7 +77,7 @@ e.rel="stylesheet";
 document.getElementsByTagName("head")[0].appendChild(e);
 };
 function dynamicjsloader(){
-dhtmlLoadCSS(js_host+"/css/submodal");
+dhtmlLoadCSS(js_host+"/skin/subModal.css");
 dhtmlLoadScript(js_host+"/js/submodal/submodal.js");
 };
 function adminInit(){

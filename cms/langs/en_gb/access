@@ -1,0 +1,239 @@
+<h2>Accessibility</h2>
+
+<p>This site uses Spensierato to help generate its content. Spensierato aims to maintain <a href="http://www.w3.org/">W3C</a> XHTML 1.0 Strict compliance and <a href="http://www.w3.org/WAI/">W3C level 1 Accessibility compatibility</a>. Please note that although every effort is made to maintain these standards they can not guaranteed full compliance all of the time.</p>
+
+<p>This site is predominantly text based, if you - or someone you know - require specifically tailored browser software to read or hear the text then the following link may be of use:</p>
+
+<p class="greenheader"><a name="download" id="download"></a><a href="http://www.w3.org/WAI/References/Browsing">Alternative browser tools</a></p>
+                
+<p>All text uses relative font sizes so text can be enlarged or reduced using the text size options available in visual browsers, some Spensierato skins offer the ability to do this using Javascript. Look for the A+ and A- to change the font size.</p>
+
+<p><a href="#textsettings">How do I change the text size of my browser?</a></p>
+                
+<p><strong>Other aspects of this site, configured for accessibility:</strong></p>
+
+<p>Tables normally have alternative descriptions for use in browsers for the partially sighted<br/><br/>Most images have ALT descriptions for speech based browsers</p>
+
+<p>Most navigation elements are plain text and we have provided text alternatives to graphics on the site.</p>
+
+<p><strong><a name="textsettings" id="textsettings"></a>Those with poor sight may be able to increase the size of the text on screen.</strong></p>
+
+<p><strong>See the table below, which outlines the procedure for most popular browsers.</strong></p>
+
+<p>If your browser is not listed in the table, the following general guideline may help: Looking under the "View" selection on the main menu, you should find an option called "Text Zoom" or "Text Magnification" or "Text Size" or "Font Size".</p>
+
+<p>From that point it should be relatively simple to find and select an additional sub menu option that adjusts text size to your needs.</p>
+
+<p>How to find out what Browser you are using: Generally this is found under the Help section of the browser tool bar under 'about' similar.</p>
+
+                <table class="data-table" summary="Instructions for increasing text size in a range of popular web browsers." width="450" border="1" cellpadding="3" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th class="col13" scope="col">
+
+                        Operating System
+                      </th>
+                      <th class="col23" scope="col">
+                        Browser
+                      </th>
+                      <th class="col33" scope="col">
+                        Instructions
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td class="col13">
+                        PC Windows
+                      </td>
+                      <td class="col23">
+                        Internet Explorer 3 and 4
+                      </td>
+                      <td class="col33">
+                        View &gt; Fonts
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13-shade">
+                        PC Windows
+                      </td>
+                      <td class="col23-shade">
+                        Internet Explorer 5+
+                      </td>
+                      <td class="col33-shade">
+                        View &gt; Text Size
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13">
+                        PC Windows
+                      </td>
+                      <td class="col23">
+                        K-meleon
+                      </td>
+                      <td class="col33">
+                        View &gt; Increase Font / Decrease Font
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13-shade">
+                        PC Windows
+                      </td>
+                      <td class="col23-shade">
+                        Mozilla
+                      </td>
+                      <td class="col33-shade">
+                        View &gt; Increase Text Size / Decrease Text Size
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13">
+                        PC Windows
+                      </td>
+                      <td class="col23">
+                        Netscape 6
+                      </td>
+                      <td class="col33">
+                        View &gt; Text Size
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13-shade">
+                        PC Windows
+                      </td>
+                      <td class="col23-shade">
+                        Netscape 7
+                      </td>
+                      <td class="col33-shade">
+                        View &gt; Text Zoom
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13">
+                        PC Windows
+                      </td>
+                      <td class="col23">
+                        Opera 5 and 6
+                      </td>
+                      <td class="col33">
+                        Use dropdown menu on 'progress' bar
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13-shade">
+                        PC Windows
+                      </td>
+                      <td class="col23-shade">
+                        Opera 7
+                      </td>
+                      <td class="col33-shade">
+                        View &gt; Zoom
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13">
+                        MAC
+                      </td>
+                      <td class="col23">
+                        I-Cab
+                      </td>
+                      <td class="col33">
+                        View &gt; Font Size
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13-shade">
+                        MAC
+                      </td>
+                      <td class="col23-shade">
+                        Internet Explorer 4.5
+                      </td>
+                      <td class="col33-shade">
+                        View &gt; Text Size
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13">
+                        MAC
+                      </td>
+                      <td class="col23">
+                        Internet Explorer 5+
+                      </td>
+                      <td class="col33">
+                        View &gt; Text Zoom
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13-shade">
+                        MAC
+                      </td>
+                      <td class="col23-shade">
+                        Netscape 4
+                      </td>
+                      <td class="col33-shade">
+                        View &gt; Increase/Decrease Font Size
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13">
+                        MAC
+                      </td>
+                      <td class="col23">
+                        Netscape 7
+                      </td>
+                      <td class="col33">
+                        View &gt; Text Zoom
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13-shade">
+                        MAC
+                      </td>
+                      <td class="col23-shade">
+                        Opera 5 and 6
+                      </td>
+                      <td class="col33-shade">
+                        Use dropdown menu on 'progress' bar
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13">
+                        MAC
+                      </td>
+                      <td class="col23">
+                        OmniWeb 4
+                      </td>
+                      <td class="col33">
+                        Browser &gt; Bigger Text / Smaller Text
+                      </td>
+
+                    </tr>
+                    <tr>
+                      <td class="col13-shade">
+                        MAC
+                      </td>
+                      <td class="col23-shade">
+                        Safari
+                      </td>
+                      <td class="col33-shade">
+                        View &gt; Text Size
+                      </td>
+                     </tr>
+                    </tbody>
+                   </table>
+<p><a href="http://www.spensierato.net">Spensierato</a></p>

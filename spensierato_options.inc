@@ -24,7 +24,7 @@ Settings::Singleton()->new_setting('site_name_short', 'Spensierato');
 
 //Setting site_lang
 //For language template (Not implemented)
-Settings::Singleton()->new_setting('site_lang', 'en');
+Settings::Singleton()->new_setting('site_lang', 'en_gb');
 
 //Setting meta_description
 //
@@ -85,6 +85,14 @@ Settings::Singleton()->new_setting('show_help', true);
 //Setting show_access
 //true / false
 Settings::Singleton()->new_setting('show_access', true);
+
+//Setting show_shop
+//If a product page has been created automaticly add the shop option to the menu
+Settings::Singleton()->new_setting('show_shop', true, false, true);
+
+//Setting shop_menu_name
+//Menu name for the shop
+Settings::Singleton()->new_setting('shop_menu_name', 'Shop', false, true);
 
 //Setting skin
 //Set this to the path of the skin you wish to use

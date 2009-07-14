@@ -15,8 +15,7 @@ class elementAccess extends elementDefault
 
 	protected function get_data()
 	{
-			$html = 'Accessability <strong>information</strong>';
-			$this->data = '<data>'. Common::html($html) .'</data>';
+			$this->data = '<data>'. Common::html(file_get_contents(Settings::singleton()->get_setting('cms_root').'/langs/'.Settings::singleton()->get_setting('site_lang').'/access')) .'</data>';
 			$this->search = NULL;
 	}
 

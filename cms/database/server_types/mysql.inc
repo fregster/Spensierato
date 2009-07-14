@@ -40,5 +40,11 @@ class Database_mysql extends Database
 		
 		return database_execution::singleton()->sql_select_exe_run($this->sql_exe($sql, NULL));
 	}
+	
+	public function get_schema()
+	{
+//		USE YourDBName GO SELECT * FROM sys.Tables GO
+		 return $this->sql_select_exe('SELECT * FROM sys.Tables', NULL);
+	}
 }
 ?>

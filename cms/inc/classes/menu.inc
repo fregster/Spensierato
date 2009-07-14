@@ -272,9 +272,20 @@ class Menu
 			$menu = array();
 			$ids = array(0);
 			$i=1;
+			
+			$where = array('parent_id', 'deleted', 'visible');
+			$values = array($id, 0, 1);
+				
+			if(options::Singleton()->get_option('admin_mode'))
+			{
+				unset($where[1]); unset($where[2]);
+				unset($values[1]); unset($values[2]);
+			}
+
 			while($i <= $this->options['top_menu_depth'])
 			{
-				$result = Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('parent_id'), $ids);
+				$values[0] = $ids;
+				$result = Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', $where, $values);
 				$ids = array();
 				if(isset($result[0]))
 				{

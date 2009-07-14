@@ -48,5 +48,11 @@ class Database_mssql extends Database
 		$result = $this->sql_exe($sql, NULL);
 		return $result;
 	}
+
+	public function get_schema()
+	{
+//		USE YourDBName GO SELECT * FROM sys.Tables GO
+		 return $this->sql_select_exe('SELECT * FROM sys.Tables', NULL);
+	}
 }
 ?>

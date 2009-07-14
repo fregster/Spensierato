@@ -20,17 +20,22 @@ div[id^="wrapper"] #block_2 .verticalalign{width:700px !important}
 #header, #footer{width:900px}
 * >#footer, * >form, * >#notes, * >.output{position:relative; z-index:400}
 #site_frame{margin-left:auto; margin-right:auto; align:center; text-align:center; background-color:#FFF; width:902px}
-#page_section_left_menu{margin-left:4px; margin-right:4px; text-align:center; color:black}
+
 #banner_submenu{position:absoloute; bottom:3px; right:10px; margin-right:3px; text-align:right}
+
 #jump_to_contents{display:none}
-a.link_menu{color:black; text-decoration:none}
-a.link_menu:visited{}
-a.link_menu:hover{text-decoration:underline; color:#06F}
+
+#page_section_left_menu{color:black;}
 #page_section_banner{width:900px; margin-left:auto; margin-right:auto; border:1px solid #ddd; border-bottom:none}
-#menu_children, .menu_children{border:#666; border:#333; border-collapse:collapse; border:1px; min-height:25px; font-variant: small-caps;}
-#menu_top_selected, .menu_top_selected{background-color:#CCC; border:#666; border-collapse:collapse; border:thin; min-height:25px; font-variant: small-caps;}
-#menu_top_parent, .menu_top_parent{background-color:#EEE; border:#666; border-collapse:collapse; border:thin; min-height:25px; font-variant: small-caps;}
-#menu_current{background-color:#DDD; border:#666; border-collapse:collapse; border:thin; min-height:30px; font-variant: small-caps;}
-#menu_tab, #menu_tab_selected, .menu_tab_selected, .menu_tab_parent, #menu_tab_parent{display:inline; min-height:25px; padding-left:5px; font-variant: small-caps}
+#menu_children, .menu_children, .menu_top{border:#666; border:#333; border-collapse:collapse; border:1px; min-height:25px; font-variant: small-caps; margin-left: -35px;}
+#menu_top_selected, .menu_top_selected{background-color:#CCC; border:#666; border-collapse:collapse; border:thin; min-height:25px; font-variant: small-caps; margin-left: -35px;}
+#menu_top_parent, .menu_top_parent{background-color:#EEE; border:#666; border-collapse:collapse; border:thin; min-height:25px; font-variant: small-caps; margin-left: -35px;}
+#menu_current{background-color:#DDD; border:#666; border-collapse:collapse; border:thin; min-height:30px; font-variant: small-caps; margin-left: -35px;}
+#menu_tab, #menu_tab_selected, .menu_tab_selected, .menu_tab_parent, #menu_tab_parent{display:inline; min-height:25px; padding-left:5px; font-variant: small-caps;}
 #menu_tab_selected{background-color:#CCC; padding-right:5px; min-width:50px}
 #menu_tab_parent{margin-right:5px; border:#DDD; border-top:1px; border-bottom:1px}
+#link_menu{list-style: none; margin-left: 0px ;margin-right: 0px ;padding-left: 1em;text-indent: -1em; text-align:center;}
+#link_item{margin-left: 5px ;margin-right: 5px}
+a.link_item{color:black; text-decoration:none;}
+a.link_item:visited{}
+a.link_item:hover{text-decoration:underline; color:#06F}

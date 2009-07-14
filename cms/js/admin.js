@@ -5,9 +5,9 @@ ed.setProgressState(1);
 var url = '';
 if (typeof revision != 'undefined')
 {
-url = ajax_host + "/ajax/revision/" + revision + "/";
+url = ajax_host + "/revision/" + revision + "/";
 }else{
-url = ajax_host + "/ajax/edit/";
+url = ajax_host + "/edit/";
 }
 ajaxGet(url,element_id);
 http.onreadystatechange=function(){
@@ -22,7 +22,7 @@ function ajaxSave(){
 clearTimeout(t);
 var ed=tinyMCE.get("content");
 ed.setProgressState(1);
-ajaxPost(ajax_host+"/ajax/edit/"+element_id,"html="+encodeURI(ed.getContent())+"&title="+encodeURI(document.getElementById('title').value));
+ajaxPost(ajax_host+"/edit/"+element_id,"html="+encodeURI(ed.getContent())+"&title="+encodeURI(document.getElementById('title').value));
 http.onreadystatechange=function(){
 if(http.readyState==4){
 if(http.responseText=="SAVED"){

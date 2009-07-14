@@ -179,6 +179,7 @@ abstract class Common
 					}
 					else
 					{
+//						$php_array[$child->getName()] = strip_tags($child->saveXML());
 						$php_array[$child->getName()] = strip_tags($child->saveXML());
 					}
 				}

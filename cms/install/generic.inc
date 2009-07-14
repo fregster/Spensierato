@@ -71,14 +71,15 @@ $tables['tbl_elements_data'] = array(
 $tables['tbl_search'] = array(
 									'cols_define' =>
 										array(
+											'serch_id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
 											'id' => 'INT UNSIGNED NOT NULL',
+											'file' => "INT UNSIGNED DEFAULT '0'",
 											'title' => 'VARCHAR(128) NOT NULL',
 											'search' => 'TEXT NOT NULL',
 											'keywords' => 'TEXT',
 											'indexed' => "INT UNSIGNED DEFAULT '0'",
-											'file' => "INT UNSIGNED DEFAULT '0'",
 											),
-									'primary_key' => 'id',
+									'primary_key' => 'search_id',
 									);							
 
 $tables['tbl_elements_draft'] = array(

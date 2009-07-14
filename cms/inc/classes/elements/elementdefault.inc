@@ -40,6 +40,14 @@ class elementDefault
 			$this->tags[$key] = $tag;
 		}
 	}
+	
+	public function allows_attachments()
+	{
+		if(array_search('file', $this->tags)){
+			return true;
+		}
+		return false;
+	}
 
 	public function create($main_page, $redirect = true)
 	{
@@ -445,7 +453,7 @@ class elementDefault
 		}
 
 		$details = array_merge($this->admin_mode_data['save_data'], $this->attach_extra_data());
-		$search = $this->build_search_text($details);
+//		$search = $this->build_search_text($details);
 		//process the data being saved
 		foreach($details as $key => &$value)
 		{
@@ -491,7 +499,7 @@ class elementDefault
 
 			if ($this->save_upload()) 
 			{
-				$revision_id = database::Singleton()->sql_update_or_insert('tbl_elements_revisions', array('element_id', 'revisor', 'approved'), array($this->id, User::Singleton()->id(), '0'), array('element_id', 'data', 'title', 'revisor', 'revised', 'search'), array($this->id, $data, $this->title, User::Singleton()->id(), CMS::Singleton()->time(), $search));
+				$revision_id = database::Singleton()->sql_update_or_insert('tbl_elements_revisions', array('element_id', 'revisor', 'approved'), array($this->id, User::Singleton()->id(), '0'), array('element_id', 'data', 'title', 'revisor', 'revised'), array($this->id, $data, $this->title, User::Singleton()->id(), CMS::Singleton()->time()));
 
 				//save if has permissions
 				if (User::singleton()->is_admin() || (settings::singleton()->get_setting('content_auto_publish') && security::Singleton()->can_do('approve'))) {
@@ -532,11 +540,28 @@ class elementDefault
 	 * @return unknown_type
 	 */
 	protected function build_search_text($details){
-		if(isset($this->tags['html']) and isset($details['html']))
+//		$details = common::xml_to_array($details);
+		$html = common::node_from_xml($details, 'html');
+
+		if(isset($this->tags['html']) and isset($html[0]))
 		{
-			return common::strip_non_alpha_numeric(strip_tags($details['html']));
+			return common::strip_non_alpha_numeric(strip_tags($html[0]));
 		}
 		return false;
+	}
+	
+	protected function build_search_summary(){
+		if($this->title != 'Please give the element a meaningful title')
+		return $this->title;
+	}
+	
+	public function get_search_text($expand_files = false)
+	{
+		if(($expand_files == false) && ($this->allows_attachments())) //If this is a file and we are not expanding it then only return the summary data
+		{
+			return $this->build_search_summary();
+		}
+		return $this->build_search_text($this->data);
 	}
 }
 ?>

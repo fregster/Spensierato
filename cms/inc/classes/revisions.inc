@@ -35,15 +35,8 @@ abstract class revisions{
 
 			database::singleton()->sql_update_by_id($data['element_id'], 'tbl_elements', array('editor', 'edited', 'approver', 'approved', 'active_revision'), array($data['revisor'], $data['revised'], user::singleton()->id(), time(), $data['id']));
 			database::singleton()->sql_update_by_id($data['element_id'], 'tbl_elements_data', array('title', 'data'), array($data['title'], $data['data']));
-			if(isset($data['search']) && !is_null($data['search']))
-			{
-				search::singleton()->add_to_index($data['element_id'], $data['title'], $data['search']);
-			}
-			else
-			{
-				print_r($data);
-				die('Revisions search save');
-			}
+
+			search::singleton()->add_to_index($data['element_id']);
 		}
 	}
 

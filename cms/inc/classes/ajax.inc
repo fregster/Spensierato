@@ -3,18 +3,18 @@ abstract class ajax
 {
 	public static function process($vars)
 	{
-		switch ($vars[2])
+		switch ($vars[1])
 		{
 			case 'edit':
-				self::edit($vars[2]);
+				self::edit($vars[1]);
 				break;
 
 			case 'revision':
-				self::get_revision($vars[2], $vars[3]);
+				self::get_revision($vars[1], $vars[2]);
 				break;
 
 			case 'approvals':
-				self::view_approvals($vars[2]);
+				self::view_approvals($vars[1]);
 				break;
 
 			case 'register':

@@ -348,17 +348,21 @@ class Database
 		return $sql	. $sql_temp_fields . $this->sql_build_where_string($where_fields, $where_values);
 	}
 
-	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false)
+	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false, $alternet_id_col = false)
 	{
 		/**
 		 * This currently does not work in MySQL and so 2 transactions are required unfortunatly
 		 */
+		$id_col = $where_fields[0];
+		if($alternet_id_col)
+		{
+			$id_col = $alternet_id_col;
+		}
 
-		$exsists = $this->sql_select_first(array($where_fields[0]), $table, $where_fields, $where_values);
-
+		$exsists = $this->sql_select_first(array($id_col), $table, $where_fields, $where_values);
 		if($exsists != NULL)
 		{
-			return $this->sql_update_by_col($table, array($where_fields[0]), array($exsists[$where_fields[0]]), $fields, $values);
+			return $this->sql_update_by_col($table, array($id_col), array($exsists[$id_col]), $fields, $values);
 		}
 		else
 		{

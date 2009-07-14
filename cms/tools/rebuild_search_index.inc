@@ -1,6 +1,6 @@
 <?php
 if (!user::Singleton()->is_admin()) common::bounce_to_referer();
-
+die('Out of date');
 if(is_writable(Settings::singleton()->get_setting('cms_folder_logs'))) //Is the log folder writable
 {
 	//Can we use lucene search?

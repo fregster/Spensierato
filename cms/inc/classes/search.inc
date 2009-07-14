@@ -189,7 +189,7 @@ class Search
 		$pull = array('id', 'title');
 		if($this->return_summary) { $pull[] = 'search'; }
 		$results = Database::singleton()->sql_search('tbl_search', 'search', $this->string, $pull, $this->boolean, null, null, $this->drop, $this->max_results_per_query);
-		
+
 	//FIXME there must be a quick way to get all the id's from this associate array but for the time been...
 		foreach($results as $r)
 		{
@@ -200,7 +200,7 @@ class Search
 	
 	private function get_results_from_index_lucene()
 	{
-		$results = array(); 
+		$results = array();
 		
 		foreach($this->lucene_search->find($this->string) as $r) //Loop through the results to format them in the required array style
 		{
@@ -468,25 +468,100 @@ class Search
 	    return $text;
 	}
 	
-	public function add_to_index($id, $title, $text, $file = 0, $keywords = false)
+	public function add_to_index($id)
 	{
-		if($file != 0) { $file = 1;}
-		$fields = array('id', 'title', 'search', 'indexed', 'file');
-		$values = array($id, $title, $text, 0, $file);		
+		if($file != 0) {
+			$this->build_file_index($id);
+		}
 		
+		//Check the element type, if it a file element it should be indexed seperatly and the title and keywords added to the page index
+		
+		//Get the pages that this element is on and the list of element ids
+		$pages = Database::Singleton()->sql_select(array('page_id'), 'tbl_page_elements', array('element_id'), array($id));
+		foreach($pages as $page)
+		{
+			$this->build_page_index($page['page_id']);
+		}
+	}
+	
+	private function build_file_index($element_id)
+	{
+		$fields = array('id', 'title', 'indexed', 'file', 'search');
+		$values = array($element_id, $title, 0, 1, $this->get_search_string_for_elements(array($element_id)), true);
+		$this->index($fields, $values);
+	}
+	//array('id', 'title', 'indexed', 'file', 'search');
+	private function index($fields, $values)
+	{
 		/**
 		 * If were using the lucence search index update it now
 		 */
+		
+		$values[2] = $this->add_to_lucene($values[0], $values[3], $values[1], $values[4]);
+		
+		/**
+		 * Update the SQL search text
+		 */
+		database::singleton()->sql_update_or_insert('tbl_search', array('id', 'file'), array($values[0], $values[3]), $fields, $values, true, 'search_id');
+	}
+	
+	public function build_page_index($page_id)
+	{
+		$fields = array('id', 'title', 'indexed', 'file', 'search');
+		$values = array($page_id, $title, 0, 0, NULL);
+		$title = Database::Singleton()->sql_select_first(array('title'), 'tbl_pages', array('id'), array($page_id));
+		$values[1] = $title['title']; unset($title);
+		$result = Database::Singleton()->sql_select(array('element_id'), 'tbl_page_elements', array('page_id', 'visible'), array($page_id, 1));
+		$elements = array();
+		foreach($result as $element)
+		{
+			$elements[] = $element['element_id'];
+		}
+		unset($result);
+		unset($element);
+		
+		
+		$values[4] = $this->get_search_string_for_elements($elements);
+		
+		$this->index($fields, $values);
+	}
+	
+	private function get_search_string_for_elements($ids, $expand_files = false)
+	{
+		$text = '';
+		
+		//For each element, build the element object to then get the search text and build up the page search string
+		$data = Database::Singleton()->sql_select(array('*'), 'tbl_elements', array('id'), array($ids), array('id'));
+		$element_data = Database::Singleton()->sql_select(array('*'), 'tbl_elements_data', array('id'), array($ids), array('id'));
+
+		if(isset($data[0]))
+		{
+			foreach($data as $key => $data)
+			{
+				if(isset($element_data[$key]) && $element_data[$key] != NULL)
+				{
+					$element = Element::type($data['type']);
+					$element->build($element_data[$key]['id'], $element_data[$key]);
+					$text .= ' '.$element->get_search_text($expand_files);
+				}
+			}
+		}
+		return $text;
+	}
+	
+	private function add_to_lucene($id, $file, $title, $text)
+	{
 		if($this->lucene_search !== false)
 		{
-			$l_id = $this->lucene_search->find('search_id:' . $id);
-			if(is_numeric($l_id->id)) { $this->lucene_search->delete($l_id->id); }//Ensure we delete the old record
-		
+			$keyword = 'page_id';
+			if($file == 1)
+			{
+				$keyword = 'file';
+			}
 			$doc = new Zend_Search_Lucene_Document();
-			$doc->addField(Zend_Search_Lucene_Field::Keyword('search_id', $id));
+			$doc->addField(Zend_Search_Lucene_Field::Keyword($keyword, $id));
 			$doc->addField(Zend_Search_Lucene_Field::Text('title', $title));
 			$doc->addField(Zend_Search_Lucene_Field::Text('search', $text));
-			$doc->addField(Zend_Search_Lucene_Field::Text('file', $file));
 		
 			if($keywords !== false)
 			{
@@ -494,15 +569,40 @@ class Search
 				$fields[] = 'keywords';
 				$values[] = $keywords;
 			}
+			
+			//Ensure we delete the old record
+			$this->drop_from_lucene($id, $file);
 			$this->lucene_search->addDocument($doc);
 			
-			$fields['indexed'] = 1;
+			return 1;
 		}
+		return 0;
+	}
+	
+	public function drop_from_index($id, $file)
+	{
+		$this->drop_from_sql($id, $file);
+		$this->drop_from_lucene($id, $file);
+	}
+	
+	private function drop_from_sql($id, $file)
+	{
 		
-		/**
-		 * Update the SQL search text
-		 */
-		database::singleton()->sql_update_or_insert('tbl_search', array('id'), array($id), $fields, $values);
+	}
+	
+	private function drop_from_lucene($id, $file)
+	{
+		if($this->lucene_search !== false)
+		{
+			$keyword = 'page_id';
+			if($file == 1)
+			{
+				$keyword = 'file';
+			}
+			
+			$l_id = $this->lucene_search->find($keyword.':' . $id);
+			if(is_numeric($l_id->id)) { $this->lucene_search->delete($l_id->id); }
+		}
 	}
 
 }

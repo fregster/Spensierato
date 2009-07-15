@@ -197,7 +197,7 @@ $GLOBALS[\'server_os\'] = \''.$os.'\'; //Should be unix, windows or osx
 
 
 //Settings for email
-$GLOBALS[\'smtp_server\'] = '. post::variable('smtp_host').'; //Where should email submissions be sent
+$GLOBALS[\'smtp_server\'] = \''. post::variable('smtp_host').'\'; //Where should email submissions be sent
 $GLOBALS[\'smtp_port\'] = '. post::variable('smtp_port').';
 $GLOBALS[\'smtp_username\'] = '. post::variable('smtp_username').';
 $GLOBALS[\'smtp_password\'] = '. post::variable('smtp_password').';

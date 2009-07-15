@@ -71,7 +71,7 @@ $tables['tbl_elements_data'] = array(
 $tables['tbl_search'] = array(
 									'cols_define' =>
 										array(
-											'serch_id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
+											'search_id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
 											'id' => 'INT UNSIGNED NOT NULL',
 											'file' => "INT UNSIGNED DEFAULT '0'",
 											'title' => 'VARCHAR(128) NOT NULL',

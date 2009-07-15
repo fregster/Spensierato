@@ -9,7 +9,9 @@ class cmspage_loading extends cmspage
 	
 	public function run()
 	{
-		include(Settings::Singleton()->get_setting('cms_root').'/js/submodal/loading.inc');
+		$path = Settings::Singleton()->get_setting('cms_root').'/js/submodal/loading.inc';
+		cache::headers_allow_cache($path);
+		include($path);
 		exit;
 	}
 }

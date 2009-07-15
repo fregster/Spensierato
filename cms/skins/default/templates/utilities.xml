@@ -6,12 +6,12 @@
 				<xsl:attribute name="method">GET</xsl:attribute>
 				<xsl:attribute name="id">searchform</xsl:attribute>
 				<div id="search">
-					<input type="text" id="searchtext" name="searchtext" onkeyup="delayedSearch();"/>
+					<input type="text" id="searchtext" name="searchtext" onkeyup="delayedSearch();" />
 					<!-- <input type="button" id="searchbutton" name="searchbutton" value="Find" onclick="javascript:searchFunction();" /> -->
 					<input type="submit" id="searchbutton" name="searchbutton" value="Find" />
 				</div>
 			</xsl:element>
-			<div id="ajaxSearchResults">
+			<div id="ajaxSearchResults" style="visibility: hidden;">
 			</div>
 		</xsl:if>
 	</xsl:template>

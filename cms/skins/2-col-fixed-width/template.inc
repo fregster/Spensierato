@@ -7,8 +7,13 @@ Settings::Singleton()->new_setting('template_header_graphic_background', 'prity-
 
 Settings::Singleton()->overwrite_setting('template_extends', 'default', false, true);
 
+foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/*') as $filename) 
+{
+	array_push($this->preload, basename($filename));
+}
+
 $inherirted_css = Settings::Singleton()->get_setting('template_inherits_css');
-$include = array('common.css', 'standard_sprite.css', '2_col_layout.css');
+$include = array('common.css', 'standard_sprite.css', 'search.css', '2_col_layout.css');
 if($inherirted_css)
 {
 	if(is_array($inherirted_css))

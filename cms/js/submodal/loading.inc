@@ -5,11 +5,12 @@
 	<title> </title>
 </head>
 <body>
+<!-- Submodal loading window -->
 	<div class="centered">
 	<table>
 		<tr>
 			<td align="center"><p>Now loading...</p></td>
-			<td align="center"><img src="<?php echo(urlencode(Common::document_root())); ?>/skin/z-loading.gif" alt="Loading Image"/></td>
+			<td align="center"><img src="<?php echo((Common::document_root())); ?>/skin/z-loading.gif" alt="Loading Image"/></td>
 			<td align="center"><p>...please wait</p></td>
 		</tr>
 	</table>

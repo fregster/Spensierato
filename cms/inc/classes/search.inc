@@ -503,7 +503,7 @@ class Search
 		/**
 		 * If were using the lucence search index update it now
 		 */
-		
+		$values[1] = strtolower($values[1]);
 		$values[2] = $this->add_to_lucene($values[0], $values[3], $values[1], $values[4]);
 		
 		/**

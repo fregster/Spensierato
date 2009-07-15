@@ -47,58 +47,20 @@ _6=http.responseXML;
 }
 return _6;
 };
-function searchFunction(){
-ajaxGet(ajax_host+"/search?searchtext=",document.forms.searchform.elements.searchtext.value);
-http.onreadystatechange=function(){
-if(http.readyState==4){
-x=http.responseXML.documentElement.getElementsByTagName("result");
-if(x.length>0)
-{
-var txt='<div>Quick Search Results</div>';
-for (i=0;i<x.length;i++)
-{
-xx=x[i].getElementsByTagName("title");
-{
-try
-{
-al=x[i].getElementsByTagName("page");
-txt=txt + '<div class="search_title"><a href="'+al[0].firstChild.nodeValue +'">' + xx[0].firstChild.nodeValue + "</a></div>";
-}
-catch (er)
-{
-}
-}
-}
-}else{
-var txt='<div>No Search Results</div>';
-}
-document.getElementById("ajaxSearchResults").innerHTML=txt;
-}
-};
-};
-var ToolTips=new Tips($$(".ToolTip"),{className:"ToolTip"});
-var SpriteTips=new Tips($$(".sprite"),{className:"ToolTip"});
-function topPageReload(_7){
-setTimeout("window.top.location.reload(true)",100);
-};
-function addLoadEvent(_8){
-var _9=window.onload;
-if(typeof window.onload!="function"){
-window.onload=_8;
-}else{
-window.onload=function(){
-_9();
-_8();
-};
-}
-};
+
 var notes;
 var initalised;
 var SmoothScroll;
+var autoSearch;
+var aSt;
+var ToolTips=new Tips($$(".ToolTip"),{className:"ToolTip"});
+var SpriteTips=new Tips($$(".sprite"),{className:"ToolTip"});
+var t;
 function init(){
 if(initalised!=true){
 stepFontSize(readCookie("fontSize"));
 notes=$("notifications");
+autoSearch=$("ajaxSearchResults");
 //notes.fade.bind(notes,[0]);
 rounded();
 jsShow();
@@ -113,6 +75,63 @@ if(typeof window.adminInit == 'function'){
 adminInit();
 }
 initalised=true;
+}
+};
+function delayedSearch(){
+clearTimeout(t);
+t=setTimeout("searchFunction()",650);
+};
+function searchMouseIn(){
+	clearTimeout(aSt);
+};
+function searchMouseOut(){
+	aSt=setTimeout("autoSearch.fade(0.8, 0)",5000);
+}
+function searchFunction(){
+ajaxGet(ajax_host+"/search?searchtext=",document.forms.searchform.elements.searchtext.value);
+http.onreadystatechange=function(){
+if(http.readyState==4){
+x=http.responseXML.documentElement.getElementsByTagName("result");
+if(x.length>0)
+{
+var txt='<div style="width: 180px;" class="autosearch" onmouseover="searchMouseIn();" onmouseout="searchMouseOut();"><div class="as_header"><div class="as_corner"></div><div class="as_bar"></div></div><ul id="as_ul">';
+for (i=0;i<x.length;i++)
+{
+xx=x[i].getElementsByTagName("title");
+{
+try
+{
+al=x[i].getElementsByTagName("page");
+txt=txt + '<li class="search_title"><a href="'+al[0].firstChild.nodeValue +'"><span class="tl"> </span><span class="tr"> </span><span>' + xx[0].firstChild.nodeValue + "</span></a></li>";
+}
+catch (er)
+{
+}
+}
+}
+txt=txt + '</ul><div class="as_footer"><div class="as_corner"></div><div class="as_bar"></div></div>';
+//txt='<div style="left: 347px; top: 1024px; width: 175px;" class="autosearch" id="as_testinput_xml"><div class="as_header"><div class="as_corner"></div><div class="as_bar"></div></div><ul id="as_ul"><li><a name="1" href="#"><span class="tl"> </span><span class="tr"> </span><span><em>W</em>aldron, Ashley<br><small>Leicestershire</small></span></a></li><li><a name="2" href="#"><span class="tl"> </span><span class="tr"> </span><span><em>W</em>heeler, Bysshe<br><small>Lincolnshire</small></span></a></li></ul><div class="as_footer"><div class="as_corner"></div>	<div class="as_bar"></div></div></div>';
+}else{
+var txt='<div>No Search Results</div>';
+}
+document.getElementById("ajaxSearchResults").innerHTML=txt;
+autoSearch.fade(-0,0.8);
+searchMouseOut();
+}
+};
+};
+function topPageReload(_7){
+setTimeout("window.top.location.reload(true)",100);
+};
+function addLoadEvent(_8){
+var _9=window.onload;
+if(typeof window.onload!="function"){
+window.onload=_8;
+}else{
+window.onload=function(){
+_9();
+_8();
+};
 }
 };
 addLoadEvent(init);
@@ -386,11 +405,6 @@ for(i=1;i<4;i++){
 hex+=("0"+parseInt(_4f[i]).toString(16)).slice(-2);
 }
 return "#"+hex;
-};
-var t;
-function delayedSearch(){
-clearTimeout(t);
-t=setTimeout("searchFunction()",1000);
 };
 
 init();

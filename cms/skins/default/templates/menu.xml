@@ -2,7 +2,7 @@
 		<xsl:template name="menu_link">
 		<xsl:element name="a">
 			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="./id" /></xsl:attribute>
-			<xsl:attribute name="class">link</xsl:attribute>
+			<xsl:attribute name="class">link link_item</xsl:attribute>
 			<xsl:choose>
 			<xsl:when test="/page/options/admin_mode = 1">
 				<xsl:if test="visible != '1'">
@@ -40,7 +40,7 @@
 
 	<xsl:template name="menu">
 		<div id="page_section_left_menu" class="rounded">
-			<ul>
+			<ul  class="link_menu">
 				<xsl:for-each select="/page/menu/menu/top/menu_item">
 					<xsl:choose>
 						<xsl:when test="selected">

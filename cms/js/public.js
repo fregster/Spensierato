@@ -79,12 +79,14 @@ initalised=true;
 };
 function delayedSearch(){
 clearTimeout(t);
-t=setTimeout("searchFunction()",650);
+t=setTimeout("searchFunction()",450);
 };
 function searchMouseIn(){
 	clearTimeout(aSt);
+	autoSearch.fade('in');
 };
 function searchMouseOut(){
+	autoSearch.fade(1,0.7);
 	aSt=setTimeout("autoSearch.fade(0.8, 0)",5000);
 }
 function searchFunction(){
@@ -112,10 +114,11 @@ catch (er)
 txt=txt + '</ul><div class="as_footer"><div class="as_corner"></div><div class="as_bar"></div></div>';
 //txt='<div style="left: 347px; top: 1024px; width: 175px;" class="autosearch" id="as_testinput_xml"><div class="as_header"><div class="as_corner"></div><div class="as_bar"></div></div><ul id="as_ul"><li><a name="1" href="#"><span class="tl"> </span><span class="tr"> </span><span><em>W</em>aldron, Ashley<br><small>Leicestershire</small></span></a></li><li><a name="2" href="#"><span class="tl"> </span><span class="tr"> </span><span><em>W</em>heeler, Bysshe<br><small>Lincolnshire</small></span></a></li></ul><div class="as_footer"><div class="as_corner"></div>	<div class="as_bar"></div></div></div>';
 }else{
-var txt='<div>No Search Results</div>';
+//var txt='<div>No Search Results</div>';
+var txt='<div style="width: 180px;" class="autosearch" onmouseover="searchMouseIn();" onmouseout="searchMouseOut();"><div class="as_header"><div class="as_corner"></div><div class="as_bar"></div></div><ul id="as_ul"><li><span class="tl"> </span><span class="tr"> </span><span>No Results</span></li></lu><div class="as_footer"><div class="as_corner"></div><div class="as_bar"></div></div>'
 }
 document.getElementById("ajaxSearchResults").innerHTML=txt;
-autoSearch.fade(-0,0.8);
+autoSearch.fade(-0,0.7);
 searchMouseOut();
 }
 };

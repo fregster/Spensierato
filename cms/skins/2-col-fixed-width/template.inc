@@ -18,7 +18,7 @@ if($inherirted_css)
 {
 	if(is_array($inherirted_css))
 	{
-		array_merge($include, $inherirted_css);
+		$include = array_merge($include, $inherirted_css);
 	}
 	else
 	{

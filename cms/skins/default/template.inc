@@ -25,6 +25,25 @@ foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings:
  * Should the template also inherits any CSS files?
  * array of css file names ie array('common.css', 'standard_sprite.css');
  */
-//Setting template_inherits_css
-//Settings::Singleton()->new_setting('template_inherits_css', true, false, true);
+$inherirted_css = Settings::Singleton()->get_setting('template_inherits_css');
+$css = 'css.css';
+if(Settings::Singleton()->get_setting('skin_alternative_css') != false)
+{
+	$css = Settings::Singleton()->get_setting('skin_alternative_css');
+}
+$include = array('common.css', 'standard_sprite.css', 'search.css', $css);
+if($inherirted_css)
+{
+	if(is_array($inherirted_css))
+	{
+		$include = array_merge($include, $inherirted_css);
+	}
+	else
+	{
+		$include[] = $inherirted_css;
+	}
+}
+Settings::Singleton()->overwrite_setting('template_inherits_css', $include, false, true);
+unset($include);
+unset($inherirted_css);
 ?>

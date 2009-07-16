@@ -6,7 +6,11 @@ if(is_writable(Settings::singleton()->get_setting('cms_folder_logs'))) //Is the 
 	if(is_readable(Settings::singleton()->get_setting('cms_folder_logs').'search_index/segments.gen'))
 	{
 		echo('<p>Deleting Old Index</p>');
-		unlink(Settings::singleton()->get_setting('cms_folder_logs').'search_index/*');
+		foreach (glob(Settings::singleton()->get_setting('cms_folder_logs').'search_index/*') as $filename) 
+		{
+			unlink(Settings::singleton()->get_setting('cms_folder_logs').'search_index/'.basename($filename));
+		}
+		
 //	    $lucene_search = new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index');
 	}
 

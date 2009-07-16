@@ -138,6 +138,7 @@ $tables['tbl_pages'] = array(
 							array(
 								'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
 								'parent_id' => 'INT UNSIGNED NOT NULL',
+								'append_tags' => 'TEXT',
 								'menu_type' => "TINYINT DEFAULT '0'",
 								'title' => 'VARCHAR(64) NOT NULL',
 								'icon' => 'TINYINT UNSIGNED',
@@ -201,6 +202,25 @@ $tables['tbl_users_data'] = array(
 									'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
 									'user_id' => 'INT UNSIGNED NOT NULL',
 									'data' => 'TEXT'
+									),
+								'primary_key' => 'id',
+								);
+								
+$tables['tbl_tags_to_page'] = array(
+								'cols_define' =>
+								array(
+									'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
+									'page_id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
+									'tag' => 'VARCHAR(64)',
+									),
+								'primary_key' => 'id',
+								);
+$tables['tbl_tags_to_element'] = array(
+								'cols_define' =>
+								array(
+									'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
+									'element_id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
+									'tag' => 'VARCHAR(64)',
 									),
 								'primary_key' => 'id',
 								);

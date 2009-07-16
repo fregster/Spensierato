@@ -28,7 +28,10 @@ if(class_exists('elementDownload'))
 
 		protected function save_preview()
 		{
-			return image::generate_thumb($this->id.'-'.$this->admin_mode_data['revision']);
+			if($_FILES['uploadedfile']['error'] == 0)
+			{
+				return image::generate_thumb($this->id.'-'.$this->admin_mode_data['revision']);
+			}
 		}
 	}
 }

@@ -81,6 +81,7 @@ $tables['tbl_page_elements']['keys'] = array('UNIQUE KEY' => array('elements_to_
 
 $tables['tbl_pages']['engine'] = $default_table_engine;
 $tables['tbl_pages']['charset'] = $default_charset;
+$tables['tbl_pages']['cols_define']['append_tags'] = 'LONGTEXT';
 $tables['tbl_pages']['keys'] = array('KEY' => array('valid_child' => array('visible','deleted','parent_id')));
 
 $tables['tbl_security']['cols_define']['data'] = 'LONGTEXT';

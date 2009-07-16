@@ -56,7 +56,7 @@ class Search
 			}
 			else if (is_writable(Settings::singleton()->get_setting('cms_folder_logs')))
 			{
-				if(Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index', true))
+				if(new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index', true))
 				{
 					return true;
 				}
@@ -477,9 +477,11 @@ class Search
 	
 	public function add_to_index($id)
 	{
-		if($file != 0) {
+		$element = Element::type($id); //Quickly create a blank element of the same type to see if it has files
+		if($element->allows_attachments()) {
 			$this->build_file_index($id);
 		}
+		unset($element);
 		
 		//Check the element type, if it a file element it should be indexed seperatly and the title and keywords added to the page index
 		
@@ -515,9 +517,9 @@ class Search
 	public function build_page_index($page_id)
 	{
 		$fields = array('id', 'title', 'indexed', 'file', 'search');
-		$values = array($page_id, $title, 0, 0, NULL);
 		$title = Database::Singleton()->sql_select_first(array('title'), 'tbl_pages', array('id'), array($page_id));
-		$values[1] = $title['title']; unset($title);
+		$values = array($page_id, $title['title'], 0, 0, NULL);
+		unset($title);
 		$result = Database::Singleton()->sql_select(array('element_id'), 'tbl_page_elements', array('page_id', 'visible'), array($page_id, 1));
 		$elements = array();
 		foreach($result as $element)
@@ -598,13 +600,16 @@ class Search
 		if($this->lucene_search !== false)
 		{
 			$keyword = 'page_id';
-			if($file == 1)
-			{
+			$element = Element::type($id); //Quickly create a blank element of the same type to see if it has files
+			if($element->allows_attachments()) {
 				$keyword = 'file';
 			}
+			unset($element);
 			
 			$l_id = $this->lucene_search->find($keyword.':' . $id);
-			if(is_numeric($l_id->id)) { $this->lucene_search->delete($l_id->id); }
+			if(isset($l_id->id) && is_numeric($l_id->id)) { 
+				$this->lucene_search->delete($l_id->id);
+			}
 		}
 	}
 

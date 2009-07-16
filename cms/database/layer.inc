@@ -182,6 +182,40 @@ class Database
 		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions);
 		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 	}
+	
+	public function sql_select_count_group_by_col($fields = NULL, $table, $group_col, $where_fields= NULL, $where_values= NULL)
+	{
+		$sql_temp_select = '';
+
+		if($fields == NULL)
+		{
+			$sql_temp_select = array('*');
+		}
+		else if (!is_array($fields) )
+		{
+			$sql_temp_select = $this->sql_clean_input($fields);
+		}
+		else
+		{
+			$i = 0;
+			$count_fields = count($fields);
+			while($i <= ($count_fields - 1))
+			{
+				$sql_temp_select = $sql_temp_select . $this->sql_clean_input($fields[$i]);
+
+				if($i < ($count_fields - 1))
+				{
+					$sql_temp_select = $sql_temp_select . ', ';
+				}
+
+				$i++;
+			}
+		}
+
+
+		$sql = "SELECT $sql_temp_select, COUNT(*) as count FROM `".$this->prefix.$this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values).' GROUP BY '.$this->sql_clean_input($group_col);
+		return $this->sql_select_exe($sql, NULL);
+	}
 
 	protected function sql_select_build($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL)
 	{

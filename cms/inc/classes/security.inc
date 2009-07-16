@@ -348,11 +348,16 @@ class Security
 		$security = '';
 		
 		//Run through each page and define the security set
-		foreach($page_ids as $id)
+		if(is_array($page_ids) && count($page_ids) > 0)
 		{
-			$result[$id] = 'view';
+			foreach($page_ids as $id)
+			{
+				if(is_numeric($id))
+				{
+					$result[$id] = 'view';
+				}
+			}
 		}
-		
 		//Return the array as page_id => security_level
 		return $result;
 	}

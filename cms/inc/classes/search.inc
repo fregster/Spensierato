@@ -137,11 +137,9 @@ class Search
 //		$this->build_link_array();
 		$security = security::Singleton()->bulk_page_security_check($this->ids);
 
-		//FIXME why have I forgoten how to work array's? anyway for PoC
-
 		foreach($this->ids as $key => $id)
 		{
-			if(!isset($security[$id]))
+			if(isset($security) && is_numeric($id) && !isset($security[$id]))
 			{
 				unset($this->ids[$key]); //Drop from the array's list values we do not have security to see
 			}
@@ -189,10 +187,10 @@ class Search
 		if($this->return_summary) { $pull[] = 'search'; }
 		$results = Database::singleton()->sql_search('tbl_search', 'search', $this->string, $pull, $this->boolean, null, null, $this->drop, $this->max_results_per_query);
 
-		//FIXME there must be a quick way to get all the id's from this associate array but for the time been...
-		foreach($results as $r)
+		$ids = common::retrieve_values_from_array($results, 'id');
+		if($ids)
 		{
-			$this->ids[] = $r['id'];
+			$this->ids[] = $ids;
 		}
 		return $results;
 	}
@@ -520,17 +518,8 @@ class Search
 		$title = Database::Singleton()->sql_select_first(array('title'), 'tbl_pages', array('id'), array($page_id));
 		$values = array($page_id, $title['title'], 0, 0, NULL);
 		unset($title);
-		$result = Database::Singleton()->sql_select(array('element_id'), 'tbl_page_elements', array('page_id', 'visible'), array($page_id, 1));
-		$elements = array();
-		foreach($result as $element)
-		{
-			$elements[] = $element['element_id'];
-		}
-		unset($result);
-		unset($element);
 		
-		
-		$values[4] = $this->get_search_string_for_elements($elements);
+		$values[4] = $this->get_search_string_for_elements(common::retrieve_values_from_array(Database::Singleton()->sql_select(array('element_id'), 'tbl_page_elements', array('page_id', 'visible'), array($page_id, 1)), 'element_id'));
 		
 		$this->index($fields, $values);
 	}

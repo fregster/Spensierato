@@ -537,5 +537,20 @@ abstract class Common
 			error::error('Cookies are required, please enable cookies and try again');
 		}
 	}
+	
+	public static function retrieve_values_from_array($array, $field)
+	{
+		if(is_array($array) && count($array)>0)
+		{
+			$result = array();
+			foreach($array as $value)
+			{
+				$result[] = $value[$field];
+			}
+			
+			return $result;
+		}
+		return false;
+	}
 }
 ?>

@@ -86,6 +86,10 @@ Settings::Singleton()->new_setting('show_help', true);
 //true / false
 Settings::Singleton()->new_setting('show_access', true);
 
+//Setting shop
+//Global option to enable the shop
+Settings::Singleton()->new_setting('shop', true);
+
 //Setting show_shop
 //If a product page has been created automaticly add the shop option to the menu
 Settings::Singleton()->new_setting('show_shop', true, false, true);
@@ -93,6 +97,19 @@ Settings::Singleton()->new_setting('show_shop', true, false, true);
 //Setting shop_menu_name
 //Menu name for the shop
 Settings::Singleton()->new_setting('shop_menu_name', 'Shop', false, true);
+
+//Setting shop_tax_rate
+//Local Tax rate as a decimal ie 15% is 0.15
+Settings::Singleton()->new_setting('shop_tax_rate', 0, false, true);
+
+//Setting currency
+//currency code GBP is Great British Pound, use the paypal codes
+Settings::Singleton()->new_setting('currency', 'GBP', false, true);
+
+//Setting business_id
+//The unique id used with your payment provider
+Settings::Singleton()->new_setting('business_id', null, false, true);
+
 
 //Setting skin
 //Set this to the path of the skin you wish to use

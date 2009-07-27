@@ -23,7 +23,7 @@
 * @license http://www.opensource.org/licenses/gpl-3.0.html GPL
 * @link http://spensierato.fryer.org.uk/
 */
-
+//$force_install = true;
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 $include_path = dirname(__FILE__);
 require_once($include_path.'/spensierato_cms.inc');

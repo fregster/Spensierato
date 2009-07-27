@@ -14,6 +14,7 @@
 						<xsl:call-template name="menu"/>
 						<div id="page_section_left_utilities">
 							<xsl:call-template name="search"/>
+							<xsl:call-template name="ShoppingCart"/>
 						</div>
 					</div>
 					<div id="block_2">

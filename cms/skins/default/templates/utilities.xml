@@ -1,6 +1,6 @@
 
 	<xsl:template name="search">
-		<xsl:if test="page/settings/search = '1'">
+		<xsl:if test="/page/settings/search = '1'">
 			<xsl:element name="form">
 				<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/search</xsl:attribute>
 				<xsl:attribute name="method">GET</xsl:attribute>
@@ -16,6 +16,35 @@
 		</xsl:if>
 	</xsl:template>
 	
+	<xsl:template name="ShoppingCart">
+		<xsl:if test="/page/settings/shop = '1'">
+			<div id="ShoppingCart">
+			<div id="ShoppingCartTitle">Your Shopping Basket</div>
+				<xsl:choose>
+					<xsl:when test="/page/cart/item">
+						<xsl:for-each select="/page/cart/item">
+							<xsl:value-of select="quantity" /> x <xsl:value-of select="title" /> £<xsl:value-of select="price" /> each<br/>
+						</xsl:for-each>
+						<div><xsl:value-of select="count(/page/cart/item)"/> Items Totaling £<xsl:value-of select="/page/cart/cost/total" /></div>
+						<div>
+							<xsl:element name="a">
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/cart</xsl:attribute>
+								View Cart
+							</xsl:element> | 
+							<xsl:element name="a">
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/cart/checkout</xsl:attribute>
+								Checkout
+							</xsl:element>
+						</div>
+					</xsl:when>
+					<xsl:otherwise>
+						There are no items in your cart
+					</xsl:otherwise>
+				</xsl:choose>
+			</div>
+		</xsl:if>
+	</xsl:template>
+	
 	<xsl:template name="sitelinks">
 		<div id="links">
 		Site Links
@@ -23,7 +52,7 @@
 	</xsl:template>
 	
 	<xsl:template name="adverts">
-		<xsl:if test="page/settings/google_ads = 1">
+		<xsl:if test="/page/settings/google_ads = 1">
 			<div id="adverts">
 				<br />
 				<script type="text/javascript"><xsl:comment>

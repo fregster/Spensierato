@@ -1,6 +1,7 @@
 <?php
 class tags
 {	
+	protected static $protected_tags = array('cms_product'); //List of tags only the CMS can add to an object
 	public static function get_objects_with_tags($tags)
 	{
 		if(!is_array($tags))

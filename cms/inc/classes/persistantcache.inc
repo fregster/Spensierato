@@ -100,6 +100,7 @@ class persistantcache
 	private static function get_type()
 	{
 		$c = __CLASS__;
+//		unset($_SESSION['persistant_cache_type']);
 		if(isset($_SESSION['persistant_cache_type']) && class_exists($_SESSION['persistant_cache_type']['type'])) { $c = $_SESSION['persistant_cache_type']['type']; } //If a cache type is set ensure it is still available
 
     	if(!isset($_SESSION['persistant_cache_type']) || $_SESSION['persistant_cache_type']['time'] > (persistantcache::$time - persistantcache::$retry_time)) //Check if we have recently checked for a cache type this is per session checking, but still reduces load
@@ -119,7 +120,6 @@ class persistantcache
 				}
 			}
 		}
-
 		return $c;
 	}
 
@@ -290,6 +290,7 @@ class persistantcache_memcache extends persistantcache
 
 	public function save($name, $value, $time = 0)
 	{
+		if(!$this->enabled){ return false; }
 		$data = $this->build_save($name, $value, $time);
 		if(strlen($data['data']['value']) < $this->max_object_size && $this->store != false)
 		{
@@ -402,6 +403,7 @@ class persistantcache_file extends persistantcache
 
 	public function save($name, $value, $time = 0)
 	{
+		if(!$this->enabled){ return false; }
 		$data = build_save($name, $value, $time);
 
 		if($file = fopen($this->build_file_path($data['name']), 'wb'))
@@ -415,6 +417,7 @@ class persistantcache_file extends persistantcache
 
 	public function get($name)
 	{
+		if(!$this->enabled){ return false; }
 		$name = $this->build_key($name);
 
 		if(file_exists($name))
@@ -473,6 +476,7 @@ class persistantcache_session extends persistantcache
 
 	public function save($name, $value, $time = 0)
 	{
+		if(!$this->enabled){ return false; }
 		$data = $this->build_save($name, $value, $time);
 
 		if(strlen($data['data']['value']) < $this->max_object_size)
@@ -493,6 +497,7 @@ class persistantcache_session extends persistantcache
 
 	public function get($name)
 	{
+		if(!$this->enabled){ return false; }
 		$name = $this->build_key($name);
 
 		$result = isset($_SESSION['cache'][$name])?$_SESSION['cache'][$name]:NULL;
@@ -509,6 +514,7 @@ class persistantcache_session extends persistantcache
 
 	public function drop($name)
 	{
+		if(!$this->enabled){ return false; }
 		$name = $this->build_key($name);
 		unset($_SESSION['cache'][$name]);
 		--$_SESSION['cache_count'];

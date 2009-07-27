@@ -1,0 +1,207 @@
+	<xsl:template match="element[@type = 'elementCart']">
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /></xsl:attribute>
+			<h2>Your Shopping Cart</h2>
+			<xsl:for-each select="/page/cart/item">
+				<xsl:call-template name="cartItem" />
+			</xsl:for-each>
+			<br/>
+			<xsl:call-template name="cartCosting" />
+
+			<h3>
+			<xsl:element name="a">
+				<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/cart/checkout</xsl:attribute>
+				Checkout
+			</xsl:element>
+			</h3>
+		</xsl:element>
+	</xsl:template>
+	
+	<xsl:template name="cartItem">
+		<xsl:element name="div">
+			<xsl:attribute name="id">product_id_<xsl:value-of select="product_id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="cartItem" /></xsl:attribute>
+			<span><xsl:value-of select="title"/> </span>
+			<span> x <xsl:value-of select="quantity"/> @ £<xsl:value-of select="price"/> each = £<xsl:value-of select="price * quantity"/></span>
+			<div style="display:inline;">
+				<xsl:element name="form">
+					<xsl:attribute name="style">display:inline;</xsl:attribute>
+					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/cart/update/<xsl:value-of select="product_id" />/?quantity=<xsl:value-of select="quantity + 1"/></xsl:attribute>
+					<xsl:attribute name="method">get</xsl:attribute>
+					<xsl:attribute name="id">update_add_<xsl:value-of select="product_id" /></xsl:attribute>
+						<xsl:element name="input">
+							<xsl:attribute name="type">image</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:attribute name="class">sprite sprite-arrow_up</xsl:attribute>
+							<xsl:attribute name="style">display:inline;</xsl:attribute>
+							<xsl:attribute name="alt">Add 1 more to the order</xsl:attribute>
+						</xsl:element>
+				</xsl:element> | 			
+				<xsl:element name="form">
+					<xsl:attribute name="style">display:inline;</xsl:attribute>
+					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/cart/update/<xsl:value-of select="product_id" />/?quantity=<xsl:value-of select="quantity - 1"/></xsl:attribute>
+					<xsl:attribute name="method">get</xsl:attribute>
+					<xsl:attribute name="id">update_remove_<xsl:value-of select="product_id" /></xsl:attribute>
+						<xsl:element name="input">
+							<xsl:attribute name="type">image</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:attribute name="class">sprite sprite-arrow_down</xsl:attribute>
+							<xsl:attribute name="style">display:inline;</xsl:attribute>
+							<xsl:attribute name="alt">Delete 1 from the order</xsl:attribute>
+						</xsl:element>
+				</xsl:element> | 			
+				<xsl:element name="form">
+					<xsl:attribute name="style">display:inline;</xsl:attribute>
+					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/cart/update/<xsl:value-of select="product_id" />/?quantity=0</xsl:attribute>
+					<xsl:attribute name="method">get</xsl:attribute>
+					<xsl:attribute name="id">update_delete_<xsl:value-of select="product_id" /></xsl:attribute>
+						<xsl:element name="input">
+							<xsl:attribute name="type">image</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
+							<xsl:attribute name="style">display:inline;</xsl:attribute>
+							<xsl:attribute name="alt">Delete This Item</xsl:attribute>
+						</xsl:element>
+				</xsl:element>
+			</div>
+		</xsl:element>
+	</xsl:template>
+	
+	<xsl:template name="cartCosting">
+		<div>
+			<table class="cartSubtotal">
+				<tr>
+					<td>Subtotal</td><td>£<xsl:value-of select="/page/cart/cost/price"/></td>
+				</tr>
+				<tr>
+					<td>Shipping</td><td>£<xsl:value-of select="/page/cart/cost/shipping"/></td>
+				</tr>
+				<tr>
+					<td>Tax</td><td>£<xsl:value-of select="/page/cart/cost/tax"/></td>
+				</tr>
+				<tr>
+					<td>Total</td><td>£<xsl:value-of select="/page/cart/cost/total"/></td>
+				</tr>
+			</table>
+		</div>
+	</xsl:template>
+	
+<!-- 
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+  <input type="hidden" name="cmd" value="_cart">
+  <input type="hidden" name="upload" value="1">
+  <input type="hidden" name="business" value="seller@designerfotos.com">
+  <input type="hidden" name="item_name_1" value="Item Name 1">
+  <input type="hidden" name="amount_1" value="1.00">
+  <input type="hidden" name="item_name_2" value="Item Name 2">
+  <input type="hidden" name="amount_2" value="2.00">
+  <input type="submit" value="PayPal">
+</form> -->
+	
+			
+	<xsl:template match="element[@type = 'elementCheckout']">
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /></xsl:attribute>
+			<h2>Checkout</h2>
+			<div>
+			<h4>Your Order</h4>
+			<xsl:call-template name="cartCosting" />
+			</div>
+			<xsl:element name="form">
+					<xsl:attribute name="style">display:inline;</xsl:attribute>
+					<xsl:attribute name="action">https://www.paypal.com/cgi-bin/webscr</xsl:attribute>
+					<xsl:attribute name="method">post</xsl:attribute>
+					<xsl:attribute name="id">checkout</xsl:attribute>
+					<input type="hidden" name="cmd" value="_cart" />
+					<input type="hidden" name="upload" value="1" />
+					<input type="hidden" name="country" value="GB" />
+					
+					<!-- 
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">notify_url</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/settings/document_root"/>/cart/paypal/ipn</xsl:attribute>
+					</xsl:element>
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">shopping_url</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/settings/document_root"/></xsl:attribute>
+					</xsl:element> 
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">shipping</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/cart/cost/shipping"/></xsl:attribute>
+					</xsl:element>
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">tax_cart</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/cart/cost/tax"/></xsl:attribute>
+					</xsl:element>-->
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">currency_code</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/settings/currency"/></xsl:attribute>
+					</xsl:element>
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">business</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/settings/business_id"/></xsl:attribute>
+					</xsl:element>
+
+
+					<xsl:for-each select="/page/cart/item">
+						<xsl:element name="input">
+							<xsl:attribute name="type">hidden</xsl:attribute>
+							<xsl:attribute name="name">item_name_<xsl:value-of select="position()"/></xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="title" /></xsl:attribute>
+						</xsl:element>
+						<xsl:element name="input">
+							<xsl:attribute name="type">hidden</xsl:attribute>
+							<xsl:attribute name="name">amount_<xsl:value-of select="position()"/></xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="price" /></xsl:attribute>
+						</xsl:element>
+						<xsl:element name="input">
+							<xsl:attribute name="type">hidden</xsl:attribute>
+							<xsl:attribute name="name">quantity_<xsl:value-of select="position()"/></xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="quantity" /></xsl:attribute>
+						</xsl:element>
+					</xsl:for-each>
+			<div>
+			<h4>Your Details</h4>
+			<table>
+				<tr><td>First name:</td><td> <input name="first_name" type="textfield" /></td></tr>
+				<tr><td>Last name:</td><td><input name="last_name" type="textfield" /></td></tr>
+			</table>
+			</div>
+			<div>
+			<h4>Your Shipping Address</h4><!-- 
+			<table>
+				<tr><td>Line 1:</td><td><input name="address1" type="textfield" /></td></tr>
+				<tr><td>Line 2:</td><td><input name="address2" type="textfield" /></td></tr>
+				<tr><td>Town or City:</td><td><input name="city" type="textfield" /></td></tr>
+				<tr><td>County:</td><td><input name="state" type="textfield" /></td></tr>
+			</table> -->
+			
+			</div>
+			<div>
+				<p>By commiting to this sale you agree to the <xsl:element name="a"><xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/shop/termsandconditions</xsl:attribute><xsl:attribute name="class">submodal</xsl:attribute>Terms and Conditions</xsl:element> of sale including shipping restrictions</p>
+			</div>
+			<div>
+			<p>Pay Now using <input type="submit" value="PayPal" /></p>
+			</div>
+			</xsl:element>
+			<br/>
+			<br/>
+			
+		</xsl:element>
+	</xsl:template>

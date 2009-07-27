@@ -62,6 +62,7 @@ class Content
 		$this->settings_data = $this->dom->createDocumentFragment();
 		$this->user_data = $this->dom->createDocumentFragment();
 		$this->options_data = $this->dom->createDocumentFragment();
+		$this->shoppingcart_data = $this->dom->createDocumentFragment();
 		$this->warnings_data = $this->dom->createDocumentFragment();
 
 		$this->debug = $this->dom->createElement('debug');
@@ -123,6 +124,7 @@ class Content
 		$this->attach_user();
 		$this->attach_security();
 		$this->attach_options();
+		$this->attach_cart();
 		$this->attach_warnings(); //This should be the last but one
 		$this->attach_debug(); //This should be the last one
 		$this->build_xml();
@@ -154,6 +156,15 @@ class Content
 	private function attach_security()
 	{
 		$this->security_data->appendXML(Security::Singleton()->security_as_xml());
+	}
+	
+	private function attach_cart()
+	{
+		if(Settings::singleton()->get_setting('shop'))
+		{
+			$this->shoppingcart_data->appendXML(shoppingcart::get_cart());
+			$this->lastmodified = max($this->lastmodified, shoppingcart::lastmodified());
+		}
 	}
 
 	private function attach_head()
@@ -211,6 +222,7 @@ class Content
 		$this->page->appendChild($this->settings_data);
 		$this->page->appendChild($this->user_data);
 		$this->page->appendChild($this->security_data);
+		$this->page->appendChild($this->shoppingcart_data);
 		$this->page->appendChild($this->options_data);
 		if(isset($this->head_data))
 		{

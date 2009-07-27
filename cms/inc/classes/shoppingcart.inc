@@ -5,12 +5,13 @@ define('ITEM', 'item', true);
 if(!isset($_SESSION[CART]))
 {
 	$_SESSION[CART] = array();
-}
-$_SESSION[CART] = array(
-1 => array('title'=> 'Random Title', 'price' => 10, 'shipping' => 5, 'quantity'=>1, 'product_id' => 1),
+	$_SESSION[CART] = array(
+'item' => array(1 => array('title'=> 'Random Title', 'price' => 10, 'shipping' => 5, 'quantity'=>1, 'product_id' => 1)),
 'cost'=> array('price'=>10, 'shipping'=>5, 'tax'=>1, 'total'=>16),
 'updated' => 123456,
 );
+}
+
 class shoppingcart
 {
 	public static function add_to_cart($product_id, $quantity)
@@ -20,7 +21,8 @@ class shoppingcart
 		{
 			$_SESSION[CART][ITEM][$product_id] = array('name' => $data['title'], 'price' => $data['price'], 'shipping' => $data['shipping'], 'product_id' => $product_id);
 		}
-		return shoppingcart::update_cart_object($product_id, $quantity);
+		shoppingcart::update_cart_object($product_id, $quantity);
+		return hoppingcart::calculate_price();
 	}
 	
 	public static function get_cart()
@@ -39,18 +41,22 @@ class shoppingcart
 		{
 			if($quantity <= 0)
 			{
-				unset($_SESSION[CART][ITEM][$product_id]);	
+				unset($_SESSION[CART][ITEM][$product_id]);
+				shoppingcart::calculate_price();
 				return true;
 			}
 			$_SESSION[CART][ITEM][$product_id]['quantity'] = $quantity;
+			shoppingcart::calculate_price();
 			return true;
 		}
+		shoppingcart::calculate_price();
 		return false;
 	}
 	
 	public static function delete_cart_object($id)
 	{
-		return shoppingcart::update_cart_object($id, 0);
+		shoppingcart::update_cart_object($id, 0);
+		return shoppingcart::calculate_price();
 	}
 	
 	private static function get_product_data($id)
@@ -63,24 +69,28 @@ class shoppingcart
 		$price = 0;
 		$shipping = 0;
 		
-		foreach($_SESSION[CART][$product_id] as $product)
+		if(count($_SESSION[CART][ITEM]) > 0)
 		{
-			$price = $price + ($product['quantity'] * $product['price']);
-			$shipping = max($shipping, $product['shipping']);
+			foreach($_SESSION[CART][ITEM] as $product)
+			{
+				$price = $price + ($product['quantity'] * $product['price']);
+				$shipping = max($shipping, $product['shipping']);
+			}
+			$total = $price+$shipping;
+			
+			$result = array('price' => $price, 'shipping' => $shipping, 'tax' => 0);
+			
+			if(settings::singleton()->get_setting('shop_tax_rate'))
+			{
+				$tax = (settings::singleton()->get_setting('shop_tax_rate')*$price) + (settings::singleton()->get_setting('tax_rate')*$shipping);
+				$total = $total + $tax;
+				$result['tax'] = $tax;
+			}
+			$result['total'] = $total;
+			$_SESSION[CART]['cost'] = $result;
+			return $result;
 		}
-		$total = $price+$shipping;
-		
-		$result = array('price' => $price, 'shipping' => $shipping);
-		
-		if(settings::singleton()->get_setting('shop_tax_rate'))
-		{
-			$tax = (settings::singleton()->get_setting('shop_tax_rate')*$price) + (settings::singleton()->get_setting('tax_rate')*$shipping);
-			$total = $total + $tax;
-			$result['tax'] = $tax;
-		}
-		$result['total'] = $total;
-		$_SESSION[CART]['cost'] = $result;
-		return $result;
+		unset($_SESSION[CART]);
 	}
 }
 ?>

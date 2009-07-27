@@ -100,15 +100,15 @@ Settings::Singleton()->new_setting('shop_menu_name', 'Shop', false, true);
 
 //Setting shop_tax_rate
 //Local Tax rate as a decimal ie 15% is 0.15
-Settings::Singleton()->new_setting('shop_tax_rate', 0, false, true);
+Settings::Singleton()->new_setting('shop_tax_rate', 0);
 
 //Setting currency
 //currency code GBP is Great British Pound, use the paypal codes
-Settings::Singleton()->new_setting('currency', 'GBP', false, true);
+Settings::Singleton()->new_setting('currency', 'GBP');
 
 //Setting business_id
 //The unique id used with your payment provider
-Settings::Singleton()->new_setting('business_id', null, false, true);
+Settings::Singleton()->new_setting('business_id', null);
 
 
 //Setting skin

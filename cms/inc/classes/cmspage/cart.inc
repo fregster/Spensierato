@@ -20,9 +20,15 @@ class cmspage_cart extends cmspage_html
 
 			case 'update':
 				shoppingcart::update_cart_object(CMS::Singleton()->path_vars(2), get::variable('quantity', 'numeric'));
+				common::bounce_to_referer();
+//				print_r($_SESSION['shopping_cart']); die('hello');
 				break;
 				
 			case 'termsandconditions':
+				die('Terms and conditions');
+				break;
+				
+			case 'payment':
 				die('Terms and conditions');
 				break;
 				

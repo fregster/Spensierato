@@ -17,7 +17,7 @@
 	</xsl:template>
 	
 	<xsl:template name="ShoppingCart">
-		<xsl:if test="/page/settings/shop = '1'">
+		<xsl:if test="/page/settings/shop = '1' and /page/cart">
 			<div id="ShoppingCart">
 			<div id="ShoppingCartTitle">Your Shopping Basket</div>
 				<xsl:choose>

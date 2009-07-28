@@ -160,7 +160,7 @@ class Content
 	
 	private function attach_cart()
 	{
-		if(Settings::singleton()->get_setting('shop'))
+		if(Settings::singleton()->get_setting('shop') && shoppingcart::get_number_of_items())
 		{
 			$this->shoppingcart_data->appendXML(shoppingcart::get_cart());
 			$this->lastmodified = max($this->lastmodified, shoppingcart::lastmodified());
@@ -222,8 +222,11 @@ class Content
 		$this->page->appendChild($this->settings_data);
 		$this->page->appendChild($this->user_data);
 		$this->page->appendChild($this->security_data);
-		$this->page->appendChild($this->shoppingcart_data);
 		$this->page->appendChild($this->options_data);
+		if(isset($this->shoppingcart_data))
+		{
+			@$this->page->appendChild($this->shoppingcart_data);
+		}
 		if(isset($this->head_data))
 		{
 			$this->page->appendChild($this->head_data);

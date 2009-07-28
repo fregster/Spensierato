@@ -2,7 +2,7 @@
 // Standard error functions
 abstract class error
 {
-	public function error($text, $exception = NULL)
+	public static function error($text, $exception = NULL)
 	{	
 		if(isset($exception))
 		{
@@ -11,7 +11,7 @@ abstract class error
 		die($text);
 	}
 	
-	public function exception($exception)
+	public static function exception($exception)
 	{
 		error::error('An exception was thrown', $exception);
 	}

@@ -5,32 +5,43 @@ define('ITEM', 'items', true);
 if(!isset($_SESSION[CART]))
 {
 	$_SESSION[CART] = array();
-	$_SESSION[CART] = array(
-'items' => array(1 => array('title'=> 'Random Title', 'price' => 10, 'shipping' => 5, 'quantity'=>1, 'product_id' => 1)),
-'cost'=> array('price'=>10, 'shipping'=>5, 'tax'=>1, 'total'=>16),
-'updated' => 123456,
-);
 }
+
+/*
+ * Example cart array
+ * the items array is keyed with the product id for quick updating, this numeric value is turned into 'item' in the xml conversion
+ */
+//$_SESSION[CART] = array(
+//'items' => array(1 => array('title'=> 'Random Title', 'price' => 10, 'shipping' => 5, 'quantity'=>1, 'product_id' => 1)),
+//'cost'=> array('price'=>10, 'shipping'=>5, 'tax'=>1, 'total'=>16),
+//'updated' => 123456,
+//);
 
 class shoppingcart
 {
 	public static function add_to_cart($product_id, $quantity)
 	{
 		$data = shoppingcart::get_product_data($product_id);
-		if(!isset($_SESSION[CART][ITEM][$product_id]))
+		if($data != false)
 		{
-			$_SESSION[CART][ITEM][$product_id] = array('name' => $data['title'], 'price' => $data['price'], 'shipping' => $data['shipping'], 'product_id' => $product_id);
+			if(!isset($_SESSION[CART][ITEM][$product_id]))
+			{
+				$_SESSION[CART][ITEM][$product_id] = array('name' => $data['title'], 'price' => $data['price'], 'shipping' => $data['shipping'], 'product_id' => $product_id);
+			}
+			shoppingcart::update_cart_object($product_id, $quantity);
 		}
-		shoppingcart::update_cart_object($product_id, $quantity);
-		return hoppingcart::calculate_price();
+		return shoppingcart::calculate_price();
 	}
 	
 	public static function get_number_of_items()
 	{
-		$count = count($_SESSION[CART][ITEM]);
-		if($count > 0)
+		if(isset($_SESSION[CART][ITEM]))
 		{
-			return $count;
+			$count = count($_SESSION[CART][ITEM]);
+			if($count > 0)
+			{
+				return $count;
+			}
 		}
 		return false;
 	}
@@ -71,7 +82,7 @@ class shoppingcart
 	
 	private static function get_product_data($id)
 	{
-		
+		return false;
 	}
 	
 	private static function calculate_price()

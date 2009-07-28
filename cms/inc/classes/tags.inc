@@ -22,6 +22,38 @@ class tags
 		return common::retrieve_values_from_array(database::singleton()->sql_select(array('page_id'), 'tbl_tags_to_elements', array('tag'), array($tags)), 'page_id');
 	}
 	
+	public static function get_tags_on_page($page, $search_elements_too = true)
+	{
+		$tags = array();
+		$tags_page = database::singleton()->sql_select('tag', 'tbl_tags_to_page', array('page_id'), array($page));
+		if(is_array($tags_page))
+		{
+			foreach($tags_page as $tag)
+			{
+				$tags['page'][] = $tag['tag'];
+			}
+		}
+		
+		if($search_elements_too)
+		{
+			$elements = content::Singleton()->list_of_elements();
+			if($elements)
+			{
+				$tags_elements_on_page = database::singleton()->sql_select('tag', 'tbl_tags_to_elements', array('element_id'), array($elements));
+				
+				if(is_array($tags_elements_on_page))
+				{
+					foreach($tags_elements_on_page as $tag)
+					{
+						$tags['elements'][] = $tag['tag'];
+					}
+				}
+			}
+		}
+		
+		return $tags;
+	}
+	
 	public static function get_pages_with_tags($tags, $search_elements_too = true)
 	{
 		if(!is_array($tags))

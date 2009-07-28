@@ -2,6 +2,7 @@
 class cmspage_html extends cmspage
 {
 	protected $page_details;
+	protected $tags;
 	
 	public function initalise()
 	{
@@ -35,6 +36,7 @@ class cmspage_html extends cmspage
 			
 			//Get current page details
 			$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->value));
+			
 			return true;
 		}
 		return false;
@@ -52,6 +54,11 @@ class cmspage_html extends cmspage
 	public function title()
 	{
 		return $this->page_details['title'];
+	}
+	
+	public function get_tags()
+	{
+		return $this->tags;
 	}
 }
 ?>

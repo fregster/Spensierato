@@ -11,6 +11,7 @@ class Content
 
 	private $page;
 	private $page_data;
+	private $page_tags_data;
 
 	private $content;
 	private $content_data;
@@ -32,7 +33,9 @@ class Content
 
 	private $head;
 	private $head_data;
-
+	
+	private $elements;
+	
 	public static function Singleton()
 	{
 	   if (!isset(self::$instance)) {
@@ -118,6 +121,7 @@ class Content
 		$template = Template::Singleton();
 
 		$this->attach_menu();
+		$this->attach_page_tags();
 		$this->load_elements();
 		$this->attach_head();
 		$this->attach_settings();
@@ -180,6 +184,15 @@ class Content
 			Settings::Singleton()->new_setting('header_extra', $head);
 		}
 	}
+	
+	private function attach_page_tags()
+	{
+		if(method_exists(cmspage::singleton(), 'get_tags'))
+		{
+			$this->page_data->appendXML(common::array_to_xml_simple(tags::get_tags_on_page(cmspage::singleton()->id()), 'tags', 'tag'));
+			$this->page->appendChild($this->page_data);
+		}
+	}
 
 	private function attach_debug()
 	{
@@ -235,15 +248,12 @@ class Content
 
 		$this->dom->appendChild($this->page);
 	}
-
-	private function load_elements()
+	
+	public function list_of_elements()
 	{
-		//Only load elements from DB if page type = html
-		if(CMS::Singleton()->page_details['type'] == 'html')
+		if(isset($this->elements[0]))
 		{
 			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible'), array(cmspage::Singleton()->id(), $this->visible), array('id'), array('sort'), options::Singleton()->get_option('admin_mode'));
-			$id_string = '';
-
 			if(isset($elements[0]))
 			{
 				$ids = array();
@@ -251,7 +261,23 @@ class Content
 				{
 					$ids[] = $id['element_id'];
 				}
+				$this->elements = $ids;
+				return $ids;
+			}
+		}
+		return false;
+	}
 
+	private function load_elements()
+	{
+		//Only load elements from DB if page type = html
+		if(CMS::Singleton()->page_details['type'] == 'html')
+		{
+			$ids = $this->list_of_elements();
+			$id_string = '';
+
+			if($ids)
+			{
 				$fields = array('id', 'visible', 'deleted');
 				$values = array($ids, $this->visible, $this->deleted);
 

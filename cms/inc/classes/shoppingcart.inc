@@ -1,12 +1,12 @@
 <?php
 common::requires_session();
 define('CART', 'shopping_cart', true);
-define('ITEM', 'item', true);
+define('ITEM', 'items', true);
 if(!isset($_SESSION[CART]))
 {
 	$_SESSION[CART] = array();
 	$_SESSION[CART] = array(
-'item' => array(1 => array('title'=> 'Random Title', 'price' => 10, 'shipping' => 5, 'quantity'=>1, 'product_id' => 1)),
+'items' => array(1 => array('title'=> 'Random Title', 'price' => 10, 'shipping' => 5, 'quantity'=>1, 'product_id' => 1)),
 'cost'=> array('price'=>10, 'shipping'=>5, 'tax'=>1, 'total'=>16),
 'updated' => 123456,
 );
@@ -23,6 +23,16 @@ class shoppingcart
 		}
 		shoppingcart::update_cart_object($product_id, $quantity);
 		return hoppingcart::calculate_price();
+	}
+	
+	public static function get_number_of_items()
+	{
+		$count = count($_SESSION[CART][ITEM]);
+		if($count > 0)
+		{
+			return $count;
+		}
+		return false;
 	}
 	
 	public static function get_cart()

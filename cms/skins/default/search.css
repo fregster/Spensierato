@@ -1,10 +1,14 @@
 #searchtext{display:inline; width:140px;}
 #searchbutton{display:inline;}
 
-
-autosearch
+#ajaxSearchResults
 {
-	/* position: absolute; */
+	position:relative;	
+}
+
+.autosearch
+{
+	position: absolute;
 	background-image: url(skin/as_pointer.gif); 
 	background-position: top;
 	background-repeat: no-repeat;

@@ -4,18 +4,25 @@
 			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
 			<xsl:attribute name="class"><xsl:value-of select="./@type" /></xsl:attribute>
 			<h2>Your Shopping Cart</h2>
-			<xsl:for-each select="/page/cart/item/item">
-				<xsl:call-template name="cartItem" />
-			</xsl:for-each>
-			<br/>
-			<xsl:call-template name="cartCosting" />
-
-			<h3>
-			<xsl:element name="a">
-				<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/cart/checkout</xsl:attribute>
-				Checkout
-			</xsl:element>
-			</h3>
+			<xsl:choose>
+				<xsl:when test="count(/page/cart/items/item) > 0">
+				<xsl:for-each select="/page/cart/items/item">
+					<xsl:call-template name="cartItem" />
+				</xsl:for-each>
+				<br/>
+				<xsl:call-template name="cartCosting" />
+	
+				<h3>
+				<xsl:element name="a">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/cart/checkout</xsl:attribute>
+					Checkout
+				</xsl:element>
+				</h3>
+				</xsl:when>
+				<xsl:otherwise>
+					There are no (0) items in your cart
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:element>
 	</xsl:template>
 	

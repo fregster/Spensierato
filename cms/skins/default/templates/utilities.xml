@@ -21,11 +21,11 @@
 			<div id="ShoppingCart">
 			<div id="ShoppingCartTitle">Your Shopping Basket</div>
 				<xsl:choose>
-					<xsl:when test="/page/cart/item">
-						<xsl:for-each select="/page/cart/item/item">
+					<xsl:when test="/page/cart/items/item">
+						<xsl:for-each select="/page/cart/items/item">
 							<xsl:value-of select="quantity" /> x <xsl:value-of select="title" /> £<xsl:value-of select="price" /> each<br/>
 						</xsl:for-each>
-						<div><xsl:value-of select="count(/page/cart/item)"/> Items Totaling £<xsl:value-of select="/page/cart/cost/total" /></div>
+						<div><xsl:value-of select="count(/page/cart/items/item)"/> Items Totaling £<xsl:value-of select="/page/cart/cost/total" /></div>
 						<div>
 							<xsl:element name="a">
 								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/cart</xsl:attribute>

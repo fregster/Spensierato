@@ -1,11 +1,6 @@
 <?php
-common::requires_session();
 define('CART', 'shopping_cart', true);
 define('ITEM', 'items', true);
-if(!isset($_SESSION[CART]))
-{
-	$_SESSION[CART] = array();
-}
 
 /*
  * Example cart array
@@ -21,6 +16,11 @@ class shoppingcart
 {
 	public static function add_to_cart($product_id, $quantity)
 	{
+		common::requires_session();
+		if(!isset($_SESSION[CART]))
+		{
+			$_SESSION[CART] = array();
+		}
 		$data = shoppingcart::get_product_data($product_id);
 		if($data != false)
 		{

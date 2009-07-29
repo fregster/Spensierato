@@ -168,6 +168,7 @@ class Content
 		{
 			$this->shoppingcart_data->appendXML(shoppingcart::get_cart());
 			$this->lastmodified = max($this->lastmodified, shoppingcart::lastmodified());
+			$this->e_string .= 'c'.shoppingcart::get_version();
 		}
 	}
 
@@ -238,7 +239,7 @@ class Content
 		$this->page->appendChild($this->options_data);
 		if(isset($this->shoppingcart_data))
 		{
-			@$this->page->appendChild($this->shoppingcart_data);
+			@$this->page->appendChild($this->shoppingcart_data); //Supress the warning as this is oftern empty, should put a better check in but for now..
 		}
 		if(isset($this->head_data))
 		{
@@ -272,7 +273,6 @@ class Content
 		if(CMS::Singleton()->page_details['type'] == 'html')
 		{
 			$ids = $this->list_of_elements();
-			$id_string = '';
 			
 			if($ids)
 			{
@@ -307,7 +307,6 @@ class Content
 			{
 				if(($this->elements_attached != true) and (!options::singleton()->get_option('admin_mode')))
 				{
-					//$this->insert_xml(Render::Singleton()->render_element('STRING', 'There are no elements on this page yet'));
 					$element = Element::type('elementText');
 					$element->build('blank');
 				}

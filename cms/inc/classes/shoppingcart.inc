@@ -1,6 +1,7 @@
 <?php
 define('CART', 'shopping_cart', true);
 define('ITEM', 'items', true);
+define('VERSION', 'version', true);
 
 /*
  * Example cart array
@@ -20,6 +21,7 @@ class shoppingcart
 		if(!isset($_SESSION[CART]))
 		{
 			$_SESSION[CART] = array();
+			$_SESSION[CART][VERSION] = 1;
 		}
 		$data = shoppingcart::get_product_data($product_id);
 		if($data != false)
@@ -51,6 +53,11 @@ class shoppingcart
 		return common::array_to_xml_simple($_SESSION[CART], 'cart', 'item');
 	}
 	
+	public static function get_version()
+	{
+		return $_SESSION[CART][VERSION];
+	}
+	
 	public static function lastmodified()
 	{
 		return $_SESSION[CART]['updated'];
@@ -58,6 +65,7 @@ class shoppingcart
 	
 	public static function update_cart_object($product_id, $quantity)
 	{
+		++$_SESSION[CART][VERSION];
 		if(isset($_SESSION[CART][ITEM][$product_id]))
 		{
 			if($quantity <= 0)

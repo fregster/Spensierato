@@ -249,23 +249,21 @@ class Content
 		$this->dom->appendChild($this->page);
 	}
 	
-	public function list_of_elements()
+	public function list_of_elements($force_reload = false)
 	{
-		if(isset($this->elements[0]))
+		if(!isset($this->elements[0]) || $force_reload) //Quick check to see if we have elements, this will always rebuild if we have 0 elements on a page but will do for the moment
 		{
+			$this->elements = array();
 			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible'), array(cmspage::Singleton()->id(), $this->visible), array('id'), array('sort'), options::Singleton()->get_option('admin_mode'));
 			if(isset($elements[0]))
 			{
-				$ids = array();
 				foreach($elements as $id)
 				{
-					$ids[] = $id['element_id'];
+					$this->elements[] = $id['element_id'];
 				}
-				$this->elements = $ids;
-				return $ids;
 			}
 		}
-		return false;
+		return $this->elements;
 	}
 
 	private function load_elements()
@@ -275,7 +273,7 @@ class Content
 		{
 			$ids = $this->list_of_elements();
 			$id_string = '';
-
+			
 			if($ids)
 			{
 				$fields = array('id', 'visible', 'deleted');
@@ -297,10 +295,10 @@ class Content
 						if(isset($element_data[$key]) && $element_data[$key] != NULL)
 						{
 							$element = Element::type($data['type']);
-							$element->build($elements[$key]['element_id'], $element_data[$key]);
+							$element->build($element_data[$key]['id'], $element_data[$key]);
 	
 							$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $elements[$key]['ts']);
-							$this->e_string .=$elements[$key]['element_id'];
+							$this->e_string .=$elements[$key]['id'];
 						}
 					}
 				}

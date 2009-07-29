@@ -1,7 +1,7 @@
 <?php
 class cmspage_html extends cmspage
 {
-	protected $page_details;
+//	protected $page_details;
 	protected $tags;
 	
 	public function initalise()

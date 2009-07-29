@@ -36,7 +36,17 @@ class cmspage_html extends cmspage
 			
 			//Get current page details
 			$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->value));
-			
+			if(strlen($this->page_details['append_tags']) > 0)
+			{
+				$this->page_details['append_tags'] = explode(',',$this->page_details['append_tags']);
+				if(isset($this->page_details['append_tags'][0])) //Clean up the tags
+				{
+					foreach($this->page_details['append_tags'] as $key => $tag)
+					{
+						$this->page_details['append_tags'][$key] = trim($tag);
+					}
+				}
+			}
 			return true;
 		}
 		return false;
@@ -59,6 +69,15 @@ class cmspage_html extends cmspage
 	public function get_tags()
 	{
 		return $this->tags;
+	}
+	
+	public function get_menu_children()
+	{
+		if(isset($this->page_details['append_tags'][0]))
+		{
+			return tags::get_pages_with_tags($this->page_details['append_tags']);
+		}
+		return array();
 	}
 }
 ?>

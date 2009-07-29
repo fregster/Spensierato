@@ -70,6 +70,14 @@ class cmspage //This relies on CurentPage been loaded
 	{
 		return $this->page_details;
 	}
+	
+	/**
+	 * If this page needs to attach any aditional pages under it's normal menu item
+	 */
+	public function get_menu_children()
+	{
+		
+	}
 
 	/**
 	 * Standard security calls for ease

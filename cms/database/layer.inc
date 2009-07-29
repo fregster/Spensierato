@@ -620,6 +620,14 @@ class Database
 	protected function sql_build_where_string_part($where_fields, $where_values)
 	{
 		//Include Where clause into sql if set
+		if(!is_array($where_fields))
+		{
+			$where_fields = array($where_fields);
+		}
+		if(!is_array($where_values))
+		{
+			$where_fields = array($where_values);
+		}
 		$count_where = count($where_values) - 1;
 		$count_where_fields = count($where_fields) - 1;
 

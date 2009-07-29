@@ -135,7 +135,34 @@ class Menu
 
 	private function get_children()
 	{
-		return $this->get_children_of($this->current_page);
+		$children = $this->get_children_of($this->current_page);
+		$additional_children = $this->get_additional_children();
+
+		if(isset($additional_children[0]))
+		{
+			if(!isset($children[0]))
+			{
+				$children = array();
+			}
+			$children = array_merge($children, $additional_children);
+		}
+		
+		return $children;
+	}
+	
+	private function get_additional_children()
+	{
+		$additional_children = cmspage::Singleton()->get_menu_children();
+		if(isset($additional_children[0]))
+		{
+			$additional_children = $this->security_check(Database::Singleton()->sql_select(array('id', 'title', 'parent_id', 'visible', 'deleted'), 'tbl_pages', array('id'), $additional_children, array('sort')));
+			foreach($additional_children as $key=>$child)
+			{
+				$additional_children[$key]['tagged_child'] = 1;
+			}
+			return $additional_children;
+		}
+		return array();
 	}
 
 	private function get_parents()
@@ -222,6 +249,11 @@ class Menu
 		}
 		$details = Database::Singleton()->sql_select(array('id', 'title', 'parent_id', 'visible', 'deleted'), 'tbl_pages', $where, $values, array('sort'));
 
+		return $this->security_check($details);
+	}
+	
+	private function security_check($details)
+	{
 		$i = 0;
 		if(is_array($details))
 		{
@@ -261,7 +293,7 @@ class Menu
 	{
 		if($this->options['get_full_menu'])
 		{
-			return Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages');
+			return Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('product'), array(0));
 		}
 	}
 	
@@ -273,13 +305,13 @@ class Menu
 			$ids = array(0);
 			$i=1;
 			
-			$where = array('parent_id', 'deleted', 'visible');
-			$values = array($id, 0, 1);
+			$where = array('parent_id', 'product', 'deleted', 'visible');
+			$values = array($id,0, 0, 1);
 				
 			if(options::Singleton()->get_option('admin_mode'))
 			{
-				unset($where[1]); unset($where[2]);
-				unset($values[1]); unset($values[2]);
+				array_pop($where); array_pop($where);
+				array_pop($values); array_pop($values);
 			}
 
 			while($i <= $this->options['top_menu_depth'])

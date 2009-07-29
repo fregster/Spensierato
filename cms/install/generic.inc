@@ -137,6 +137,7 @@ $tables['tbl_pages'] = array(
 							'cols_define' =>
 							array(
 								'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
+								'product' => "TINYINT UNSIGNED DEFAULT '0'",
 								'parent_id' => 'INT UNSIGNED NOT NULL',
 								'append_tags' => 'TEXT',
 								'menu_type' => "TINYINT DEFAULT '0'",
@@ -206,7 +207,7 @@ $tables['tbl_users_data'] = array(
 								'primary_key' => 'id',
 								);
 								
-$tables['tbl_tags_to_page'] = array(
+$tables['tbl_tags_to_pages'] = array(
 								'cols_define' =>
 								array(
 									'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
@@ -215,7 +216,7 @@ $tables['tbl_tags_to_page'] = array(
 									),
 								'primary_key' => 'id',
 								);
-$tables['tbl_tags_to_element'] = array(
+$tables['tbl_tags_to_elements'] = array(
 								'cols_define' =>
 								array(
 									'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',

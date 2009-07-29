@@ -19,13 +19,13 @@ class tags
 			$tags = array($tags);
 		}
 		
-		return common::retrieve_values_from_array(database::singleton()->sql_select(array('page_id'), 'tbl_tags_to_elements', array('tag'), array($tags)), 'page_id');
+		return common::retrieve_values_from_array(database::singleton()->sql_select(array('element_id'), 'tbl_tags_to_elements', array('tag'), array($tags)), 'page_id');
 	}
 	
 	public static function get_tags_on_page($page, $search_elements_too = true)
 	{
 		$tags = array();
-		$tags_page = database::singleton()->sql_select('tag', 'tbl_tags_to_page', array('page_id'), array($page));
+		$tags_page = database::singleton()->sql_select('tag', 'tbl_tags_to_pages', array('page_id'), array($page));
 		if(is_array($tags_page))
 		{
 			foreach($tags_page as $tag)
@@ -61,11 +61,15 @@ class tags
 			$tags = array($tags);
 		}
 		
-		$page_ids = common::retrieve_values_from_array(database::singleton()->sql_select(array('element_id'), 'tbl_tags_to_pages', array('tag'), array($tags)), 'element_id');
+		$page_ids = common::retrieve_values_from_array(database::singleton()->sql_select(array('page_id'), 'tbl_tags_to_pages', array('tag'), array($tags)), 'page_id');
 		
 		if($search_elements_too)
 		{
-			$page_ids = array_merge($page_ids, common::retrieve_values_from_array(database::singleton()->sql_select(array('page_id'), 'tbl_page_elements', array('element_id'), array(get_elements_with_tags($tags))), 'page_id'));
+			$pages_with_elements_tagged = common::retrieve_values_from_array(database::singleton()->sql_select(array('page_id'), 'tbl_page_elements', array('element_id'), array(tags::get_elements_with_tags($tags))), 'page_id');
+			if(isset($pages_with_elements_tagged[0]))
+			{
+				$page_ids = array_merge($page_ids, $pages_with_elements_tagged);
+			}
 		}
 		return $page_ids;
 	}

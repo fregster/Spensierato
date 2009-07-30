@@ -538,14 +538,29 @@ abstract class Common
 		}
 	}
 	
-	public static function retrieve_values_from_array($array, $field)
+	public static function retrieve_values_from_array($array, $fields)
 	{
 		if(is_array($array) && count($array)>0)
 		{
 			$result = array();
-			foreach($array as $value)
+			if(is_array($fields))
 			{
-				$result[] = $value[$field];
+				foreach($array as $value)
+				{
+					$r = array();
+					foreach($fields as $field)
+					{
+						$r[] = $value[$field];
+					}
+					$result[] = $r;
+				}
+			}
+			else
+			{
+				foreach($array as $value)
+				{
+					$result[] = $value[$fields];
+				}
 			}
 			
 			return $result;

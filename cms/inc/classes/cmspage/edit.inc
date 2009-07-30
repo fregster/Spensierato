@@ -34,11 +34,7 @@ class cmspage_edit extends cmspage
 		}
 		else
 		{
-			if($this->value[1] == 'toggle')
-			{
-				$this->toggle();
-			}
-			if($this->value[1] == 'new_page')
+			if(($this->value[1] == 'toggle') || ($this->value[1] == 'new_page') || ($this->value[1] == 'new_product'))
 			{
 				$this->toggle();
 			}
@@ -94,6 +90,11 @@ class cmspage_edit extends cmspage
 				$this->security_page_approve();
 				$this->create_new_page($this->value[1]);
 			}
+			else if(post::variable('new_type') === 'newProduct')
+			{
+				$this->security_page_approve();
+				$this->create_new_product();
+			}
 			else
 			{
 				$element = Element::type(post::variable('new_type', 'string'));
@@ -132,6 +133,13 @@ class cmspage_edit extends cmspage
 			$sort = database::Singleton()->sql_max_field('tbl_pages', 'sort', array('parent_id'), array($parent_id));
 			$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator'), array($parent_id, time(), user::Singleton()->id()));
 		}
+		common::redirect($id);
+	}
+	
+	private function create_new_product()
+	{
+		$sort = database::Singleton()->sql_max_field('tbl_pages', 'sort', array('product'), array(1));
+		$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'product', 'created', 'creator'), array(0, 1, time(), user::Singleton()->id()));
 		common::redirect($id);
 	}
 

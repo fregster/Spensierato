@@ -183,7 +183,7 @@ class Database
 		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 	}
 	
-	public function sql_select_count_group_by_col($fields = NULL, $table, $group_col, $where_fields= NULL, $where_values= NULL)
+	public function sql_select_count_group_by_col($fields = NULL, $table, $group_col, $where_fields= NULL, $where_values= NULL, $ORDER_BY_COUNT = TRUE, $HAVING_COUNT = FALSE)
 	{
 		$sql_temp_select = '';
 
@@ -214,6 +214,14 @@ class Database
 
 
 		$sql = "SELECT $sql_temp_select, COUNT(*) as count FROM `".$this->prefix.$this->sql_clean_input($table).'`'.$this->sql_build_where_string($where_fields, $where_values).' GROUP BY '.$this->sql_clean_input($group_col);
+		if($ORDER_BY_COUNT)
+		{
+			$sql .= ' ORDER BY COUNT DESC';
+		}
+		else if(is_numeric($HAVING_COUNT)) //You can not use order by and having so they are exclusive
+		{
+			$sql .= ' HAVING COUNT(*) = '.$this->sql_clean_input($HAVING_COUNT);
+		}
 		return $this->sql_select_exe($sql, NULL);
 	}
 

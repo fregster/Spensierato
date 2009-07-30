@@ -159,6 +159,7 @@ class Menu
 			foreach($additional_children as $key=>$child)
 			{
 				$additional_children[$key]['tagged_child'] = 1;
+				$additional_children[$key]['parent_id'] = $this->current_page;
 			}
 			return $additional_children;
 		}
@@ -231,20 +232,17 @@ class Menu
 
 	private function get_children_of($id = 0)
 	{
-		if(options::Singleton()->get_option('admin_mode'))
+		$where = array('parent_id', 'product');
+		$values = array($id, 0);
+		if(!options::Singleton()->get_option('admin_mode'))
 		{
-			$where = array('parent_id');
-			$values = array($id);
-		}
-		else
-		{
-			$where = array('parent_id', 'deleted');
-			$values = array($id, '0');
+			$where[] = 'deleted';
+			$values[] = '0';
 
 			if(!user::singleton()->is_logged_in())
 			{
-				array_push($where, 'visible');
-				array_push($values, 1);
+				$where[] =  'visible';
+				$values[] =  1;
 			}
 		}
 		$details = Database::Singleton()->sql_select(array('id', 'title', 'parent_id', 'visible', 'deleted'), 'tbl_pages', $where, $values, array('sort'));

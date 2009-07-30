@@ -61,11 +61,19 @@ class tags
 			$tags = array($tags);
 		}
 		
-		$page_ids = common::retrieve_values_from_array(database::singleton()->sql_select(array('page_id'), 'tbl_tags_to_pages', array('tag'), array($tags)), 'page_id');
+		//Force this to an AND statment
+		$fields = array('tag');
+		$values = array();
+		foreach($tags as $tag)
+		{
+			$values[0][] = $tag;
+		}
 		
+		$page_ids = common::retrieve_values_from_array(database::singleton()->sql_select_count_group_by_col('page_id', 'tbl_tags_to_pages', 'page_id', $fields, $values, false, count($values[0])), 'page_id');
+
 		if($search_elements_too)
 		{
-			$pages_with_elements_tagged = common::retrieve_values_from_array(database::singleton()->sql_select(array('page_id'), 'tbl_page_elements', array('element_id'), array(tags::get_elements_with_tags($tags))), 'page_id');
+			$pages_with_elements_tagged = common::retrieve_values_from_array(database::singleton()->sql_select_count_group_by_col('page_id', 'tbl_page_elements', 'element_id', array(tags::get_elements_with_tags($tags))), 'page_id');
 			if(isset($pages_with_elements_tagged[0]))
 			{
 				$page_ids = array_merge($page_ids, $pages_with_elements_tagged);

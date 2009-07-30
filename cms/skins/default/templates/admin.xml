@@ -159,6 +159,28 @@
 							</xsl:element>
 							</div>
 						</xsl:if>
+						<xsl:if test="/page/security/can_approve = 1">
+						<div style="display:inline;">
+							<xsl:element name="form">
+								<xsl:attribute name="style">display:inline;</xsl:attribute>
+								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
+								<xsl:attribute name="method">post</xsl:attribute>
+								<xsl:attribute name="id">new_product_<xsl:value-of select="/page/@id" /></xsl:attribute>
+									<div style="display:inline;"><xsl:element name="input">
+										<xsl:attribute name="type">hidden</xsl:attribute>
+										<xsl:attribute name="value">newProduct</xsl:attribute>
+										<xsl:attribute name="name">new_type</xsl:attribute>
+									</xsl:element> | 
+									<xsl:element name="input">
+										<xsl:attribute name="type">image</xsl:attribute>
+										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+										<xsl:attribute name="class">sprite sprite-page_white_add</xsl:attribute>
+										<xsl:attribute name="style">display:inline;</xsl:attribute>
+										<xsl:attribute name="alt">Add New Product</xsl:attribute>
+									</xsl:element></div>
+							</xsl:element>
+							</div>
+							</xsl:if>
 						</xsl:element>					
 						
 						</xsl:if>

@@ -297,8 +297,8 @@ class Content
 							$element = Element::type($data['type']);
 							$element->build($element_data[$key]['id'], $element_data[$key]);
 	
-							$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $elements[$key]['ts']);
-							$this->e_string .=$elements[$key]['id'];
+							$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created'], $element_data[$key]['ts']);
+							$this->e_string .=$element_data[$key]['id'];
 						}
 					}
 				}

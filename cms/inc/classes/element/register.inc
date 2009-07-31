@@ -1,5 +1,5 @@
 <?php
-class elementRegister extends elementDefault
+class element_Register extends element_Default
 {
 	public function __construct()
 	{

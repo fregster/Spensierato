@@ -46,12 +46,11 @@ function __autoload($class_name)
 		 unset($exploded_class);
 		
 		$paths[] =	$include_path.'/cms/inc/classes/';
-		$paths[] =	$include_path.'/cms/inc/classes/elements/';
 		$paths[] =	$include_path.'/cms/inc/classes/optional/';
 					
 		foreach($paths as $path) //Cycle through the includes dir in order of preference
 		{
-			$file_ext = array('inc', 'php');
+			$file_ext = array('inc', 'php');  //Spensierato Default ext is inc as apache and iis can be configured not to serve them to help with security, Zend uses PHP
 			foreach($file_ext as $ext)
 			{
 				if(file_exists($path.$class_filename.'.'.$ext)) //Check the file exists
@@ -70,6 +69,7 @@ function __autoload($class_name)
 				}
 			}
 		}
+		return false; //Comment this out for debuging
 		print_r($paths);
 		echo($class_filename);
 		die('<p>Critical error: Class "'.$class_name.'" not defined</p>'); //A class has been called the can not be loaded

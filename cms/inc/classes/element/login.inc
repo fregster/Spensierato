@@ -1,5 +1,5 @@
 <?php
-class elementLogin extends elementDefault
+class element_Login extends element_Default
 {
 	public function __construct()
 	{

@@ -1,6 +1,6 @@
 <?php
-element::register('Link', 'elementLink');
-class elementLink extends elementDefault
+element::register('Link', 'element_Link');
+class element_Link extends element_Default
 {
 
 	public function __construct()

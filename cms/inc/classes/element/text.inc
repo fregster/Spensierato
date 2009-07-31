@@ -1,6 +1,6 @@
 <?php
 element::register('Text Article', 'elementText');
-class elementText extends elementDefault
+class element_Text extends element_Default
 {
 	public function __construct()
 	{

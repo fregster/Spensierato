@@ -7,6 +7,18 @@ abstract class Element
 		{
 			$type = Element::get_element_type($type);
 		}
+		$prefix = 'element_';
+		if(substr($type, 0, 8) != $prefix)
+		{
+			if(substr($type, 0, 7) == 'element')
+			{
+				$type = $prefix.substr($type, 7);
+			}
+			else
+			{
+				$type = $prefix.$type;
+			}
+		}
 
 		if(class_exists($type))
 		{
@@ -14,7 +26,7 @@ abstract class Element
 		}
 		else
 		{
-			$c = 'elementDefault';
+			$c = 'element_Default';
 		}
 
 		return new $c;

@@ -106,6 +106,9 @@ Settings::Singleton()->new_setting('shop_tax_rate', 0);
 //currency code GBP is Great British Pound, use the paypal codes
 Settings::Singleton()->new_setting('currency', 'GBP');
 
+//Setting currency_symbol
+Settings::Singleton()->new_setting('currency_symbol', '£');
+
 //Setting business_id
 //The unique id used with your payment provider
 Settings::Singleton()->new_setting('business_id', null);

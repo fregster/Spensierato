@@ -1,6 +1,6 @@
 <?php
-element::register('Tag Tree', 'elementTagTree');
-class elementTagTree extends elementDefault
+element::register('Tag Tree', 'element_TagTree');
+class element_TagTree extends element_Default
 {
 
 	public function __construct()

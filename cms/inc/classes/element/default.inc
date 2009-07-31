@@ -1,5 +1,5 @@
 <?php
-class elementDefault
+class element_Default
 {
 	//useful when not in admin mode
 	protected $id;

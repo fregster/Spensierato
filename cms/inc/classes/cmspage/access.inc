@@ -9,7 +9,7 @@ class cmspage_access extends cmspage_html
 	
 	public function run()
 	{
-		$element = Element::type('elementAccess');
+		$element = Element::type('element_Access');
 		$element->build('access');
 		Render::Singleton()->render_html(Content::Singleton()->build());
 	}

@@ -9,7 +9,7 @@ class cmspage_account extends cmspage_html
 	
 	public function run()
 	{
-		$element = Element::type('elementAccount');
+		$element = Element::type('element_Account');
 		$element->build('account');
 		Render::Singleton()->render_html(Content::Singleton()->build());
 	}

@@ -1,6 +1,6 @@
 <?php
 element::register('Page Contact', 'elementContact');
-class elementContact extends elementDefault
+class element_Contact extends element_Default
 {
 	public function __construct()
 	{

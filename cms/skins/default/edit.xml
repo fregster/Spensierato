@@ -41,11 +41,31 @@
 	</div>
 </xsl:template>
 	
-<xsl:template match="*[@type = 'text']">
+<xsl:template match="*[@type = 'text' or @type = 'numeric']">
 	<div>
 		<xsl:value-of select="@type" />: <xsl:element name="input">
 		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
 		<xsl:value-of select="." />
+		</xsl:element>
+	</div>
+</xsl:template>
+
+<xsl:template match="*[@type = 'value']">
+	<div>
+		<xsl:value-of select="@type" />: <xsl:element name="input">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:value-of select="/page/settings/currency_symbol" /><xsl:value-of select="." />
+		<!-- 
+		<xsl:choose>
+			<xsl:when test="/page/body/element/data/Tax_Rate">
+				+ <xsl:value-of select="/page/body/element/data/Tax_Rate" />% Tax
+			</xsl:when>
+			<xsl:when test="/page/settings/shop_tax_rate > 0">
+				+ <xsl:value-of select="/page/settings/shop_tax_rate" />% Tax
+			</xsl:when>
+		
+		</xsl:choose>		
+		 -->
 		</xsl:element>
 	</div>
 </xsl:template>

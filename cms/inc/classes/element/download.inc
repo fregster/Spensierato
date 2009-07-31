@@ -1,8 +1,8 @@
 <?php
 if(Settings::Singleton()->get_setting('uploads_enabled'))
 {
-	element::register('File Download', 'elementDownload');
-	class elementDownload extends elementDefault
+	element::register('File Download', 'element_Download');
+	class element_Download extends element_Default
 	{
 		public function __construct()
 		{

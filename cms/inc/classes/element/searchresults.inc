@@ -1,5 +1,5 @@
 <?php
-class elementSearchResults extends elementDefault
+class element_SearchResults extends element_Default
 {
 	public function __construct()
 	{

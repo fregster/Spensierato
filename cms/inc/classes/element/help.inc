@@ -1,5 +1,5 @@
 <?php
-class elementHelp extends elementDefault
+class element_Help extends element_Default
 {
 	public function __construct()
 	{

@@ -1,5 +1,5 @@
 <?php
-class elementWarnings extends elementDefault
+class element_Warnings extends element_Default
 {
 	public function __construct()
 	{

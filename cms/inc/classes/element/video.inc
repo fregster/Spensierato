@@ -2,8 +2,8 @@
 
 if(Settings::Singleton()->get_setting('uploads_enabled'))
 {
-	element::register('Video', 'elementVideo');
-	class elementVideo extends elementImage
+	element::register('Video', 'element_Video');
+	class element_Video extends element_Image
 	{
 		private $video_extended_details;
 		private $preview;

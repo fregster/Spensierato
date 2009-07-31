@@ -2,7 +2,7 @@
 // Standard error functions
 abstract class error
 {
-	public static function error($text, $exception = NULL)
+	public function error($text, $exception = NULL)
 	{	
 		if(isset($exception))
 		{

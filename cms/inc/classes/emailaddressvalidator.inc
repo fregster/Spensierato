@@ -39,7 +39,7 @@ class EmailAddressValidator {
 		}
 
 		// Check email length - min 3 (a@a), max 256
-		if (!$this->check_text_length($strEmailAddress, 3, 256)) {
+		if (!EmailAddressValidator::check_text_length($strEmailAddress, 3, 256)) {
 				return false;
 			}
 
@@ -72,12 +72,12 @@ class EmailAddressValidator {
 		}
 
 		// Check local portion
-		if (!$this->check_local_portion($arrEmailAddress[0])) {
+		if (!EmailAddressValidator::check_local_portion($arrEmailAddress[0])) {
 			return false;
 		}
 
 		// Check domain portion
-		if (!$this->check_domain_portion($arrEmailAddress[1])) {
+		if (!EmailAddressValidator::check_domain_portion($arrEmailAddress[1])) {
 			return false;
 		}
 
@@ -95,7 +95,7 @@ class EmailAddressValidator {
 		// Local portion can only be from 1 to 64 characters, inclusive.
 		// Please note that servers are encouraged to accept longer local
 		// parts than 64 characters.
-		if (!$this->check_text_length($strLocalPortion, 1, 64)) {
+		if (!EmailAddressValidator::check_text_length($strLocalPortion, 1, 64)) {
 			return false;
 		}
 		// Local portion must be:
@@ -124,7 +124,7 @@ class EmailAddressValidator {
 	 */
 	protected function check_domain_portion($strDomainPortion) {
 		// Total domain can only be from 1 to 255 characters, inclusive
-		if (!$this->check_text_length($strDomainPortion, 1, 255)) {
+		if (!EmailAddressValidator::check_text_length($strDomainPortion, 1, 255)) {
 			return false;
 		}
 		// Check if domain is IP, possibly enclosed in square brackets.
@@ -142,7 +142,7 @@ class EmailAddressValidator {
 			}
 			for ($i = 0, $max = sizeof($arrDomainPortion); $i < $max; $i++) {
 				// Each portion must be between 1 and 63 characters, inclusive
-				if (!$this->check_text_length($arrDomainPortion[$i], 1, 63)) {
+				if (!EmailAddressValidator::check_text_length($arrDomainPortion[$i], 1, 63)) {
 					return false;
 				}
 				if (!preg_match('/^(([A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9])|'

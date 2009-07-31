@@ -11,7 +11,7 @@ var gPopFrame = null;
 var gReturnFunc;
 var gPopupIsShown = false;
 var gHideSelects = false;
-var gLoading = "loading.html";
+var gLoading = document_root+"/loading.html";
 
 var gTabIndexes = new Array();
 // Pre-defined list of tags we want to disable/enable tabbing into

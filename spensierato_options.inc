@@ -113,6 +113,10 @@ Settings::Singleton()->new_setting('currency_symbol', '£');
 //The unique id used with your payment provider
 Settings::Singleton()->new_setting('business_id', null);
 
+//Settings show_email_orders
+//An email address that all orders will be BCC to
+Settings::Singleton()->new_setting('show_email_orders', null);
+
 
 //Setting skin
 //Set this to the path of the skin you wish to use

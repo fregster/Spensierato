@@ -1,5 +1,6 @@
 <?php
 define('CART', 'shopping_cart', true);
+define('ORDER', 'order', true);
 define('ITEM', 'items', true);
 define('VERSION', 'version', true);
 
@@ -51,7 +52,21 @@ class shoppingcart
 	
 	public static function get_cart()
 	{
-		return common::array_to_xml_simple($_SESSION[CART], 'cart', 'item');
+		if(isset($_SESSION[CART]))
+		{
+			return common::array_to_xml_simple($_SESSION[CART], 'cart', 'item');
+		}
+		return false;
+	}
+	
+	public static function get_order()
+	{
+		if(isset($_SESSION[ORDER]['id']))
+		{
+			$result = database::singleton()->sql_select_first(array('data'), 'tbl_orders', array('id'), array($_SESSION[ORDER]['id']));
+			return common::array_to_xml_simple(array_merge(json_decode($result['data'],true),array('order' => $_SESSION[ORDER]['id'])), 'order', 'item');
+		}
+		return false;
 	}
 	
 	public static function get_version()
@@ -127,6 +142,54 @@ class shoppingcart
 			return $result;
 		}
 		unset($_SESSION[CART]);
+	}
+	
+	public static function finalise($email, $details)
+	{
+		if(count($_SESSION[CART][ITEM]) > 0)
+		{
+			database::singleton()->force_write_user();
+			$_SESSION[ORDER]['id'] = database::singleton()->sql_insert('tbl_orders', array('email', 'data'), array($email, json_encode(array_merge($_SESSION[CART], $details))));
+			database::singleton()->destroy_write_user();
+			if(is_numeric($_SESSION[ORDER]['id']))
+			{
+				$_SESSION[ORDER][$_SESSION[ORDER]['id']] = $_SESSION[CART];
+				$_SESSION[ORDER][$_SESSION[ORDER]['id']]['details'] = $details;
+				shoppingcart::email_confirmation($_SESSION[ORDER]['id'], $email);
+				unset($_SESSION[CART]);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private static function email_confirmation($id, $email)
+	{
+//		echo($id);
+//		print_r($_SESSION[ORDER][$id]);
+//		print_r($_SESSION);
+//		die();
+		//Build email
+		$content = 'Content';
+		
+		//Send email
+		return common::email(array($email), settings::singleton()->get_setting('show_email_orders'), 'Online Order', $content, true, settings::singleton()->get_setting('show_email_orders'));
+	}
+	
+	public static function mark_order_paid($id)
+	{
+		database::singleton()->force_write_user();
+		$result = database::singleton()->sql_update_by_id($id, 'tbl_orders', array('paid'), array(1));
+		database::singleton()->destroy_write_user();
+		return $result;
+	}
+	
+	public static function mark_order_to_be_paid_by($id, $type)
+	{
+		database::singleton()->force_write_user();
+		$result = database::singleton()->sql_update_by_id($id, 'tbl_orders', array('payment_method'), array($type));
+		database::singleton()->destroy_write_user();
+		return $result;
 	}
 }
 ?>

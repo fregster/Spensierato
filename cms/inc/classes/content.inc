@@ -66,6 +66,7 @@ class Content
 		$this->user_data = $this->dom->createDocumentFragment();
 		$this->options_data = $this->dom->createDocumentFragment();
 		$this->shoppingcart_data = $this->dom->createDocumentFragment();
+		$this->shoppingorder_data = $this->dom->createDocumentFragment();
 		$this->warnings_data = $this->dom->createDocumentFragment();
 
 		$this->debug = $this->dom->createElement('debug');
@@ -164,11 +165,24 @@ class Content
 	
 	private function attach_cart()
 	{
-		if(Settings::singleton()->get_setting('shop') && shoppingcart::get_number_of_items())
+		if(Settings::singleton()->get_setting('shop'))
 		{
-			$this->shoppingcart_data->appendXML(shoppingcart::get_cart());
-			$this->lastmodified = max($this->lastmodified, shoppingcart::lastmodified());
-			$this->e_string .= 'c'.shoppingcart::get_version();
+			if(shoppingcart::get_number_of_items())
+			{
+				$this->shoppingcart_data->appendXML(shoppingcart::get_cart());
+				$this->lastmodified = max($this->lastmodified, shoppingcart::lastmodified());
+				$this->e_string .= 'c'.shoppingcart::get_version();
+				return true;
+			}
+			
+			$order = shoppingcart::get_order();
+			if($order)
+			{
+				$this->shoppingorder_data->appendXML($order);
+				$this->lastmodified = max($this->lastmodified, shoppingcart::lastmodified());
+				$this->e_string .= 'o'.shoppingcart::get_version();
+				return true;
+			}
 		}
 	}
 
@@ -240,6 +254,10 @@ class Content
 		if(isset($this->shoppingcart_data))
 		{
 			@$this->page->appendChild($this->shoppingcart_data); //Supress the warning as this is oftern empty, should put a better check in but for now..
+		}
+		if(isset($this->shoppingorder_data))
+		{
+			@$this->page->appendChild($this->shoppingorder_data); //Supress the warning as this is oftern empty, should put a better check in but for now..
 		}
 		if(isset($this->head_data))
 		{

@@ -1,4 +1,4 @@
-	<xsl:template match="element[@type = 'elementCart']">
+	<xsl:template match="element[@type = 'element_Cart']">
 		<xsl:element name="div">
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
 			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
@@ -29,9 +29,9 @@
 	<xsl:template name="cartItem">
 		<xsl:element name="div">
 			<xsl:attribute name="id">product_id_<xsl:value-of select="product_id" /></xsl:attribute>
-			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./name" /></xsl:attribute></xsl:if>
 			<xsl:attribute name="class"><xsl:value-of select="cartItem" /></xsl:attribute>
-			<span><xsl:value-of select="title"/> </span>
+			<span><xsl:value-of select="./name"/> </span>
 			<span> x <xsl:value-of select="quantity"/> @ £<xsl:value-of select="price"/> each = £<xsl:value-of select="price * quantity"/></span>
 			<div style="display:inline;">
 				<xsl:element name="form">
@@ -114,7 +114,7 @@
 		</div>
 	</xsl:template>	
 			
-	<xsl:template match="element[@type = 'elementCheckout']">
+	<xsl:template match="element[@type = 'element_Checkout']">
 		<xsl:element name="div">
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
 			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
@@ -124,13 +124,95 @@
 			<h4>Your Order</h4>
 			<xsl:call-template name="cartCosting" />
 			</div>
-			<xsl:call-template name="paypal_checkout" />
+			<xsl:call-template name="place_order" />
 			<br/>
 			<br/>
 		</xsl:element>
 	</xsl:template>
 	
-	<xsl:template name="paypal_checkout">
+	<xsl:template name="place_order">
+		<div id="order_form">
+			<xsl:element name="form">
+						<xsl:attribute name="style">display:inline;</xsl:attribute>
+						<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/cart/place_order</xsl:attribute>
+						<xsl:attribute name="method">post</xsl:attribute>
+						<xsl:attribute name="id">place_order</xsl:attribute>
+						<div>
+			<div>
+				<h4>Your Details</h4>
+				<table>
+					<tr><td>First name:</td><td> <input name="first_name" type="text" /></td></tr>
+					<tr><td>Last name:</td><td><input name="last_name" type="text" /></td></tr>
+				</table>
+				</div>
+				<div>
+				<h4>Your Shipping Address</h4>
+				<table>
+					<tr><td>Line 1:</td><td><input name="address1" type="textfield" /></td></tr>
+					<tr><td>Line 2:</td><td><input name="address2" type="textfield" /></td></tr>
+					<tr><td>Town or City:</td><td><input name="city" type="textfield" /></td></tr>
+					<tr><td>County:</td><td><input name="county" type="textfield" /></td></tr>
+				</table>
+				
+				</div>
+				<div>
+				<h4>Your Contact Details</h4>
+				<table>
+					<tr><td>Phone Number (Including Area Code):</td><td><input name="phone" type="textfield" /></td></tr>
+					<tr><td>Email Address:</td><td><input name="email" type="textfield" /></td></tr>
+				</table>
+				
+				</div>
+				<div>
+					<p>By commiting to this sale you agree to the <xsl:element name="a"><xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/shop/termsandconditions</xsl:attribute><xsl:attribute name="class">submodal</xsl:attribute>Terms and Conditions</xsl:element> of sale including shipping restrictions</p>
+					<input type="submit" value="Place Order and Pay Online" />
+				</div>
+			</div>
+			</xsl:element>
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="element[@type = 'element_Payment']">
+		<div id="Payment">
+			<h2>Your Order has been placed #<xsl:value-of select="/page/order/order" /></h2>
+			You have been emailed a copy for your records
+			
+			<h3>Select Your Payment</h3>
+			<div>
+				Pay online now using <xsl:element name="form">
+				<xsl:attribute name="style">display:inline;</xsl:attribute>
+					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/cart/payment/paypal</xsl:attribute>
+					<xsl:attribute name="method">post</xsl:attribute>
+					<xsl:attribute name="id">place_order</xsl:attribute>
+					<input type="submit" value="PayPal" />
+				</xsl:element>
+			</div>
+			<div>
+				Pay by <xsl:element name="form">
+				<xsl:attribute name="style">display:inline;</xsl:attribute>
+					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/cart/payment/phone</xsl:attribute>
+					<xsl:attribute name="method">post</xsl:attribute>
+					<xsl:attribute name="id">place_order</xsl:attribute>
+					<input type="submit" value="Phone" />
+				</xsl:element>
+			</div>
+			Click you chosen payment method
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="element[@type = 'element_Payment_thankyou']">
+		<p>Thank you for shopping with</p>
+		
+		<p>Your order will be shiped as soon as your payment has cleared and as soon as the order can be fulfilled</p>
+		
+	</xsl:template>
+	
+	<xsl:template match="element[@type = 'element_Payment_Phone']">
+		To make your payment by phone please ring.
+	</xsl:template>
+	
+	<xsl:template match="element[@type = 'element_Payment_PayPal']">
+	You have chosen to pay via PayPal you are now leaving please click to confirm and pay 
 	<div id="paypal">
 		<xsl:element name="form">
 					<xsl:attribute name="style">display:inline;</xsl:attribute>
@@ -202,38 +284,52 @@
 							<xsl:attribute name="value"><xsl:value-of select="quantity" /></xsl:attribute>
 						</xsl:element>
 					</xsl:for-each>
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">first_name</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/order/first_name" /></xsl:attribute>
+					</xsl:element>
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">last_name</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/order/last_name" /></xsl:attribute>
+					</xsl:element>
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">address1</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/order/address1" /></xsl:attribute>
+					</xsl:element>
+					
+					<xsl:if test="/page/order/address2">
+						<xsl:element name="input">
+							<xsl:attribute name="type">hidden</xsl:attribute>
+							<xsl:attribute name="name"></xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="/page/order/address2" /></xsl:attribute>
+						</xsl:element>
+					</xsl:if>
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">city</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/order/city" /></xsl:attribute>
+					</xsl:element>
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">state</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/order/state" /></xsl:attribute>
+					</xsl:element>
+					
+					<xsl:element name="input">
+						<xsl:attribute name="type">hidden</xsl:attribute>
+						<xsl:attribute name="name">night_phone_b</xsl:attribute>
+						<xsl:attribute name="value"><xsl:value-of select="/page/order/night_phone_b" /></xsl:attribute>
+					</xsl:element>
+					<input type="submit" value="PayPal" />
 				</div>
-			<div>
-			<h4>Your Details</h4>
-			<table>
-				<tr><td>First name:</td><td> <input name="first_name" type="text" /></td></tr>
-				<tr><td>Last name:</td><td><input name="last_name" type="text" /></td></tr>
-			</table>
-			</div>
-			<div>
-			<h4>Your Shipping Address</h4>
-			<table>
-				<tr><td>Line 1:</td><td><input name="address1" type="textfield" /></td></tr>
-				<tr><td>Line 2:</td><td><input name="address2" type="textfield" /></td></tr>
-				<tr><td>Town or City:</td><td><input name="city" type="textfield" /></td></tr>
-				<tr><td>County:</td><td><input name="state" type="textfield" /></td></tr>
-			</table>
-			
-			</div>
-			<div>
-			<h4>Your Contact Details</h4>
-			<table>
-				<tr><td>Phone Number (Including Area Code):</td><td><input name="night_phone_b" type="textfield" /></td></tr>
-				<tr><td>Email Address:</td><td><input name="address2" type="textfield" /></td></tr>
-			</table>
-			
-			</div>
-			<div>
-				<p>By commiting to this sale you agree to the <xsl:element name="a"><xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/shop/termsandconditions</xsl:attribute><xsl:attribute name="class">submodal</xsl:attribute>Terms and Conditions</xsl:element> of sale including shipping restrictions</p>
-			</div>
-			<div>
-			<p>Pay Now using <input type="submit" value="PayPal" /></p>
-			</div>
 			</xsl:element>
 			</div>
-		</xsl:template>
+	</xsl:template>

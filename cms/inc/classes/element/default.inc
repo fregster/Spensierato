@@ -4,6 +4,7 @@ class element_Default
 	//useful when not in admin mode
 	protected $id;
 	protected $data;
+	protected $data_array;
 	protected $type;
 	protected $name;
 	protected $title = 'Please give the element a meaningful title';
@@ -437,6 +438,7 @@ class element_Default
 	}
 
 	protected function build_data_xml(){
+		$this->data_array = $this->data; //make a copy of the data in to an array
 		$this->data = stripslashes(common::array_to_xml_simple($this->data, 'data'));  //FIXME Should not need strip slashes here the database should return the data as we saved it
 
 		//FIXME: try to come up with a better way to add attributes to xml from arrays

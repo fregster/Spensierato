@@ -28,8 +28,9 @@ class shoppingcart
 		{
 			if(!isset($_SESSION[CART][ITEM][$product_id]))
 			{
-				$_SESSION[CART][ITEM][$product_id] = array('name' => $data['title'], 'price' => $data['price'], 'shipping' => $data['shipping'], 'product_id' => $product_id);
+				$_SESSION[CART][ITEM][$product_id] = array('name' => $data['title'], 'price' => $data['Price'], 'shipping' => $data['Shipping'], 'product_id' => $product_id);
 			}
+			//TODO add tax data
 			shoppingcart::update_cart_object($product_id, $quantity);
 		}
 		return shoppingcart::calculate_price();
@@ -90,6 +91,12 @@ class shoppingcart
 	
 	private static function get_product_data($id)
 	{
+		if(security::singleton()->can_view_element($id))
+		{
+			$element = Element::type($id);
+			$element->build($id);
+			return $element->cart_data();
+		}
 		return false;
 	}
 	

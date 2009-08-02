@@ -390,7 +390,7 @@ abstract class Common
 		{
 			foreach($to as $to)
 			{
-				if(!common::email_address_check())
+				if(!common::email_address_check($to))
 				{
 					return false;
 				}
@@ -432,7 +432,7 @@ abstract class Common
 		if(isset($bcc_string)) { $headers .= 'Bcc: ' .$bcc_string. "\r\n"; }
 
 		// Mail it
-		return mail($to_string, $subject, $message, $headers);
+		return(mail($to_string, $subject, $message, $headers));
 	}
 
 	public static function group_email($bcc = array(), $subject, $content, $from = NULL, $html = true)

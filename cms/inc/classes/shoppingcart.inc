@@ -165,15 +165,21 @@ class shoppingcart
 	
 	private static function email_confirmation($id, $email)
 	{
-//		echo($id);
-//		print_r($_SESSION[ORDER][$id]);
-//		print_r($_SESSION);
-//		die();
-		//Build email
-		$content = 'Content';
-		
-		//Send email
-		return common::email(array($email), settings::singleton()->get_setting('show_email_orders'), 'Online Order', $content, true, settings::singleton()->get_setting('show_email_orders'));
+		if(isset($_SESSION[ORDER][$id]))
+		{
+			//Build email
+			$content = '<p>Thank you for your order at '. settings::singleton()->get_setting('site_name_long') .'. <br/>
+Your order will be processed as soon as payment clears and shipped as soon as posible.<br/>
+This is NOT A RECIPT OF PAYMENT<br/></p>
+<p>';
+			foreach($_SESSION[ORDER][$id] as $item)
+			{
+				$content .= $item['quantity'] . ' X '. $item['item'].' product id ('.$item['product_id'].') individual item value '.$item['price'].'<br/>';
+			}
+			$content .= '<br/><p>Thank you for your custom</p><p>If you have any questions then please email <a href="mailto:'.settings::singleton()->get_setting('shop_email_orders').'">'.settings::singleton()->get_setting('shop_email_orders').'</a>';
+			//Send email
+			common::email(array($email), settings::singleton()->get_setting('shop_email_orders'), 'Online Order', $content, true, settings::singleton()->get_setting('shop_email_orders'));
+		}
 	}
 	
 	public static function mark_order_paid($id)

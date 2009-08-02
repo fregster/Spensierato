@@ -45,7 +45,7 @@ class cmspage_cart extends cmspage_html
 					
 						$element = Element::type('element_payment_thankyou');
 						$element->build('element_payment_thankyou');
-						unset($_SESSION['order']);
+//						unset($_SESSION['order']);
 					}
 					
 					$element = Element::type($type);

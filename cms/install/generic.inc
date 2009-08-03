@@ -225,4 +225,15 @@ $tables['tbl_tags_to_elements'] = array(
 									),
 								'primary_key' => 'id',
 								);
+$tables['tbl_orders'] = array(
+								'cols_define' =>
+								array(
+									'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
+									'email' => 'VARCHAR(64)',
+									'data' => 'TEXT NOT NULL',
+									'paid' => 'TINYINT UNSIGNED DEFAULT 0',
+									'payment_method' => 'VARCHAR(64)',
+									),
+								'primary_key' => 'id',
+								);							
 ?>

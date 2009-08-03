@@ -52,7 +52,7 @@ class cmspage_html extends cmspage
 			}
 			
 			
-			if(strlen($this->page_details['css']) > 0)
+			if(isset($this->page_details['css']) && strlen($this->page_details['css']) > 0)
 			{
 				$this->page_details['css'] = explode(',',$this->page_details['append_tags']);
 				if(isset($this->page_details['css'][0])) //Clean up the tags

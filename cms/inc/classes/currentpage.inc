@@ -85,9 +85,17 @@ class currentPage
 		$command = Database::Singleton()->sql_select_first(array('*'), 'tbl_commands', array('command'), array($command));
 		if(count($command) == 1)
 		{
-			if(isset($command['page']))
+			if(isset($command['type']) && isset($command['instruction']))
 			{
-				return $command['page'];
+				switch($command['type'])
+				{
+					case 'redir':
+						common::redirect($command['instruction']);
+						break;
+				
+					default:
+					break;
+				}
 			}
 		}
 		else

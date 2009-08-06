@@ -94,6 +94,7 @@ class currentPage
 						break;
 				
 					default:
+						return false;
 					break;
 				}
 			}

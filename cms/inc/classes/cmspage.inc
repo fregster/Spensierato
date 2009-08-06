@@ -41,6 +41,7 @@ class cmspage //This relies on CurentPage been loaded
 
 	public function initalise()
 	{
+		return class_exists($this->class, false);
 		if($this->type == 'cmspage') { return false; } //If this class has not been extended then the page type does not exsist and so return false
 		return true;
 	}

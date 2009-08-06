@@ -82,8 +82,8 @@ class currentPage
 
 	private function command_lookup($command)
 	{
-		$command = Database::Singleton()->sql_select_first(array('*'), 'tbl_commands', array('command'), array($command));
-		if(count($command) == 1)
+		$command = Database::Singleton()->sql_select_first(array('type', 'instruction'), 'tbl_commands', array('command'), array($command));
+		if(is_array($command))
 		{
 			if(isset($command['type']) && isset($command['instruction']))
 			{
@@ -99,10 +99,7 @@ class currentPage
 				}
 			}
 		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 
 	private function check_page()
@@ -138,7 +135,7 @@ class currentPage
 				CMS::Singleton()->page_details = $this->page_type;
 				if(!cmspage::Singleton()->initalise())
 				{
-					$command = $this->command_lookup($page_var);
+					$command = $this->command_lookup(CMS::Singleton()->path_vars(0));
 					if(!$command)
 					{
 						Error::do404();

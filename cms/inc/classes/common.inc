@@ -408,6 +408,42 @@ abstract class Common
 		{
 			return false;
 		}
+		
+		if(is_array($bto))
+		{
+			foreach($bcc as $bcc)
+			{
+				if(!common::email_address_check($bcc))
+				{
+					return false;
+				}
+				else
+				{
+					$bcc_string = $bcc_string . $bcc .', ';
+				}
+			}
+		}
+		else if (is_string($bcc)) {
+			$bcc_string = $bcc;
+		}
+		
+		if(is_array($cc))
+		{
+			foreach($cc as $cc)
+			{
+				if(!common::email_address_check($cc))
+				{
+					return false;
+				}
+				else
+				{
+					$cc_string = $cc_string . $cc .', ';
+				}
+			}
+		}
+		else if (is_string($cc)) {
+			$cc_string = $cc;
+		}
 
 		//Subjects should not have line breaks in them or html
 		$subject = str_replace('\n', '', strip_tags($subject));

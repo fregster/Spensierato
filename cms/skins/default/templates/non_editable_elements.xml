@@ -139,6 +139,7 @@
 						<xsl:attribute name="id">place_order</xsl:attribute>
 						<div>
 			<div>
+				<h3>All Fields are required unless shown otherwise</h3>
 				<h4>Your Details</h4>
 				<table>
 					<tr><td>First name:</td><td> <input name="first_name" type="text" /></td></tr>
@@ -149,7 +150,7 @@
 				<h4>Your Shipping Address</h4>
 				<table>
 					<tr><td>Line 1:</td><td><input name="address1" type="textfield" /></td></tr>
-					<tr><td>Line 2:</td><td><input name="address2" type="textfield" /></td></tr>
+					<tr><td>Line 2 (Optional):</td><td><input name="address2" type="textfield" /></td></tr>
 					<tr><td>Town or City:</td><td><input name="city" type="textfield" /></td></tr>
 					<tr><td>County:</td><td><input name="county" type="textfield" /></td></tr>
 				</table>

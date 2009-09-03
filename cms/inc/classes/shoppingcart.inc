@@ -172,11 +172,16 @@ class shoppingcart
 Your order will be processed as soon as payment clears and shipped as soon as posible.<br/>
 This is NOT A RECIPT OF PAYMENT<br/></p>
 <p>';
-			foreach($_SESSION[ORDER][$id] as $item)
+//			print_r($_SESSION[ORDER][$id]['items']); print_r($_SESSION[ORDER]);
+			foreach($_SESSION[ORDER][$id]['items'] as $item)
 			{
-				$content .= $item['quantity'] . ' X '. $item['item'].' product id ('.$item['product_id'].') individual item value '.$item['price'].'<br/>';
+				$content .= $item['quantity'] . ' X '. $item['name'].' (Product ID #'.$item['product_id'].') individual item value '.settings::singleton()->get_setting('currency_symbol').$item['price'].'<br/>';
 			}
-			$content .= '<br/><p>Thank you for your custom</p><p>If you have any questions then please email <a href="mailto:'.settings::singleton()->get_setting('shop_email_orders').'">'.settings::singleton()->get_setting('shop_email_orders').'</a>';
+			$content .= '<br/>Total including shipping and taxs ' .settings::singleton()->get_setting('currency_symbol').$_SESSION[ORDER][$id]['cost']['total'];
+			$content .= '<p>Shipping Address</p><p>'.$_SESSION[ORDER][$id]['details']['first_name'].'<br/>'.$_SESSION[ORDER][$id]['details']['last_name'].'<br/>'.$_SESSION[ORDER][$id]['details']['address1'].'<br/>'.$_SESSION[ORDER][$id]['details']['address2'].'<br/>'.$_SESSION[ORDER][$id]['details']['city'].'<br/>'.$_SESSION[ORDER][$id]['details']['county'];
+			$content .= '<p>Contact Details</p><p>'.$_SESSION[ORDER][$id]['details']['email'].'<br/>'.$_SESSION[ORDER][$id]['details']['phone'];		
+			$content .='<p>Thank you for your custom</p><p>If you have any questions then please email <a href="mailto:'.settings::singleton()->get_setting('shop_email_orders').'">'.settings::singleton()->get_setting('shop_email_orders').'</a>';
+//			die($content);
 			//Send email
 			common::email(array($email), settings::singleton()->get_setting('shop_email_orders'), 'Online Order', $content, true, settings::singleton()->get_setting('shop_email_orders'));
 		}
@@ -198,4 +203,3 @@ This is NOT A RECIPT OF PAYMENT<br/></p>
 		return $result;
 	}
 }
-?>

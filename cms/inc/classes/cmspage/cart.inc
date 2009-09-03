@@ -65,6 +65,7 @@ class cmspage_cart extends cmspage_html
 						'county' => post::variable('county', 'string'),
 						'phone' => post::variable('phone', 'string'),
 						'email' => post::variable('email'),
+						'postcode' => post::variable('postcode');
 					);
 					
 					if(post::variable('address2', 'isset'))

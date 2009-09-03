@@ -153,6 +153,7 @@
 					<tr><td>Line 2 (Optional):</td><td><input name="address2" type="textfield" /></td></tr>
 					<tr><td>Town or City:</td><td><input name="city" type="textfield" /></td></tr>
 					<tr><td>County:</td><td><input name="county" type="textfield" /></td></tr>
+					<tr><td>Post Code:</td><td><input name="postcode" type="textfield" /></td></tr>
 				</table>
 				
 				</div>
@@ -231,13 +232,14 @@
 						<xsl:attribute name="value"><xsl:value-of select="/page/settings/document_root"/>/cart/paypal/ipn</xsl:attribute>
 					</xsl:element>
 
-					<xsl:if test="/page/order/address1">
+					<!-- <xsl:if test="/page/order/address1">
 						<xsl:element name="input">
 							<xsl:attribute name="type">hidden</xsl:attribute>
 							<xsl:attribute name="name">address_override</xsl:attribute>
 							<xsl:attribute name="value">1</xsl:attribute>
 						</xsl:element>
-					</xsl:if>
+						
+					</xsl:if> -->
 					
 					<xsl:element name="input">
 						<xsl:attribute name="type">hidden</xsl:attribute>
@@ -251,6 +253,7 @@
 							<xsl:attribute name="name">shipping</xsl:attribute>
 							<xsl:attribute name="value"><xsl:value-of select="/page/cart/cost/shipping"/></xsl:attribute>
 						</xsl:element>
+						
 					</xsl:if>
 					
 					<xsl:if test="/page/cart/cost/tax">
@@ -259,6 +262,7 @@
 							<xsl:attribute name="name">tax_cart</xsl:attribute>
 							<xsl:attribute name="value"><xsl:value-of select="/page/cart/cost/tax"/></xsl:attribute>
 						</xsl:element>
+						
 					</xsl:if>
 					
 					<xsl:element name="input">
@@ -274,22 +278,25 @@
 					</xsl:element>
 
 
-					<xsl:for-each select="/page/cart/item">
+					<xsl:for-each select="/page/order/items/item">
 						<xsl:element name="input">
 							<xsl:attribute name="type">hidden</xsl:attribute>
 							<xsl:attribute name="name">item_name_<xsl:value-of select="position()"/></xsl:attribute>
-							<xsl:attribute name="value"><xsl:value-of select="title" /></xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="name" /></xsl:attribute>
 						</xsl:element>
+						
 						<xsl:element name="input">
 							<xsl:attribute name="type">hidden</xsl:attribute>
 							<xsl:attribute name="name">amount_<xsl:value-of select="position()"/></xsl:attribute>
 							<xsl:attribute name="value"><xsl:value-of select="price" /></xsl:attribute>
 						</xsl:element>
+						
 						<xsl:element name="input">
 							<xsl:attribute name="type">hidden</xsl:attribute>
 							<xsl:attribute name="name">quantity_<xsl:value-of select="position()"/></xsl:attribute>
 							<xsl:attribute name="value"><xsl:value-of select="quantity" /></xsl:attribute>
 						</xsl:element>
+						
 					</xsl:for-each>
 					
 					<xsl:if test="/page/order/first_name">
@@ -298,6 +305,7 @@
 							<xsl:attribute name="name">first_name</xsl:attribute>
 							<xsl:attribute name="value"><xsl:value-of select="/page/order/first_name" /></xsl:attribute>
 						</xsl:element>
+						
 					</xsl:if>
 					
 					<xsl:if test="/page/order/last_name">
@@ -306,6 +314,7 @@
 							<xsl:attribute name="name">last_name</xsl:attribute>
 							<xsl:attribute name="value"><xsl:value-of select="/page/order/last_name" /></xsl:attribute>
 						</xsl:element>
+						
 					</xsl:if>
 					
 					<xsl:if test="/page/order/address1">
@@ -314,24 +323,36 @@
 							<xsl:attribute name="name">address1</xsl:attribute>
 							<xsl:attribute name="value"><xsl:value-of select="/page/order/address1" /></xsl:attribute>
 						</xsl:element>
+						
+					</xsl:if>
+					
+					<xsl:if test="/page/order/postcode">
+						<xsl:element name="input">
+							<xsl:attribute name="type">hidden</xsl:attribute>
+							<xsl:attribute name="name">zip</xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="/page/order/postcode" /></xsl:attribute>
+						</xsl:element>
+						
 					</xsl:if>
 					
 					<xsl:if test="/page/order/address2">
 						<xsl:if test="/page/order/address2">
 							<xsl:element name="input">
 								<xsl:attribute name="type">hidden</xsl:attribute>
-								<xsl:attribute name="name"></xsl:attribute>
+								<xsl:attribute name="name">address2</xsl:attribute>
 								<xsl:attribute name="value"><xsl:value-of select="/page/order/address2" /></xsl:attribute>
 							</xsl:element>
+							
 						</xsl:if>
 					</xsl:if>
 					
 					<xsl:if test="/page/order/city">
-					<xsl:element name="input">
-						<xsl:attribute name="type">hidden</xsl:attribute>
-						<xsl:attribute name="name">city</xsl:attribute>
-						<xsl:attribute name="value"><xsl:value-of select="/page/order/city" /></xsl:attribute>
-					</xsl:element>
+						<xsl:element name="input">
+							<xsl:attribute name="type">hidden</xsl:attribute>
+							<xsl:attribute name="name">city</xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="/page/order/city" /></xsl:attribute>
+						</xsl:element>
+					
 					</xsl:if>
 					
 					<xsl:if test="/page/order/state">
@@ -340,6 +361,7 @@
 							<xsl:attribute name="name">state</xsl:attribute>
 							<xsl:attribute name="value"><xsl:value-of select="/page/order/state" /></xsl:attribute>
 						</xsl:element>
+						
 					</xsl:if>
 					
 					<xsl:if test="/page/order/night_phone_b">
@@ -348,6 +370,7 @@
 							<xsl:attribute name="name">night_phone_b</xsl:attribute>
 							<xsl:attribute name="value"><xsl:value-of select="/page/order/night_phone_b" /></xsl:attribute>
 						</xsl:element>
+						
 					</xsl:if>
 					<input type="submit" value="PayPal" />
 				</div>

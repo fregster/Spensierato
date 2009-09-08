@@ -30,7 +30,7 @@ class cmspage_cart extends cmspage_html
 				break;
 				
 			case 'termsandconditions':
-				die('Terms and conditions');
+				common::redirect('tandc');
 				break;
 				
 			case 'payment':

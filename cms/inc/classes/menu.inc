@@ -89,7 +89,7 @@ class Menu
 			$menu_array['current'] = $this->current_page_details;
 		}
 		$menu_array['full_menu'] = $this->get_full_menu();
-		$menu_array['top_menu'] = $this->get_top_menu();
+		$menu_array['top_menu'] = $this->get_top_menu($menu_array['top'][0]['parent_id']);
 
 		$menu_array['children'] = $this->children;
 
@@ -295,12 +295,12 @@ class Menu
 		}
 	}
 	
-	private function get_top_menu()
+	private function get_top_menu($ids = array(0))
 	{
 		if($this->options['top_menu_depth'] > 1)
 		{
 			$menu = array();
-			$ids = array(0);
+//			$ids = array(0);
 			$i=1;
 			
 			$where = array('parent_id', 'product', 'deleted', 'visible');

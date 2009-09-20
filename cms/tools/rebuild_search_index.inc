@@ -18,10 +18,11 @@ if(is_writable(Settings::singleton()->get_setting('cms_folder_logs'))) //Is the 
 	echo('<p>Creating New Index</p>');
 	new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index', true);
 	
-	$pages = Database::Singleton()->sql_select(array('page_id'), 'tbl_page_elements', array('element_id'), array($id));
+	$pages = Database::Singleton()->sql_select(array('id'), 'tbl_pages');
 	foreach($pages as $page)
 	{
-		$this->build_page_index($page['page_id']);
+		echo('Building '.$page['id'].'<br/>');
+		$this->build_page_index($page['id']);
 	}
 	
 //	common::bounce_to_referer();

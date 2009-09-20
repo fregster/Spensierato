@@ -22,7 +22,7 @@ if(is_writable(Settings::singleton()->get_setting('cms_folder_logs'))) //Is the 
 	foreach($pages as $page)
 	{
 		echo('Building '.$page['id'].'<br/>');
-		$this->build_page_index($page['id']);
+		search::Singleton()->build_page_index($page['id']);
 	}
 	
 //	common::bounce_to_referer();

@@ -58,7 +58,7 @@ function jsCheckHostType(){
 	</head>
 <body onload="jsShow(); jsHide();">
 <div id="frame" style="width:600px; margin-left:auto; margin-right:auto;">
-<div><img src="<?php echo(Common::document_root_folder_only()); ?>/cms/skins/default/graphics/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0; position: fixed;" alt="" /></div>
+<div><img src="<?php echo(Common::document_root_folder_only()); ?>/skin/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0; position: fixed;" alt="" /></div>
 <div id="notices"><?php
 //die(Common::document_root());
 if(isset($req_missing[0]) or isset($opt_missing[0]))

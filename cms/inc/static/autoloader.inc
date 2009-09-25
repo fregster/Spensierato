@@ -69,6 +69,8 @@ function __autoload($class_name)
 				}
 			}
 		}
+		@include_once($class_name);
+		return class_exists($class_name, false); //Try to see if the require function can load the class as it might be in the libs
 		return false; //Comment this out for debuging
 		print_r($paths);
 		echo($class_filename);

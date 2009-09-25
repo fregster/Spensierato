@@ -211,7 +211,7 @@ $tables['tbl_tags_to_pages'] = array(
 								'cols_define' =>
 								array(
 									'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
-									'page_id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
+									'page_id' => 'INT UNSIGNED NOT NULL',
 									'tag' => 'VARCHAR(64)',
 									),
 								'primary_key' => 'id',
@@ -220,7 +220,7 @@ $tables['tbl_tags_to_elements'] = array(
 								'cols_define' =>
 								array(
 									'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
-									'element_id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT',
+									'element_id' => 'INT UNSIGNED NOT NULL',
 									'tag' => 'VARCHAR(64)',
 									),
 								'primary_key' => 'id',

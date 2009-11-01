@@ -130,7 +130,7 @@ class warnings
 		if(Security::Singleton()->can_edit()) { $level = 1; }
 		if(User::Singleton()->is_admin()) { $level = 2;}
 
-		return Common::array_to_xml_simple($this->get($level), 'warnings', 'warning');
+		return xml::array_to_xml_simple($this->get($level), 'warnings', 'warning');
 	}
 }
 ?>

@@ -94,7 +94,7 @@ class Register
 			return false;
 		}
 
-		$data = common::xml_to_array($temp_details['data']);
+		$data = xml::xml_to_array($temp_details['data']);
 
 		//Compare hashes
 		if($data['hash'] == get::variable('key','string'))
@@ -111,7 +111,7 @@ class Register
 	private function save_registration()
 	{
 		database::Singleton()->force_write_user();
-		$data = Common::array_to_xml(array('hash' => $this->hash, 'username' => $this->username, 'email' => $this->email, 'salt' => $this->salt));
+		$data = xml::array_to_xml(array('hash' => $this->hash, 'username' => $this->username, 'email' => $this->email, 'salt' => $this->salt));
 		$this->id = database::Singleton()->sql_insert('tbl_temp', array('data', 'ts'), array($data, time()));
 		database::Singleton()->destroy_write_user();
 	}

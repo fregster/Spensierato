@@ -144,7 +144,7 @@ abstract class revisions{
 			$list_array = database::singleton()->sql_select($db_cols, 'tbl_elements_revisions', $db_condition_fields, $db_condition_values);
 
 			if ($list_array != NULL) {
-				return common::array_to_xml_simple($list_array, $type.'s', $type);
+				return xml::array_to_xml_simple($list_array, $type.'s', $type);
 			}
 		}
 		return NULL;

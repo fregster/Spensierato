@@ -102,8 +102,8 @@ class Settings
 			}
 			$i++;
 		}
-//		return Common::array_to_xml($settings, $serializer_options);
-		return Common::array_to_xml_simple($settings, 'settings', 'setting');
+//		return xml::array_to_xml($settings, $serializer_options);
+		return xml::array_to_xml_simple($settings, 'settings', 'setting');
 	}
 
 	public function overwrite_setting($name, $value, $protected = false)

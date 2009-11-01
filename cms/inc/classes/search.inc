@@ -124,7 +124,7 @@ class Search
 		
 //		$xml .= '<number_of_results>'.$this->results_in_set.'</number_of_results>';
 
-		$xml .= common::array_to_xml_simple($this->results, 'results', 'result');
+		$xml .= xml::array_to_xml_simple($this->results, 'results', 'result');
 
 		$xml .= '<time>'.(time()-$this->time).'</time></search>';
 

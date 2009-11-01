@@ -100,7 +100,7 @@ class Menu
 			   'rootName'  => 'menu',
 			   'defaultTagName'  => 'menu_item'
 			);
-		$this->menu_xml = Common::array_to_xml_simple($menu_array, 'menu', 'menu_item');
+		$this->menu_xml = xml::array_to_xml_simple($menu_array, 'menu', 'menu_item');
 
 		return $this->menu_xml;
 	}

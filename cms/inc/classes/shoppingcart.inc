@@ -54,7 +54,7 @@ class shoppingcart
 	{
 		if(isset($_SESSION[CART]))
 		{
-			return common::array_to_xml_simple($_SESSION[CART], 'cart', 'item');
+			return xml::array_to_xml_simple($_SESSION[CART], 'cart', 'item');
 		}
 		return false;
 	}
@@ -64,7 +64,7 @@ class shoppingcart
 		if(isset($_SESSION[ORDER]['id']))
 		{
 			$result = database::singleton()->sql_select_first(array('data'), 'tbl_orders', array('id'), array($_SESSION[ORDER]['id']));
-			return common::array_to_xml_simple(array_merge(json_decode($result['data'],true),array('order' => $_SESSION[ORDER]['id'])), 'order', 'item');
+			return xml::array_to_xml_simple(array_merge(json_decode($result['data'],true),array('order' => $_SESSION[ORDER]['id'])), 'order', 'item');
 		}
 		return false;
 	}

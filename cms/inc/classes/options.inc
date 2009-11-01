@@ -69,7 +69,7 @@ class options
 
 	public function options_as_xml()
 	{
-		return Common::array_to_xml_simple($_SESSION['cms_options'], 'options', 'option');
+		return xml::array_to_xml_simple($_SESSION['cms_options'], 'options', 'option');
 	}
 
 	public function set_option($option, $value)

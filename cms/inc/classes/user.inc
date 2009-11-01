@@ -167,7 +167,7 @@ class user
 
 	public function user_details_as_xml()
 	{
-		return Common::array_to_xml_simple($this->user_details, 'user', 'detail');
+		return xml::array_to_xml_simple($this->user_details, 'user', 'detail');
 	}
 
 	/**

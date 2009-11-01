@@ -204,7 +204,7 @@ class Content
 	{
 		if(method_exists(cmspage::singleton(), 'get_tags'))
 		{
-			$this->page_data->appendXML(common::array_to_xml_simple(tags::get_tags_on_page(cmspage::singleton()->id()), 'tags', 'tag'));
+			$this->page_data->appendXML(xml::array_to_xml_simple(tags::get_tags_on_page(cmspage::singleton()->id()), 'tags', 'tag'));
 			$this->page->appendChild($this->page_data);
 		}
 	}

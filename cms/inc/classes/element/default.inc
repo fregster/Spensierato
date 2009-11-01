@@ -446,7 +446,7 @@ class element_Default
 
 	protected function build_data_xml(){
 		$this->data_array = $this->data; //make a copy of the data in to an array
-		$this->data = stripslashes(common::array_to_xml_simple($this->data, 'data'));  //FIXME Should not need strip slashes here the database should return the data as we saved it
+		$this->data = stripslashes(xml::array_to_xml_simple($this->data, 'data'));  //FIXME Should not need strip slashes here the database should return the data as we saved it
 
 		//FIXME: try to come up with a better way to add attributes to xml from arrays
 		foreach ($this->tags as $tag => $type){
@@ -550,8 +550,8 @@ class element_Default
 	 * @return unknown_type
 	 */
 	protected function build_search_text($details){
-//		$details = common::xml_to_array($details);
-		$html = common::node_from_xml($details, 'html');
+//		$details = xml::xml_to_array($details);
+		$html = xml::node_from_xml($details, 'html');
 
 		if(isset($this->tags['html']) and isset($html[0]))
 		{

@@ -53,7 +53,8 @@ class virusscan
 			$output = array();
 
 			//Execute the command
-			exec($this->build_exec_command($file), $output, $av);//print_r($av); die();
+			exec($this->build_exec_command($file), $output, $av);
+//			print_r($av); die();
 			return $av;
 		}
 		return false;
@@ -65,7 +66,7 @@ class virusscan
 	 * @param string $file
 	 */
 	public function is_not_virus($file)
-	{
+	{		
 		if(!$this->scan_file($file))
 		{
 			return true;

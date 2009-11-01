@@ -7,6 +7,7 @@ class element_Default
 	protected $data_array;
 	protected $type;
 	protected $name;
+	protected $position = 1;
 	protected $title = 'Please give the element a meaningful title';
 
 	private $tags = array();
@@ -65,10 +66,15 @@ class element_Default
 		return true;
 	}
 
-	public function build($id, $data = array(), $link = NULL)
+	public function build($id, $data = array(), $link = NULL, $position = NULL)
 	{
 		$this->id = $id;
 
+		if($position != NULL)
+		{
+			$this->position = $position;
+		}
+		
 		$this->init_admin_data();
 
 		if($link == NULL)
@@ -107,6 +113,7 @@ class element_Default
 		$this->element->setAttribute('type', $this->type);
 		$this->element->setAttribute('etype', $this->name);
 		$this->element->setAttribute('title', $this->title);
+		$this->element->setAttribute('sort', $this->position);
 
 		$this->admin(&$dom);
 
@@ -451,6 +458,7 @@ class element_Default
 
 		if(!$this->attach_upload())
 		{
+			echo('Error uploading');
 			die($this->admin_mode_data['error']);
 		}
 

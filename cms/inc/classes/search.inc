@@ -494,9 +494,11 @@ class Search
 	private function build_file_index($element_id)
 	{
 		$fields = array('id', 'title', 'indexed', 'file', 'search');
-		$values = array($element_id, $title, 0, 1, $this->get_search_string_for_elements(array($element_id)), true);
+		$title = ''; //TODO lookup title
+		$values = array($element_id, $title, 0, 1, $this->get_search_string_for_elements(array($element_id)));
 		$this->index($fields, $values);
 	}
+	
 	//array('id', 'title', 'indexed', 'file', 'search');
 	private function index($fields, $values)
 	{

@@ -273,7 +273,8 @@ class Content
 		if(!isset($this->elements[0]) || $force_reload) //Quick check to see if we have elements, this will always rebuild if we have 0 elements on a page but will do for the moment
 		{
 			$this->elements = array();
-			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible'), array(cmspage::Singleton()->id(), $this->visible), array('id'), array('sort'), options::Singleton()->get_option('admin_mode'));
+			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible'), array(cmspage::Singleton()->id(), $this->visible), array('sort'), array('ASC'), options::Singleton()->get_option('admin_mode'));
+
 			if(isset($elements[0]))
 			{
 				foreach($elements as $id)
@@ -297,6 +298,7 @@ class Content
 				$fields = array('id', 'visible', 'deleted');
 				$values = array($ids, $this->visible, $this->deleted);
 
+				$positions = array_flip($ids);
 				//display deleted elements in admin mode
 				if (options::Singleton()->get_option('admin_mode')) {
 					array_pop($fields);
@@ -312,8 +314,10 @@ class Content
 					{
 						if(isset($element_data[$key]) && $element_data[$key] != NULL)
 						{
-							$element = Element::type($data['type']);
-							$element->build($element_data[$key]['id'], $element_data[$key]);
+							$position = $positions[$element_data[$key]['id']]+1;
+
+							$element = Element::type($data['type']);							
+							$element->build($element_data[$key]['id'], $element_data[$key], null, $position);
 	
 							$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created']);
 							$this->e_string .=$element_data[$key]['id'];

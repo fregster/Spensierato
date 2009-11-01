@@ -39,7 +39,6 @@ class clamav extends virusscan
 		 *
 		 * Note 127 will be returned from shell if clamdscan was not found
 		 */
-
 		switch ($av)
 		{
 			case 0:
@@ -49,7 +48,11 @@ class clamav extends virusscan
 			case 1:
 				return 'Virus Scan ClamAV'.$this->version().' found a virus';
 			break;
-
+			
+			case (settings::singleton()->get_setting('virus_scanner_pass_on_error') == true);
+				return false;
+			break;
+			
 			case 2:
 				return 'Virus Scan Failed';
 			break;

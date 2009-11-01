@@ -17,4 +17,3 @@ class cmspage_toggle extends cmspage
 		Common::bounce_to_referer();
 	}
 }
-?>

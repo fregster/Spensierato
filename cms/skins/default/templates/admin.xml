@@ -229,8 +229,13 @@
 		<!-- If in admin show admin header -->
 		<xsl:if test="/page/security/can_edit = 1">
 		<xsl:if test="/page/options/admin_mode = 1">
+			<xsl:variable name="id" select="./@id"/>
+			<xsl:variable name="position">
+				<xsl:value-of select="./@sort"/>
+			</xsl:variable>
+			
 			<xsl:element name="div">
-				<xsl:attribute name="id">eid_admin_<xsl:value-of select="./@id" /></xsl:attribute>
+				<xsl:attribute name="id">eid_admin_<xsl:value-of select="$id" /></xsl:attribute>
 				<xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute>
 				<xsl:attribute name="class">element_header rounded-4-4-0-0</xsl:attribute>
 
@@ -242,7 +247,7 @@
 				<xsl:value-of select="./@etype" /> | <xsl:value-of select="./@title" />
 
 				<xsl:element name="a">
-					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="./@id" /></xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="$id" /></xsl:attribute>
 					<!--<xsl:attribute name="onclick">editContent('eid_<xsl:value-of select="./@id" />'); return false;</xsl:attribute>  -->
 					<xsl:attribute name="class">submodal-<xsl:value-of select="./@ew" />-<xsl:value-of select="./@eh" /></xsl:attribute>
 					<xsl:element name="img">
@@ -253,6 +258,32 @@
 					</xsl:element>
 
 				</xsl:element> |
+
+				<xsl:if test="$position > 1">
+					<xsl:element name="a">
+						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/move/<xsl:value-of select="$id" />/<xsl:value-of select="/page/@id"/>/u</xsl:attribute>
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:attribute name="alt">Move Content Up</xsl:attribute>
+							<xsl:attribute name="class">sprite sprite-arrow_up</xsl:attribute>
+							<xsl:attribute name="title">Move Up</xsl:attribute>
+						</xsl:element>
+	
+					</xsl:element> |
+				</xsl:if>
+				<xsl:if test="not($position > (count(/page/body/element)-1))">
+					<xsl:element name="a">
+						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/move/<xsl:value-of select="./@id" />/<xsl:value-of select="/page/@id"/>/d</xsl:attribute>
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:attribute name="alt">Move Content Down</xsl:attribute>
+							<xsl:attribute name="class">sprite sprite-arrow_down</xsl:attribute>
+							<xsl:attribute name="title">Move Content Down</xsl:attribute>
+						</xsl:element>
+	
+					</xsl:element> |
+				</xsl:if>
+				
 				 <xsl:choose>
 					 <xsl:when test="/page/security/can_approve = 1">
 						<xsl:element name="a">

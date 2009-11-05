@@ -743,7 +743,7 @@ class Database
 		{
 			foreach($result as $col => $value)
 			{
-				$results[$row][$col] = strip_quotes($value);
+				$results[$row][$col] = stripslashes($value);
 			}
 		}
 		

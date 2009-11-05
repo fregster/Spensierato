@@ -23,6 +23,7 @@ class Database
 
 	private $use_external_log = true;
 	private $show_error_sql = false;
+	private $strip_slashes = true;
 
 
 	/**
@@ -738,6 +739,14 @@ class Database
 
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit, $results['resultset']);
 
+		foreach($results as $row => $result)
+		{
+			foreach($result as $col => $value)
+			{
+				$results[$row][$col] = strip_quotes($value);
+			}
+		}
+		
 		return $results['resultset'];
 	}
 

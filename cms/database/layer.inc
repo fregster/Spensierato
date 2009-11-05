@@ -739,11 +739,11 @@ class Database
 
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit, $results['resultset']);
 
-		foreach($results as $row => $result)
+		foreach($results['resultset'] as $row => $result)
 		{
 			foreach($result as $col => $value)
 			{
-				$results[$row][$col] = stripslashes($value);
+				$results['resultset'][$row][$col] = stripslashes($value);
 			}
 		}
 		

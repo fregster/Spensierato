@@ -1,6 +1,6 @@
 <?php
 //uncomment to force an install
-//	$force_install = true;
+	$force_install = true;
 
 function exception_handler($exception)
 {

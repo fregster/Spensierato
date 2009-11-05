@@ -1,3 +1,12 @@
+<?php 
+$background_image = Common::document_root_folder_only().'/skin/CrunchyBranch_1024x768.png';
+
+$rewrite_enabled = check_rewrite();
+if(!$rewrite_enabled)
+{
+	$background_image = 'http://'.$_SERVER['SERVER_NAME'].Common::document_root().'/cms/skins/default/graphics/CrunchyBranch_1024x768.png';
+}
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
@@ -12,9 +21,9 @@
 			.js-hide {	}
 			.button_open { background:LemonChiffon ; border:thin solid gold; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
 			.button_close { background:green ; border:thin solid darkgreen; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
-			div#notices { background:white; margin-left:50px; margin-right:50px; margin-top:5px; margin-bottom:5px; padding:5px;}
-			div#notices_critical { background:red; border:thin solid darkred; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
-			div#notices_warning { background:LemonChiffon ; border:thin solid gold; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
+			div#notices, div.notices { background:white; margin-left:50px; margin-right:50px; margin-top:5px; margin-bottom:5px; padding:5px;}
+			div#notices_critical, div.notices_critical{ background:red; border:thin solid darkred; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
+			div#notices_warning, div.notices_warning{ background:LemonChiffon ; border:thin solid gold; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
 			div#create { text-align:right;}
 		</style>
 		<script type="text/javascript">
@@ -58,7 +67,7 @@ function jsCheckHostType(){
 	</head>
 <body onload="jsShow(); jsHide();">
 <div id="frame" style="width:600px; margin-left:auto; margin-right:auto;">
-<div><img src="<?php echo(Common::document_root_folder_only()); ?>/skin/CrunchyBranch_1024x768.png" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0; position: fixed;" alt="" /></div>
+<div><img src="<?php echo($background_image); ?>" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0; position: fixed;" alt="Background Image" /></div>
 <div id="notices"><?php
 //die(Common::document_root());
 if(isset($req_missing[0]) or isset($opt_missing[0]))
@@ -97,7 +106,20 @@ else
 
 if(!Common::rewrite_enabled())
 {
-	echo'URL re-writing is not enabled on your webserver, clean URL\'s are unavailable<br/>';
+	echo'<div class="notices_warning"><p>URL re-writing is not enabled on your webserver, clean URL\'s are unavailable</p></div>';
+	$rewrite_enabled = false;
+}
+else
+{
+	if(!$rewrite_enabled)
+	{
+		echo('<div class="notices_warning"><p>URL re-writing is enabled on the server but NOT setup for this site.<br/>You may need to create a .htaccess file or edit your config</p></div>');
+	}
+}
+
+if(!check_inc_restrictions())
+{
+	echo('<div class="notices_critical"><h3>! Security Alert !</h3><p>Your webserver is serving .inc files, enable url rewriting and / or block *.inc files from been served</p><h3>! Security Alert !</h3></div>');
 }
 ?></div>
 <div id="form" style="margin-left:auto; margin-right:auto;">
@@ -123,10 +145,10 @@ if(!Common::rewrite_enabled())
 		<div>Password: <input type="password" name="password" /></div>
 		
 		<div id="database_advanced_button" class="js-show button">
-			<div class="button_open"><a href="" onclick="jsShowID('database_advanced'); jsHideID('database_advanced_button'); return false;">Show advanced database options &gt;&gt;&gt;</a></div>
+			<div class="button_open"><a href="#" onclick="jsShowID('database_advanced'); jsHideID('database_advanced_button'); return false;">Show advanced database options &gt;&gt;&gt;</a></div>
 		</div>
 		<div id="database_advanced" class="js-hide">
-			<div class="button_close"><a href="" onclick="jsShowID('database_advanced_button'); jsHideID('database_advanced'); return false;">Hide advanced database options &lt;&lt;&lt;</a></div>
+			<div class="button_close"><a href="#" onclick="jsShowID('database_advanced_button'); jsHideID('database_advanced'); return false;">Hide advanced database options &lt;&lt;&lt;</a></div>
 			<div id="database" class="pad-div">
 				Database to connect to or create
 				<div>Database name: <input type="text" name="database" value="spensierato" /></div>
@@ -156,10 +178,10 @@ if(!Common::rewrite_enabled())
 	</div>
 
 	<div id="extra-options-button" class="js-show">
-		<div class="button_open"><a href="" onclick="jsShowID('extra-options'); jsHideID('extra-options-button'); return false;">Show Extra options &gt;&gt;&gt;</a></div>
+		<div class="button_open"><a href="#" onclick="jsShowID('extra-options'); jsHideID('extra-options-button'); return false;">Show Extra options &gt;&gt;&gt;</a></div>
 	</div>
 	<div id="extra-options" class="js-hide">
-		<div class="button_close"><a href="" onclick="jsHideID('extra-options'); jsShowID('extra-options-button'); return false;">Hide options &lt;&lt;&lt;</a></div>
+		<div class="button_close"><a href="#" onclick="jsHideID('extra-options'); jsShowID('extra-options-button'); return false;">Hide options &lt;&lt;&lt;</a></div>
 		<div id="randomkey" class="pad-div">
 			Create a random key. This is used when generating hashes to help preventing people work out the final hash it defaults to a sha1 hash of the server microtime when you install.
 			<div>Random Key: <input type="text" name="random_key" value="<?php echo(sha1(microtime())); ?>" /></div>

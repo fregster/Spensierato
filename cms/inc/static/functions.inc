@@ -24,7 +24,7 @@ function get_site_document_root()
 {
     $document_root = $GLOBALS['document_root_folder_only'];
 
-    if(!Common::rewrite_enabled() && $GLOBALS['allow_rewrite']) //We use the globals here as the settings class might not be loaded
+    if(!Common::rewrite_enabled() && isset($GLOBALS['allow_rewrite']) && $GLOBALS['allow_rewrite']) //We use the globals here as the settings class might not be loaded
     {
     	$document_root .= '/index.php';
     }

@@ -8,6 +8,8 @@ class database_execution
 	protected $write = NULL; //FIXME Temp hack from avi to allow the insert methods to get the last id, needs new method I think.
 	protected $connected = false;
 
+	public $max_sql_length = 10240; //Max Sql query length
+	
 	private $dsn_default;
 	private $dsn;
 

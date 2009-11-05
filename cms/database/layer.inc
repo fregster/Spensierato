@@ -716,7 +716,14 @@ class Database
 
 		//Logging info
 		$this->site_sql_count ++;
-		$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
+		if(strlen($sql) > database_execution::Singleton()->max_sql_length)
+		{
+			$results = array('Error' => 'SQL Length greater than max supported');
+		}
+		else
+		{
+			$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
+		}
 
 		if($this->show_error_sql && isset($results['error']))
 		{

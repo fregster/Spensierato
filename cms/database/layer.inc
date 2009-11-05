@@ -739,13 +739,13 @@ class Database
 
 		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit, $results['resultset']);
 
-		foreach($results['resultset'] as $row => $result)
-		{
-			foreach($result as $col => $value)
-			{
-				$results['resultset'][$row][$col] = stripslashes($value);
-			}
-		}
+//		foreach($results['resultset'] as $row => $result)
+//		{
+//			foreach($result as $col => $value)
+//			{
+//				$results['resultset'][$row][$col] = stripslashes($value);
+//			}
+//		}
 		
 		return $results['resultset'];
 	}

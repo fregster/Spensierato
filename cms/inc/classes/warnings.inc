@@ -5,7 +5,7 @@
  *
  * Level 4 - null
  * Level 3 - log
- * Level 2 - Show warning to Admins (information)
+ * Level 2 - Show warning to Admins (information, security warnings should go here else you will be advertising faults), default level
  * Level 1 - Show warning to Editors (posible probelms that might stop something working, ie uploads dir not wrtiable)
  * Level 0 - Show warning to All (Super critical problems ie nuncular war)
  */

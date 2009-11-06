@@ -292,6 +292,18 @@ class CMS
 
 			//When in admin mode do extra code such as version checking
 			$this->version_check();
+			
+			if(!isset($_SESSION['check_inc_restrictions']))
+			{
+				if(check_inc_restrictions())
+				{
+					warnings::singleton()->register('System Access Permissions', 'Your webserver is serving files directly, this is very bad. Please enable mod rewrite, use the .htacess or disable serving files from below the root folder');
+				}
+				else
+				{
+					$_SESSION['check_inc_restrictions'] = true;
+				}
+			}
 
 			//Register any shutdown cleanup functions
 			register_shutdown_function(array(&$this, 'shutdown'));

@@ -12,7 +12,7 @@ class Menu
 	private $working_page_id; //id
 	private $parents = array();
 	
-	private $options = array('get_full_menu' => false, 'top_menu_depth' => 1);
+	private $options = array('get_full_menu' => false, 'top_menu_depth' => 1, 'include_breadcrumbs' => true);
 
 	public static function Singleton()
 	{
@@ -92,7 +92,9 @@ class Menu
 		$menu_array['top_menu'] = $this->get_top_menu($menu_array['top'][0]['parent_id']);
 
 		$menu_array['children'] = $this->children;
-
+		
+		$menu_array['breadcrumbs'] = $this->breadcrumbs();
+		
 		$serializer_options = array (
 			   'addDecl' => FALSE,
 			   'encoding' => Settings::Singleton()->get_setting('char_set'),
@@ -108,6 +110,36 @@ class Menu
 	public function get_path()
 	{
 		return $this->get_path_to($this->current_page);
+	}
+	
+	private function breadcrumbs()
+	{
+		if(isset($this->options['include_breadcrumbs']) && $this->options['include_breadcrumbs'])
+		{
+			$menu = $this->get_full_menu(true); //Load the full menu as it is probably cached
+			$menu = common::retrieve_values_from_array($menu, array('id', 'title'));
+			
+			$menu_link_map = array();
+			foreach($menu as $item)
+			{
+				if(strlen($item[1]) > 0)
+				{
+					$menu_link_map[$item[0]] = $item[1];
+				}
+			}
+			
+			$xml = '';
+			foreach($this->path as $key => $id)
+			{
+				if(isset($menu_link_map[$id]))
+				{
+					$xml .= '<menu_item sort="'.$key.'" id="'.$id.'">'.$menu_link_map[$id].'</menu_item>';
+				}
+			}
+			
+//			die($xml);
+			return $xml;
+		}
 	}
 
 	public function get_path_to($id)
@@ -287,9 +319,9 @@ class Menu
 		return $details;
 	}
 	
-	private function get_full_menu()
+	private function get_full_menu($force = false)
 	{
-		if($this->options['get_full_menu'])
+		if($this->options['get_full_menu'] || $force)
 		{
 			return Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('product'), array(0));
 		}

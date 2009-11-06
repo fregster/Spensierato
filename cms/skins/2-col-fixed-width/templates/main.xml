@@ -19,6 +19,9 @@
 					</div>
 					<div id="block_2">
 						<div id="page_section_main">
+							<div class="breadcrumbs">
+								<xsl:call-template name="breadcrumbs"/>
+							</div>
 							<xsl:call-template name="menu_tabs"/>
 							<a name="contents" />
 							<xsl:call-template name="body"/>

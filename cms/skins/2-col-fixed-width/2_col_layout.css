@@ -32,6 +32,6 @@ div[id^="wrapper"] #block_2 .verticalalign{width:700px !important}
 #menu_top_selected, .menu_top_selected{background-color:#CCC; border:#666; border-collapse:collapse; border:thin; min-height:25px; font-variant: small-caps; margin-left: -35px;}
 #menu_top_parent, .menu_top_parent{background-color:#EEE; border:#666; border-collapse:collapse; border:thin; min-height:25px; font-variant: small-caps; margin-left: -35px;}
 #menu_current{background-color:#DDD; border:#666; border-collapse:collapse; border:thin; min-height:30px; font-variant: small-caps; margin-left: -35px;}
-#menu_tab, .menu_tab, #menu_tab_selected, .menu_tab_selected, .menu_tab_parent, #menu_tab_parent{display:inline; min-height:25px; padding-left:3px; padding-right:3px; font-variant: small-caps; border:1px solid gray; border-bottom: 0px; position:relative; top:5px;}
+#menu_tab, .menu_tab, #menu_tab_selected, .menu_tab_selected, .menu_tab_parent, #menu_tab_parent{display:inline; min-height:25px; padding-left:3px; padding-right:3px; font-variant: small-caps; border:1px solid gray; border-bottom: 0px; position:relative; top:3px;}
 #menu_tab_selected{background-color:#EEE; padding-right:5px; padding-bottom:5px; min-width:50px; border-bottom:0px; top:0px; margin-right:5px;}
 #menu_tab_parent{margin-right:5px; border:#DDD; border-top:1px; border-bottom:1px}

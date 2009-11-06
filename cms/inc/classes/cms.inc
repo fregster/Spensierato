@@ -297,7 +297,7 @@ class CMS
 			{
 				if(check_inc_restrictions())
 				{
-					warnings::singleton()->register('System Access Permissions', 'Your webserver is serving files directly, this is very bad. Please enable mod rewrite, use the .htacess or disable serving files from below the root folder');
+					warnings::singleton()->register('System Access Permissions', 'Your webserver is serving files directly, this is very bad. Please enable mod rewrite, use the .htacess or disable serving files from below the root folder at least block *.inc');
 				}
 				else
 				{

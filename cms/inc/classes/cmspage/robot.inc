@@ -1,5 +1,5 @@
 <?php
-class robot extends cmspage_html
+class cmspage_robot extends cmspage_html
 {	
 	public function initalise()
 	{

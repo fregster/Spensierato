@@ -277,7 +277,7 @@ class Menu
 				$values[] =  1;
 			}
 		}
-		$details = Database::Singleton()->sql_select(array('id', 'title', 'parent_id', 'visible', 'deleted'), 'tbl_pages', $where, $values, array('sort'));
+		$details = Database::Singleton()->sql_select(array('id', 'title', 'parent_id', 'visible', 'deleted', 'sort'), 'tbl_pages', $where, $values, array('sort'));
 
 		return $this->security_check($details);
 	}

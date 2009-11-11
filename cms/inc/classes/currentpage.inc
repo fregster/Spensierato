@@ -124,7 +124,7 @@ class currentPage
 					'loading.html'=>'loading',
 					'video'=>'stream',
 					'js-combine' => 'javascript',
-					'robot.txt' => 'robot',
+					'robots.txt' => 'robots',
 				);
 
 				$this->page_type['type'] = strtolower(CMS::Singleton()->path_vars(0));

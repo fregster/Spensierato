@@ -429,10 +429,10 @@ class CMS
 			}
 
 			//If a DNS record is found
-			if(checkdnsrr($hostname, 'TXT'))
+			if(checkdnsrr($hostname, 'A'))
 			{
 				$dns = dns_get_record($hostname, DNS_TXT);
-				if($dns['TXT'] > CMS::$cms_version)
+				if(substr($dns['A'], 4) > CMS::$cms_version)
 				{
 					warnings::Singleton()->register('New version of Spensierato released', 'There is a new version available ('.$dns['txt'].') to download which might contain new features, bug fixes and security updates, please visit the spensierato website for details');
 					return true;

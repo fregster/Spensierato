@@ -295,7 +295,7 @@ Settings::Singleton()->new_setting('css_mobile', true);
 //Setting update_version_check
 //To enable auto version checking set this value to the update server
 //If the log dir is not writeable auto update checking will be disabled
-Settings::Singleton()->new_setting('update_version_check', 'spensierato.fryer.org.uk', false, true);
+Settings::Singleton()->new_setting('update_version_check', 'version.spensierato.net', false, true);
 
 //Setting update_version_check_schedule
 //Set the timeperiod between version update checking in days

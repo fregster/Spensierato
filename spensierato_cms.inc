@@ -14,8 +14,13 @@ $class_block_list = array(
 );
 $include_path = dirname(__FILE__);
 
-require_once($include_path.'/cms/inc/static/autoloader.inc');
-require_once($include_path.'/cms/inc/static/functions.inc');
+require_once($include_path.'/cms/inc/static/defines.inc');
+
+ini_set('error_log', DIR_LOG.'php_error.log');
+ini_set('display_errors', 'Off');
+
+require_once(DIR_STATIC.'autoloader.inc');
+require_once(DIR_STATIC.'functions.inc');
 
 set_exception_handler('exception_handler');
 try

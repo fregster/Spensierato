@@ -259,7 +259,7 @@ class Menu
 
 	private function get_page_details($id)
 	{
-		return Database::Singleton()->sql_select_first(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('id'), array($id));
+		return Database::Singleton()->sql_select_first(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('id', 'visible', 'deleted'), array($id));
 	}
 
 	private function get_children_of($id = 0)

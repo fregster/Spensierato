@@ -31,7 +31,9 @@
 			</xsl:when>
 
 			<xsl:otherwise>
-				<xsl:value-of select="translate(title, $lowercase, $uppercase)" />
+				<xsl:if test="./deleted != '1' and visible = '1'">
+					<xsl:value-of select="translate(title, $lowercase, $uppercase)" />
+				</xsl:if>
 			</xsl:otherwise>
 			</xsl:choose>
 		</xsl:element>

@@ -115,4 +115,3 @@ class database_execution_pdo extends database_execution
 		return $result;
 	}
 }
-?>

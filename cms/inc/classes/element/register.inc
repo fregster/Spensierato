@@ -22,6 +22,3 @@ class element_Register extends element_Default
 	}
 
 }
-
-
-?>

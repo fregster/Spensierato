@@ -13,4 +13,3 @@ abstract class maintenance
 		database_maintenance::Singleton()->optimize();
 	}
 }
-?>

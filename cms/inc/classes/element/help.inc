@@ -20,4 +20,3 @@ class element_Help extends element_Default
 	}
 
 }
-?>

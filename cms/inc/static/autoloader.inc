@@ -27,14 +27,14 @@ function __autoload($class_name)
 		if(isset($exploded_class[1])) //The class is in a folder 
 		{ 
 			$folder_count = count($exploded_class) -1;
-			$temp_path = $include_path.'/cms/inc/classes/';
-			$temp_path_ucfirst = $include_path.'/cms/inc/external/'; //For Zend plugins etc
+			$temp_path = DIR_CLASSES;
+			$temp_path_ucfirst = DIR_EXTERNAL; //For Zend plugins etc
 			$class_filename = $exploded_class[($folder_count)];
 			array_pop($exploded_class);
 			foreach($exploded_class as $folder)
 			{
-				$temp_path .= $folder . '/'; //Spensieratos default filesystem in always lowercase
-				$temp_path_ucfirst .= ucfirst($folder) . '/'; //Useful for Zend plugins
+				$temp_path .= $folder . DS; //Spensieratos default filesystem in always lowercase
+				$temp_path_ucfirst .= ucfirst($folder) . DS; //Useful for Zend plugins
 			}
 			$paths[] = $temp_path;
 			$paths[] = $temp_path_ucfirst;
@@ -45,8 +45,8 @@ function __autoload($class_name)
 		 }
 		 unset($exploded_class);
 		
-		$paths[] =	$include_path.'/cms/inc/classes/';
-		$paths[] =	$include_path.'/cms/inc/classes/optional/';
+		$paths[] =	DIR_CLASSES;
+		$paths[] =	DIR_CLASSES.DS.'optional'.DS;
 					
 		foreach($paths as $path) //Cycle through the includes dir in order of preference
 		{
@@ -71,10 +71,16 @@ function __autoload($class_name)
 		}
 		@include_once($class_name);
 		return class_exists($class_name, false); //Try to see if the require function can load the class as it might be in the libs
+		
+		//An Error has occoured
+		$error_message = 'Critical error: Class "'.$class_name.'" not defined';
+		
+		error_log($error_message, 0);
 		return false; //Comment this out for debuging
+		
 		print_r($paths);
 		echo($class_filename);
-		die('<p>Critical error: Class "'.$class_name.'" not defined</p>'); //A class has been called the can not be loaded
+		die('<p>'.$error_message.'</p>'); //A class has been called the can not be loaded
 	}
 	return false; //Should never really get here
 }
@@ -112,5 +118,3 @@ foreach ($extra_include_paths AS $path)
 	set_include_path(implode(PATH_SEPARATOR, $paths));
 }
 unset($extra_include_paths);
-
-?>

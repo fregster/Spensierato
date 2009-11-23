@@ -367,4 +367,3 @@ if(!$install) //Settings that require the install to have been completed
 	//used to toggle os specific finctionality (e.g. ffmpeg)
 	Settings::singleton()->new_setting('server_os', $GLOBALS['server_os'], false, true);
 }
-?>

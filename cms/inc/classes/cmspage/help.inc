@@ -8,4 +8,3 @@ class cmspage_help extends cmspage_html
 		Render::Singleton()->render_html(Content::Singleton()->build());
 	}
 }
-?>

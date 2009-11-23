@@ -75,5 +75,3 @@ class clamav extends virusscan
 		return $version;
 	}
 }
-
-?>

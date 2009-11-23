@@ -15,4 +15,3 @@ class cmspage_loading extends cmspage
 		exit;
 	}
 }
-?>

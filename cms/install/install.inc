@@ -232,4 +232,3 @@ function debug($text)
 	$debug = true;
 	if($debug){ echo('<br />'.$text); }
 }
-?>

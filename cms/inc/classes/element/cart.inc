@@ -19,6 +19,3 @@ class element_Cart extends element_Default
 		$this->search = NULL;
 	}
 }
-
-
-?>

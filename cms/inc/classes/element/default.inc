@@ -574,4 +574,3 @@ class element_Default
 		return $this->build_search_text($this->data);
 	}
 }
-?>

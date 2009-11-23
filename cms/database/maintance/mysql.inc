@@ -14,4 +14,3 @@ class database_maintenance_mysql implements database_maintenance
 		}
 	}
 }
-?>

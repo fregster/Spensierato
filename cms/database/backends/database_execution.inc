@@ -162,4 +162,3 @@ class database_execution
 		database::singleton()->sql_error($message, $line, $file);
 	}
 }
-?>

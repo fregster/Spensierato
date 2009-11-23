@@ -20,4 +20,3 @@ class element_Access extends element_Default
 	}
 
 }
-?>

@@ -37,4 +37,3 @@ class cmspage_login extends cmspage_html
 		}
 	}
 }
-?>

@@ -6,4 +6,3 @@ CMS::Singleton()->start();
 
 
 include_once('../java/runjava.inc');
-?>

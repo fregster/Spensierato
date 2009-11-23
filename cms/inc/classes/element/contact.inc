@@ -22,4 +22,3 @@ class element_Contact extends element_Default
 	}
 
 }
-?>

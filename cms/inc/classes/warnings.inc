@@ -133,4 +133,3 @@ class warnings
 		return xml::array_to_xml_simple($this->get($level), 'warnings', 'warning');
 	}
 }
-?>

@@ -110,4 +110,3 @@ class cmspage_cart extends cmspage_html
 		return false;
 	}
 }
-?>

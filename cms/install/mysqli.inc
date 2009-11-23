@@ -191,4 +191,3 @@ unset($table, $data);
 $grant_db = "$database.*";
 $grant_user_rw = "'$user_rw'@'localhost' IDENTIFIED BY '$user_db_password'";
 $grant_user_r = "'$user_r'@'localhost' IDENTIFIED BY '$user_db_password'";
-?>

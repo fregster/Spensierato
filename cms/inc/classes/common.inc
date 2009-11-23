@@ -480,4 +480,3 @@ abstract class Common
 		return false;
 	}
 }
-?>

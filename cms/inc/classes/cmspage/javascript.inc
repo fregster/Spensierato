@@ -15,4 +15,3 @@ class cmspage_javascript extends cmspage
 		die();
 	}
 }
-?>

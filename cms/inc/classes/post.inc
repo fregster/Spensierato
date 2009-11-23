@@ -13,4 +13,3 @@ class post extends variables
 		return FALSE;
 	}
 }
-?>

@@ -12,4 +12,3 @@ class cmspage_xslt extends cmspage
 		render::Singleton()->send_xslt();
 	}
 }
-?>

@@ -22,4 +22,3 @@ class cmspage_tools extends cmspage
 		}
 	}
 }
-?>

@@ -537,4 +537,3 @@ function memcached_server_fail($server = NULL, $port = NULL)
 {
 	persistantcache::Singleton()->server_fail($server = NULL, $port = NULL);
 }
-?>

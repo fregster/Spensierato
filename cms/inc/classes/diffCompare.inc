@@ -106,5 +106,3 @@ class diffClass extends Text_MappedDiff {
 	}
 
 }
-
-?>

@@ -936,5 +936,3 @@ class Database
 
 	}
 }
-
-?>

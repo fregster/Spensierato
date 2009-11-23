@@ -116,4 +116,3 @@ class tags
 		return($results);
 	}
 }
-?>

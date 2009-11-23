@@ -460,4 +460,3 @@ class ffmpeg_movie
         }
 
 }
-?>

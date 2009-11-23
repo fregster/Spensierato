@@ -6,4 +6,3 @@ class cmspage_capthca extends cmspage
 		Capthca::create_Images();	
 	}
 }
-?>

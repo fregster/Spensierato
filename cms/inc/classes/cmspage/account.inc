@@ -14,4 +14,3 @@ class cmspage_account extends cmspage_html
 		Render::Singleton()->render_html(Content::Singleton()->build());
 	}
 }
-?>

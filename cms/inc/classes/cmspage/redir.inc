@@ -6,4 +6,3 @@ class cmspage_redir extends cmspage
 //		CMS::Singleton()->get_html($this->value);
 	}
 }
-?>

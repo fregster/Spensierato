@@ -54,4 +54,3 @@ class cmspage_js extends cmspage
 			exit;
 		}
 }
-?>

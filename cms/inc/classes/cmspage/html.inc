@@ -115,4 +115,3 @@ class cmspage_html extends cmspage
 		return array();
 	}
 }
-?>

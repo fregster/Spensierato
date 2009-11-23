@@ -20,4 +20,3 @@ class cmspage_image extends cmspage
 		FileTransfer::singleton()->get_image($this->value);
 	}
 }
-?>

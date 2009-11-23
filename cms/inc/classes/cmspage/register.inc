@@ -54,4 +54,3 @@ class cmspage_register extends cmspage_html
 		}
 	}
 }
-?>

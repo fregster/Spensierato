@@ -24,4 +24,3 @@ google_ad_height = '.Settings::singleton()->get_setting('google_ad_height').';
 </html>');
 	}
 }
-?>

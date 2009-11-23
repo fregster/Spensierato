@@ -13,4 +13,3 @@ class cmspage_stream extends cmspage
 		Stream::stream($this->value);
 	}
 }
-?>

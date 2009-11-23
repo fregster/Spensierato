@@ -7,4 +7,3 @@ class cmspage_ad extends cmspage
 		exit;
 	}
 }
-?>

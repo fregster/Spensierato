@@ -53,4 +53,3 @@ abstract class Element
 		Settings::singleton()->overwrite_setting('elementTypes', $types);
 	}
 }
-?>

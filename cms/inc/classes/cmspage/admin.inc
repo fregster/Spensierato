@@ -11,4 +11,3 @@ class cmspage_admin extends cmspage
 		$this->get_admin($this->page_details['value']);
 	}
 }
-?>

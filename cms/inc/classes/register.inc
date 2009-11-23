@@ -127,4 +127,3 @@ class Register
 		return common::email($to, $from, $subject, $message, true);
 	}
 }
-?>

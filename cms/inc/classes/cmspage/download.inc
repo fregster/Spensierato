@@ -18,4 +18,3 @@ class cmspage_download extends cmspage
 		FileTransfer::singleton()->get_download($this->value);
 	}
 }
-?>

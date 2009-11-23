@@ -21,4 +21,3 @@ class element_Warnings extends element_Default
 	}
 
 }
-?>

@@ -259,4 +259,3 @@ class currentPage
 		return $this->xslt;
 	}
 }
-?>

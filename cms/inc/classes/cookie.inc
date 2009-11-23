@@ -160,4 +160,3 @@ class cookie
 		return $encrypted_text;
 	}
 }
-?>

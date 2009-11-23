@@ -39,4 +39,3 @@ class cmspage_skin extends cmspage
 		error::do404();
 	}
 }
-?>

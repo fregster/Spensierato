@@ -4,4 +4,3 @@
  */
 
 require_once($include_path.'/cms/database/database.inc');
-?>

@@ -16,4 +16,3 @@ class element_Link extends element_Default
 	}
 
 }
-?>

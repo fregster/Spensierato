@@ -23,4 +23,3 @@ $GLOBALS['cms_folder_downloads'] = 'C:/wamp/www/spensierato/cms/writeable/upload
 $GLOBALS['cms_folder_orig_images'] = 'C:/wamp/www/spensierato/cms/writeable/uploads/original_images/';
 $GLOBALS['cms_folder_logs'] = 'C:/wamp/www/spensierato/cms/writeable/logs/';
 $GLOBALS['cms_folder_cache'] = 'C:/wamp/www/spensierato/cms/writeable/cache/';
-?>

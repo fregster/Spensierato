@@ -129,5 +129,3 @@ class image
 	    return false; 
 	}
 }
-
-?>

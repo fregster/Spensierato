@@ -19,6 +19,3 @@ class element_Checkout extends element_Default
 		$this->search = NULL;
 	}
 }
-
-
-?>

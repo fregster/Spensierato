@@ -46,4 +46,3 @@ class cmspage_search extends cmspage
 		Render::Singleton()->render_html(Content::Singleton()->build());
 	}	
 }
-?>

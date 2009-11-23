@@ -456,4 +456,3 @@ class CMS
 		return persistantcache::Singleton()->load();
 	}
 }
-?>

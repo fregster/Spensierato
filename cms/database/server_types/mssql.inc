@@ -55,4 +55,3 @@ class Database_mssql extends Database
 		 return $this->sql_select_exe('SELECT * FROM sys.Tables', NULL);
 	}
 }
-?>

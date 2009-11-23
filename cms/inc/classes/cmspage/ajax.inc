@@ -13,4 +13,3 @@ class cmspage_ajax extends cmspage
 		ajax::process($this->value);
 	}
 }
-?>

@@ -83,4 +83,3 @@ class database_execution_php extends database_execution
 		return mysql_query($sql_str, $this->db_backend);
 	}
 }
-?>

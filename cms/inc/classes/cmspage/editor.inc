@@ -12,4 +12,3 @@ class cmspage_editor extends cmspage
 		ContentEditor::run($this->value);
 	}
 }
-?>

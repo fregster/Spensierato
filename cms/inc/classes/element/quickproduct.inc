@@ -20,4 +20,3 @@ class element_QuickProduct extends element_Default
 		return array_merge($this->data_array, $extra);
 	}
 }
-?>

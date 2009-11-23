@@ -227,4 +227,3 @@ class cmspage_edit extends cmspage
 			</html>');
 	}
 }
-?>

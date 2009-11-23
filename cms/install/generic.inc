@@ -235,5 +235,4 @@ $tables['tbl_orders'] = array(
 									'payment_method' => 'VARCHAR(64)',
 									),
 								'primary_key' => 'id',
-								);							
-?>
+								);

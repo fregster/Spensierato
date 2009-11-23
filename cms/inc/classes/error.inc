@@ -44,4 +44,3 @@ abstract class error
 }
 //Over write the exception handler to use the now loaded error class
 set_exception_handler(array('error','exception'));
-?>

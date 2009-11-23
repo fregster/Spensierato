@@ -16,4 +16,3 @@ class cmspage_css extends cmspage
 		Render::Singleton()->send_css();
 	}
 }
-?>

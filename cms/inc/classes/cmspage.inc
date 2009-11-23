@@ -134,4 +134,3 @@ class cmspage //This relies on CurentPage been loaded
 		}
 	}
 }
-?>

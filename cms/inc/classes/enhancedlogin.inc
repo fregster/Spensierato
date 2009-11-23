@@ -79,5 +79,3 @@ class enhancedLogin extends user
 		return false;
 	}
 }
-
-?>

@@ -62,6 +62,3 @@ class element_Login extends element_Default
 		}
 
 }
-
-
-?>

@@ -106,4 +106,3 @@ class element_RSS extends element_Default
 		}
 	}
 }
-?>

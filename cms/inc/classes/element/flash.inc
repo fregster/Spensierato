@@ -23,4 +23,3 @@ if(class_exists('element_Download'))
 		}
 	}
 }
-?>

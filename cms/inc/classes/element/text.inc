@@ -15,4 +15,3 @@ class element_Text extends element_Default
 	}
 
 }
-?>

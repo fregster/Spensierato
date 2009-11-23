@@ -19,6 +19,3 @@ class element_Payment_Phone extends element_Default
 		$this->search = NULL;
 	}
 }
-
-
-?>

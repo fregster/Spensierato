@@ -12,4 +12,3 @@ class cmspage_folder extends cmspage
 		
 	}
 }
-?>

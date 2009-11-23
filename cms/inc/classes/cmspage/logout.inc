@@ -7,4 +7,3 @@ class cmspage_logout extends cmspage
 		CMS::Singleton()->destroy_session($this->value);
 	}
 }
-?>

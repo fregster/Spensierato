@@ -19,6 +19,3 @@ class element_Payment_PayPal extends element_Default
 		$this->search = NULL;
 	}
 }
-
-
-?>

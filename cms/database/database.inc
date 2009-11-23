@@ -5,6 +5,11 @@ $drivers = array('mysqli', 'mysql', 'mssql');
 //Cache the file system path for performance
 define('DATABASE_LAYER_PATH', dirname(__FILE__));
 
+if(!defined('DS'))
+{
+	define('DS', DIRECTORY_SEPARATOR);
+}
+
 //Set the database driver, if it's not set load it from the array of avaiable drivers
 if(!isset($GLOBALS['database_driver'])) { $GLOBALS['database_driver'] = $drivers[0]; }
 define('DATABASE_DRIVER', $GLOBALS['database_driver']);
@@ -18,8 +23,7 @@ if(!isset($GLOBALS['table_prefix'])) { $GLOBALS['table_prefix'] = ''; }
 define('DATABASE_TABLE_PREFIX' , $GLOBALS['table_prefix']);
 
 //Load the required files for the database layer
-require_once(DATABASE_LAYER_PATH.'/backends/database_execution.inc');
+require_once(DATABASE_LAYER_PATH.DS.'backends'.DS.'database_execution.inc');
 
 //Load the main database API
-require_once(DATABASE_LAYER_PATH.'/layer.inc');
-?>
+require_once(DATABASE_LAYER_PATH.DS.'layer.inc');

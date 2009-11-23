@@ -156,5 +156,3 @@ abstract class revisions{
 		return common::strip_non_alpha_numeric(strip_tags($input));
 	}
 }
-
-?>

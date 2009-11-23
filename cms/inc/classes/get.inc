@@ -13,4 +13,3 @@ class get extends variables
 		return FALSE;
 	}
 }
-?>

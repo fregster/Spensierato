@@ -189,5 +189,3 @@ function washtml($html, $config=array(), &$full=true) {
   @$node->loadHTML($html);
   return dumpHtml($node, $config, $full);
 }
-
-?>

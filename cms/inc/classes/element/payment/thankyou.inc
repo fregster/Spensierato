@@ -19,6 +19,3 @@ class element_Payment_thankyou extends element_Default
 		$this->search = NULL;
 	}
 }
-
-
-?>

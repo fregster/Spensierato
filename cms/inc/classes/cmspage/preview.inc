@@ -20,4 +20,3 @@ class cmspage_preview extends cmspage
 		FileTransfer::singleton()->get_preview($this->value);
 	}
 }
-?>

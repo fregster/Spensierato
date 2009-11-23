@@ -11,4 +11,3 @@ class element_SearchResults extends element_Default
 
 	}
 }
-?>

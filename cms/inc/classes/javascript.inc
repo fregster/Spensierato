@@ -262,4 +262,3 @@ abstract class javascript
 		die($contents);
 	}
 }
-?>

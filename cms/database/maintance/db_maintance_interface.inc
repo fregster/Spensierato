@@ -30,4 +30,3 @@ interface database_maintenance
 		return true;
 	}
 }
-?>

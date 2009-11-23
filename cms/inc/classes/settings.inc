@@ -129,4 +129,3 @@ class Settings
 		return false;
 	}
 }
-?>

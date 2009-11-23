@@ -12,4 +12,3 @@ class cmspage_file extends cmspage
 		FileTransfer::Singleton()->get_public_file($this->value);
 	}
 }
-?>

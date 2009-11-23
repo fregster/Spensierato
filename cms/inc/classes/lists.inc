@@ -38,4 +38,3 @@ class Lists
 		return Database::Singleton()->sql_select(array('*'), 'tbl_list_data', array('id'), array($lists));
 	}
 }
-?>

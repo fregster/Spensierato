@@ -29,6 +29,3 @@ class element_Account extends element_Default
 		</data>';
 	}
 }
-
-
-?>

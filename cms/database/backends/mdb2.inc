@@ -150,4 +150,3 @@ class database_execution_mdb2 extends database_execution
 		$this->db_backend->dropDatabase($database);
 	}
 }
-?>

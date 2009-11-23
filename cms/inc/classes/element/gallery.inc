@@ -25,4 +25,3 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 		}
 	}
 }
-?>

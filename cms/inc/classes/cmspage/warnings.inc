@@ -14,4 +14,3 @@ class cmspage_warnings extends cmspage
 		Render::Singleton()->render_edit(Content::Singleton()->build());
 	}
 }
-?>

@@ -100,7 +100,7 @@ function get_extended_class_path($base_class, $new_class)
 }
 
 
-$extra_include_paths = array($include_path . '/cms/inc/external/');
+$extra_include_paths = array($include_path . '/cms/external/');
 
 foreach ($extra_include_paths AS $path)
 {

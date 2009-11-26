@@ -22,10 +22,13 @@
 * @license http://www.opensource.org/licenses/lgpl-3.0.html LGPL
 * @link http://www.fryer.org.uk/
 *
-* Version 2 Released Feb 2009
+* Version 2.1 Released Dec 2009
 */
 
-define('PREFIX', 'cache_kljliouo_'); //Prefix the key names to help prevent collisions
+if(!defined('PREFIX'))
+{
+	define('PREFIX', 'cache_kljliouo_'); //Prefix the key names to help prevent collisions
+}
 
 /**
  * Persistant Cache is a monolithic file for fast caching of data
@@ -36,6 +39,7 @@ class persistantcache
 {
 	private $encrypt_data = false;
 	private $encryption_key = 'mnbvcfde4567890poiuytrazsxv';
+	private $encryption_type = array('MCRYPT_RIJNDAEL_256', 'MCRYPT_TWOFISH256', 'MCRYPT_3DES', 'MCRYPT_CRYPT'); //In order of preference
 	protected $max_cache_time = 300;
 	protected $max_object_size = 20480; //The string length of the serialized array
 	protected static $retry_time = 30; //Time in seconds before reworking out the best cache type
@@ -253,6 +257,15 @@ class persistantcache
 	}
 }
 
+/**
+ * persistantcache_memcache
+ * 
+ * This is the implementation of the persistant cache using Memcached
+ * It supports multiple memcached servers and fail over with delayed re-testing
+ * 
+ * @author Paul Fryer
+ *
+ */
 class persistantcache_memcache extends persistantcache
 {
 	private $store = false; //Memcache object
@@ -366,6 +379,15 @@ class persistantcache_memcache extends persistantcache
 		$this->rebuild_singleton();
 	}
 }
+
+/**
+ * File system based implementation
+ * Currently only this was designed for and tested against Linix
+ * Please let me know if it works or you patch it to work against Windows
+ * 
+ * @author Paul Fryer
+ *
+ */
 
 class persistantcache_file extends persistantcache
 {
@@ -529,6 +551,7 @@ class persistantcache_session extends persistantcache
 
 /**
  * Memcached call back function on server fail
+ * This is a function as the call back works better
  *
  * @param unknown_type $server
  * @param unknown_type $port

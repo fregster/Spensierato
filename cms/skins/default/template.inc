@@ -4,7 +4,7 @@
  */
 Settings::Singleton()->new_setting('template_dtd', 'xslt');
 Settings::Singleton()->new_setting('template_header_graphic', array('headerfill.png', 'header-green.png'));
-Settings::Singleton()->overwrite_setting('template_verstion', cms::cms_version);
+Settings::Singleton()->overwrite_setting('template_verstion', cms::$cms_version, true);
 
 /**
  * Any skin specific images that you want to use javascript to preload

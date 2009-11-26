@@ -20,7 +20,7 @@ class update
 	
 	private function __construct()
 	{
-		$versions = explode('.', cms::cms_version);
+		$versions = explode('.', cms::$cms_version);
 		update::$major = $versions[0];
 		update::$minor = $versions[1];
 	}

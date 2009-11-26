@@ -336,7 +336,7 @@ class Menu
 			$i=1;
 			
 			$where = array('parent_id', 'product', 'deleted', 'visible');
-			$values = array($id,0, 0, 1);
+			$values = array($ids,0, 0, 1);
 				
 			if(options::Singleton()->get_option('admin_mode'))
 			{

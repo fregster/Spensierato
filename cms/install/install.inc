@@ -208,7 +208,7 @@ $GLOBALS[\'cms_folder_downloads\'] = \''.$doc_root_prefix.post::variable('cms_fo
 $GLOBALS[\'cms_folder_orig_images\'] = \''.$doc_root_prefix.post::variable('cms_folder_orig_images').'\';
 $GLOBALS[\'cms_folder_logs\'] = \''.$doc_root_prefix.post::variable('cms_folder_logs').'\';
 $GLOBALS[\'cms_folder_cache\'] = \''.$doc_root_prefix.post::variable('cms_folder_cache').'\';
-?>';
+';
 
 	/**
 	* Write the settings file

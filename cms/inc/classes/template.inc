@@ -32,16 +32,16 @@ class Template
 	{
 		if(Settings::Singleton()->get_setting('use_external_skins') === true)
 		{
-			$this->template_path = file_root().'/skins/'.Settings::Singleton()->get_setting('skin');
+			$this->template_path = file_root().DS.'skins'.DS.Settings::Singleton()->get_setting('skin');
 		}
 		else
 		{
-			$this->template_path = Settings::Singleton()->get_setting('cms_root').'/skins/'.Settings::Singleton()->get_setting('skin');
+			$this->template_path = Settings::Singleton()->get_setting('cms_root').DS.'skins'.DS.Settings::Singleton()->get_setting('skin');
 		}
 		
-		$this->default_path = Settings::Singleton()->get_setting('cms_root').'skins/default';
+		$this->default_path = Settings::Singleton()->get_setting('cms_root').'skins'.DS.'default';
 
-		$templateinc = $this->template_path.'/template.inc';
+		$templateinc = $this->template_path.DS.'template.inc';
 
 		if(file_exists($templateinc))
 		{
@@ -77,7 +77,7 @@ class Template
 	{
 		foreach($this->inherited_template_paths as $pos_path)
 		{
-			$path = $pos_path .'/'.$file;
+			$path = $pos_path .DS.$file;
 			if(file_exists($path))
 			{
 				return $path;
@@ -120,7 +120,7 @@ class Template
 
 	public function edit()
 	{
-		$path = $this->template_path = Settings::Singleton()->get_setting('cms_root').'/skins/edit/edit.xml';
+		$path = $this->template_path = Settings::Singleton()->get_setting('cms_root').DS.'skins'.DS.'edit'.DS.'edit.xml';
 		return $this->build_xslt_template(file_get_contents($path));
 	}
 
@@ -130,11 +130,11 @@ class Template
 		switch ($path_vars)
 		{
 			case 'mobile':
-				$path = $this->default_path .'/mobile.css';
+				$path = $this->default_path.DS.'mobile.css';
 			break;
 
 			case 'submodal':
-				$path = $this->default_path .'/subModal.css';
+				$path = $this->default_path.DS.'subModal.css';
 			break;
 
 			default:
@@ -148,7 +148,7 @@ class Template
 				}
 				foreach($this->inherited_template_paths as $pos_css_path)
 				{
-					$path = $pos_css_path .'/'.$css_file;
+					$path = $pos_css_path.DS.$css_file;
 					if(file_exists($path))
 					{
 						return $path;
@@ -260,7 +260,7 @@ class Template
 	
 	private function build_template()
 	{
-		$path = $this->template_path .'/templates/*.xml';
+		$path = $this->template_path.DS.'templates'.DS.'*.xml';
 		$files = glob($path);
 		
 		foreach($files as $filepath)
@@ -275,30 +275,30 @@ class Template
 	private function extend_template()
 	{
 		$old_template = $this->working_template_path;
-		if(file_exists($this->working_template_path.'/template.inc'))
+		if(file_exists($this->working_template_path.DS.'template.inc'))
 		{
-			require_once($this->working_template_path.'/template.inc');
+			require_once($this->working_template_path.DS.'template.inc');
 		
 			if(Settings::Singleton()->get_setting('template_extends') != false)
 			{
-				if(file_exists(file_root().'skins/'.Settings::Singleton()->get_setting('template_extends')))
+				if(file_exists(file_root().'skins'.DS.Settings::Singleton()->get_setting('template_extends')))
 				{
-					$this->working_template_path = file_exists(file_root().'skins/'.Settings::Singleton()->get_setting('template_extends'));
+					$this->working_template_path = file_exists(file_root().'skins'.DS.Settings::Singleton()->get_setting('template_extends'));
 				}
 				else
 				{
-					$this->working_template_path = Settings::Singleton()->get_setting('cms_root').'skins/'.Settings::Singleton()->get_setting('template_extends');
+					$this->working_template_path = Settings::Singleton()->get_setting('cms_root').'skins'.DS.Settings::Singleton()->get_setting('template_extends');
 				}
 				Settings::Singleton()->overwrite_setting('template_extends', false, false, true);
 				
 				if($this->working_template_path != $old_template)
 				{
-					if(file_exists($this->working_template_path.'/template.inc'))
+					if(file_exists($this->working_template_path.DS.'template.inc'))
 					{
-						require_once($this->working_template_path.'/template.inc');
+						require_once($this->working_template_path.DS.'template.inc');
 					}
 					
-					$files = glob($this->working_template_path.'/templates/*.xml');
+					$files = glob($this->working_template_path.DS.'templates'.DS.'*.xml');
 					foreach ($files as $filepath)
 					{
 						$filename = basename($filepath);

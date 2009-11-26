@@ -297,6 +297,11 @@ Settings::Singleton()->new_setting('css_mobile', true);
 //If the log dir is not writeable auto update checking will be disabled
 Settings::Singleton()->new_setting('update_version_check', 'version.spensierato.net', false, true);
 
+//Setting update_version_https_only
+//Enable to only allow secure updates
+//This will be the default in the future once auto updates work safely
+Settings::Singleton()->new_setting('update_version_https_only', false, false, true);
+
 //Setting update_version_check_schedule
 //Set the timeperiod between version update checking in days
 //If the log dir is not writeable auto update checking will be disabled
@@ -327,7 +332,6 @@ Settings::singleton()->new_setting('date_format', 'd/m/Y', false, true);
 //setting show_username_in_approvals
 //this determines whether to show the username in the pending approvals list in element editing
 Settings::singleton()->new_setting('approvals_show_revisor', true);
-
 
 //output_compression_level
 //Sets the GZip compression level set to 0 to disable

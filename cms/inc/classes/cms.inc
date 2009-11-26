@@ -291,7 +291,7 @@ class CMS
 			require_once(dirname(__FILE__).'/../../cms_admin_includes.inc');
 
 			//When in admin mode do extra code such as version checking
-			$this->version_check();
+			update::check();
 			
 			if(!isset($_SESSION['check_inc_restrictions']))
 			{
@@ -374,77 +374,6 @@ class CMS
 
 </body>
 </html>');
-	}
-
-	/**
-	 * TODO finish this, it should check a TXT record at spensierato.net for version information.
-	 * It should raise a warning if an updated release has been made.
-	 * @return unknown_type
-	 */
-	private function version_check()
-	{
-		$hostname = Settings::singleton()->get_setting('update_version_check');
-		if($hostname != NULL)
-		{
-			return false;
-		}
-
-
-		$update_log = Settings::singleton()->get_setting('cms_root') . '/writeable/logs/update.log';
-		if(file_exists($update_log))
-		{
-			$pervious_update_check = file_get_contents($update_log);
-		}
-		$update_interval = Settings::Singleton()->get_setting('update_version_check_schedule')*24*60*60;
-
-		if(isset($pervious_update_check) && $pervious_update_check+$update_interval > time())
-		{
-
-			$update_log = fopen($update_log, 'w');
-
-			fwrite($update_log, time());
-			fclose($update_log);
-
-
-			//This function does not work in windows fo fake it
-			if(!function_exists('checkdnsrr'))
-			{
-			    function checkdnsrr($host, $type='')
-			    {
-			        if(!empty($host))
-			        {
-			            $type = (empty($type)) ? 'MX' :  $type;
-			            exec('nslookup -type='.$type.' '.escapeshellcmd($host), $result);
-			            $it = new ArrayIterator($result);
-			            foreach(new RegexIterator($it, '~^'.$host.'~', RegexIterator::GET_MATCH) as $result)
-			            {
-			                if($result)
-			                {
-			                    return true;
-			                }
-			            }
-			        }
-			        return false;
-			   	}
-			}
-
-			//If a DNS record is found
-			if(checkdnsrr($hostname, 'A'))
-			{
-				$dns = dns_get_record($hostname, DNS_TXT);
-				if(substr($dns['A'], 4) > CMS::$cms_version)
-				{
-					warnings::Singleton()->register('New version of Spensierato released', 'There is a new version available ('.$dns['txt'].') to download which might contain new features, bug fixes and security updates, please visit the spensierato website for details');
-					return true;
-				}
-				else
-				{
-					warnings::Singleton()->register('Auto update check', 'Update check shows you are running the latest version of Spensierato '.$dns['txt'], 3);
-					return false;
-				}
-			}
-		}
-		return false;
 	}
 
 	/**

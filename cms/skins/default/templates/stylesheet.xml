@@ -1,6 +1,7 @@
 <xsl:template name="stylesheet">
 	<xsl:element name="link">
-		<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css</xsl:attribute>
+		<!-- The detail after css is ignored, it's only used to force file changes for caching -->
+		<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css/v/<xsl:value-of select="/page/settings/skin"/>/<xsl:value-of select="/page/settings/template_verstion"/></xsl:attribute>
 		<xsl:attribute name="type">text/css</xsl:attribute>
 		<xsl:attribute name="rel">stylesheet</xsl:attribute>
 	</xsl:element>

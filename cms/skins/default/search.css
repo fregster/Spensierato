@@ -9,7 +9,7 @@
 .autosearch
 {
 	position: absolute;
-	background-image: url(../../skin/as_pointer.gif); 
+	background-image: url(../../../skin/as_pointer.gif); 
 	background-position: top;
 	background-repeat: no-repeat;
 	margin-left: auto; margin-right:auto;
@@ -25,14 +25,14 @@ div.autosearch div.as_footer
 	position: relative;
 	height: 6px;
 	padding: 0 6px;
-	background-image: url(../../skin/ul_corner_tr.gif);
+	background-image: url(../../../skin/ul_corner_tr.gif);
 	background-position: top right;
 	background-repeat: no-repeat;
 	overflow: hidden;
 }
 div.autosearch div.as_footer
 {
-	background-image: url(../../skin/ul_corner_br.gif);
+	background-image: url(../../../skin/ul_corner_br.gif);
 }
 
 div.autosearch div.as_header div.as_corner,
@@ -43,13 +43,13 @@ div.autosearch div.as_footer div.as_corner
 	left: 0;
 	height: 6px;
 	width: 6px;
-	background-image: url(../../skin/ul_corner_tl.gif);
+	background-image: url(../../../skin/ul_corner_tl.gif);
 	background-position: top left;
 	background-repeat: no-repeat;
 }
 div.autosearch div.as_footer div.as_corner
 {
-	background-image: url(../../skin/ul_corner_bl.gif);
+	background-image: url(../../../skin/ul_corner_bl.gif);
 }
 div.autosearch div.as_header div.as_bar,
 div.autosearch div.as_footer div.as_bar
@@ -119,14 +119,14 @@ div.autosearch ul li.as_highlight a
 {
 	color: #fff;
 	background-color: #1B5CCD;
-	background-image: url(../../skin/hl_corner_br.gif);
+	background-image: url(../../../skin/hl_corner_br.gif);
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
 
 div.autosearch ul li.as_highlight a span
 {
-	background-image: url(../../skin/hl_corner_bl.gif);
+	background-image: url(../../../skin/hl_corner_bl.gif);
 	background-position: bottom left;
 	background-repeat: no-repeat;
 }
@@ -151,14 +151,14 @@ div.autosearch ul li a .tr
 div.autosearch ul li.as_highlight a .tl
 {
 	left: 0;
-	background-image: url(../../skin/hl_corner_tl.gif);
+	background-image: url(../../../skin/hl_corner_tl.gif);
 	background-position: bottom left;
 }
 
 div.autosearch ul li.as_highlight a .tr
 {
 	right: 0;
-	background-image: url(../../skin/hl_corner_tr.gif);
+	background-image: url(../../../skin/hl_corner_tr.gif);
 	background-position: bottom right;
 }
 

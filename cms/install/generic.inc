@@ -166,7 +166,7 @@ $tables['tbl_security'] = array(
 $tables['tbl_settings'] = array(
 								'cols_define' =>
 								array(
-									'setting' => 'VARCHAR(32) NOT NULL',
+									'setting' => 'VARCHAR(64) NOT NULL',
 									'value' => 'VARCHAR(128) NOT NULL'
 									),
 								'primary_key' => 'setting',

@@ -25,6 +25,7 @@ if(!$rewrite_enabled)
 			div#notices_critical, div.notices_critical{ background:red; border:thin solid darkred; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
 			div#notices_warning, div.notices_warning{ background:LemonChiffon ; border:thin solid gold; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
 			div#create { text-align:right;}
+			.title{color:white;text-align:center;}
 		</style>
 		<script type="text/javascript">
 function jsShow(){
@@ -68,7 +69,9 @@ function jsCheckHostType(){
 <body onload="jsShow(); jsHide();">
 <div id="frame" style="width:600px; margin-left:auto; margin-right:auto;">
 <div><img src="<?php echo($background_image); ?>" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0; position: fixed;" alt="Background Image" /></div>
+<h1 class="title">Spensierato Install Page</h1>
 <div id="notices"><?php
+
 //die(Common::document_root());
 if(isset($req_missing[0]) or isset($opt_missing[0]))
 {
@@ -117,9 +120,9 @@ else
 	}
 }
 
-if(!check_inc_restrictions())
+if(!$rewrite_enabled && !check_inc_restrictions())
 {
-	echo('<div class="notices_critical"><h3>! Security Alert !</h3><p>Your webserver is serving .inc files, enable url rewriting and / or block *.inc files from been served</p><h3>! Security Alert !</h3></div>');
+	echo('<div class="notices_critical"><h3 style="text-align:center;">**** ! Security Alert ! ****</h3><p>Your webserver is serving .inc files, enable url rewriting and / or block *.inc files from been served</p><h3 style="text-align:center;">**** ! Security Alert ! ****</h3></div>');
 }
 ?></div>
 <div id="form" style="margin-left:auto; margin-right:auto;">
@@ -189,7 +192,7 @@ if(!check_inc_restrictions())
 		<div id="options" class="pad-div">
 		<?php if(Common::rewrite_enabled()) {?>
 			<div>Enable URL re-writing, <input type="checkbox" name="rewrite" checked="checked" /><br/>Ensure your server has this enabled for this host either by AllowOverride all in the directory config to load the htaccess file or by defining the URL rewriting directly in the directory config</div>
-		<?php } ?>
+		<?php }die(__FILE__.' '.__LINE__); ?>
 		</div>
 		
 		<div id="email-options">

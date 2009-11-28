@@ -94,7 +94,6 @@ try
 	if($install || isset($force_install))
 	{
 		include($include_path.'/cms/install/install.inc');
-		die();
 	}
 	
 	//Start site

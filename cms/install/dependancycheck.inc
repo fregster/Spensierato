@@ -25,8 +25,7 @@ foreach($optional as $opt)
 function check_rewrite()
 {
 	global $background_image;
-	$handle = load("http:/$background_image");
-	
+	$handle = load('http://'.$_SERVER['SERVER_NAME'].$background_image);
 	if($handle['info']['http_code'] == '200' && ( isset($handle['body']) && strlen($handle['body']) > 0)) //If the page has retured content then error
 	{
 		return true;

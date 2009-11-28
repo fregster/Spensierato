@@ -34,7 +34,7 @@ class cmspage_skin extends cmspage
 				FileTransfer::singleton()->get_file($file, true, false);
 				exit;
 			}
-//			echo($file);
+//			echo('<br/>'.$file);
 		}
 		error::do404();
 	}

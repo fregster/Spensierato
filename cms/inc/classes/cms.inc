@@ -107,10 +107,10 @@ class CMS
 		ob_start();
 		
 		//If required include PHPIDS
-		if(Settings::singleton()->get_setting('phpids'))
-		{
-			require_once(cms_root().'/external/phpids/phpids.inc');
-		}
+//		if(Settings::singleton()->get_setting('phpids'))
+//		{
+//			require_once(cms_root().'/external/phpids/phpids.inc');
+//		}
 
 		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'])
 		{

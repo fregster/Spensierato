@@ -272,6 +272,11 @@ class Template
 		$this->extend_template();
 	}
 	
+	private function template_mtime()
+	{
+		
+	}
+	
 	private function extend_template()
 	{
 		$old_template = $this->working_template_path;

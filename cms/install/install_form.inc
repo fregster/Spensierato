@@ -209,3 +209,4 @@ if(!$rewrite_enabled && !check_inc_restrictions())
 </div>
 </body>
 </html>
+<?php die(); ?>

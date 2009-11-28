@@ -41,6 +41,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET' && !isset($path_vars[0]))
 
 	require_once('dependancycheck.inc');
 	require_once('install_form.inc');
+	exit;
 }
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -228,6 +229,7 @@ $GLOBALS[\'cms_folder_cache\'] = \''.$doc_root_prefix.post::variable('cms_folder
 		debug('Settings file created');
 
 	debug('The site is now setup<br/><strong>Note: If you manual set the install directive you will need to remove it now!</strong><br />You can log in with the user '.$username.' and the password '.$password.'<br/>Click <a href="'.$GLOBALS['document_root'].'">here</a> to login');
+	exit;
 }
 
 function debug($text)

@@ -192,7 +192,7 @@ if(!$rewrite_enabled && !check_inc_restrictions())
 		<div id="options" class="pad-div">
 		<?php if(Common::rewrite_enabled()) {?>
 			<div>Enable URL re-writing, <input type="checkbox" name="rewrite" checked="checked" /><br/>Ensure your server has this enabled for this host either by AllowOverride all in the directory config to load the htaccess file or by defining the URL rewriting directly in the directory config</div>
-		<?php }die(__FILE__.' '.__LINE__); ?>
+		<?php } ?>
 		</div>
 		
 		<div id="email-options">

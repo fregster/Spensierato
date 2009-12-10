@@ -1,0 +1,40 @@
+<VirtualHost *:80>
+# Example ServerAlias
+        ServerAlias test
+        ServerAlias test.config
+        ServerAlias www.spensierato.net
+
+        DocumentRoot /var/www/workspace/
+
+       <Directory />
+                Options FollowSymLinks
+                Order deny,allow
+                Deny from all
+                Allow from 127.0.0.0/255.0.0.0 ::1/128
+        </Directory>
+
+# Disable serving .inc files for security
+        <FilesMatch "\.inc$">
+                Order allow,deny
+                Deny from all
+        </FilesMatch>
+
+# Set the default options
+        <Directory "/mnt/share/www/workspace/">
+                Options Indexes FollowSymLinks MultiViews
+#               AllowOverride None
+		AllowOverride all
+                Order allow,deny
+                allow from all
+        </Directory>
+
+
+# If you set the above override to none you would need this per spensierato site as the .htaccess would not load
+        <Directory "/var/www/workspace/Spensierato">
+                RewriteEngine on
+                RewriteCond %{REQUEST_URI}  !^/index.php/.*$
+                RewriteCond %{REQUEST_FILENAME} !-f
+                RewriteRule ^(.+)$ index.php/$1
+                DirectoryIndex index.php
+        </Directory>
+</VirtualHost>

@@ -45,8 +45,9 @@ function __autoload($class_name)
 		 }
 		 unset($exploded_class);
 		
-		$paths[] =	DIR_CLASSES;
-		$paths[] =	DIR_CLASSES.DS.'optional'.DS;
+		$paths[] = DIR_CLASSES;
+		$paths[] = DIR_EXTERNAL;
+		$paths[] = DIR_CLASSES.DS.'optional'.DS;
 					
 		foreach($paths as $path) //Cycle through the includes dir in order of preference
 		{

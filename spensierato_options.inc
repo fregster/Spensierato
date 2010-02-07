@@ -107,7 +107,7 @@ Settings::Singleton()->new_setting('shop_tax_rate', 0);
 Settings::Singleton()->new_setting('currency', 'GBP');
 
 //Setting currency_symbol
-Settings::Singleton()->new_setting('currency_symbol', '£');
+Settings::Singleton()->new_setting('currency_symbol', 'Â£');
 
 //Setting business_id
 //The unique id used with your payment provider

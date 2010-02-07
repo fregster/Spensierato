@@ -253,7 +253,11 @@
 							<xsl:attribute name="name">shipping_1</xsl:attribute>
 							<xsl:attribute name="value"><xsl:value-of select="/page/order/cost/shipping"/></xsl:attribute>
 						</xsl:element>
-						
+						<xsl:element name="input">
+							<xsl:attribute name="type">hidden</xsl:attribute>
+							<xsl:attribute name="name">shipping2_1</xsl:attribute>
+							<xsl:attribute name="value">0</xsl:attribute>
+						</xsl:element>
 					</xsl:if>
 					
 					<xsl:if test="/page/order/cost/tax">

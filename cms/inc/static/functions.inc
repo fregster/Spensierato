@@ -33,24 +33,24 @@ function get_site_document_root()
 }
 
 function get_site_document_root_folder_only() //This does NOT work if we have a front end proxy, needs thought on a possible solution.
-    {
+{
     $a = substr($_SERVER['PHP_SELF'], 0 , strripos($_SERVER['PHP_SELF'], '.php'));
     $document_root = substr($a, 0, strripos($a, '/'));
     if($document_root == '')
     {
-    	$proto = 'http://';
-    	if(isset($_SERVER['HTTPS']))
+    $proto = 'http://';
+    if(isset($_SERVER['HTTPS']))
+    {
+    	if( ($_SERVER['HTTPS'] != '') && ($_SERVER['HTTPS'] != 'off') )
     	{
-    		if( ($_SERVER['HTTPS'] != '') && ($_SERVER['HTTPS'] != 'off') )
-    		{
-    			$proto = 'https://';
-    		}
+    		$proto = 'https://';
     	}
-    	$document_root = $proto . $_SERVER['SERVER_NAME'];
+    }
+    $document_root = $proto . $_SERVER['SERVER_NAME'];
 
     }
 	return $document_root;
-    }
+}
 
 function get_file_root()
 {

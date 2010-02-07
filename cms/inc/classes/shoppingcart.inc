@@ -30,8 +30,16 @@ class shoppingcart
 			if(!isset($_SESSION[CART][ITEM][$product_id]))
 			{
 				$_SESSION[CART][ITEM][$product_id] = array('name' => $data['title'], 'price' => $data['Price'], 'shipping' => $data['Shipping'], 'product_id' => $product_id);
+				
+				if(isset($data['tax']))
+				{
+					$_SESSION[CART][ITEM][$product_id]['tax'] = round($data['Price'] * $data['tax'], 2);
+				}
+				else
+				{
+					$_SESSION[CART][ITEM][$product_id]['tax'] = round($data['Price'] * settings::singleton()->get_setting('shop_tax_rate'), 2);
+				}
 			}
-			//TODO add tax data
 			shoppingcart::update_cart_object($product_id, $quantity);
 		}
 		return shoppingcart::calculate_price();
@@ -118,6 +126,7 @@ class shoppingcart
 	private static function calculate_price()
 	{
 		$price = 0;
+		$tax = 0;
 		$shipping = 0;
 		
 		if(count($_SESSION[CART][ITEM]) > 0)
@@ -125,19 +134,19 @@ class shoppingcart
 			foreach($_SESSION[CART][ITEM] as $product)
 			{
 				$price = $price + ($product['quantity'] * $product['price']);
+				$tax = $tax + ($product['quantity'] * $product['tax']);
 				$shipping = max($shipping, $product['shipping']);
 			}
-			$total = $price+$shipping;
 			
-			$result = array('price' => $price, 'shipping' => $shipping, 'tax' => 0);
+			//Add the tax from the shipping on
 			
 			if(settings::singleton()->get_setting('shop_tax_rate'))
 			{
-				$tax = round((settings::singleton()->get_setting('shop_tax_rate')*$price) + (settings::singleton()->get_setting('shop_tax_rate')*$shipping), 2);
-				$total = $total + $tax;
-				$result['tax'] = $tax;
+				$tax = round($tax + (settings::singleton()->get_setting('shop_tax_rate')*$shipping), 2);
 			}
-			$result['total'] = $total;
+			$result = array('price' => $price, 'shipping' => $shipping, 'tax' => $tax);
+			
+			$result['total'] = $total = $price+$shipping+$tax;
 			$_SESSION[CART]['cost'] = $result;
 			return $result;
 		}

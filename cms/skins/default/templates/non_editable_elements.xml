@@ -214,7 +214,7 @@
 	</xsl:template>
 	
 	<xsl:template match="element[@type = 'element_Payment_PayPal']">
-	You have chosen to pay via PayPal you are now leaving please click to confirm and pay 
+	You have chosen to pay via PayPal you are now leaving please click to confirm and pay
 	<div id="paypal">
 		<xsl:element name="form">
 					<xsl:attribute name="style">display:inline;</xsl:attribute>
@@ -247,20 +247,20 @@
 						<xsl:attribute name="value"><xsl:value-of select="/page/settings/document_root"/></xsl:attribute>
 					</xsl:element> 
 					
-					<xsl:if test="/page/cart/cost/shipping">
+					<xsl:if test="/page/order/cost/shipping">
 						<xsl:element name="input">
 							<xsl:attribute name="type">hidden</xsl:attribute>
 							<xsl:attribute name="name">shipping</xsl:attribute>
-							<xsl:attribute name="value"><xsl:value-of select="/page/cart/cost/shipping"/></xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="/page/order/cost/shipping"/></xsl:attribute>
 						</xsl:element>
 						
 					</xsl:if>
 					
-					<xsl:if test="/page/cart/cost/tax">
+					<xsl:if test="/page/order/cost/tax">
 						<xsl:element name="input">
 							<xsl:attribute name="type">hidden</xsl:attribute>
 							<xsl:attribute name="name">tax_cart</xsl:attribute>
-							<xsl:attribute name="value"><xsl:value-of select="/page/cart/cost/tax"/></xsl:attribute>
+							<xsl:attribute name="value"><xsl:value-of select="/page/order/cost/tax"/></xsl:attribute>
 						</xsl:element>
 						
 					</xsl:if>

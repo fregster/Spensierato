@@ -57,7 +57,7 @@ set_include_path($default_include_path);
 require_once($include_path.'/cms/inc/static/defines.inc');
 
 ini_set('error_log', DIR_LOG.'php_error.log');
-ini_set('display_errors', 'Off');
+//ini_set('display_errors', 'Off');
 
 require_once(DIR_STATIC.'autoloader.inc');
 require_once(DIR_STATIC.'functions.inc');

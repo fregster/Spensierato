@@ -133,7 +133,7 @@ class shoppingcart
 			
 			if(settings::singleton()->get_setting('shop_tax_rate'))
 			{
-				$tax = (settings::singleton()->get_setting('shop_tax_rate')*$price) + (settings::singleton()->get_setting('tax_rate')*$shipping);
+				$tax = (settings::singleton()->get_setting('shop_tax_rate')*$price) + (settings::singleton()->get_setting('shop_tax_rate')*$shipping);
 				$total = $total + $tax;
 				$result['tax'] = $tax;
 			}

@@ -9,14 +9,57 @@ require_once 'generic.inc';
  * Use InnoDB anywhere where you need clustering, caching data, higher concurrency, background flushes
  */
 
-$default_table_engine = 'MYISAM';
-//$default_table_engine = 'INNODB';
-//$archive_table_engine = 'ARCHIVE';
-$archive_table_engine = 'MYISAM';
-$full_text_search_table_engine = 'MYISAM';
-$cache_table_engine = 'MEMORY';
+if(!isset($default_table_engine))
+{
+	$default_table_engine = 'MYISAM';
+	//$default_table_engine = 'INNODB';
+}
 
-$default_charset = 'latin1';
+if(!isset($archive_table_engine))
+{
+	//$archive_table_engine = 'ARCHIVE';
+	$archive_table_engine = 'MYISAM';
+}
+
+if(!isset($full_text_search_table_engine))
+{
+	$full_text_search_table_engine = 'MYISAM';
+}
+
+if(!isset($cache_table_engine))
+{
+	$cache_table_engine = 'MEMORY';
+}
+
+if(!isset($default_charset))
+{
+	$default_charset = 'latin1';
+}
+
+if(!isset($long_text))
+{
+	$long_text = 'LONGTEXT';
+}
+
+if(!isset($tiny_int))
+{
+	$tiny_int = 'TINYINT';
+}
+
+if(!isset($full_text))
+{
+	$full_text = 'FULLTEXT';
+}
+
+if(!isset($full_text_enabled))
+{
+	$full_text_enabled = true;
+}
+
+if(!isset($allow_unique_keys))
+{
+	$allow_unique_keys = true;
+}
 
 /** this is where you add MySQL-specific data to the table definitions.
  *  for example, storage engine and charset are defined here.
@@ -41,8 +84,8 @@ $tables['tbl_commands']['engine'] = $default_table_engine;
 $tables['tbl_commands']['charset'] = $default_charset;
 $tables['tbl_commands']['keys'] = array();
 
-$tables['tbl_elements_revisions']['cols_define']['data'] = 'LONGTEXT';
-$tables['tbl_elements_revisions']['cols_define']['search'] = 'LONGTEXT';
+$tables['tbl_elements_revisions']['cols_define']['data'] = $long_text;
+$tables['tbl_elements_revisions']['cols_define']['search'] = $long_text;
 $tables['tbl_elements_revisions']['engine'] = $default_table_engine;
 $tables['tbl_elements_revisions']['charset'] = $default_charset;
 $tables['tbl_elements_revisions']['keys'] = array();
@@ -53,19 +96,29 @@ $tables['tbl_elements']['keys'] = array();
 
 $tables['tbl_elements_data']['engine'] = $default_table_engine;
 $tables['tbl_elements_data']['charset'] = $default_charset;
-$tables['tbl_elements_data']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_elements_data']['cols_define']['data'] = $long_text;
 $tables['tbl_temp']['keys'] = array();
 
 $tables['tbl_search']['engine'] = $full_text_search_table_engine;
 $tables['tbl_search']['charset'] = $default_charset;
-$tables['tbl_search']['cols_define']['search'] = 'LONGTEXT';
-$tables['tbl_search']['cols_define']['keywords'] = 'LONGTEXT';
-$tables['tbl_search']['keys'] = array('FULLTEXT' => array(array('search')), 'UNIQUE KEY' => array('id_to_file' => array('id','file')));
+$tables['tbl_search']['cols_define']['search'] = $long_text;
+$tables['tbl_search']['cols_define']['keywords'] = $long_text;
+if($allow_unique_keys)
+{
+	$tables['tbl_search']['keys'] = array('UNIQUE KEY' => array('id_to_file' => array('id','file')));
+}
+if($full_text_enabled)
+{
+	$tables['tbl_search']['keys']['FULLTEXT'] = array(array('search'));
+}
 
-$tables['tbl_elements_draft']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_elements_draft']['cols_define']['data'] = $long_text;
 $tables['tbl_elements_draft']['engine'] = $default_table_engine;
 $tables['tbl_elements_draft']['charset'] = $default_charset;
-$tables['tbl_elements_draft']['keys'] = array('UNIQUE KEY' => array('user_to_element' => array('element_id', 'user_id')));
+if($allow_unique_keys)
+{
+	$tables['tbl_elements_draft']['keys'] = array('UNIQUE KEY' => array('user_to_element' => array('element_id', 'user_id')));
+}
 
 $tables['tbl_list_data']['engine'] = $default_table_engine;
 $tables['tbl_list_data']['charset'] = $default_charset;
@@ -73,18 +126,26 @@ $tables['tbl_list_data']['keys'] = array();
 
 $tables['tbl_list_membership']['engine'] = $default_table_engine;
 $tables['tbl_list_membership']['charset'] = $default_charset;
-$tables['tbl_list_membership']['keys'] = array('UNIQUE KEY' => array('user_id' => array('user_id', 'list_id')));
+if($allow_unique_keys)
+{
+	$tables['tbl_list_membership']['keys'] = array('UNIQUE KEY' => array('user_id' => array('user_id', 'list_id')));
+}
 
 $tables['tbl_page_elements']['engine'] = $default_table_engine;
 $tables['tbl_page_elements']['charset'] = $default_charset;
-$tables['tbl_page_elements']['keys'] = array('UNIQUE KEY' => array('elements_to_page_link' => array('page_id','element_id')), 'UNIQUE KEY' => array('only_one_main_element' => array('element_id','main')));
+if($allow_unique_keys)
+{
+	$tables['tbl_page_elements']['keys'] = array('UNIQUE KEY' => array('elements_to_page_link' => array('page_id','element_id')), 'UNIQUE KEY' => array('only_one_main_element' => array('element_id','main')));
+}
 
 $tables['tbl_pages']['engine'] = $default_table_engine;
 $tables['tbl_pages']['charset'] = $default_charset;
-$tables['tbl_pages']['cols_define']['append_tags'] = 'LONGTEXT';
-$tables['tbl_pages']['keys'] = array('KEY' => array('valid_child' => array('visible','deleted','parent_id')));
-
-$tables['tbl_security']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_pages']['cols_define']['append_tags'] = $long_text;
+if($allow_unique_keys)
+{
+	$tables['tbl_pages']['keys'] = array('KEY' => array('valid_child' => array('visible','deleted','parent_id')));
+}
+$tables['tbl_security']['cols_define']['data'] = $long_text;
 $tables['tbl_security']['engine'] = $default_table_engine;
 $tables['tbl_security']['charset'] = $default_charset;
 $tables['tbl_security']['keys'] = array();
@@ -99,13 +160,18 @@ $tables['tbl_temp']['keys'] = array();
 
 $tables['tbl_users']['engine'] = $default_table_engine;
 $tables['tbl_users']['charset'] = $default_charset;
-$tables['tbl_users']['keys'] = array('UNIQUE KEY' => array('username' => array('username')), 'KEY' => array('login' => array('username','password')));
+if($allow_unique_keys)
+{
+	$tables['tbl_users']['keys'] = array('UNIQUE KEY' => array('username' => array('username')), 'KEY' => array('login' => array('username','password')));
+}
 
-$tables['tbl_users_data']['cols_define']['data'] = 'LONGTEXT';
+$tables['tbl_users_data']['cols_define']['data'] = $long_text;
 $tables['tbl_users_data']['engine'] = $default_table_engine;
 $tables['tbl_users_data']['charset'] = $default_charset;
-$tables['tbl_users_data']['keys'] = array('KEY' => array('id' => array('user_id')));
-
+if($allow_unique_keys)
+{
+	$tables['tbl_users_data']['keys'] = array('KEY' => array('id' => array('user_id')));
+}
 /** build sql strings and execute the table creation.
  *  this code is MySQL specific.
  */
@@ -163,18 +229,18 @@ foreach ($tables as $table => $data){
 
 	//add storage engine if exists
 	$engine = '';
-	if (!is_null($data['engine'])) {
+	if (!is_null($data['engine']) && $data['engine'] != false) {
 		$engine = "ENGINE='{$data['engine']}'";
 	}
 
 	//add table charset if exists
 	$charset = '';
-	if (!is_null($data['charset'])) {
+	if (!is_null($data['charset']) && $data['charset'] != false) {
 		$charset = "DEFAULT CHARSET='{$data['charset']}'";
 	}
 
 	//construct sql string
-	$sql = "CREATE TABLE IF NOT EXISTS $table ($cols $primary_key $keys) $engine $charset;";
+	$sql = "CREATE TABLE $table ($cols $primary_key $keys) $engine $charset;";
 
 	//execute sql
 	$result = $db->query($sql);

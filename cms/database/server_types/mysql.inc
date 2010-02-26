@@ -1,6 +1,9 @@
 <?php
 class Database_mysql extends Database
 {
+	protected $table_quote = '';
+	protected $escape_method = 'mysqli_real_escape_string';
+	
 	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
 		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions);

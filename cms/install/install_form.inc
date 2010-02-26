@@ -136,12 +136,13 @@ if(!$rewrite_enabled && !check_inc_restrictions())
 	<div id="dbinfo" class="pad-div">
 	Please specify the connection information to your SQL server, this user needs to be able to create users and databases, as well as give permissions (Usally root or sa)
 		<div>Host: <input type="text" name="host" value="localhost" /></div>
-		<div>Database Layer: <select name="db-layer" id="db-layer" onchange="jsCheckHostType();"><option value="mdb2">MDB2 (Default)</option><option value="pdo">PDO (Cross SQL platform)</option><option value="php">PHP's Mysql (Not recomended)</option></select></div>
+		<div>Database Layer: <select name="db-layer" id="db-layer" onchange="jsCheckHostType();"><option value="mdb2">MDB2 (Default)</option><option value="pdo">PDO (Cross SQL platform)</option><option value="php">PHP's Builtin Functions (Not recomended)</option></select></div>
 		<div id="db-driver">
 			<div>Host type: <select name="type">
 				<option value="mysqli">MySQL 4+</option>
 				<option value="mysql">MySQL 4</option>
-				<option value="mssql">MSSQL (2000, 2005 and 2008)</option>				
+				<option value="mssql">MSSQL (2000, 2005 and 2008)</option>		
+				<option value="sqlite">SQLite (Filesystem based)</option>		
 			</select></div>
 		</div>
 		<div>Username: <input type="text" name="username" value="root" /></div>

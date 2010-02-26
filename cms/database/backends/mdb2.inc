@@ -6,8 +6,9 @@ class database_execution_mdb2 extends database_execution
 		//Load the MDB2 code
 		//Doing this here only loads the code if a DB query is actually going to be done
 		require_once 'MDB2.php';
-
+		
 		$this->db_backend =& MDB2::singleton($dsn, $options);
+
 		if (PEAR::isError($this->db_backend) or (MDB2::isError($this->db_backend)))
 		{
 			$this->sql_error($this->db_backend->getMessage());
@@ -26,6 +27,7 @@ class database_execution_mdb2 extends database_execution
 
 	public function sql_run($sql, $values, $writeuser)
 	{
+		
 		$error = false;
 		//Query the database Object
 
@@ -129,6 +131,7 @@ class database_execution_mdb2 extends database_execution
 	public function query($sql_str)
 	{
 		$result = $this->db_backend->query($sql_str);
+		
 		if (PEAR::isError($result)) {
 			return FALSE;
 		}

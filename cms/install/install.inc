@@ -26,7 +26,7 @@
 
 	Write settings file out
 */
-
+ob_end_flush();
 //$settings_file = Settings::singleton()->get_setting('cms_root').'/../spensierato_setup.inc';
 $path_vars = Common::get_path_vars();
 //print_r($path_vars);
@@ -72,6 +72,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	else { $rewrite = 'false'; }
 
 	//define $GLOBALS required by the database layer
+	if($driver == 'sqlite') { $database = $host; }
 	$GLOBALS['database_driver'] = $driver;
 	$GLOBALS['database_backend'] = $layer;
 	$GLOBALS['database_user_readwrite'] = $user_rw;
@@ -80,12 +81,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$GLOBALS['database_host'] = $host;
 	$GLOBALS['database_name'] = $database;
 	$GLOBALS['table_prefix'] = $prefix.'_';
-
+											
 	debug('Vars set');
 
 	/*
 	 * Create the db object
-	 */
+	 */	
 	$db = database::custom_db_object(array('phptype'  => $driver,
 		    								'username' => $username,
 											'password' => $password,
@@ -121,38 +122,46 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	//Include the file which processes the SQL code
 	//Load aproprate sql file
 
-	if(!is_file($install_folder.'/'.$driver.'.inc'))
-	{
-		die('<br/>Unable to load install sql file '.$install_folder.'/'.$driver.'.inc');
-	}
-
 	debug('Loading setup file');
+	
+	if(!is_file($install_folder.DS.'db'.DS.$driver.'.inc'))
+	{
+		die('<br/>Unable to load install sql file '.$install_folder.DS.'db'.DS.$driver.'.inc');
+	}
 
 	//Execute sql
 	debug('Running...');
-	include($install_folder.'/'.$driver.'.inc');
-
-	//Create the DB users and give permissions over the database
-	//TODO allow connections from specified places
-	$user_create_sql = array('GRANT SELECT, INSERT, UPDATE, DELETE ON '.$grant_db.'	TO '.$grant_user_rw,
-							 'GRANT SELECT ON '.$grant_db.'	TO '.$grant_user_r);
+	include($install_folder.DS.'db'.DS.$driver.'.inc');
 
 	debug('Createing users and permissions');
-	foreach($user_create_sql as $sql)
+	if($create_db_users)
 	{
-		$result = $db->query($sql);
-
-		if(!$result)
+		//Create the DB users and give permissions over the database
+		//TODO allow connections from specified places
+		$user_create_sql = array('GRANT SELECT, INSERT, UPDATE, DELETE ON '.$grant_db.'	TO '.$grant_user_rw,
+							 'GRANT SELECT ON '.$grant_db.'	TO '.$grant_user_r);
+		
+		foreach($user_create_sql as $sql)
 		{
-			die('An error occured while attempting to create database user.<br />
-				The SQL statement associated with this error: '.$sql);
+			$result = $db->query($sql);
+	
+			if(!$result)
+			{
+				die('An error occured while attempting to create database user.<br />
+					The SQL statement associated with this error: '.$sql);
+			}
 		}
+	}
+	else
+	{
+		echo (' - Database users not required for this install');
 	}
 
 	debug('Createing Homepage');
 	database::Singleton()->force_write_user();
+	
 	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible', 'title'), array(0, time(), 0, 1, 'Homepage'));
-
+	
 	debug('Adding starting element');
 	$element = Element::type('elementText');
 	$element->create($id, false);
@@ -224,6 +233,7 @@ $GLOBALS[\'cms_folder_cache\'] = \''.$doc_root_prefix.post::variable('cms_folder
 		echo('Unable to create settings file ('.$settings_file.'), instalation aborted.<br/>
 				Make sure the root dir is writeable or the file spensierato_setup.inc is created and writeable');
 		debug($settings_file_string);
+		exit;
 	}
 	else
 		debug('Settings file created');

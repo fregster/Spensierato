@@ -1,6 +1,6 @@
 <?php
-$backends = array('mdb2', 'pdo', 'php'); //PHP is mysql only
-$drivers = array('mysqli', 'mysql', 'mssql');
+$backends = array('mdb2', 'pdo', 'php'); //PHP is mysql, sqlite only
+$drivers = array('mysqli', 'mysql', 'mssql', 'sqlite');
 
 //Cache the file system path for performance
 define('DATABASE_LAYER_PATH', dirname(__FILE__));

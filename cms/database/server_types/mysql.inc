@@ -1,8 +1,7 @@
 <?php
 class Database_mysql extends Database
 {
-	protected $table_quote = '';
-	protected $escape_method = 'mysqli_real_escape_string';
+	protected $escape_method = 'mysql_real_escape_string';
 	
 	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
@@ -39,7 +38,7 @@ class Database_mysql extends Database
 			$score = 10;
 		}
 		//Mysql search
-		$sql = 'SELECT '.$this->sql_build_select_string($select).', (MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.") * 10) AS score FROM `".$this->prefix. $this->sql_clean_input($table).'` WHERE ( MATCH(`'.$this->sql_clean_input($col)."`) AGAINST('".$this->sql_clean_input($query)."'".$boolean.') '.$where.' ) ORDER BY score '.$order.' LIMIT '.$from.', '.$to;
+		$sql = 'SELECT '.$this->sql_build_select_string($select).', (MATCH('.$this->col_quote.$this->sql_clean_input($col).$this->col_quote.") AGAINST('".$this->sql_clean_input($query)."'".$boolean.") * 10) AS score FROM `".$this->prefix. $this->sql_clean_input($table).$this->col_quote.' WHERE ( MATCH('.$this->col_quote.$this->sql_clean_input($col).$this->col_quote.") AGAINST('".$this->sql_clean_input($query)."'".$boolean.') '.$where.' ) ORDER BY score '.$order.' LIMIT '.$from.', '.$to;
 		
 		return database_execution::singleton()->sql_select_exe_run($this->sql_exe($sql, NULL));
 	}
@@ -49,4 +48,14 @@ class Database_mysql extends Database
 //		USE YourDBName GO SELECT * FROM sys.Tables GO
 		 return $this->sql_select_exe('SELECT * FROM sys.Tables', NULL);
 	}
+	
+	/*
+	protected function sql_clean_input($var)
+	{
+		//If the input is just a number just return it
+		if(is_numeric($var)) { return $var; }
+		
+		return call_user_func('addslashes',$var); //FIXME mysql uses a reference in the function needs fixing.
+	}
+	*/
 }

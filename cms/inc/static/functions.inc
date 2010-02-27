@@ -243,6 +243,10 @@ function load($url,$options=array()) {
         $headers['Status'] = 404;
     } else {
         //Seperate header and content
+        if(!isset($info['header_size']))
+        {
+        	$info['header_size'] = '';
+        }
         $header_text = substr($response, 0, $info['header_size']);
         $body = substr($response, $info['header_size']);
         

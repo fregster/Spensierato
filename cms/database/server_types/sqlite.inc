@@ -12,4 +12,6 @@ class Database_sqlite extends Database_mysql
 	protected $col_quote = '';
 	protected $terminate_sql = ';';
 	protected $escape_method = 'sqlite_escape_string';
+	
+	
 }

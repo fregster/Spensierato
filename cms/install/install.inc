@@ -26,11 +26,10 @@
 
 	Write settings file out
 */
-ob_end_flush();
+
+ob_start();
 //$settings_file = Settings::singleton()->get_setting('cms_root').'/../spensierato_setup.inc';
 $path_vars = Common::get_path_vars();
-//print_r($path_vars);
-//die();
 if($_SERVER['REQUEST_METHOD'] == 'GET' && !isset($path_vars[0]))
 {
 	//Check that the settings file does not exsist

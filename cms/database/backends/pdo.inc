@@ -4,11 +4,16 @@ class database_execution_pdo extends database_execution
 	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
 		try {
+			$host = $dsn['hostspec'];
+			if($dsn['phptype'] != 'sqlite')
+			{
+				$host = 'host='.$host;
+			}
 				if(isset($dsn['database']))
-					$connection_String = 'mysql:host='.$dsn['hostspec'].';dbname='.$dsn['database'];
+					$connection_String = $dsn['phptype'].':'.$host.';dbname='.$dsn['database'];
 				else
-					$connection_String = 'mysql:host='.$dsn['hostspec'];
-		    	$this->db_backend = new PDO($connection_String, $dsn['username'], $dsn['password'], array(PDO::FETCH_ASSOC, PDO::ERRMODE_EXCEPTION));
+					$connection_String = $dsn['phptype'].':'.$host;
+		    	$this->db_backend = new PDO($connection_String, $dsn['username'], $dsn['password'], array(PDO::FETCH_ASSOC => PDO::ERRMODE_EXCEPTION));
 		    }
 			catch(PDOException $e)
 		    {

@@ -229,13 +229,13 @@ foreach ($tables as $table => $data){
 
 	//add storage engine if exists
 	$engine = '';
-	if (!is_null($data['engine']) && $data['engine'] != false) {
+	if (isset($data['engine']) && !is_null($data['engine']) && $data['engine'] != false) {
 		$engine = "ENGINE='{$data['engine']}'";
 	}
 
 	//add table charset if exists
 	$charset = '';
-	if (!is_null($data['charset']) && $data['charset'] != false) {
+	if (isset($data['charset']) && !is_null($data['charset']) && $data['charset'] != false) {
 		$charset = "DEFAULT CHARSET='{$data['charset']}'";
 	}
 

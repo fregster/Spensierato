@@ -131,7 +131,6 @@ class database_execution_mdb2 extends database_execution
 	public function query($sql_str)
 	{
 		$result = $this->db_backend->query($sql_str);
-		
 		if (PEAR::isError($result)) {
 			return FALSE;
 		}

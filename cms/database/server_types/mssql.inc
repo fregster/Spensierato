@@ -1,6 +1,8 @@
 <?php
 class Database_mssql extends Database
 {
+	protected $dsn_host_type = 'mssql';
+	
 	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
 		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions);

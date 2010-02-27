@@ -5,6 +5,7 @@ class Database
 	private static $instance;
 
 	protected $prefix;
+	protected $dsn_host_type;
 	private $sql_db_type;
 	private $error_file = false;
 
@@ -66,6 +67,11 @@ class Database
 		$this->time = time();
 		$this->microtime = microtime();
 		$this->prefix = DATABASE_TABLE_PREFIX;
+		
+		if(!function_exists($this->escape_method))
+		{
+			$this->escape_method = 'addslashes';
+		}
 
 		if(!$this->error_file)
 		{
@@ -139,8 +145,8 @@ class Database
 	{
 		//If the input is just a number just return it
 		if(is_numeric($var)) { return $var; }
-
-		return sqlite_escape_string($var);
+		
+		return call_user_func($this->escape_method,$var);
 	}
 
 	//SQL Logging function

@@ -31,7 +31,11 @@ MySQL (or SQL server that supports the LIMIT call untill the DB layer can be upd
 In Debian
 apt-get install php-xml-serializer php-xml-parser php5-xsl php5-mysql php5-ffmpeg
 
+If you want to use sqlite (You can install it anyway if you wish)
+apt-get install php-mdb2-driver-sqlite
+
 pear install MDB2
 pear install pear/MDB2#MySQLi
 
 pear install text_diff etc
+

@@ -344,7 +344,7 @@ class Database
 
 	protected function sql_update_time_build($table, $id)
 	{
-		return 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = \'' . $this->time . '\' WHERE id = \'' . $this->sql_clean_input($id) . '\'';
+		return 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = ' . $this->value_quote . $this->time . $this->value_quote . ' WHERE id = ' . $this->value_quote . $this->sql_clean_input($id) . $this->value_quote . ' ';
 	}
 
 	public function sql_toggle_field_by_id($id, $table, $field, $destroy_cache = false)
@@ -390,7 +390,7 @@ class Database
 		$count_fields = count($fields);
 		while($i <= ($count_fields - 1))
 		{
-			$sql_temp_fields .= $this->col_quote.$this->sql_clean_input($fields[$i]).$this->col_quote.' = \''.$this->sql_clean_input($values[$i]) .'\' ';
+			$sql_temp_fields .= $this->col_quote.$this->sql_clean_input($fields[$i]).$this->col_quote.' = '.$this->value_quote . $this->sql_clean_input($values[$i]) . $this->value_quote . ' ';
 			if($i < ($count_fields -1))
 			{
 				//not the last one so add a ,
@@ -473,7 +473,7 @@ class Database
 	protected function sql_delete_by_colum_equals_build($table, $col, $equals)
 	{
 		$table = $this->prefix.$this->sql_clean_input($table);
-		return 'DELETE FROM '.$table.' WHERE '.$this->table_quote.$this->sql_clean_input($col).$this->table_quote.' = "'.$this->sql_clean_input($equals).'"';
+		return 'DELETE FROM '.$table.' WHERE '.$this->table_quote.$this->sql_clean_input($col).$this->table_quote.' = ' . $this->value_quote . $this->sql_clean_input($equals).$this->value_quote;
 	}
 
 	public function sql_delete_where($table, $where_fields, $where_values)

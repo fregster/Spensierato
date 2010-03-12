@@ -30,6 +30,7 @@ class Database
 	protected $user_support = true;
 	protected $col_quote = '`';
 	protected $table_quote = '`';
+	protected $value_quote = "'";
 
 	/**
 	 * Privately cached vars
@@ -454,7 +455,7 @@ class Database
 		$sql_temp_values = '';
 		while($i <= ($count_values - 1))
 		{
-			$sql_temp_values = $sql_temp_values . '"'.$this->sql_clean_input($values[$i]) .'" ';
+			$sql_temp_values = $sql_temp_values . $this->value_quote . $this->sql_clean_input($values[$i]) . $this->value_quote . ' ';
 			if($i < ($count_values - 1)) { $sql_temp_values .=', '; }
 			$i++;
 		}
@@ -670,7 +671,7 @@ class Database
 						{
 							$sql_temp_where_or .= $this->table_quote.$this->sql_clean_input($where_fields[$i]) .$this->table_quote.' = ';
 							//Quote non numeric values
-							if(is_numeric($where_values[$i][$j])) {	$sql_temp_where_or .= $where_values[$i][$j]; }else{ $sql_temp_where_or .= '"'. $this->sql_clean_input($where_values[$i][$j]) .'"'; }
+							if(is_numeric($where_values[$i][$j])) {	$sql_temp_where_or .= $where_values[$i][$j]; }else{ $sql_temp_where_or .= $this->value_quote . $this->sql_clean_input($where_values[$i][$j]) .$this->value_quote; }
 	
 							$j++;
 							if(isset($where_values[$i][$j]))
@@ -698,7 +699,7 @@ class Database
 					}
 					else
 					{
-						$sql_temp_where .= '"'. $this->sql_clean_input($where_values[$i]) .'")';
+						$sql_temp_where .= $this->value_quote . $this->sql_clean_input($where_values[$i]) . $this->value_quote .')';
 					}
 				}
 

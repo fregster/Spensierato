@@ -26,6 +26,9 @@
 						</xsl:element>
 					</span>
 				</xsl:if>
+				<div id="page_section_banner_title">
+					<xsl:value-of select="/page/settings/site_name_long" />
+				</div>
 			<div id="banner_submenu"><xsl:call-template name="banner_submenu"/></div>
 		</xsl:element>
 	</xsl:template>

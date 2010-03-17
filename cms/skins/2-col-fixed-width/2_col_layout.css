@@ -27,7 +27,8 @@ div[id^="wrapper"] #block_2 .verticalalign{width:700px !important}
 
 #page_section_left_menu{color:black;}
 #page_section_main{margin-left:3px;}
-#page_section_banner{width:900px; margin-left:auto; margin-right:auto; border:1px solid #ddd; border-bottom:none}
+#page_section_banner{width:900px; margin-left:auto; margin-right:auto; border:1px solid #ddd; border-bottom:none; position:relative;}
+#page_section_banner_title{position:absolute; left:15px;top:30px;font-size:30px;font-style:italic;}
 #menu_children, .menu_children, .menu_top{border:#666; border:#333; border-collapse:collapse; border:1px; min-height:25px; font-variant: small-caps; margin-left: -35px;}
 #menu_top_selected, .menu_top_selected{background-color:#CCC; border:#666; border-collapse:collapse; border:thin; min-height:25px; font-variant: small-caps; margin-left: -35px;}
 #menu_top_parent, .menu_top_parent{background-color:#EEE; border:#666; border-collapse:collapse; border:thin; min-height:25px; font-variant: small-caps; margin-left: -35px;}

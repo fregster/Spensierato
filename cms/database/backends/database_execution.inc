@@ -79,7 +79,7 @@ class database_execution
 					}
 					else
 					{
-						$this->write &= $this->read;
+						$this->write =& $this->read;
 					}
 				}
 

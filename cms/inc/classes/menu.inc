@@ -120,11 +120,14 @@ class Menu
 			$menu = common::retrieve_values_from_array($menu, array('id', 'title'));
 			
 			$menu_link_map = array();
-			foreach($menu as $item)
+			if(isset($menu[0]))
 			{
-				if(strlen($item[1]) > 0)
+				foreach($menu as $item)
 				{
-					$menu_link_map[$item[0]] = $item[1];
+					if(strlen($item[1]) > 0)
+					{
+						$menu_link_map[$item[0]] = $item[1];
+					}
 				}
 			}
 			

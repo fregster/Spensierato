@@ -25,6 +25,12 @@ abstract class Capthca
 
 	public static function create_Images($width='120',$height='40')
    {
+   		//Ensure teh GD lib's are available
+	   	if(!function_exists('imagettfbbox'))
+	   	{
+	   		return exit;
+	   	}
+	   	
    		$characters = Settings::Singleton()->get_setting('login_capthca_length');
 		if(($characters >= 8) or (!is_numeric($characters)) )
 		{

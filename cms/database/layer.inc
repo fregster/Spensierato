@@ -26,6 +26,7 @@ class Database
 	private $show_error_sql = false;
 	private $strip_slashes = true;
 	protected $escape_method = 'addslashes';
+	protected $allow_extenal_escaping = false; //False uses the internal method's only which prevent's opening a DB connection unless required.
 	
 	protected $user_support = true;
 	protected $col_quote = '`';
@@ -147,7 +148,11 @@ class Database
 		//If the input is just a number just return it
 		if(is_numeric($var)) { return $var; }
 		
-		return call_user_func($this->escape_method,$var);
+		if($this->allow_extenal_escaping)
+		{
+			return call_user_func($this->escape_method,$var);
+		}
+		return addslashes($var);
 	}
 
 	//SQL Logging function

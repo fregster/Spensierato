@@ -1,5 +1,4 @@
-#notifications
-{
+#notifications{
 	position:absolute;
 	z-index: 9999;
 	top: 0px;
@@ -7,18 +6,17 @@
 	width: 100%;
 }
 
-#debug_text
-{
+#debug_text{
 	
 }
 
-.ToolTip-tip {
+.ToolTip-tip{
 	color: #000;
 	width: 130px;
 	z-index: 13000;
 }
  
-.ToolTip-title {
+.ToolTip-title{
 	font-weight: bold;
 	font-size: 11px;
 	margin: 0;
@@ -28,13 +26,13 @@
 	border-bottom: 1px solid #B5CF74;
 }
  
-.ToolTip-text {
+.ToolTip-text{
 	font-size: 11px;
 	padding: 4px 8px 8px;
 	background: #CFDFA7;
 }
 
-.elementDownload {
+.elementDownload{
 	margin-top; margin-bottom: 3px;
 	background: #DDDDDD;
 }
@@ -48,47 +46,52 @@
 
 }
 
-.element_admin_header
-{
+.element_admin_header{
 	width:100%;	
 }
 
-.element_admin_footer
-{
+.element_admin_footer{
 	width:100%;
 }
 
-.element_header
-{
+.element_header{
 	background-color:#CCCCCC;
 	width:100%;
 }
 
-.element_footer
-{
+.element_footer{
 	background-color:#CCCCCC;
 	width:100%;
 }
 
-.elementadmin {
+.elementadmin{
 	border-left: medium solid #FFFFFF;
 	border-right: medium solid #FFFFFF;
 }
 
-.download {
+.download{
 	cursor: pointer;	
 }
 
-.image {
+.image{
 	border: 0px;
 }
 
-.js-show {
+.js-show{
 	display: none;
 }
 
 .js-hide {
 	
+}
+
+.warning{
+	border:1px;
+	border-style:solid;
+	border-color:black;
+	background:#EEE;
+	margin-bottom:3px;
+	padding:2px;
 }
 
 #link_menu{list-style: none; margin-left: 3px ;margin-right: 3px ;padding-left: 1em;text-indent: -1em; text-align:center;}

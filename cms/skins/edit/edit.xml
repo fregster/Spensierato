@@ -26,20 +26,28 @@
 							</div>
 						</xsl:if>
 					</xsl:if>
-					<div id="page_edit_form">
-						<xsl:element name="form">
-							<xsl:attribute name="action"></xsl:attribute>
-							<xsl:attribute name="method">post</xsl:attribute>
-
-							<!-- test if we might upload a file and if so add the multipart attribute -->
-							<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
-
-							<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
-							<xsl:call-template name="edit_header"/>
-							<xsl:apply-templates select="/page/body/element/data"/>
-							<xsl:call-template name="edit_footer"/>
-						</xsl:element>
-					</div>
+					<xsl:choose>
+						<xsl:when test="/page/@type = 'warnings'">
+							<xsl:apply-templates select="/page/body/element/data/warnings/warning/*"/>
+						</xsl:when>
+						
+						<xsl:otherwise>
+							<div id="page_edit_form">
+								<xsl:element name="form">
+									<xsl:attribute name="action"></xsl:attribute>
+									<xsl:attribute name="method">post</xsl:attribute>
+		
+									<!-- test if we might upload a file and if so add the multipart attribute -->
+									<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+		
+									<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
+									<xsl:call-template name="edit_header"/>
+									<xsl:apply-templates select="/page/body/element/data"/>
+									<xsl:call-template name="edit_footer"/>
+								</xsl:element>
+							</div>
+						</xsl:otherwise>
+					</xsl:choose>
 				</div>
 			</xsl:element>
         </html>
@@ -91,9 +99,10 @@
 	</div>
 </xsl:template>
 
-<xsl:template match="*[@type = 'warning']">
-	<div>
-		<xsl:value-of select="./title" /><em><xsl:value-of select="./description" /></em>
+<xsl:template match="warning">
+	<div class="warning">
+		<div style="cursor:pointer;" onclick="jsToggleDisplay('warning_{position()}'); return false;"><xsl:value-of select="./title" /> - Toggle Description</div>
+		<div id="warning_{position()}" class="js-hide"><xsl:value-of select="./description" /></div>
 	</div>
 </xsl:template>
 

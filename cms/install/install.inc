@@ -225,12 +225,12 @@ $GLOBALS[\'cms_folder_cache\'] = \''.$doc_root_prefix.post::variable('cms_folder
 	/**
 	* Write the settings file
 	*/
-	$write_result = file_put_contents($settings_file, $settings_file_string);
+	$write_result = @file_put_contents($settings_file, $settings_file_string);
 
 	if(!$write_result)
 	{
-		echo('Unable to create settings file ('.$settings_file.'), instalation aborted.<br/>
-				Make sure the root dir is writeable or the file spensierato_setup.inc is created and writeable');
+		echo('<p>Unable to create settings file ('.$settings_file.'), instalation aborted.<br/>
+				Make sure the root dir is writeable or the file spensierato_setup.inc is created and writeable</p>');
 		debug($settings_file_string);
 		exit;
 	}

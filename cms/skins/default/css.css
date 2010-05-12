@@ -189,16 +189,6 @@ a.tooltip:hover span
 	text-align:center;
 }
 
-#page_section_admin_bar
-{
-	background-color:#FFFFFF;
-	right:2px;
-	top:2px;
-	position:absolute;
-	margin-left: 5px;
-	margin-right: 5px;
-}
-
 #account_personal_details
 {
 	width:250px;

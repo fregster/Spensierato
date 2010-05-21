@@ -168,7 +168,7 @@ class CMS
 
 		$sql_string = $sql_info[0].' SQL Querys ('.round($sql_info[2]).' Cached in '.$cache.') through ('. strtoupper($GLOBALS['database_backend']) .')';
 
-		$runtime=('<div class="footer_text">Page generated in ' . round($totaltime, 4) . ' seconds<br /> ' . round($percent, 0) . '% php time and with ' .$sql_string.' using '.(memory_get_peak_usage(true) / (1024 * 1024)).' MB</div>');
+		$runtime=('<div class="footer_text">Page generated in ' . round($totaltime, 4) . ' seconds on '. date("D M j G:i:s T Y") .'<br /> ' . round($percent, 0) . '% php time and with ' .$sql_string.' using '.(memory_get_peak_usage(true) / (1024 * 1024)).' MB</div>');
 
 		return ('<div id="page_section_footer">'.$runtime.'</div>');
 

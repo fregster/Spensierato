@@ -57,13 +57,13 @@ class Settings
 		}
 	}
 
-	public function new_setting($name, $value, $protected = false, $hidden = false)
+	public function new_setting($name, $value, $protected = false, $hidden = false, $editable = false)
 	{
 			if(!isset($this->settings[$name]))
 			{
 				$this->settings[$name] = array();
 			}
-			$setting_details = array('protected' => $protected, 'hidden' => $hidden, 'value' => $value);
+			$setting_details = array('protected' => $protected, 'hidden' => $hidden, 'value' => $value, 'editable' => $editable);
 			array_push($this->settings[$name], $setting_details);
 	}
 
@@ -106,7 +106,7 @@ class Settings
 		return xml::array_to_xml_simple($settings, 'settings', 'setting');
 	}
 
-	public function overwrite_setting($name, $value, $protected = false)
+	public function overwrite_setting($name, $value, $protected = false, $editable = false)
 	{
 		//Check if the setting exists. if not, create a new one.
 		if (!isset($this->settings[$name])) {
@@ -121,7 +121,7 @@ class Settings
 			unset($this->settings[$name]);
 
 			//Push the new setting
-			$this->new_setting($name, $value, $protected, $hidden);
+			$this->new_setting($name, $value, $protected, $hidden, $editable);
 
 			return true;
 		}

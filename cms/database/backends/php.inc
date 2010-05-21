@@ -18,6 +18,11 @@ class database_execution_php extends database_execution
 				$this->sql_error($error);
 			}
 		}
+	
+		if($dsn['phptype'] != 'sqlite')
+		{
+			if(!file_exists($dsn['phptype'])){ $this->sql_error('Database offline'); }
+		}
 		return $this->db_backend;
 	}
 

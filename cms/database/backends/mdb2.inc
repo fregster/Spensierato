@@ -7,6 +7,11 @@ class database_execution_mdb2 extends database_execution
 		//Doing this here only loads the code if a DB query is actually going to be done
 		require_once 'MDB2.php';
 		
+		if($dsn['phptype'] != 'sqlite')
+		{
+			if(!file_exists($host)){ $this->sql_error('Database offline'); }
+		}
+		
 		$this->db_backend =& MDB2::singleton($dsn, $options);
 
 		if (PEAR::isError($this->db_backend) or (MDB2::isError($this->db_backend)))

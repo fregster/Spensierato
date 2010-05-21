@@ -9,6 +9,10 @@ class database_execution_pdo extends database_execution
 			{
 				$host = 'host='.$host;
 			}
+			else
+			{
+				if(!file_exists($host)){ $this->sql_error('Database offline'); }
+			}
 				if(isset($dsn['database']))
 					$connection_String = $dsn['phptype'].':'.$host.';dbname='.$dsn['database'];
 				else

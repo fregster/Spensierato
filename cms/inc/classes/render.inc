@@ -70,6 +70,7 @@ class Render
 	public function render_edit($xml)
 	{
 		Cache::headers_no_cache();
+//		die(Template::Singleton()->edit());
 		$this->render(Template::Singleton()->edit(), $xml);
 	}
 

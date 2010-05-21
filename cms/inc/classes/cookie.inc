@@ -32,7 +32,7 @@ class cookie
 
 	protected function __construct()
 	{
-		if(function_exists('mcrypt_get_iv_size'))
+		if(function_exists('mcrypt_get_iv_size') && settings::singleton()->get_setting('cookie_encryption'))
 		{
 			$this->encryption = true;
 			$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);

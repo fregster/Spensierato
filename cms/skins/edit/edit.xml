@@ -28,6 +28,12 @@
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="/page/@type = 'warnings'">
+						<a href="{/page/settings/document_root}/toggle/suppress_warnings" target="_self">
+							<xsl:choose>
+								<xsl:when test="/page/options/suppress_warnings = 1">Show Warning</xsl:when>
+								<xsl:otherwise>Suppress Warning</xsl:otherwise>
+							</xsl:choose>
+							 Notifications</a>
 							<xsl:apply-templates select="/page/body/element/data/warnings/warning/*"/>
 						</xsl:when>
 						

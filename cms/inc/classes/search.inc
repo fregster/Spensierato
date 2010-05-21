@@ -61,6 +61,7 @@ class Search
 					return true;
 				}
 			}
+			Warnings::Singleton()->register('Enhanced Search Failed', 'The enhanced search was unable to initialise. Check your folder permissions');
 		}
 		
 		return false;

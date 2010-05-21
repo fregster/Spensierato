@@ -214,7 +214,7 @@
 	</xsl:template>
 	
 	<xsl:template match="element[@type = 'element_SearchResults']">
-	Search Results
+	Search Results <span class="search_time">(fetched in <xsl:value-of select="search/time" /> seconds)</span>
 		<xsl:for-each select="search/results/result">
 			<xsl:element name="div">
 				<xsl:attribute name="id">eid_<xsl:value-of select="id" /></xsl:attribute>

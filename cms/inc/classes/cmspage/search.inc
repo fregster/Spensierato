@@ -42,7 +42,8 @@ class cmspage_search extends cmspage
 		}
 		
 		$element = Element::type('elementSearchResults');
-		$element->build('results', common::strip_external_xml_decleration(search::singleton()->search($_GET['searchtext'])));
+		$element->build('results', array('raw' => common::strip_external_xml_decleration(search::singleton()->search($_GET['searchtext']))));
+
 		Render::Singleton()->render_html(Content::Singleton()->build());
 	}	
 }

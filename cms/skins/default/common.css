@@ -10,6 +10,20 @@
 	
 }
 
+#page_section_footer{
+	font-size: 8px;
+	color: #AAA;	
+}
+
+.search_score{
+	font-size: 10px;
+	color: green;	
+}
+
+.search_title{
+	font-size: 16px;	
+}
+
 .ToolTip-tip{
 	color: #000;
 	width: 130px;

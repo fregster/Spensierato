@@ -1,7 +1,7 @@
 <?php
 //uncomment to force an install
 //	$force_install = true;
-
+date_default_timezone_set('UTC');
 function exception_handler($exception)
 {
   echo 'Uncaught exception: ' , $exception->getMessage(), "\n";

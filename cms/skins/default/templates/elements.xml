@@ -213,7 +213,7 @@
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
 	
-	<xsl:template match="element[@type = 'elementSearchResults']">
+	<xsl:template match="element[@type = 'element_SearchResults']">
 	Search Results
 		<xsl:for-each select="search/results/result">
 			<xsl:element name="div">
@@ -230,12 +230,13 @@
 				<div>
 					<xsl:value-of select="html" />
 					<br />
-					Score: <xsl:value-of select="score" /> features on 
+					<span class="search_score">Score: <xsl:value-of select="score" /> features on 
 					<xsl:element name="a">
 						<xsl:attribute name="class">search_link</xsl:attribute>
 						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="page" /></xsl:attribute>
 						<xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="page" />
 					</xsl:element>
+					</span>
 				</div>
 			</xsl:element>
 		</xsl:for-each>

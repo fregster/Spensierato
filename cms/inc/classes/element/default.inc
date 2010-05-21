@@ -92,7 +92,7 @@ class element_Default
 
 		$this->data = $data;
 		$this->get_data();
-
+//		print_r($this);die();
 		Content::Singleton()->attach_content($this->render());
 	}
 
@@ -406,7 +406,12 @@ class element_Default
 				$this->data = array_merge($this->data, $html);
 			}
 		}
-
+		else if (isset($this->data['raw'])) {
+			$copy = $this->data['raw'];
+			$this->data = $copy;
+			unset($copy);
+		}
+		
 		//make sure the data conforms to the element data schema
 		if (!empty($this->tags)) {
 			foreach ($this->tags as $key => $value){

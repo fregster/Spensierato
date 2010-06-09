@@ -150,7 +150,12 @@ class FileTransfer
 				if (file_exists($target)) {
 					unlink($target);
 				}
-				return(rename($path, $target));
+				if(rename($path, $target))
+				{
+					//Set the file permissions, read / write for owner read for group.
+					//This may need to be modified depending on the backup soloution.
+					return(chmod($target, 0640));
+				}
 			}
 		}
 

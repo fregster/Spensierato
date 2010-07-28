@@ -1,5 +1,6 @@
 
 		<xsl:template name="admin_bar">
+		<xsl:variable name="tgif" select="concat(/page/settings/document_root, '/skin/transparent-gif.gif') " />
 			<xsl:if test="/page/user/id != 0">
 				<div id="page_section_admin_bar" class="rounded">
 					<xsl:if test="/page/security/can_edit = 1">
@@ -12,22 +13,19 @@
 								Switch off Admin Mode
 							</xsl:element>
 							<xsl:if test="/page/user/administrator =1"> | 
+							<img src="{$tgif}" class="sprite sprite-page_white_text" alt="Edit Site details" title="Edit Site details"/>
 							<xsl:element name="a">
 									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/site_details</xsl:attribute>
 									<xsl:attribute name="class">submodal-500-600</xsl:attribute>
 									Edit Site details
 								</xsl:element> | 
+								<img src="{$tgif}" class="sprite sprite-sitemap" alt="Edit Site Structure" title="Edit Site Structure"/>
 								<xsl:element name="a">
 									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/site_structure</xsl:attribute>
 									<xsl:attribute name="class">submodal-500-600</xsl:attribute>
 									Edit Site Structure
 								</xsl:element> |
-								<xsl:element name="img">
-										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
-										<xsl:attribute name="class">sprite sprite-lock_edit</xsl:attribute>
-										<xsl:attribute name="alt">Lists Administration</xsl:attribute>
-										<xsl:attribute name="title">Lists Administration</xsl:attribute>
-								</xsl:element>
+								<img src="{$tgif}" class="sprite sprite-comments" alt="Lists Administration" title="Lists Administration"/>
 								<xsl:element name="a">
 									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/lists</xsl:attribute>
 									<xsl:attribute name="class">submodal-400-300</xsl:attribute>
@@ -36,11 +34,7 @@
 								<!--  If the user is a site admin show site warnings -->
 
 								<xsl:if test="/page/warnings/warning">
-								| <xsl:element name="img">
-									<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
-									<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
-									<xsl:attribute name="alt">Icon</xsl:attribute>
-								</xsl:element>
+								| <img src="{$tgif}" class="sprite sprite-delete" alt="Icon"/>
 									<xsl:element name="a">
 										<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/warnings</xsl:attribute>
 										<xsl:attribute name="class">submodal-700-450</xsl:attribute>
@@ -86,7 +80,7 @@
 							<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/update/<xsl:value-of select="/page/@id" /></xsl:attribute>
 							<xsl:attribute name="method">post</xsl:attribute>
 							<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
-							<div style="display: inline">
+							<div style="display: inline;padding-left:3px">
 								Page Title
 								<xsl:element name="input">
 									<xsl:attribute name="type">text</xsl:attribute>
@@ -131,7 +125,7 @@
 									<xsl:attribute name="class">submodal-450-500</xsl:attribute>
 									<xsl:element name="img">
 										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
-										<xsl:attribute name="class">sprite sprite-lock_edit</xsl:attribute>
+										<xsl:attribute name="class">sprite sprite-lock</xsl:attribute>
 										<xsl:attribute name="alt">Page Security</xsl:attribute>
 										<xsl:attribute name="title">Page Security</xsl:attribute>
 									</xsl:element>
@@ -155,6 +149,7 @@
 										<xsl:attribute name="class">sprite sprite-page_white_add</xsl:attribute>
 										<xsl:attribute name="style">display:inline;</xsl:attribute>
 										<xsl:attribute name="alt">Add Child Page</xsl:attribute>
+										<xsl:attribute name="title">Add Child Page</xsl:attribute>
 									</xsl:element></div>
 							</xsl:element>
 							</div>
@@ -174,9 +169,10 @@
 									<xsl:element name="input">
 										<xsl:attribute name="type">image</xsl:attribute>
 										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
-										<xsl:attribute name="class">sprite sprite-page_white_add</xsl:attribute>
+										<xsl:attribute name="class">sprite sprite-basket_add</xsl:attribute>
 										<xsl:attribute name="style">display:inline;</xsl:attribute>
 										<xsl:attribute name="alt">Add New Product</xsl:attribute>
+										<xsl:attribute name="title">Add New Product</xsl:attribute>
 									</xsl:element></div>
 							</xsl:element>
 							</div>
@@ -185,13 +181,12 @@
 						
 						</xsl:if>
 						<xsl:element name="div">
-
 							<xsl:element name="form">
 								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
 								<xsl:attribute name="method">post</xsl:attribute>
 								<xsl:attribute name="id">new_<xsl:value-of select="/page/@id" /></xsl:attribute>
 								<p>Create New <xsl:call-template name="new_element" />
-								<input type="submit" value="Create" />
+								<!--  <input type="submit" value="Create" /> -->
 								</p>
 							</xsl:element>
 					</xsl:element>
@@ -211,6 +206,7 @@
 		</xsl:if>
 		</xsl:template>
 
+<!-- 
 		<xsl:template name="new_element">
 			<select name="new_type">
 				<xsl:for-each select="/page/settings/elementTypes/setting">
@@ -224,9 +220,19 @@
 				</xsl:for-each>
 			</select>
 		</xsl:template>
-
+ -->
+ 		<xsl:template name="new_element">
+ 			<span style="background:#EEE">
+			<xsl:for-each select="/page/settings/elementTypes/setting">
+				<xsl:if test="position() != 1"> | </xsl:if>
+				<input type="image" name="new_type" value="{./class}" src="{/page/settings/document_root}/skin/transparent-gif.gif" class="sprite sprite-{./icon}" style="display:inline;" title="Add a new {./name} element" alt="{./name}" />
+			</xsl:for-each>
+			</span>
+		</xsl:template>
+ 		
 		<xsl:template name="element_admin_header">
 		<!-- If in admin show admin header -->
+		<xsl:variable name="etype" select="./@etype" /> 
 		<xsl:if test="/page/security/can_edit = 1">
 		<xsl:if test="/page/options/admin_mode = 1">
 			<xsl:variable name="id" select="./@id"/>
@@ -241,7 +247,8 @@
 
 				<xsl:element name="img">
 					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
-					<xsl:attribute name="class">sprite sprite-<xsl:value-of select="./@image" /></xsl:attribute>
+					<xsl:attribute name="class">sprite sprite-<xsl:value-of select="/page/settings/elementTypes/setting[name = $etype]/icon" /></xsl:attribute>
+					<xsl:attribute name="style">margin-left:3px;margin-right:3px;</xsl:attribute>
 					<xsl:attribute name="alt">Icon</xsl:attribute>
 				</xsl:element>
 				<xsl:value-of select="./@etype" /> | <xsl:value-of select="./@title" />
@@ -253,8 +260,9 @@
 					<xsl:element name="img">
 						<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
 						<xsl:attribute name="alt">Edit Content</xsl:attribute>
-						<xsl:attribute name="class">sprite sprite-<xsl:value-of select="./@image_edit" /></xsl:attribute>
+						<xsl:attribute name="class">sprite sprite-<xsl:value-of select="/page/settings/elementTypes/setting[name = $etype]/edit_icon" /></xsl:attribute>
 						<xsl:attribute name="title">Edit Content</xsl:attribute>
+						<xsl:attribute name="style">margin-left:3px;</xsl:attribute>
 					</xsl:element>
 
 				</xsl:element> |

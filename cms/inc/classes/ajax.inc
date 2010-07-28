@@ -31,10 +31,33 @@ abstract class ajax
 			case 'search':
 				header('content-type: text/xml');
 				die(search::singleton()->search(get::variable('searchtext'), null, 5, 0, false, false));
-
+				break;
+				
+			case 'dd':
+				self::dragdrop();
+				break;
+				
 			default:
 				die();
 				break;
+		}
+	}
+	
+	private static function dragdrop(){
+		/* on form submission */
+		if(isset($_POST['do_submit']))  {
+			/* split the value of the sortation */
+			$ids = explode(',',$_POST['sort_order']);
+			/* run the update query for each id */
+			foreach($ids as $index=>$id) {
+				$id = (int) $id;
+				if($id != '') {
+					//DB update
+				}
+			}
+			
+			/* now what? */
+			if($_POST['byajax']) { die(); } else { $message = 'Saved'; }
 		}
 	}
 

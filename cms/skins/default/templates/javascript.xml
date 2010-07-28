@@ -6,11 +6,11 @@
 <xsl:when test="/page/user/id != 0">
 <!-- User logged in -->
 <xsl:choose>
-<xsl:when test="/page/options/admin_mode = 1"><!-- User logged in and in admin mode-->mootools/mootools.js,public.js,logged_in.js,admin.js</xsl:when>
-<xsl:otherwise><!-- User logged in and NOT in admin mode-->mootools/mootools.js,public.js,logged_in.js</xsl:otherwise>
+<xsl:when test="/page/options/admin_mode = 1"><!-- User logged in and in admin mode-->mootools/mootools-1.2.4-core-yc.js,mootools/mootools-1.2.4.4-more-yc.js,public.js,logged_in.js,admin.js</xsl:when>
+<xsl:otherwise><!-- User logged in and NOT in admin mode-->mootools/mootools-1.2.4-core-yc.js,mootools/mootools-1.2.4.4-more-yc.js,public.js,logged_in.js</xsl:otherwise>
 </xsl:choose>
 </xsl:when>
-<xsl:otherwise><!-- User Not logged in -->mootools/mootools.js,public.js</xsl:otherwise>
+<xsl:otherwise><!-- User Not logged in -->mootools/mootools-1.2.4-core-yc.js,mootools/mootools-1.2.4.4-more-yc.js,public.js</xsl:otherwise>
 </xsl:choose>
 </xsl:attribute>
 </xsl:element>

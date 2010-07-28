@@ -154,6 +154,7 @@ class FileTransfer
 				{
 					//Set the file permissions, read / write for owner read for group.
 					//This may need to be modified depending on the backup soloution.
+					//TODO: Check this works on a WAMP stack
 					return(chmod($target, 0640));
 				}
 			}

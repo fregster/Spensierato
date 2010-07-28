@@ -1,5 +1,5 @@
 <?php
-element::register('Link', 'element_Link');
+element::register('Link', 'element_Link', false, 'link');
 class element_Link extends element_Default
 {
 

@@ -38,7 +38,7 @@ abstract class Element
 		return $type['type'];
 	}
 
-	public static function register($name, $class, $admin = false)
+	public static function register($name, $class, $admin = false, $icon = null, $edit_icon = null)
 	{
 		$types = Settings::singleton()->get_setting('elementTypes');
 		if(!is_array($types))
@@ -48,7 +48,9 @@ abstract class Element
 
 		if(!$admin or options::Singleton()->get_option('admin_mode'))
 		{
-			array_push($types, array('name' => $name, 'class' => $class));
+			if(is_null($icon)) { $icon = 'page_white'; }
+			if(is_null($edit_icon)) { $edit_icon = $icon; }
+			array_push($types, array('name' => $name, 'class' => $class, 'icon' => $icon, 'edit_icon' => $edit_icon));
 		}
 		Settings::singleton()->overwrite_setting('elementTypes', $types);
 	}

@@ -463,8 +463,8 @@ class element_Default
 
 		if(!$this->attach_upload())
 		{
-			echo('Error uploading');
-			die($this->admin_mode_data['error']);
+			//FIXME: update to use debug / error class
+			die('Error uploading ' . $this->admin_mode_data['error']);
 		}
 
 		$details = array_merge($this->admin_mode_data['save_data'], $this->attach_extra_data());

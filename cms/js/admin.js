@@ -82,6 +82,7 @@ dhtmlLoadScript(js_host+"/js/submodal/submodal.js");
 };
 function adminInit(){
 dynamicjsloader();
+updater();
 };
 
 function get_diff(name){
@@ -102,7 +103,7 @@ function get_diff(name){
 			ed.setContent(diff);
 		}
 	};
-}
+};
 
 function show_old_approvals(toggle, name){
 	var old_approvals = document.getElementsByName(name);
@@ -118,4 +119,59 @@ function show_old_approvals(toggle, name){
 	for (i = 0; i < old_approvals.length; ++i){
 		old_approvals[i].style.display = display_style;
 	}
-}
+};
+
+/* when the DOM is ready */
+function updater() {
+	/* grab important elements */
+	//var sortInput = document.id('sort_order');
+	var submit = 'checked';
+	var messageBox = document.getElementById('notifications');
+	var list = document.getElementById('page_section_body');
+	
+	/* get the request object ready;  re-use the same Request */
+	var request = new Request({
+		url: ajax_host+"/ajax/dd/",
+		link: 'cancel',
+		method: 'post',
+		onRequest: function() {
+			messageBox.set('text','Updating the sort order in the database.');
+		},
+		onSuccess: function() {
+			messageBox.set('text','Database has been updated.');
+		}
+	});
+	/* worker function */
+	var fnSubmit = function(save) {
+		
+		var sortOrder = new Array();
+		list.getElements('div').each(function(li) {
+			sortOrder.push(li.retrieve('id'));
+		});
+		//sortInput.value = sortOrder.join(',');
+		if(save) {
+			//request.send('sort_order=' + sortInput.value + '&ajax=' + submit.checked + '&do_submit=1&byajax=1');
+		}
+	};
+	
+	/* store values */
+	/*list.getElements('div').each(function(li) {
+		li.store('id',li.get('title')).set('title','');
+	});*/
+	
+	/* sortables that also *may* */
+	new Sortables(list,{
+		constrain: true,
+		clone: true,
+		revert: true,
+		onComplete: function(el,clone) {
+			fnSubmit(submit.checked);
+		}
+	});
+	
+	/* ajax form submission */
+//	document.id('dd-form').addEvent('submit',function(e) {
+//		if(e) e.stop();
+		fnSubmit(true);
+//	});
+};

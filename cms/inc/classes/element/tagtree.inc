@@ -1,5 +1,5 @@
 <?php
-element::register('Tag Tree', 'element_TagTree');
+element::register('Tag Tree', 'element_TagTree', false, 'sitemap');
 class element_TagTree extends element_Default
 {
 

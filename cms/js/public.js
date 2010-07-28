@@ -53,9 +53,9 @@ var initalised;
 var SmoothScroll;
 var autoSearch;
 var aSt;
-var ToolTips=new Tips($$(".ToolTip"),{className:"ToolTip"});
-var SpriteTips=new Tips($$(".sprite"),{className:"ToolTip"});
 var t;
+var ToolTips;
+var SpriteTips;
 function init(){
 if(initalised!=true){
 stepFontSize(readCookie("fontSize"));
@@ -72,8 +72,10 @@ if(typeof window.imageFlowLoad == 'function'){
 imageFlowLoad();
 }
 if(typeof window.adminInit == 'function'){
-adminInit();
+	adminInit();
 }
+ToolTips=new Tips($$(".ToolTip"),{className:"ToolTip"});
+SpriteTips=new Tips($$(".sprite"),{className:"ToolTip",fixed: true});
 initalised=true;
 }
 };
@@ -168,6 +170,7 @@ function jsShowID(id){
 	document.getElementById(id).style.display="block";
 };
 function notification(_a,_b,_c){
+if(typeof window.notes.fade == 'function'){
 var _d;
 if(!_c){
 _c="black";
@@ -177,6 +180,7 @@ document.getElementById("notifications").style.font=_c;
 document.getElementById("notifications").innerHTML=_a;
 notes.fade(-0,0.8);
 _d=setTimeout("notes.fade(0.8, 0)",3000);
+}
 return false;
 };
 var fxSlideHorizontal = new Fx.Slide(null, {mode: 'horizontal'})();

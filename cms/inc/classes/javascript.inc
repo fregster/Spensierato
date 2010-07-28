@@ -247,6 +247,7 @@ abstract class javascript
 		if (isset($encoding) && $encoding != 'none')
 		{
 			// Send compressed contents
+			header('Vary: Accept-Encoding');
 			$contents=(gzencode($contents, 9, $gzip ? FORCE_GZIP : FORCE_DEFLATE));
 		}
 

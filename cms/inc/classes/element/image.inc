@@ -1,7 +1,7 @@
 <?php
 if(class_exists('element_Download'))
 {
-	element::register('Image', 'element_Image');
+	element::register('Image', 'element_Image', false, 'image');
 	class element_Image extends element_Download
 	{
 		public function __construct()

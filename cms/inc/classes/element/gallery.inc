@@ -1,7 +1,7 @@
 <?php
 if(Settings::Singleton()->get_setting('uploads_enabled'))
 {
-	element::register('Gallery', 'element_Gallery');
+	element::register('Gallery', 'element_Gallery', false, 'picture');
 	class element_Gallery extends element_Image
 	{
 		private $video_extended_details;

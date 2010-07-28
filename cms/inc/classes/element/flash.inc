@@ -1,7 +1,7 @@
 <?php
 if(class_exists('element_Download'))
 {
-	element::register('Flash', 'element_Flash');
+	element::register('Flash', 'element_Flash', false, 'page_white_acrobat');
 	class element_Flash extends element_Download
 	{
 		public function __construct()
@@ -10,10 +10,6 @@ if(class_exists('element_Download'))
 			$this->type = __CLASS__;
 			$this->allowed_tags(array('file' => 'file', 'filename' => 'auto', 'filesize' => 'auto', 'mime' => 'auto', 'description' => 'html', 'linktext' => 'auto'));
 			$this->name = 'Flash';
-			if (options::singleton()->get_option('admin_mode')) {
-				$this->admin_mode_data['image'] = 'disk';
-				$this->admin_mode_data['image_edit'] = '';
-			}
 		}
 
 		protected function add_header()

@@ -197,7 +197,8 @@ class Render
 
 		/*$remove = array('<?xml version="1.0" encoding="UTF-8"?>');*/
 
-		$this->html = template::singleton()->dtd().str_replace($remove, '', $this->html);
+//		$start = strpos($this->html, '<!DOCTYPE');
+//		$this->html = template::singleton()->dtd().str_replace($remove, '', substr($this->html, (strpos($this->html, '>', $start) +1)));
 
 		$this->tidy();
 	}

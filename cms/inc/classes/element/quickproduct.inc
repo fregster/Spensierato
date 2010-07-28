@@ -1,5 +1,5 @@
 <?php
-element::register('Quick Product', 'element_QuickProduct');
+element::register('Quick Product', 'element_QuickProduct', false, 'basket');
 class element_QuickProduct extends element_Default
 {
 	public function __construct()

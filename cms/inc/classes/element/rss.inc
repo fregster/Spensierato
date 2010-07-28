@@ -1,5 +1,5 @@
 <?php 
-element::register('RSS Feed', 'element_RSS');
+element::register('RSS Feed', 'element_RSS', false, 'rss');
 class element_RSS extends element_Default
 {
 	private $href;

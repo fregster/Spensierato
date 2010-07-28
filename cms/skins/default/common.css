@@ -36,6 +36,7 @@
 }
  
 .ToolTip-title{
+	z-index: 13001;
 	font-weight: bold;
 	font-size: 11px;
 	margin: 0;
@@ -46,6 +47,7 @@
 }
  
 .ToolTip-text{
+	z-index: 13001;
 	font-size: 11px;
 	padding: 4px 8px 8px;
 	background: #CFDFA7;

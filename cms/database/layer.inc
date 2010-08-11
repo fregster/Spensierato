@@ -606,6 +606,7 @@ class Database
 
 	protected function sql_build_select_string($fields)
 	{
+		$sql_temp_select = '';
 		if($fields == NULL)
 		{
 			$sql_temp_select = '*';

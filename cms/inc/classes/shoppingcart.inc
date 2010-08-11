@@ -24,6 +24,7 @@ class shoppingcart
 			$_SESSION[CART] = array();
 			$_SESSION[CART][VERSION] = 1;
 		}
+		$_SESSION[CART]['updated'] = cms::singleton()->time();
 		$data = shoppingcart::get_product_data($product_id);
 		if($data != false)
 		{

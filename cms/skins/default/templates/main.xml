@@ -17,6 +17,7 @@
 							<div id="page_section_left_utilities">
 								<xsl:call-template name="sitelinks"/>
 								<xsl:call-template name="search"/>
+								<xsl:call-template name="ShoppingCart"/>
 								<xsl:call-template name="adverts"/>
 							</div>
 						</div>

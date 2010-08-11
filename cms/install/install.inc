@@ -87,11 +87,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	 * Create the db object
 	 */	
 	$db = database::custom_db_object(array('phptype'  => $driver,
+											'database' => $database,
 		    								'username' => $username,
 											'password' => $password,
 											'hostspec' => $host),
 											NULL,
 											array('Manager'));
+	
 	debug('db connected');
 	/*
 	 * Create the database

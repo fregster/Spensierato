@@ -22,6 +22,8 @@ define('DATABASE_BACKEND' , $GLOBALS['database_backend']);
 if(!isset($GLOBALS['table_prefix'])) { $GLOBALS['table_prefix'] = ''; }
 define('DATABASE_TABLE_PREFIX' , $GLOBALS['table_prefix']);
 
+if(isset($install) && $install){ define('DATABASE_INSTALL_MODE', true); }
+
 //Load the required files for the database layer
 require_once(DATABASE_LAYER_PATH.DS.'backends'.DS.'database_execution.inc');
 

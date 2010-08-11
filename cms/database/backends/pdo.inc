@@ -11,7 +11,7 @@ class database_execution_pdo extends database_execution
 			}
 			else
 			{
-				if(!file_exists($host)){ $this->sql_error('Database offline'); }
+				if(!file_exists($host) && !defined(DATABASE_INSTALL_MODE)){ $this->sql_error('Database offline'); }
 			}
 				if(isset($dsn['database']))
 					$connection_String = $dsn['phptype'].':'.$host.';dbname='.$dsn['database'];

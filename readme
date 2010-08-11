@@ -1,3 +1,11 @@
 Introduction Readme
 
 delete the spensierato_setup.inc to force a new install or uncoment the the install = true line in spensierato_cms.inc
+
+Example .htaccess file is provided, just rename to .htaccess the contents is shown bellow.
+
+RewriteEngine on
+RewriteCond %{REQUEST_URI}  !^/index.php/.*$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)$ index.php/$1
+DirectoryIndex index.php

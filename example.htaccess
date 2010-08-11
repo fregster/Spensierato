@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteCond %{REQUEST_URI}  !^/index.php/.*$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)$ index.php/$1
+DirectoryIndex index.php

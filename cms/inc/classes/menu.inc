@@ -89,8 +89,11 @@ class Menu
 			$menu_array['current'] = $this->current_page_details;
 		}
 		$menu_array['full_menu'] = $this->get_full_menu();
-		$menu_array['top_menu'] = $this->get_top_menu($menu_array['top'][0]['parent_id']);
-
+		if(isset($menu_array['top'][0]))
+		{
+			$menu_array['top_menu'] = $this->get_top_menu($menu_array['top'][0]['parent_id']);
+		}
+		
 		$menu_array['children'] = $this->children;
 		
 		$menu_array['breadcrumbs'] = $this->breadcrumbs();

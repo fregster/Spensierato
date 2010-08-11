@@ -93,6 +93,7 @@ try
 	//run the installation
 	if($install || isset($force_install))
 	{
+		$install = true;
 		include($include_path.'/cms/install/install.inc');
 	}
 	

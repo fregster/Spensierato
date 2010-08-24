@@ -48,13 +48,13 @@ class FileTransfer
 		$this->get_file($file, true, false, true);
 	}
 
-	public function get_file($file, $cache = false, $use_rate_limit = true, $work_out_mime = false)
+	public function get_file($file, $cache = false, $use_rate_limit = true, $work_out_mime = false, $no_db_lookup = false)
 	{
 		if(file_exists($file))
 		{
 			$file_stat = stat($file);
 
-			if($cache = true)
+			if($cache == true)
 			{
 				//Allow cache for 31 days
 				Cache::headers_allow_cache($file, true, 2678400, 2678400);
@@ -63,10 +63,20 @@ class FileTransfer
 			{
 				Cache::headers_no_cache($file);
 			}
-
-			$file_info = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array(basename($file)));
-			$file_info = json_decode($file_info['data'], TRUE);
-
+			
+			//Some times ie in the install process DB lookup's are not available so prevent any calls that may lookup information
+			if($no_db_lookup == true)
+			{
+				$file_info = array();
+				$work_out_mime = true;
+				$use_rate_limit = false;
+			}
+			else
+			{
+				$file_info = database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array(basename($file)));
+				$file_info = json_decode($file_info['data'], TRUE);
+			}
+			
 			if(!isset($file_info['filename']))
 			{
 				$filename = basename($file);
@@ -88,44 +98,45 @@ class FileTransfer
 			header('Content-Transfer-Encoding: binary');
 			header('Content-Disposition: filename='.$filename);
 
-			$rate = Settings::singleton()->get_setting('download_rate');
-			if(is_numeric($rate) and $use_rate_limit)
+			if($use_rate_limit)
 			{
-				/* Rate limited download */
-				$rate = round($rate * 1024);
-
-				if(class_exists('ffmpeg_movie') and $mime == 'video/flv')
+				if(is_numeric(Settings::singleton()->get_setting('download_rate')))
 				{
-					/* If this is a movie download then the max rate is set to atleast the bits per second of the video + 50 */
-						$movie = new ffmpeg_movie($file);
-						$rate = max($rate, $movie->getBitRate()) + 50;
-				}
-
-				// flush content
-			    flush();
-			    // open file stream
-			    $file = fopen($local_file, "r");
-			    while(!feof($file))
-			    {
-				    // send the current file part to the browser
-				    print fread($file, $rate);
-
-				    // flush the content to the browser
+					/* Rate limited download */
+					$rate = round($rate * 1024);
+	
+					if(class_exists('ffmpeg_movie') and $mime == 'video/flv')
+					{
+						/* If this is a movie download then the max rate is set to atleast the bits per second of the video + 50 */
+							$movie = new ffmpeg_movie($file);
+							$rate = max($rate, $movie->getBitRate()) + 50;
+					}
+	
+					// flush content
 				    flush();
-
-				    // sleep one second
-				    sleep(1);
-			    }
-
-			    // close file stream
-			    fclose($file);
+				    // open file stream
+				    $file = fopen($local_file, "r");
+				    while(!feof($file))
+				    {
+					    // send the current file part to the browser
+					    print fread($file, $rate);
+	
+					    // flush the content to the browser
+					    flush();
+	
+					    // sleep one second
+					    sleep(1);
+				    }
+	
+				    // close file stream
+				    fclose($file);
+				    exit;
+				}
 			}
-			else
-			{
-				/* Simple download */
-				session_write_close();
-				readfile($file);
-			}
+
+			/* Simple download */
+			session_write_close();
+			readfile($file);
 			die();
 		}
 		else

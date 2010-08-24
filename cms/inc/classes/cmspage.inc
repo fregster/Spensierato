@@ -10,11 +10,15 @@ class cmspage //This relies on CurentPage been loaded
 	protected $page_details;
 	protected $id = NULL;
 
-	public static function Singleton()
+	public static function Singleton($force_type = null)
 	{
 	   if (!isset(self::$instance))
 	   {
-			$c = __CLASS__.'_'.CMS::Singleton()->page_details['type'];
+	   		if($force_type == null)
+	   		{
+	   			$force_type = CMS::Singleton()->page_details['type'];
+	   		}
+			$c = __CLASS__.'_'.$force_type;
 			
 	   		if(!class_exists($c))
 	   		{

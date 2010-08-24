@@ -1,4 +1,13 @@
 <?php 
+if(get::variable('tools'))
+{
+	$filename = dirname(__FILE__).DS.'tools'.DS.get::variable('tools').'.inc';
+	if(file_exists($filename))
+	{
+		require_once $filename;
+	}
+}
+
 $background_image = Common::document_root_folder_only().'/skin/CrunchyBranch_1024x768.png';
 
 $rewrite_enabled = check_rewrite();
@@ -116,7 +125,21 @@ else
 {
 	if(!$rewrite_enabled)
 	{
-		echo('<div class="notices_warning"><p>URL re-writing is enabled on the server but NOT setup for this site.<br/>You may need to create a .htaccess file or edit your config</p></div>');
+		echo('<div class="notices_warning"><h4>URL re-writing is enabled on the server but NOT setup for this site.</h4>');
+		
+		if(apache_get_version())
+		{
+			if(!file_exists(dirname($_SERVER['SCRIPT_FILENAME']).'/.htaccess'))
+			{
+				echo('<p>Apache and no htaccess file</p><p>You can use the <a href="http://wiki.apache.org/httpd/Htaccess">htaccess</a> file to configure this for you easily at a very slight performance loss</p><p>To do this copy the example.htaccess to '.Common::document_root_folder_only().DS.'.htaccess or setup your vhost with the rewrite rules as defined in the example.htaccess</p>');
+				echo('<p>Spensierato may be able to configure Apache automatically. <a href="'.Common::document_root_folder_only().'?tools=enable_htaccess">Autoconfigure Apache</a><p>');
+			}
+			else
+			{
+				echo('<p>Apache is NOT setup to use the .htaccess file even though it is in place. Update the Apache config to <a href="http://httpd.apache.org/docs/2.2/mod/core.html#allowoverride">AllowOverides</a> or enable rewrite rules in the vhost</p>');
+			}
+		}
+		echo('</div>');
 	}
 }
 
@@ -124,6 +147,8 @@ if(!$rewrite_enabled && !check_inc_restrictions())
 {
 	echo('<div class="notices_critical"><h3 style="text-align:center;">**** ! Security Alert ! ****</h3><p>Your webserver is serving .inc files, enable url rewriting and / or block *.inc files from been served</p><h3 style="text-align:center;">**** ! Security Alert ! ****</h3></div>');
 }
+
+
 ?></div>
 <div id="form" style="margin-left:auto; margin-right:auto;">
 <form method="post" action="">

@@ -27,20 +27,33 @@
 	Write settings file out
 */
 
+//The installer can generate severl error's depending on the system setup, most are caught but for readability incase any are missed tuen displaying error's off.
+ini_set('display_errors', 1);
 ob_start();
 //$settings_file = Settings::singleton()->get_setting('cms_root').'/../spensierato_setup.inc';
 $path_vars = Common::get_path_vars();
-if($_SERVER['REQUEST_METHOD'] == 'GET' && !isset($path_vars[0]))
+if($_SERVER['REQUEST_METHOD'] == 'GET')
 {
+	if(isset($path_vars[0]) && $path_vars[0] == 'skin' && isset($path_vars[1]))
+	{
+		//ini_set('display_errors', 'off');
+		$file = $include_path.DS.'cms'.DS.'skins'.DS.'default'.DS.'graphics'.DS.$path_vars[1];
+		FileTransfer::singleton()->get_file($file, false, false, true, true);
+		exit;
+	}
+	
 	//Check that the settings file does not exsist
 //	if(is_file($settings_file))
 //	{
 //		die('The site has been setup delete the settings file to start again');
 //	}
 
-	require_once('dependancycheck.inc');
-	require_once('install_form.inc');
-	exit;
+	if(!isset($path_vars[0]))
+	{
+		require_once('dependancycheck.inc');
+		require_once('install_form.inc');
+		exit;	
+	}
 }
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')

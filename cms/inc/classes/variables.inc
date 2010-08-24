@@ -85,5 +85,10 @@ abstract class variables
 
 		return false;
 	}
+	
+	protected static function path($input)
+	{
+		return $input;
+	}
 
 }

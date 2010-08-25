@@ -36,8 +36,8 @@ class warnings
 		//Do standard warning checks here for easy of code finding.
 
 		//Check paths are writable
-		$paths = array( Settings::singleton()->get_setting('cms_folder_uploads'),
-						Settings::singleton()->get_setting('cms_folder_downloads'),
+		$paths = array( Settings::singleton()->get_setting('cms_folder_downloads'),
+						Settings::singleton()->get_setting('cms_folder_uploads'),
 						Settings::singleton()->get_setting('cms_folder_orig_images'),
 					);
 
@@ -45,7 +45,16 @@ class warnings
 		{
 			if (!is_dir($path))
 			{
-    			$this->register('Folder does not exsist', 'Please create the folder '.$path.' as uploads, downloads and local caching may be disabled');
+				//If the parent folder is writable auto create the folder
+				if (is_writable(dirname($path)))
+				{
+					mkdir($path, 0750);
+					$this->register('Folder did not exsist', 'Auto created '.$path);
+				}
+				else 
+				{
+					$this->register('Folder does not exsist', 'Please create the folder '.$path.' as uploads, downloads and local caching may be disabled');	
+				}
 			}
 
 			if (!is_readable($path))
@@ -66,8 +75,16 @@ class warnings
 			$log_folder = Settings::singleton()->get_setting('cms_folder_logs');
 			if(!is_writable($log_folder))
 			{
-				$this->register('Logs are not writable', 'The folder '.$log_folder.' does not have write permissions logging and autoupdates are now disabled', 1);
 				Settings::Singleton()->overwrite_setting('update_version_check', NULL, true);
+				if (is_writable(dirname($log_folder)))
+				{
+					mkdir($log_folder, 0750);
+					$this->register('Logs folder did not exsist', 'Auto created '.$log_folder.' Update checks will be done on the next reload');
+				}
+				else 
+				{
+					$this->register('Logs are not writable', 'The folder '.$log_folder.' does not have write permissions logging and autoupdates are now disabled', 1);
+				}
 			}
 			else
 			{

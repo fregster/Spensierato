@@ -166,9 +166,18 @@ class CMS
 		$percent = 0;
 		if($totaltime != 0 and $phptime != 0) { $percent = $phptime/$totaltime*100;}
 
-		$sql_string = $sql_info[0].' SQL Querys ('.round($sql_info[2]).' Cached in '.$cache.') through ('. strtoupper($GLOBALS['database_backend']) .')';
+		$sql_string = $sql_info[0].' SQL Querys (';
+		
+		if(Options::singleton()->get_option('admin_mode'))
+		{
+			$sql_string .= 'Database cache disabled in Admin mode) ';
+		}
+		else
+		{
+			$sql_string .= round($sql_info[2]).' Cached in '.$cache.') through ('. strtoupper($GLOBALS['database_backend']) .')';
+		}
 
-		$runtime=('<div class="footer_text">Page generated in ' . round($totaltime, 4) . ' seconds on '. date("D M j G:i:s T Y") .'<br /> ' . round($percent, 0) . '% php time and with ' .$sql_string.' using '.(memory_get_peak_usage(true) / (1024 * 1024)).' MB</div>');
+		$runtime=('<div class="footer_text">Page generated in ' . round($totaltime, 4) . ' seconds on '. date("D M j G:i:s T Y") .'<br /> ' . round($percent, 0) . '% php time using '.(memory_get_peak_usage(true) / (1024 * 1024)).' MB and running ' .$sql_string .'</div>');
 
 		return ('<div id="page_section_footer">'.$runtime.'</div>');
 

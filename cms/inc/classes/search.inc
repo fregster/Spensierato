@@ -21,6 +21,7 @@ class Search
 
 	//Vars set during the construct
 	private $time;
+	protected $enabled = true;
 
 	//Vars built
 	private $ids = array();
@@ -43,6 +44,11 @@ class Search
 		else{
 			return NULL; //should we return false here?
 		}
+	}
+	
+	public function enabled()
+	{
+		return $this->disabled;
 	}
 	
 	public static function lucence()
@@ -76,6 +82,13 @@ class Search
 		if(search::lucence())
 		{
 			$this->lucene_search = new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index');
+		}
+		else
+		{
+			//Does the DB support search as Lucene is not available?
+			if(!Database::Singleton()->fts()){
+				$this->enabled = false;
+			}
 		}
 	}
 

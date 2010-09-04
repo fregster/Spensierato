@@ -2,6 +2,7 @@
 class Database_mssql extends Database
 {
 	protected $dsn_host_type = 'mssql';
+	protected $full_text_search = true;
 	
 	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{

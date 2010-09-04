@@ -17,6 +17,7 @@ class Database
 	private $sql_cache_hits = 0;
 
 	private $memcached = false;
+	protected $full_text_search = false;
 
 	private $sql_log_array = array();
 	protected $site_sql_count = 0;
@@ -141,6 +142,14 @@ class Database
 		{
 			$this->memcached = true;
 		}
+	}
+	
+	/**
+	 * Is Full Text Searching available true / false
+	 */
+	public function fts()
+	{
+		return $this->full_text_search;
 	}
 
 	protected function sql_clean_input($var)

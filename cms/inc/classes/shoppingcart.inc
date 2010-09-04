@@ -16,14 +16,24 @@ define('VERSION', 'version', true);
 
 class shoppingcart
 {
-	public static function add_to_cart($product_id, $quantity)
-	{
+	function __construct(){
 		common::requires_session();
+		shoppingcart::build_session();
+	}
+	
+	private function build_session(){
 		if(!isset($_SESSION[CART]))
 		{
 			$_SESSION[CART] = array();
 			$_SESSION[CART][VERSION] = 1;
+			$_SESSION[CART]['updated'] = cms::singleton()->time();
 		}
+	}
+	
+	public static function add_to_cart($product_id, $quantity)
+	{
+		shoppingcart::build_session();
+		
 		$_SESSION[CART]['updated'] = cms::singleton()->time();
 		$data = shoppingcart::get_product_data($product_id);
 		if($data != false)
@@ -182,7 +192,7 @@ class shoppingcart
 Your order will be processed as soon as payment clears and shipped as soon as posible.<br/>
 This is NOT A RECIPT OF PAYMENT<br/></p>
 <p>';
-//			print_r($_SESSION[ORDER][$id]['items']); print_r($_SESSION[ORDER]);
+
 			foreach($_SESSION[ORDER][$id]['items'] as $item)
 			{
 				$content .= $item['quantity'] . ' X '. $item['name'].' (Product ID #'.$item['product_id'].') individual item value '.settings::singleton()->get_setting('currency_symbol').$item['price'].'<br/>';
@@ -191,7 +201,7 @@ This is NOT A RECIPT OF PAYMENT<br/></p>
 			$content .= '<p>Shipping Address</p><p>'.$_SESSION[ORDER][$id]['details']['first_name'].'<br/>'.$_SESSION[ORDER][$id]['details']['last_name'].'<br/>'.$_SESSION[ORDER][$id]['details']['address1'].'<br/>'.$_SESSION[ORDER][$id]['details']['address2'].'<br/>'.$_SESSION[ORDER][$id]['details']['city'].'<br/>'.$_SESSION[ORDER][$id]['details']['county'];
 			$content .= '<p>Contact Details</p><p>'.$_SESSION[ORDER][$id]['details']['email'].'<br/>'.$_SESSION[ORDER][$id]['details']['phone'];		
 			$content .='<p>Thank you for your custom</p><p>If you have any questions then please email <a href="mailto:'.settings::singleton()->get_setting('shop_email_orders').'">'.settings::singleton()->get_setting('shop_email_orders').'</a>';
-//			die($content);
+
 			//Send email
 			common::email(array($email), settings::singleton()->get_setting('shop_email_orders'), 'Online Order', $content, true, settings::singleton()->get_setting('shop_email_orders'));
 		}

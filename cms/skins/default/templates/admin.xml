@@ -2,7 +2,7 @@
 		<xsl:template name="admin_bar">
 		<xsl:variable name="tgif" select="concat(/page/settings/document_root, '/skin/transparent-gif.gif') " />
 			<xsl:if test="/page/user/id != 0">
-				<div id="page_section_admin_bar" class="rounded">
+				<div id="page_section_admin_bar">
 					<xsl:if test="/page/security/can_edit = 1">
 						<!-- can edit this page -->
 						<xsl:choose>
@@ -181,13 +181,13 @@
 						
 						</xsl:if>
 						<xsl:element name="div">
+							<xsl:attribute name="id">create_new_toolbar</xsl:attribute>
+							<xsl:attribute name="class">rounded</xsl:attribute>
 							<xsl:element name="form">
 								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
 								<xsl:attribute name="method">post</xsl:attribute>
 								<xsl:attribute name="id">new_<xsl:value-of select="/page/@id" /></xsl:attribute>
-								<p>Create New <xsl:call-template name="new_element" />
-								<!--  <input type="submit" value="Create" /> -->
-								</p>
+								Create New: <xsl:call-template name="new_element" />
 							</xsl:element>
 					</xsl:element>
 						<br />

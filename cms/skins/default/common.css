@@ -102,7 +102,7 @@
 	display: none;
 }
 
-.js-hide {
+.js-hide{
 	
 }
 
@@ -115,8 +115,7 @@
 	padding:2px;
 }
 
-#page_section_admin_bar
-{
+#page_section_admin_bar{
 	background-color:#FFFFFF;
 	right:2px;
 	top:2px;
@@ -127,6 +126,12 @@
 	border:1px;
 	border-style:solid;
 	padding:3px;
+}
+
+#create_new_toolbar{
+	background-color:#EEE;
+	width:100%;
+	margin:5px;
 }
 
 #link_menu{list-style: none; margin-left: 3px ;margin-right: 3px ;padding-left: 1em;text-indent: -1em; text-align:center;}

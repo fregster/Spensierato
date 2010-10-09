@@ -23,6 +23,14 @@ foreach($optional as $opt)
 	if(!extension_loaded($opt)) { array_push($opt_missing, $opt); }
 }
 
+check_includes('MDB2.php');
+
+function check_includes($include)
+{
+	global $opt_missing;
+	if(@!include_once($include)) { array_push($opt_missing, $include); }
+}
+
 function check_rewrite()
 {
 	global $background_image;

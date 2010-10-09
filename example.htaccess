@@ -3,3 +3,21 @@ RewriteCond %{REQUEST_URI}  !^/index.php/.*$
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.+)$ index.php/$1
 DirectoryIndex index.php
+
+#We never server .inc files as there not intended to be entry points but class files and static includes so block access to them
+<FilesMatch "\.inc$">
+        Order allow,deny
+        Deny from all
+</FilesMatch>
+
+#By convention, any file or directory name beginning with a "." is not meant to be served
+<FilesMatch "^\.">
+        Order  deny,allow
+        Deny  from  all
+</FilesMatch>
+
+#Prevent access to hidden directoryies
+<DirectoryMatch "/\.">
+        Order  deny,allow
+        Deny  from  all
+</DirectoryMatch>

@@ -1,5 +1,5 @@
 <?php
-class Database
+class database
 {
 	private $options = array('allow_external_calls' => true);
 	private static $instance;
@@ -33,6 +33,14 @@ class Database
 	protected $col_quote = '`';
 	protected $table_quote = '`';
 	protected $value_quote = "'";
+	
+	/**
+	 * Prepared Statment work
+	 */
+	protected $sql_can_prepare_statments = false;
+	protected $sql_use_prepared_statments = false;
+	private $sql_values = array();
+	private $sql_prepared_count = 1;
 
 	/**
 	 * Privately cached vars
@@ -150,6 +158,18 @@ class Database
 	public function fts()
 	{
 		return $this->full_text_search;
+	}
+	
+	protected function sql_clean_input_value($var)
+	{
+		if($this->sql_use_prepared_statments)
+		{
+			$key = 'v_'.$this->sql_prepared_count;
+			$this->sql_values[$key] = $var;
+			++$this->sql_prepared_count;
+			return $key;
+		}
+		return sql_clean_input($var);
 	}
 
 	protected function sql_clean_input($var)
@@ -686,7 +706,7 @@ class Database
 						{
 							$sql_temp_where_or .= $this->table_quote.$this->sql_clean_input($where_fields[$i]) .$this->table_quote.' = ';
 							//Quote non numeric values
-							if(is_numeric($where_values[$i][$j])) {	$sql_temp_where_or .= $where_values[$i][$j]; }else{ $sql_temp_where_or .= $this->value_quote . $this->sql_clean_input($where_values[$i][$j]) .$this->value_quote; }
+							if(is_numeric($where_values[$i][$j])) {	$sql_temp_where_or .= $where_values[$i][$j]; }else{ $sql_temp_where_or .= $this->value_quote . $this->sql_clean_input_value($where_values[$i][$j]) .$this->value_quote; }
 	
 							$j++;
 							if(isset($where_values[$i][$j]))
@@ -714,7 +734,7 @@ class Database
 					}
 					else
 					{
-						$sql_temp_where .= $this->value_quote . $this->sql_clean_input($where_values[$i]) . $this->value_quote .')';
+						$sql_temp_where .= $this->value_quote . $this->sql_clean_input_value($where_values[$i]) . $this->value_quote .')';
 					}
 				}
 

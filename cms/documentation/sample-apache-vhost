@@ -18,12 +18,25 @@
                 Order allow,deny
                 Deny from all
         </FilesMatch>
+		
+		#By convention, any file or directory name beginning with a "." is not meant to be served
+		<FilesMatch "^\.">
+		        Order  deny,allow
+		        Deny  from  all
+		</FilesMatch>
+		
+		<DirectoryMatch "/\.">
+		        Order  deny,allow
+		        Deny  from  all
+		</DirectoryMatch>
 
 # Set the default options
         <Directory "/mnt/share/www/workspace/">
-                Options Indexes FollowSymLinks MultiViews
+                Options Indexes FollowSymLinks -MultiViews
+#Use AllowOverride None for a slight performance advantage and posible security improvment
+#Using this requires a rewrite rule as per bellow per install of Spensierato
 #               AllowOverride None
-		AllowOverride all
+				AllowOverride all
                 Order allow,deny
                 allow from all
         </Directory>

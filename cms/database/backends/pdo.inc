@@ -11,12 +11,16 @@ class database_execution_pdo extends database_execution
 			}
 			else
 			{
-				if(!file_exists($host) && !defined(DATABASE_INSTALL_MODE)){ $this->sql_error('Database offline'); }
+				if(@!defined('DATABASE_INSTALL_MODE') || DATABASE_INSTALL_MODE != true)
+				{
+					if(!file_exists($host)){ $this->sql_error('Database offline '.$host); }
+				}
 			}
 				if(isset($dsn['database']))
 					$connection_String = $dsn['phptype'].':'.$host.';dbname='.$dsn['database'];
 				else
 					$connection_String = $dsn['phptype'].':'.$host;
+					
 		    	$this->db_backend = new PDO($connection_String, $dsn['username'], $dsn['password'], array(PDO::FETCH_ASSOC => PDO::ERRMODE_EXCEPTION));
 		    }
 			catch(PDOException $e)

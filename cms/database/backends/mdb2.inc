@@ -7,7 +7,7 @@ class database_execution_mdb2 extends database_execution
 		//Doing this here only loads the code if a DB query is actually going to be done
 		require_once 'MDB2.php';
 		
-		if($dsn['phptype'] == 'sqlite' && !file_exists($dsn['database']) && !defined(DATABASE_INSTALL_MODE))
+		if($dsn['phptype'] == 'sqlite' && !file_exists($dsn['database']) && @!defined(DATABASE_INSTALL_MODE))
 		{
 			$this->sql_error('Database offline');
 		}

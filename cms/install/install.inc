@@ -30,6 +30,7 @@
 //The installer can generate severl error's depending on the system setup, most are caught but for readability incase any are missed tuen displaying error's off.
 ini_set('display_errors', 1);
 ob_start();
+$install = true;
 //$settings_file = Settings::singleton()->get_setting('cms_root').'/../spensierato_setup.inc';
 $path_vars = Common::get_path_vars();
 if($_SERVER['REQUEST_METHOD'] == 'GET')
@@ -58,6 +59,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
+	require_once($include_path.'/cms/database/database.inc');
 	$install_folder = dirname(__FILE__);
 	$site_root = file_root();
 
@@ -93,14 +95,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$GLOBALS['database_host'] = $host;
 	$GLOBALS['database_name'] = $database;
 	$GLOBALS['table_prefix'] = $prefix.'_';
-											
+
 	debug('Vars set');
 
 	/*
 	 * Create the db object
-	 */	
+	 */
+
 	$db = database::custom_db_object(array('phptype'  => $driver,
-											'database' => $database,
 		    								'username' => $username,
 											'password' => $password,
 											'hostspec' => $host),

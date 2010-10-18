@@ -1,6 +1,6 @@
 
 	<xsl:template name="debug">
-		<xsl:if test="/page/debug">
+		<xsl:if test="/page/debug/xml/item">
 			<div id="debug_text">
 				<h2>Debug</h2>
 				<xsl:for-each select="/page/debug/xml/item">

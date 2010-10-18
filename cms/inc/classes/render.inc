@@ -201,6 +201,13 @@ class Render
 //		$this->html = template::singleton()->dtd().str_replace($remove, '', substr($this->html, (strpos($this->html, '>', $start) +1)));
 
 		$this->tidy();
+		$this->compact();
+	}
+	
+	private function compact()
+	{
+		$compactor = new Compactor(array('use_buffer' => false,'buffer_echo' => false,'compact_on_shutdown' => false)); 
+		$this->html = $compactor->squeeze($this->html);
 	}
 
 	private function tidy()

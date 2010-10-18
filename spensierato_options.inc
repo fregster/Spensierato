@@ -1,6 +1,6 @@
 <?php
 //Site Settings
-//Settings::Singleton()->new_setting($name, $value, $protected = false, $hidden = false, $editible = null || array || false)
+//Settings::Singleton()->new_setting($name, $value, $protected = false, $hidden = false, $editible = null || array || false, $edit_group = null)
 //Editable should be an array containing the following
 //array('desc' => 'Setting Description', 'cat' => 'Catagory Name', 'sec' => 'Section Name'); setting to false will disable any previous settings
 //Protected stops the value been overwriten in the future by DB settings
@@ -14,31 +14,31 @@ Settings::Singleton()->new_setting('protect_db_settings', true, true, true);
 
 //Setting Intro text
 //String
-Settings::Singleton()->new_setting('intoduction_text', 'Welcome To ', false, false, true);
+Settings::Singleton()->new_setting('intoduction_text', 'Welcome To ', false, false, true, 1);
 
 //Setting site_name_long
 //String
-Settings::Singleton()->new_setting('site_name_long', 'Another Spensierato Site', false, false, true);
+Settings::Singleton()->new_setting('site_name_long', 'Another Spensierato Site', false, false, true, 1);
 
 //Setting site_name_short
 //Strring default = site_name_long
-Settings::Singleton()->new_setting('site_name_short', 'Spensierato', false, false, true);
+Settings::Singleton()->new_setting('site_name_short', 'Spensierato', false, false, true, 1);
 
 //Setting site_lang
 //For language template (Not implemented)
-Settings::Singleton()->new_setting('site_lang', 'en_gb', false, false, true);
+Settings::Singleton()->new_setting('site_lang', 'en_gb', false, false, array('en_gb'), 10);
 
 //Setting meta_description
 //
-Settings::singleton()->new_setting('meta_description', 'A free and easy to use, open source content managment system', false, false, true);
+Settings::singleton()->new_setting('meta_description', 'A free and easy to use, open source content managment system', false, false, true, 2);
 
 //Setting meta_keywords
 //String of Comma seperated values
-Settings::Singleton()->new_setting('meta_keywords', 'cms, open, free, gpl, spensierato, content, managment, system', false, false, true);
+Settings::Singleton()->new_setting('meta_keywords', 'cms, open, free, gpl, spensierato, content, managment, system', false, false, true, 2);
 
 //Setting meta_verify-v1
 //Google verification string
-Settings::Singleton()->new_setting('meta_verify-v1', NULL, false, false, true);
+Settings::Singleton()->new_setting('meta_verify-v1', NULL, false, false, true, 3);
 
 //Setting char_set
 //Default encodeing set
@@ -58,72 +58,72 @@ Settings::Singleton()->new_setting('content_auto_publish', true, false, true, tr
 
 //Setting show_footer
 //false / true
-Settings::Singleton()->new_setting('show_footer', true, false, false, true);
+Settings::Singleton()->new_setting('show_footer', true, false, false, true, 5);
 
 //Setting menu_level
 //int default 0
-Settings::Singleton()->new_setting('menu_level', 0, false, false, true);
+Settings::Singleton()->new_setting('menu_level', 0, false, false, true, 4);
 
 //Setting menu_max_levels
 // int default 2
-Settings::Singleton()->new_setting('menu_max_levels', 2, false, false, true);
+Settings::Singleton()->new_setting('menu_max_levels', 2, false, false, true, 4);
 
 //Setting show_copyright
 //true / false
-Settings::Singleton()->new_setting('show_copyright', true, false, false, true);
+Settings::Singleton()->new_setting('show_copyright', true, false, false, true, 5);
 
 //Setting allow_registration
 //true / false
-Settings::Singleton()->new_setting('allow_registration', true, false, false, true);
+Settings::Singleton()->new_setting('allow_registration', true, false, false, true, 6);
 
 //Setting show_login
 //true / false
-Settings::Singleton()->new_setting('show_login', true, false, false, true);
+Settings::Singleton()->new_setting('show_login', true, false, false, true, 6);
 
 //Setting show_help
 //true / false
-Settings::Singleton()->new_setting('show_help', true, false, false, true);
+Settings::Singleton()->new_setting('show_help', true, false, false, true, 5);
 
 //Setting show_access
 //true / false
-Settings::Singleton()->new_setting('show_access', true, false, false, true);
+Settings::Singleton()->new_setting('show_access', true, false, false, true, 5);
 
 //Setting shop
 //Global option to enable the shop
-Settings::Singleton()->new_setting('shop', true, false, false, true);
+Settings::Singleton()->new_setting('shop', true, false, false, true, 7);
 
 //Setting show_shop
 //If a product page has been created automaticly add the shop option to the menu
-Settings::Singleton()->new_setting('show_shop', true, false, true, true);
+Settings::Singleton()->new_setting('show_shop', true, false, true, true, 7);
 
 //Setting shop_menu_name
 //Menu name for the shop
-Settings::Singleton()->new_setting('shop_menu_name', 'Shop', false, true, true);
+Settings::Singleton()->new_setting('shop_menu_name', 'Shop', false, true, true, 7);
 
 //Setting shop_tax_rate
 //Local Tax rate as a decimal ie 15% is 0.15
-Settings::Singleton()->new_setting('shop_tax_rate', 0, false, false, true);
+Settings::Singleton()->new_setting('shop_tax_rate', 0, false, false, true, 10);
 
 //Setting currency
 //currency code GBP is Great British Pound, use the paypal codes
-Settings::Singleton()->new_setting('currency', 'GBP', false, false, true);
+Settings::Singleton()->new_setting('currency', 'GBP', false, false, true, 10);
 
 //Setting currency_symbol
-Settings::Singleton()->new_setting('currency_symbol', '£', false, false, true);
+Settings::Singleton()->new_setting('currency_symbol', '£', false, false, true, 10);
 
 //Setting business_id
 //The unique id used with your payment provider
-Settings::Singleton()->new_setting('business_id', null, false, false, true);
+Settings::Singleton()->new_setting('business_id', null, false, false, true, 7);
 
 //Settings shop_email_orders
 //An email address that all orders will be BCC to
-Settings::Singleton()->new_setting('shop_email_orders', null, false, false, true);
+Settings::Singleton()->new_setting('shop_email_orders', null, false, false, true, 7);
 
 
 //Setting skin
 //Set this to the path of the skin you wish to use
 //Folder name from cms/skins/
-Settings::Singleton()->new_setting('skin', 'default', false, true, true);
+Settings::Singleton()->new_setting('skin', 'default', false, true, true, 4);
 
 //Setting skin_alternative_css
 //Set this to the css file if not css.css in the skins folder

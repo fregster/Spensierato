@@ -12,7 +12,7 @@
  * 									'primary_key' => 'name of the promary key. must be a column defined in cols_define
  * 								  )
  */
-
+$create_db_users = true;
 $tables = array();
 
 if(!isset($int))

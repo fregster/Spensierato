@@ -1,3 +1,22 @@
+if(typeof window.imageFlowLoad != 'function'){
+function getElementsByClass(searchClass,node,tag) {
+        var classElements = new Array();
+        if ( node == null )
+                node = document;
+        if ( tag == null )
+                tag = '*';
+        var els = node.getElementsByTagName(tag);
+        var elsLen = els.length;
+        var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+        for (i = 0, j = 0; i < elsLen; i++) {
+                if ( pattern.test(els[i].className) ) {
+                        classElements[j] = els[i];
+                        j++;
+                }
+        }
+        return classElements;
+}
+}
 function ajaxLoad(revision){
 clearTimeout(t);
 var ed=tinyMCE.get("content");
@@ -80,8 +99,10 @@ function dynamicjsloader(){
 dhtmlLoadCSS(js_host+"/skin/subModal.css");
 dhtmlLoadScript(js_host+"/js/submodal/submodal.js");
 };
+var sortInput;
 function adminInit(){
 dynamicjsloader();
+sortInput = new String();
 updater();
 };
 
@@ -122,56 +143,59 @@ function show_old_approvals(toggle, name){
 };
 
 /* when the DOM is ready */
-function updater() {
+function updater(){
 	/* grab important elements */
-	//var sortInput = document.id('sort_order');
-	var submit = 'checked';
-	var messageBox = document.getElementById('notifications');
 	var list = document.getElementById('page_section_body');
-	
-	/* get the request object ready;  re-use the same Request */
-	var request = new Request({
-		url: ajax_host+"/ajax/dd/",
-		link: 'cancel',
-		method: 'post',
-		onRequest: function() {
-			messageBox.set('text','Updating the sort order in the database.');
-		},
-		onSuccess: function() {
-			messageBox.set('text','Database has been updated.');
-		}
-	});
+
 	/* worker function */
-	var fnSubmit = function(save) {
+	var fnSubmit = function(){
 		
 		var sortOrder = new Array();
-		list.getElements('div').each(function(li) {
-			sortOrder.push(li.retrieve('id'));
-		});
-		//sortInput.value = sortOrder.join(',');
-		if(save) {
-			//request.send('sort_order=' + sortInput.value + '&ajax=' + submit.checked + '&do_submit=1&byajax=1');
+		var objects = new Array();
+		objects = list.getElementsByClassName('object');
+		
+		var i = 0;
+		while(i < objects.length) {
+			eid = objects[i].getElementsByClassName('elementadmin');
+			sortOrder.push(eid[0]['id'].substring(4));
+			i++;
+		};
+		sortInput = sortOrder.join(',');
+	
+		if(document.getElementById("saveSortOrder").disabled == true){
+			document.getElementById("saveSortOrder").disabled=false;
+			var moveIcons = new Array();
+			moveIcons = list.getElementsByClassName('move');
+			var i2 = 0;
+			while(i2 < moveIcons.length) {
+				moveIcons[i2].style.display = 'none';
+				i2++;
+			};
 		}
 	};
-	
-	/* store values */
-	/*list.getElements('div').each(function(li) {
-		li.store('id',li.get('title')).set('title','');
-	});*/
 	
 	/* sortables that also *may* */
 	new Sortables(list,{
 		constrain: true,
 		clone: true,
 		revert: true,
+		onLoad: function(el,clone) {
+			fnSubmit();
+		},
 		onComplete: function(el,clone) {
-			fnSubmit(submit.checked);
+			fnSubmit();
 		}
 	});
-	
-	/* ajax form submission */
-//	document.id('dd-form').addEvent('submit',function(e) {
-//		if(e) e.stop();
-		fnSubmit(true);
-//	});
+};
+
+function saveSortOrder(){
+	/* get the request object ready;  re-use the same Request */
+	var messageBox = document.getElementById('notifications');
+	messageBox.set('text','Updating the sort order in the database.');
+	ajaxPost(ajax_host+"/ajax/reorder/", 'order='+sortInput);
+	http.onreadystatechange=function(){
+		if(http.readyState==4){
+			alert(http);
+		}
+	}
 };

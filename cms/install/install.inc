@@ -59,10 +59,6 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-	require_once($include_path.'/cms/database/database.inc');
-	$install_folder = dirname(__FILE__);
-	$site_root = file_root();
-
 	//SQL connection settings
 	$username = post::variable('username');
 	$password = post::variable('password');
@@ -96,7 +92,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$GLOBALS['database_name'] = $database;
 	$GLOBALS['table_prefix'] = $prefix.'_';
 
-	debug('Vars set');
+	debug('Vars set ('.$GLOBALS['table_prefix'].')');
+	
+	require_once($include_path.'/cms/database/database.inc');
+	$install_folder = dirname(__FILE__);
+	$site_root = file_root();
 
 	/*
 	 * Create the db object
@@ -109,14 +109,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 											NULL,
 											array('Manager'));
 	
-	debug('db connected');
+	debug('DB Connected');
 	/*
 	 * Create the database
 	 */
+	debug('Attepmting to drop DB');
 	$db->dropDatabase($database);
+	debug('DB Dropped');
+	
+	debug('Attepmting to create DB');
 	$db->createDatabase($database);
+	debug('DB Created');
 
-	debug('DB created');
 	/**
 	 * Add the db users with the appropriate permissions
 	 * Read user select on all
@@ -126,18 +130,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	//TODO add grant sql
 
 	//Replace the db object with a new one in the database
+	unset($db);
 	$db = database::custom_db_object(array('phptype'  => $driver,
-		    											'username' => $username,
-													    'password' => $password,
-													    'hostspec' => $host,
-														'database' => $database),
-														NULL,
-														array('Manager'));
+		    								'username' => $username,
+											'password' => $password,
+											'hostspec' => $host,
+											'database' => $database),
+											NULL,
+											array('Manager'));
 
 	debug('Connection replaced');
+	
 	//Include the file which processes the SQL code
 	//Load aproprate sql file
-
 	debug('Loading setup file');
 	
 	if(!is_file($install_folder.DS.'db'.DS.$driver.'.inc'))
@@ -147,6 +152,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 	//Execute sql
 	debug('Running...');
+
 	include($install_folder.DS.'db'.DS.$driver.'.inc');
 
 	debug('Createing users and permissions');
@@ -174,6 +180,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	}
 
 	debug('Createing Homepage');
+	
 	database::Singleton()->force_write_user();
 	
 	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible', 'title'), array(0, time(), 0, 1, 'Homepage'));
@@ -261,5 +268,5 @@ $GLOBALS[\'cms_folder_cache\'] = \''.$doc_root_prefix.post::variable('cms_folder
 function debug($text)
 {
 	$debug = true;
-	if($debug){ echo('<br />'.$text); }
+	if($debug){ echo('<br />'.$text.' '); }
 }

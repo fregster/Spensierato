@@ -14,7 +14,6 @@ $tiny_int = 'INTEGER';
 $int = 'INTEGER';
 $increment = '';
 
-require_once 'generic.inc';
 require_once 'mysqli.inc';
 
 $create_db_users = false;

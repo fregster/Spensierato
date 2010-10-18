@@ -8,30 +8,51 @@ class database_execution
 	protected $read;
 	protected $write = NULL; //FIXME Temp hack from avi to allow the insert methods to get the last id, needs new method I think.
 	protected $connected = false;
+	protected $show_error_sql = true;
+	protected $db_backend;
 
 	public $max_sql_length = 10240; //Max Sql query length
 	
 	private $dsn_default;
 	private $dsn;
+	protected $supports_prepared_statments = false;
+	protected $sql_prepared_statment_placeholder_prefix = ':';
+	
 
-	public static function Singleton()
+	public static function factory()
 	{
-	   if (!isset(self::$instance))
-	   {
-	   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = database_execution::$backends[0]; }
-	   		if(file_exists(DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc'))
-	   		{
-	   			require_once(DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc');
-	   			$c = 'database_execution_'.$GLOBALS['database_backend'];
-	   		}
-	   		else
-	   		{
-			    die('Unable to build the requested database layer '.DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc');
-	   		}
-	   		
-		   self::$instance = new $c;
-	   }
-	   return self::$instance;
+   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = database_execution::$backends[0]; }
+   		if(file_exists(DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc'))
+   		{
+   			require_once(DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc');
+   			$c = 'database_execution_'.$GLOBALS['database_backend'];
+   		}
+   		else
+   		{
+		    die('Unable to build the requested database layer '.DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc');
+   		}
+   		
+	   return new $c;
+	}
+	
+	public static function singleton()
+	{
+		if(!isset(self::$instance) || self::$instance == false || !is_null(self::$instance))
+		{
+	   		self::$instance = database_execution::factory();
+		}
+		
+		return self::$instance;
+	}
+	
+	public function __destruct()
+	{
+		self::$instance = false;
+	}
+	
+	public function destroy()
+	{
+		self::$instance = false;
 	}
 
 	/**
@@ -85,6 +106,11 @@ class database_execution
 
 			$this->dsn = isset($dsn)?$dsn:NULL;
 			$this->connected = true;
+		}
+		
+		if($this->db_backend == null)
+		{
+			$this->sql_error('Driver failed to load', __LINE__, __FILE__);
 		}
 
 		return $this->connected;
@@ -150,7 +176,7 @@ class database_execution
 	
 	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
-
+		
 	}
 
 	public function sql_run($sql, $values, $writeuser)
@@ -188,5 +214,15 @@ class database_execution
 	protected function sql_error($message, $line = NULL, $file = NULL)
 	{
 		database::singleton()->sql_error($message, $line, $file);
+	}
+	
+	public function supports_prepared_statments()
+	{
+		return $this->supports_prepared_statments;
+	}
+	
+	public function prepared_statment_placeholder()
+	{
+		return $this->sql_prepared_statment_placeholder_prefix;
 	}
 }

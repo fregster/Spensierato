@@ -181,10 +181,8 @@ class CMS
 
 		return ('<div id="page_section_footer">'.$runtime.'</div>');
 
-		/*
 		//Run any methods required after the site has rendered
 		Debug::Singleton()->render();
-		*/
 	}
 
 	public function page_exists()
@@ -237,10 +235,13 @@ class CMS
 		//Increase the bits per Char so we can store it in a smaller DB field
 		ini_set('session.hash_bits_per_character', 5);
 		ini_set('session.hash_function', 1);
-		session_start();
-		$this->session_user_agent_check();
-		$this->session_ip_check();
-		cookie::Singleton()->load();
+		if(isset($_COOKIE['PHPSESSID']) || isset($_COOKIE['CMS']))
+		{
+			session_start();
+			$this->session_user_agent_check();
+			$this->session_ip_check();
+//			cookie::Singleton()->load();
+		}
 	}
 
 	private function session_user_agent_check()

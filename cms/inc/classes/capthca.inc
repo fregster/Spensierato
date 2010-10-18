@@ -104,7 +104,12 @@ abstract class Capthca
 
 	public static function get_code()
 	{
-		return $_SESSION['capthca_security_code'];
+		if(isset($_SESSION['capthca_security_code']))
+		{
+			return $_SESSION['capthca_security_code'];
+		}
+		
+		return false;
 	}
 
 }

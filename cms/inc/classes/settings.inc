@@ -57,13 +57,13 @@ class Settings
 		}
 	}
 
-	public function new_setting($name, $value, $protected = false, $hidden = false, $editable = false)
+	public function new_setting($name, $value, $protected = false, $hidden = false, $editable = false, $edit_group = null)
 	{
 			if(!isset($this->settings[$name]))
 			{
 				$this->settings[$name] = array();
 			}
-			$setting_details = array('protected' => $protected, 'hidden' => $hidden, 'value' => $value, 'editable' => $editable);
+			$setting_details = array('protected' => $protected, 'hidden' => $hidden, 'value' => $value, 'editable' => $editable, 'edit_group' => $edit_group);
 			array_push($this->settings[$name], $setting_details);
 	}
 
@@ -91,19 +91,52 @@ class Settings
 //			   'defaultTagName'  => 'setting'
 //			);
 
+		
+//		return xml::array_to_xml($settings, $serializer_options);
+		return xml::array_to_xml_simple($this->get_all_settings(), 'settings', 'setting');
+	}
+	
+	public function get_all_settings($editable = false)
+	{
 		$i = 0;
 		$settings = array();
-		foreach($this->settings as $setting)
+		
+		/**
+		 * Split for performance, increased code size but reduces complex if's majority of the time
+		 */
+		if(!$editable)
 		{
-			$key = array_keys($this->settings);
-			if($setting[0]['hidden'] != true)
+			foreach($this->settings as $setting)
 			{
-				$settings[$key[$i]] = $setting[0]['value'];
+				$key = array_keys($this->settings);
+				if($setting[0]['hidden'] != true)
+				{
+					$settings[$key[$i]] = $setting[0]['value'];	
+				}
+				$i++;
 			}
-			$i++;
+			return $settings;
 		}
-//		return xml::array_to_xml($settings, $serializer_options);
-		return xml::array_to_xml_simple($settings, 'settings', 'setting');
+		else
+		{
+			foreach($this->settings as $setting)
+			{
+				$key = array_keys($this->settings);
+				if($setting[0]['editable'] == true)
+				{
+					if(!isset($setting[0]['edit_group'])){ $setting[0]['edit_group'] = 99999; }
+					if(!isset($settings[$setting[0]['edit_group']]))
+					{
+						$settings[$setting[0]['edit_group']] = array();
+					}		
+					
+					$settings[$setting[0]['edit_group']][$key[$i]] = array('name' => $key[$i], 'value' => $setting[0]['value'], 'options' => $setting[0]['editable']);
+				}
+				$i++;
+			}
+			ksort($settings);
+			return $settings;
+		}
 	}
 
 	public function overwrite_setting($name, $value, $protected = false, $editable = false)

@@ -17,12 +17,18 @@
 	$plugins = explode(',', getParam("plugins", ""));
 	$languages = explode(',', getParam("languages", ""));
 	$themes = explode(',', getParam("themes", ""));
-	$diskCache = getParam("diskcache", "") == "true";
 	$isJS = getParam("js", "") == "true";
 	$compress = getParam("compress", "true") == "true";
 	$core = getParam("core", "true") == "true";
 	$suffix = getParam("suffix", "_src") == "_src" ? "_src" : "";
-	$cachePath = realpath("."); // Cache path, this is where the .gz files will be stored
+	$cachePath = $GLOBALS['cms_folder_cache']; // Cache path, this is where the .gz files will be stored
+	if(is_writable($cachePath))
+	{
+		$diskCache = getParam("diskcache", "") == "true";
+	}
+	else {
+		$diskCache = false;
+	}
 	$expiresOffset = 3600 * 24 * 10; // Cache for 10 days in browser cache
 	$content = "";
 	$encodings = array();
@@ -45,8 +51,7 @@
 	// Is called directly then auto init with default settings
 	if (!$isJS) {
 		echo getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/tiny_mce_gzip.js');
-		echo "tinyMCE_GZ.init({});";
-		die();
+		die("tinyMCE_GZ.init({});");
 	}
 
 	// Setup cache info

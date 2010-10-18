@@ -1,39 +1,44 @@
 <?php
 class database_execution_pdo extends database_execution
 {
+	protected $supports_prepared_statments = true;
+	
 	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
 		try {
 			$host = $dsn['hostspec'];
+			if($dsn['phptype'] == 'mysqli'){ $dsn['phptype'] = 'mysql'; }
 			if($dsn['phptype'] != 'sqlite')
 			{
 				$host = 'host='.$host;
 			}
 			else
 			{
+				unset($dsn['database']);
 				if(@!defined('DATABASE_INSTALL_MODE') || DATABASE_INSTALL_MODE != true)
 				{
 					if(!file_exists($host)){ $this->sql_error('Database offline '.$host); }
 				}
 			}
-				if(isset($dsn['database']))
-					$connection_String = $dsn['phptype'].':'.$host.';dbname='.$dsn['database'];
-				else
-					$connection_String = $dsn['phptype'].':'.$host;
-					
-		    	$this->db_backend = new PDO($connection_String, $dsn['username'], $dsn['password'], array(PDO::FETCH_ASSOC => PDO::ERRMODE_EXCEPTION));
-		    }
-			catch(PDOException $e)
-		    {
-				$this->sql_error($e->getMessage());
-		    }
+			if(isset($dsn['database'])){
+				$connection_String = $dsn['phptype'].':'.$host.';dbname='.$dsn['database'];
+			} else {
+				$connection_String = $dsn['phptype'].':'.$host;
+			}
+
+			$this->db_backend = new PDO($connection_String, $dsn['username'], $dsn['password'], array(PDO::FETCH_ASSOC => PDO::ERRMODE_EXCEPTION));	
+		}	    
+		catch(PDOException $e)
+	    {
+			$this->sql_error($e->getMessage() . ': Are all the required PHP extentions loaded for your Database Type', __LINE__, __FILE__);
+	    }
+		
 		return $this->db_backend;
 	}
 
 	public function sql_run($sql, $values, $writeuser)
 	{
 		$error = false;
-
 		try
 		{
 			if($writeuser == true)
@@ -49,6 +54,15 @@ class database_execution_pdo extends database_execution
 					{
 						//Do prepeared statment
 						$stmt = $this->write->prepare($sql);
+						if($stmt === false)
+						{
+							$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />';
+							if($this->show_error_sql)
+							{
+								$error .= 'From : '. $sql .'<br />With: ' .$values;
+							}
+							$this->sql_error($error);
+						}
 					}
 				}
 				else
@@ -68,8 +82,31 @@ class database_execution_pdo extends database_execution
 				{
 					//Do prepeared statment
 					$stmt = $this->read->prepare($sql);
+					if($stmt === false)
+					{
+						$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />';
+						if($this->show_error_sql)
+						{
+							$error .= 'From : '. $sql .'<br />With: ' .$values;
+						}
+						$this->sql_error($error);
+					}
 				}
 			}
+			
+			unset($sql);
+			if(isset($stmt))
+			{
+				$result = $stmt->execute($values);
+
+				if($result === false)
+				{
+					$error = 'Failed to issue query, error message : ' . $result->getMessage().', '. $result->getDebugInfo().'<br />';
+				}
+				
+				$resultset = $stmt->fetchAll();
+			}
+			
 		}
 		catch(PDOException $e)
 	    {

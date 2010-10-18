@@ -21,6 +21,7 @@ class cmspage_html extends cmspage
 				else
 				{
 					$value = database::singleton()->sql_select_first(array('id'), 'tbl_pages', NULL, NULL, array('id'), 'ASC');
+					
 					if(is_numeric($value['id']))
 					{
 						$this->value = $value['id'];
@@ -35,6 +36,7 @@ class cmspage_html extends cmspage
 			
 			//Get current page details
 			$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->value));
+
 			if(isset($this->page_details['append_tags']) && strlen($this->page_details['append_tags']) > 0)
 			{
 				$this->page_details['append_tags'] = explode(',',$this->page_details['append_tags']);

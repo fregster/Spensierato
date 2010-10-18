@@ -16,7 +16,7 @@ class database
 	private $sql_cache_hit = false;
 	private $sql_cache_hits = 0;
 
-	private $memcached = false;
+	private $external_cache = true;
 	protected $full_text_search = false;
 
 	private $sql_log_array = array();
@@ -34,12 +34,19 @@ class database
 	protected $table_quote = '`';
 	protected $value_quote = "'";
 	
+	private $db_object;
+	
 	/**
 	 * Prepared Statment work
 	 */
+	protected $sql_use_prepared_statments_if_available = true;
 	protected $sql_can_prepare_statments = false;
 	protected $sql_use_prepared_statments = false;
-	private $sql_values = array();
+	protected $sql_prepared_statment_placeholder_name = 'v';
+	protected $sql_prepared_statment_placeholder_prefix = ':';
+	protected $sql_prepared_statment_use_short_holder = true;
+	private $sql_values = null;
+	private $sql_types = null;
 	private $sql_prepared_count = 1;
 
 	/**
@@ -47,37 +54,61 @@ class database
 	 */
 	private $time;
 	private $microtime;
+	
+	/**
+	 * Handle for custom backends
+	 * $db
+	 */
+	protected $db = false;
 
 	public static function Singleton()
 	{
-	   if (!isset(self::$instance))
-	   {
+		if (!isset(self::$instance))
+		{
 			$c = 'database_'.DATABASE_DRIVER;
 			include(DATABASE_LAYER_PATH.'/server_types/'.DATABASE_DRIVER.'.inc');
-	   		if(!class_exists($c))
-	   		{
-	   			die('Unable to create correct database layer type ('.$c.')');
-	   		}
-
-		   self::$instance = new $c;
-	   }
-	   return self::$instance;
+		   	if(!class_exists($c))
+		   	{
+		   		die('Unable to create correct database layer type ('.$c.')');
+		   	}
+		
+			self::$instance = new $c;
+		}		
+		return self::$instance;
 	}
 
 	/**
 	 * Database construct
 	 * If the database class has been called directly throught the singleton then connect to the default database
 	 *
-	 * A connection to a seperate DB can be started with $new_db = Database::Singleton($dsn);
+	 * It is intended a new connection to a seperate DB can be started with $new_db = Database::Singleton($dsn);
 	 * The call $result = $new_bd()->sql_select_first(......);
 	 *
-	 * @param unknown_type $dsn
+	 * @param Databse_execution object $db
 	 */
 	protected function __construct()
 	{
 		$this->time = time();
 		$this->microtime = microtime();
 		$this->prefix = DATABASE_TABLE_PREFIX;
+		
+		if(isset($db) && !is_null($db))
+		{
+			$this->db = $db;
+		}
+		if(!$this->db) 
+		{
+			$this->db = database_execution::singleton();
+		}
+		
+		if($this->db->supports_prepared_statments() && $this->sql_use_prepared_statments_if_available)
+		{
+			$this->sql_can_prepare_statments = true;
+			$this->sql_use_prepared_statments = true;
+			$this->sql_values = array();
+			$this->sql_types = null;
+			$this->sql_prepared_statment_placeholder_prefix = $this->db->prepared_statment_placeholder();
+		}
 		
 		if(!function_exists($this->escape_method))
 		{
@@ -90,11 +121,16 @@ class database
 		}
 
 	}
+	
+	public function __destruct()
+	{
+		$this->db->destroy();
+	}
 
 	public static function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{
 		//A DSN has been set so create the connection with the specified options
-		return database_execution::singleton()->custom_db_object($dsn, $options, $mods);
+		return database_execution::factory()->custom_db_object($dsn, $options, $mods);
 	}
 
 	/**
@@ -103,12 +139,12 @@ class database
 	 */
 	public function force_write_user()
 	{
-		database_execution::singleton()->force_write_user();
+		$this->db->force_write_user();
 	}
 
 	public function destroy_write_user()
 	{
-		database_execution::singleton()->destroy_write_user();
+		$this->db->destroy_write_user();
 	}
 
 	public function __clone()
@@ -148,7 +184,7 @@ class database
 	{
 		if($this->options['allow_external_calls'])
 		{
-			$this->memcached = true;
+			$this->external_cache = true;
 		}
 	}
 	
@@ -164,24 +200,41 @@ class database
 	{
 		if($this->sql_use_prepared_statments)
 		{
-			$key = 'v_'.$this->sql_prepared_count;
+			if($this->sql_prepared_statment_use_short_holder)
+			{
+				$this->sql_values[] = $var;
+				++$this->sql_prepared_count;
+				return '?';
+				
+			}
+			$key = $this->sql_prepared_statment_placeholder_name.$this->sql_prepared_count;
 			$this->sql_values[$key] = $var;
+			if(is_int($var)){
+				$this->sql_types[] = 'integer';
+			}
+			else {
+				$this->sql_types[] = 'text';
+			}
 			++$this->sql_prepared_count;
-			return $key;
+			return $this->sql_prepared_statment_placeholder_prefix;
+
+//			$this->sql_values[] = $var;
+//			return '?';
 		}
-		return sql_clean_input($var);
+		return $this->sql_clean_input($var);
 	}
 
-	protected function sql_clean_input($var)
+	protected function sql_clean_input($var, $quote = null)
 	{
 		//If the input is just a number just return it
 		if(is_numeric($var)) { return $var; }
+		if($quote == null) { $quote = $this->value_quote; }
 		
 		if($this->allow_extenal_escaping)
 		{
-			return call_user_func($this->escape_method,$var);
+			return $quote.call_user_func($this->escape_method,$var).$quote;
 		}
-		return addslashes($var);
+		return $quote.addslashes($var).$quote;
 	}
 
 	//SQL Logging function
@@ -239,7 +292,7 @@ class database
 		}
 		else if (!is_array($fields) )
 		{
-			$sql_temp_select = $this->sql_clean_input($fields);
+			$sql_temp_select = $this->sql_clean_input_value($fields);
 		}
 		else
 		{
@@ -247,7 +300,7 @@ class database
 			$count_fields = count($fields);
 			while($i <= ($count_fields - 1))
 			{
-				$sql_temp_select = $sql_temp_select . $this->sql_clean_input($fields[$i]);
+				$sql_temp_select = $sql_temp_select . $this->sql_clean_input_value($fields[$i]);
 
 				if($i < ($count_fields - 1))
 				{
@@ -259,14 +312,14 @@ class database
 		}
 
 
-		$sql = "SELECT $sql_temp_select, COUNT(*) as count FROM ".$this->table_quote.$this->prefix.$this->sql_clean_input($table).$this->table_quote.$this->sql_build_where_string($where_fields, $where_values).' GROUP BY '.$this->sql_clean_input($group_col);
+		$sql = "SELECT $sql_temp_select, COUNT(*) as count FROM ".$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values).' GROUP BY '.$this->sql_clean_input($group_col, $this->col_quote);
 		if($ORDER_BY_COUNT)
 		{
 			$sql .= ' ORDER BY COUNT DESC';
 		}
 		else if(is_numeric($HAVING_COUNT)) //You can not use order by and having so they are exclusive
 		{
-			$sql .= ' HAVING COUNT(*) = '.$this->sql_clean_input($HAVING_COUNT);
+			$sql .= ' HAVING COUNT(*) = '.$this->sql_clean_input_value($HAVING_COUNT);
 		}
 		return $this->sql_select_exe($sql, NULL);
 	}
@@ -277,11 +330,18 @@ class database
 
 		if($fields == NULL)
 		{
-			$sql_temp_select = array('*');
+			$sql_temp_select = '*';
 		}
 		else if (!is_array($fields) )
 		{
-			$sql_temp_select = $this->sql_clean_input($fields);
+			if($fields === '*')
+			{
+				$sql_temp_select = '*';
+			}
+			else 
+			{
+				$sql_temp_select = $this->sql_clean_input($fields, $this->col_quote);
+			}
 		}
 		else
 		{
@@ -289,8 +349,15 @@ class database
 			$count_fields = count($fields);
 			while($i <= ($count_fields - 1))
 			{
-				$sql_temp_select = $sql_temp_select . $this->sql_clean_input($fields[$i]);
-
+				if($fields[$i] === '*')
+				{
+					$sql_temp_select = $sql_temp_select . '*';
+				}
+				else 
+				{
+					$sql_temp_select = $sql_temp_select . $this->sql_clean_input($fields[$i], $this->col_quote);
+				}
+				
 				if($i < ($count_fields - 1))
 				{
 					$sql_temp_select = $sql_temp_select . ', ';
@@ -301,7 +368,7 @@ class database
 		}
 
 
-		$sql = "SELECT $sql_temp_select FROM ".$this->table_quote.$this->prefix.$this->sql_clean_input($table).$this->table_quote.$this->sql_build_where_string($where_fields, $where_values);
+		$sql = "SELECT $sql_temp_select FROM ".$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values);
 
 
 		//Include Order By if required
@@ -322,7 +389,7 @@ class database
 					$order = 'DESC';
 				}
 
-				$sql_temp_order = $sql_temp_order . ' '.$this->col_quote . $this->sql_clean_input($order_fields[$i]) .$this->col_quote.' '. $order .' ';
+				$sql_temp_order = $sql_temp_order . ' '.$this->sql_clean_input($order_fields[$i], $this->col_quote).' '. $order .' ';
 
 				if($i < ($count_order - 1))
 				{
@@ -352,7 +419,7 @@ class database
 
 	protected function sql_max_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
-		return 'SELECT max( '.$this->sql_clean_input($field).' ) FROM '.$this->table_quote.$this->prefix. $this->sql_clean_input($table).$this->table_quote.$this->sql_build_where_string($where_fields, $where_values);;
+		return 'SELECT max( '.$this->sql_clean_input($field, $this->col_quote).' ) FROM '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values);;
 	}
 
 	public function sql_min_field($table, $field, $where_fields = NULL, $where_values = NULL)
@@ -364,7 +431,7 @@ class database
 
 	protected function sql_min_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
-		return 'SELECT min( '.$this->sql_clean_input($field).' ) FROM '.$this->table_quote.$this->prefix. $this->sql_clean_input($table).$this->table_quote.$this->sql_build_where_string($where_fields, $where_values);
+		return 'SELECT min( '.$this->sql_clean_input_value($field).' ) FROM '.$this->table_quote.$this->prefix. $this->sql_clean_input($table).$this->table_quote.$this->sql_build_where_string($where_fields, $where_values);
 	}
 
 	//SQL Update time field query
@@ -378,7 +445,7 @@ class database
 
 	protected function sql_update_time_build($table, $id)
 	{
-		return 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = ' . $this->value_quote . $this->time . $this->value_quote . ' WHERE id = ' . $this->value_quote . $this->sql_clean_input($id) . $this->value_quote . ' ';
+		return 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = ' . $this->value_quote . $this->time . $this->value_quote . ' WHERE id = ' . $this->sql_clean_input_value($id) . ' ';
 	}
 
 	public function sql_toggle_field_by_id($id, $table, $field, $destroy_cache = false)
@@ -415,7 +482,7 @@ class database
 			return false;
 		}
 
-		$sql = 'UPDATE '.$this->table_quote. $this->prefix.$this->sql_clean_input($table) . $this->table_quote.' SET ';
+		$sql = 'UPDATE '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).' SET ';
 
 		$i = 0;
 		$sql_temp_fields = '';
@@ -424,7 +491,7 @@ class database
 		$count_fields = count($fields);
 		while($i <= ($count_fields - 1))
 		{
-			$sql_temp_fields .= $this->col_quote.$this->sql_clean_input($fields[$i]).$this->col_quote.' = '.$this->value_quote . $this->sql_clean_input($values[$i]) . $this->value_quote . ' ';
+			$sql_temp_fields .= $this->sql_clean_input($fields[$i], $this->col_quote).' = '. $this->sql_clean_input_value($values[$i]) . ' ';
 			if($i < ($count_fields -1))
 			{
 				//not the last one so add a ,
@@ -460,15 +527,12 @@ class database
 
 	public function sql_insert($table, $fields, $values)
 	{
-		$sql = $this->sql_insert_build($table, $fields, $values);
-		$this->sql_exe($sql, NULL, true);
-		return database_execution::Singleton()->lastInsertID($table,'id');
+		$this->sql_exe($this->sql_insert_build($table, $fields, $values), $this->sql_values, true);
+		return $this->db->lastInsertID($table,'id');
 	}
 
 	protected function sql_insert_build($table, $fields, $values)
 	{
-		$table = $this->prefix.$this->sql_clean_input($table);
-
 		if(	(count($fields)) != (count($values))	)
 		{
 			return false;
@@ -479,7 +543,7 @@ class database
 		$sql_temp_fields = '';
 		while($i <= ($count_fields - 1))
 		{
-			$sql_temp_fields = $sql_temp_fields . $this->col_quote.$this->sql_clean_input($fields[$i]) .$this->col_quote.' ';
+			$sql_temp_fields = $sql_temp_fields . $this->sql_clean_input($fields[$i], $this->col_quote).' ';
 			if($i < ($count_fields - 1)) { $sql_temp_fields .=', '; }
 			$i++;
 		}
@@ -489,13 +553,13 @@ class database
 		$sql_temp_values = '';
 		while($i <= ($count_values - 1))
 		{
-			$sql_temp_values = $sql_temp_values . $this->value_quote . $this->sql_clean_input($values[$i]) . $this->value_quote . ' ';
+			$sql_temp_values = $sql_temp_values . $this->sql_clean_input_value($values[$i]) . ' ';
 			if($i < ($count_values - 1)) { $sql_temp_values .=', '; }
 			$i++;
 		}
 
 
-		return 'INSERT INTO '.$this->table_quote. $table . $this->table_quote.' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
+		return 'INSERT INTO '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 	}
 
 	public function sql_delete_by_colum_equals($table, $col, $equals, $destroy_cache = false)
@@ -506,8 +570,8 @@ class database
 
 	protected function sql_delete_by_colum_equals_build($table, $col, $equals)
 	{
-		$table = $this->prefix.$this->sql_clean_input($table);
-		return 'DELETE FROM '.$table.' WHERE '.$this->table_quote.$this->sql_clean_input($col).$this->table_quote.' = ' . $this->value_quote . $this->sql_clean_input($equals).$this->value_quote;
+		$table = $this->sql_clean_input($this->prefix.$table, $this->table_quote);
+		return 'DELETE FROM '.$table.' WHERE '.$this->sql_clean_input($col, $this->col_quote).' = ' . $this->sql_clean_input_value($equals);
 	}
 
 	public function sql_delete_where($table, $where_fields, $where_values)
@@ -518,7 +582,7 @@ class database
 
 	protected function sql_delete_where_build($table, $where_fields, $where_values)
 	{
-		$table = $this->prefix.$this->sql_clean_input($table);
+		$table = $this->sql_clean_input($this->prefix.$table, $this->table_quote);
 		return 'DELETE FROM '.$table.' '.$this->sql_build_where_string($where_fields, $where_values);
 	}
 
@@ -541,8 +605,8 @@ class database
 
 	protected function sql_select_into_build($fields, $from, $to, $where_fields, $where_values, $extra_insert = NULL)
 	{
-		$from = $this->prefix.$this->sql_clean_input($from);
-		$to = $this->prefix.$this->sql_clean_input($to);
+		$from = $this->prefix.$this->sql_clean_input_value($from);
+		$to = $this->prefix.$this->sql_clean_input_value($to);
 
 		if($fields == NULL)
 		{
@@ -550,7 +614,7 @@ class database
 		}
 		else if (!is_array($fields) )
 		{
-			$select_fields = $this->sql_clean_input($fields);
+			$select_fields = $this->sql_clean_input_value($fields);
 		}
 		else
 		{
@@ -558,7 +622,7 @@ class database
 			$count_fields = count($fields);
 			while($i <= ($count_fields - 1))
 			{
-				$sql_temp_select = $sql_temp_select . $this->sql_clean_input($fields[$i]);
+				$sql_temp_select = $sql_temp_select . $this->sql_clean_input_value($fields[$i]);
 
 				if($i < ($count_fields - 1))
 				{
@@ -642,7 +706,7 @@ class database
 		}
 		else if (!is_array($fields) )
 		{
-			$sql_temp_select = $this->sql_clean_input($fields);
+			$sql_temp_select = $this->sql_clean_input_value($fields);
 		}
 		else
 		{
@@ -650,7 +714,7 @@ class database
 			$count_fields = count($fields);
 			while($i <= ($count_fields - 1))
 			{
-				$sql_temp_select = $sql_temp_select . $this->sql_clean_input($fields[$i]);
+				$sql_temp_select = $sql_temp_select . $this->sql_clean_input_value($fields[$i]);
 
 				if($i < ($count_fields - 1))
 				{
@@ -704,9 +768,9 @@ class database
 						$sql_temp_where_or = '';
 						while($j <= ($count_or))
 						{
-							$sql_temp_where_or .= $this->table_quote.$this->sql_clean_input($where_fields[$i]) .$this->table_quote.' = ';
+							$sql_temp_where_or .= $this->sql_clean_input($where_fields[$i], $this->col_quote).' = ';
 							//Quote non numeric values
-							if(is_numeric($where_values[$i][$j])) {	$sql_temp_where_or .= $where_values[$i][$j]; }else{ $sql_temp_where_or .= $this->value_quote . $this->sql_clean_input_value($where_values[$i][$j]) .$this->value_quote; }
+							$sql_temp_where_or .= $this->sql_clean_input_value($where_values[$i][$j]);
 	
 							$j++;
 							if(isset($where_values[$i][$j]))
@@ -725,16 +789,16 @@ class database
 				}
 				else
 				{
-					$sql_temp_where .= '('.$this->col_quote . $this->sql_clean_input($where_fields[$i]) .$this->col_quote.' = ';
+					$sql_temp_where .= '('.$this->sql_clean_input($where_fields[$i], $this->col_quote).' = ';
 
 					//Quote non numeric values
 					if(is_numeric($where_values[$i]))
 					{
-						$sql_temp_where .= $where_values[$i].')';
+						$sql_temp_where .= $this->sql_clean_input_value($where_values[$i]).')';
 					}
 					else
 					{
-						$sql_temp_where .= $this->value_quote . $this->sql_clean_input_value($where_values[$i]) . $this->value_quote .')';
+						$sql_temp_where .= $this->sql_clean_input_value($where_values[$i]) .')';
 					}
 				}
 
@@ -752,7 +816,7 @@ class database
 	//$Values is for when I get around to implimenting MDB2 properly!
 	protected function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{
-		database_execution::Singleton()->sql_connect();
+		$this->db->sql_connect();
 
 		if($destroy_cache)
 		{
@@ -763,13 +827,15 @@ class database
 
 		//Logging info
 		$this->site_sql_count ++;
-		if(strlen($sql) > database_execution::Singleton()->max_sql_length)
+		if(strlen($sql) > $this->db->max_sql_length)
 		{
 			$results = array('Error' => 'SQL Length greater than max supported');
 		}
 		else
 		{
-			$results = database_execution::Singleton()->sql_run($sql, $values, $writeuser);
+			$results = $this->db->sql_run($sql, $values, $writeuser);
+			$this->sql_values = array();
+			$this->sql_prepared_count = 1;
 		}
 
 		if($this->show_error_sql && isset($results['error']))
@@ -783,15 +849,7 @@ class database
 			exit;
 		}
 
-		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit, $results['resultset']);
-
-//		foreach($results['resultset'] as $row => $result)
-//		{
-//			foreach($result as $col => $value)
-//			{
-//				$results['resultset'][$row][$col] = stripslashes($value);
-//			}
-//		}
+		$this->sql_log($this->site_sql_count, $sql, $sql_start_time, $this->sql_cache_hit, $results);
 		
 		return $results['resultset'];
 	}
@@ -812,7 +870,7 @@ class database
 
 	protected function sql_update_exe($sql, $values = NULL, $destroy_cache = false)
 	{
-		return $this->sql_exe($sql, $values, true, $destroy_cache);
+		return $this->sql_exe($sql, $this->sql_values, true, $destroy_cache);
 	}
 
 	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)
@@ -821,18 +879,21 @@ class database
 		//Check cache if not explecitly set not to
 		if(!$no_cache)
 		{
-			$results = $this->sql_check_cache($sql, $values);
+			$results = $this->sql_check_cache($sql, $this->sql_values);
 		}
 
 		//If cache fails or not checked to SQL query
 		if($results === false)
 		{
-			$results = database_execution::singleton()->sql_select_exe_run($this->sql_exe($sql, $values));
+			$results = $this->db->sql_select_exe_run($this->sql_exe($sql, $this->sql_values));
 
 			//Cache the result
-			$this->sql_cache($sql, $values, $results);
+			$this->sql_cache($sql, $this->sql_values, $results);
 		}
 
+		$this->sql_log($this->site_sql_count, $sql, null, $this->sql_cache_hit, $results);
+		$this->sql_values = array();
+		$this->sql_prepared_count = 1;
 		return $results;
 	}
 
@@ -843,7 +904,11 @@ class database
 			//Set cache hit to false only set true if actually a hit
 			$this->sql_cache_hit = false;
 			$result = false;
-			if($this->memcached)
+			if(isset($values) && is_array($values))
+			{
+				$sql .= implode('-',$values);
+			}
+			if($this->external_cache)
 			{
 				$result = persistantcache::Singleton()->get($sql);
 			}
@@ -857,16 +922,16 @@ class database
 
 			if($result != false)
 			{
-				if($values != NULL)
-				{
-					//This was a prepared statment return the correct cached result
-					if(	(isset($result[$values])) and ($result[$values]['time'] >= ($this->time - 30)))
-					{
-						return $result[$values];
-					}
-					//SQL Query has been done before but with diffrent values
-					return false;
-				}
+//				if($values != NULL)
+//				{
+//					//This was a prepared statment return the correct cached result
+//					if(	(isset($result[$values])) and ($result[$values]['time'] >= ($this->time - 30)))
+//					{
+//						return $result[$values];
+//					}
+//					//SQL Query has been done before but with diffrent values
+//					return false;
+//				}
 
 				if($result['time'] >= ($this->time - $this->sql_cache_max_time) )
 				{
@@ -881,7 +946,7 @@ class database
 				else
 				{
 					//SQL Query is old so delete it and re-check the DB
-					if($this->memcached)
+					if($this->external_cache)
 					{
 						$result = persistantcache::Singleton()->drop($sql);
 					}
@@ -899,7 +964,7 @@ class database
 
 	private function sql_cache($sql, $values, $result)
 	{
-		if($this->memcached)
+		if($this->external_cache)
 		{
 			persistantcache::Singleton()->save($sql, array('time' => $this->time, 'result' => $result), $this->sql_cache_max_time);
 		}
@@ -928,10 +993,14 @@ class database
 		return($this->sql_exe('SHOW TABLES') );
 	}
 
+	public function drop_database($database)
+	{
+		$this->db->drop_database($this->sql_clean_input($database));
+	}
+	
 	public function create_database($database)
 	{
-		die('create db');
-		echo $this->sql_exe('CREATE DATABASE '.$this->sql_clean_input($database), NULL, true, true);
+		$this->db->create_database($this->sql_clean_input($database));
 	}
 
 	public function create_table($table, $database = NULL, $cols = array(), $types = array(), $length = array())
@@ -964,6 +1033,7 @@ class database
 			$i++;
 		}
 		$sql = rtrim($sql, ',') .')';
+		echo($sql.'<br/>');
 		$this->sql_exe($sql, NULL, true, true);
 	}
 	

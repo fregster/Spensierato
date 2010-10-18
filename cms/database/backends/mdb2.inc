@@ -1,6 +1,8 @@
 <?php
 class database_execution_mdb2 extends database_execution
 {
+	protected $supports_prepared_statments = true;
+	
 	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
 		//Load the MDB2 code
@@ -12,7 +14,7 @@ class database_execution_mdb2 extends database_execution
 			$this->sql_error('Database offline');
 		}
 		
-		$this->db_backend =& MDB2::singleton($dsn, $options);
+		$this->db_backend = MDB2::singleton($dsn, $options);
 
 		if (PEAR::isError($this->db_backend) or (MDB2::isError($this->db_backend)))
 		{
@@ -27,6 +29,7 @@ class database_execution_mdb2 extends database_execution
 			}
 		}
 
+		$this->db_backend->setFetchMode(MDB2_FETCHMODE_ASSOC);
 		return $this->db_backend;
 	}
 
@@ -66,7 +69,7 @@ class database_execution_mdb2 extends database_execution
 					else
 					{
 						//Do prepeared statment
-						$stmt = $this->write->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
+						$stmt = $this->write->prepare($sql);
 					}
 				}
 				else
@@ -85,7 +88,7 @@ class database_execution_mdb2 extends database_execution
 				else
 				{
 					//Do prepeared statment
-					$stmt = $this->read->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
+					$stmt = $this->read->prepare($sql);
 				}
 			}
 
@@ -100,19 +103,21 @@ class database_execution_mdb2 extends database_execution
 					}
 					$this->sql_error($error);
 				}
+				
 				$resultset = $stmt->execute($values);
-			}
 
-			if (PEAR::isError($resultset))
-			{
-				$error = 'Failed to issue query, error message : ' . $resultset->getMessage().', '. $resultset->getDebugInfo().'<br />';
+				if(PEAR::isError($resultset) || MDB2::isError($resultset))
+				{
+					$error = 'Failed to issue query, error message : ' . $resultset->getMessage().', '. $resultset->getDebugInfo().'<br />';
+				}
 			}
+			unset($sql);
+			
 		 }
 		catch(PEAR_Exception $e)
 	    {
 			$this->sql_error($e->getMessage());
 	    }
-
 	    $final = array('resultset' => $resultset);
 	    if($error) { $final['error'] = $error; }
 
@@ -121,13 +126,22 @@ class database_execution_mdb2 extends database_execution
 
 	public function sql_select_exe_run($resultset)
 	{
-		$results = array();
-
-		while($row = $resultset->fetchRow(MDB2_FETCHMODE_ASSOC))
+		if(is_object($resultset))
 		{
-			$results[] = $row;
+			 return $resultset->fetchAll();
+		}
+		
+		$results = array();
+		if(is_array($resultset))
+		{
+		    foreach ($resultset as $row)
+			{
+		      		$results[] = $row;
+		    }
 		}
 
+//		var_dump($resultset); die();
+		
 		return $results;
 	}
 
@@ -149,11 +163,13 @@ class database_execution_mdb2 extends database_execution
 
 	public function createDatabase($database)
 	{
-		$this->db_backend->createDatabase($database);
+		$this->db_backend->loadModule('Manager');
+		return $this->db_backend->createDatabase($database);
 	}
 
 	public function dropDatabase($database)
 	{
-		$this->db_backend->dropDatabase($database);
+		$this->db_backend->loadModule('Manager');
+		return $this->db_backend->dropDatabase($database);
 	}
 }

@@ -37,6 +37,10 @@ abstract class ajax
 				self::dragdrop();
 				break;
 				
+			case 'reorder':
+				self::reorder();
+				break;
+				
 			default:
 				die();
 				break;
@@ -59,6 +63,12 @@ abstract class ajax
 			/* now what? */
 			if($_POST['byajax']) { die(); } else { $message = 'Saved'; }
 		}
+	}
+	
+	private static function reorder(){
+		$order = explode(',', post::variable('o'));
+		print_r($order);
+		die();
 	}
 
 	private static function view_approvals($element_id){

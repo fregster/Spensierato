@@ -1057,4 +1057,9 @@ class database
 	{
 		return $this->user_support;
 	}
+	
+	public function using_prepared_statments()
+	{
+		return $this->sql_use_prepared_statments;
+	}
 }

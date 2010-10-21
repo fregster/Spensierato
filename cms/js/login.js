@@ -18,7 +18,8 @@ function jsSecureLogin() {
 			}
 			else
 			{
-				pageReload()
+				alert('Login Failed, the username, password or security image was incorect. Please try again');
+				pageReload();
 			}
 		}
 	};

@@ -174,7 +174,13 @@ class CMS
 		}
 		else
 		{
-			$sql_string .= round($sql_info[2]).' Cached in '.$cache.') through ('. strtoupper($GLOBALS['database_backend']) .')';
+			$sql_string .= round($sql_info[2]).' Cached in '.$cache.') through ('. strtoupper($GLOBALS['database_backend']);
+			
+			if(Database::Singleton()->using_prepared_statments()){
+				$sql_string .= '+';
+			}
+
+			$sql_string .=')';
 		}
 
 		$runtime=('<div class="footer_text">Page generated in ' . round($totaltime, 4) . ' seconds on '. date("D M j G:i:s T Y") .'<br /> ' . round($percent, 0) . '% php time using '.(memory_get_peak_usage(true) / (1024 * 1024)).' MB and running ' .$sql_string .'</div>');
@@ -199,7 +205,7 @@ class CMS
 
 	public function delete_session()
 	{
-		$_SESSION = array(); //Clear the session data
+		$_SESSION = @array(); //Clear the session data
 
 		if (isset($_COOKIE[session_name()])) {
 		    setcookie(session_name(), '', time()-42000, '/');

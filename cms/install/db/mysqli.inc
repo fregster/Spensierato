@@ -235,11 +235,8 @@ foreach ($tables as $table => $data){
 
 	if(!$result)
 	{
-		$error = '<br/>Failed to create table '.$table.'. The sql that triggered the error:<br />'. $sql;
-		die($error);
+		die('<br/>Failed to create table '.$table.'. The sql that triggered the error:<br />'. $sql);
 	}
-//	echo($sql.'<br />');
-//	print_r($result);
 }
 unset($table, $data);
 

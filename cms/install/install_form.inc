@@ -73,6 +73,13 @@ function jsCheckHostType(){
 		jsShowID('db-driver');
 	}
 };
+function jsCheckHostTypeDetail(){
+	if(document.getElementById('db-host').value == 'sqlite'){
+		jsHideID('db-host-detail');
+	}else{
+		jsShowID('db-host-detail');
+	}
+}
 		</script>
 	</head>
 <body onload="jsShow(); jsHide();">
@@ -160,18 +167,20 @@ if(!$rewrite_enabled && !check_inc_restrictions())
 	</div>
 	<div id="dbinfo" class="pad-div">
 	Please specify the connection information to your SQL server, this user needs to be able to create users and databases, as well as give permissions (Usally root or sa)
-		<div>Host: <input type="text" name="host" value="localhost" /></div>
 		<div>Database Layer: <select name="db-layer" id="db-layer" onchange="jsCheckHostType();"><?php if(!array_search('MDB2.php', $opt_missing)) { echo '<option value="mdb2">MDB2 (Default)</option>'; } ?><option value="pdo">PDO (Cross SQL platform)</option><option value="php">PHP's Builtin Functions (Not recomended)</option></select></div>
 		<div id="db-driver">
-			<div>Host type: <select name="type">
+			<div>Host type: <select id="db-host" name="type" onchange="jsCheckHostTypeDetail();">
 				<option value="mysqli">MySQL 4+</option>
 				<option value="mysql">MySQL 4</option>
 				<option value="mssql">MSSQL (2000, 2005 and 2008)</option>		
 				<option value="sqlite">SQLite (Filesystem based)</option>		
 			</select></div>
 		</div>
-		<div>Username: <input type="text" name="username" value="root" /></div>
-		<div>Password: <input type="password" name="password" /></div>
+		<div id="db-host-detail">
+			<div>Host: <input type="text" name="host" value="localhost" /></div>
+			<div>Username: <input type="text" name="username" value="root" /></div>
+			<div>Password: <input type="password" name="password" /></div>
+		</div>
 		
 		<div id="database_advanced_button" class="js-show button">
 			<div class="button_open"><a href="#" onclick="jsShowID('database_advanced'); jsHideID('database_advanced_button'); return false;">Show advanced database options &gt;&gt;&gt;</a></div>
@@ -185,25 +194,34 @@ if(!$rewrite_enabled && !check_inc_restrictions())
 					If your connecting to an exsisting database this must match the origonal table prefix or new tables will be created
 					<div>Table Prefix name: <input type="text" name="prefix" value="<?php echo(Common::generate_random_string(3, false)); ?>" /></div>
 				</div>
-			</div>
-		
-			<div id="db_users" class="pad-div">
-				If no usernames are set then one will be created and a random password will be generated (Recomended)<br /><br />
-				If the password set is does not meet the recomended length an random password will also be created
-				<div>Read only username: <input type="text" name="r_user" value="spensierato_read" /></div>
-				<div>Read Write username: <input type="text" name="rw_user" value="spensierato_writ" /></div>
-				<div>Users password: <input type="password" name="db_password" value="<?php echo(Common::generate_random_string(16)); ?>" /></div>
+				
+				<div id="db_users" class="pad-div">
+					If no usernames are set then one will be created and a random password will be generated (Recomended)<br /><br />
+					If the password set is does not meet the recomended length an random password will also be created
+					<div>Read only username: <input type="text" name="r_user" value="spensierato_read" /></div>
+					<div>Read Write username: <input type="text" name="rw_user" value="spensierato_writ" /></div>
+					<div>Users password: <input type="password" name="db_password" value="<?php echo(Common::generate_random_string(16)); ?>" /></div>
+				</div>
 			</div>
 		</div>
 	</div>
 	
 	<div id="filesystem" class="pad-div">
 		Please choose where to allow filesystem access. <br/>The site will work with out write access but detailed logging and uploads will be disabled
-		<div>Uploads tempory folder: <input type="text" name="cms_folder_uploads" value="writeable/uploads/tmp/" /></div>
-		<div>Main Download folder: <input type="text" name="cms_folder_downloads" value="writeable/uploads/" /></div>
-		<div>Origonal Images: <input type="text" name="cms_folder_orig_images" value="writeable/uploads/original_images/" /></div>
-		<div>Logging Folder: <input type="text" name="cms_folder_logs" value="writeable/logs/" /></div>
-		<div>Cache Folder: <input type="text" name="cms_folder_cache" value="writeable/cache/" /></div>
+		<div>Site specific writable folder: <input type="text" name="cms_folder_writeable" value="writeable" /></div>
+		<div id="filesystem-options-button" class="js-show button">
+			<div class="button_open"><a href="#" onclick="jsShowID('filesystem-options'); jsHideID('filesystem-options-button'); return false;">Show advanced filesystem options &gt;&gt;&gt;</a></div>
+		</div>
+		<div id="filesystem-options" class="js-hide">
+			<div class="button_close"><a href="#" onclick="jsShowID('filesystem-options-button'); jsHideID('filesystem-options'); return false;">Hide advanced filesystem options &lt;&lt;&lt;</a></div>
+			<div>Use custom folders: <input name="cms_folder_use_custom" type="checkbox" /></div>
+			<div>Uploads tempory folder: <input type="text" name="cms_folder_uploads" value="writeable/uploads/tmp/" /></div>
+			<div>Main Download folder: <input type="text" name="cms_folder_downloads" value="writeable/uploads/" /></div>
+			<div>Origonal Images: <input type="text" name="cms_folder_orig_images" value="writeable/uploads/original_images/" /></div>
+			<div>Logging Folder: <input type="text" name="cms_folder_logs" value="writeable/logs/" /></div>
+			<div>Cache Folder: <input type="text" name="cms_folder_cache" value="writeable/cache/" /></div>
+			<div>Search Index Folder: <input type="text" name="cms_folder_search" value="writeable/search/" /></div>
+		</div>
 	</div>
 
 	<div id="extra-options-button" class="js-show">
@@ -235,4 +253,4 @@ if(!$rewrite_enabled && !check_inc_restrictions())
 </div>
 </body>
 </html>
-<?php die(); ?>
+<?php exit;

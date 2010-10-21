@@ -56,13 +56,13 @@ class Search
 		//Can we use lucene search?
 		if(Settings::singleton()->get_setting('use_lucence_search'))
 		{
-			if(is_readable(Settings::singleton()->get_setting('cms_folder_logs').'search_index/segments.gen'))
+			if(is_readable(Settings::singleton()->get_setting('cms_folder_search').'search_index/segments.gen'))
 			{
 	    		return true;
 			}
-			else if (is_writable(Settings::singleton()->get_setting('cms_folder_logs')))
+			else if (is_writable(Settings::singleton()->get_setting('cms_folder_search')))
 			{
-				if(new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index', true))
+				if(new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_search').'search_index', true))
 				{
 					return true;
 				}
@@ -81,7 +81,7 @@ class Search
 		
 		if(search::lucence())
 		{
-			$this->lucene_search = new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index');
+			$this->lucene_search = new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_search').'search_index');
 		}
 		else
 		{

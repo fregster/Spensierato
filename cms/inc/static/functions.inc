@@ -2,7 +2,7 @@
 function cms_root()
 {
 	global $include_path;
-	return($include_path.'/cms/');
+	return($include_path.DIRECTORY_SEPARATOR.'cms'.DIRECTORY_SEPARATOR);
 }
 
 //This gets the file system root to the index.php
@@ -17,6 +17,7 @@ function file_root()
 	}
 	$list = get_included_files();
 	$index_root = dirname($list[0]);
+	
 	return $index_root;
 }
 

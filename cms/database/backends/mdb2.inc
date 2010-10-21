@@ -9,15 +9,30 @@ class database_execution_mdb2 extends database_execution
 		//Doing this here only loads the code if a DB query is actually going to be done
 		require_once 'MDB2.php';
 		
-		if($dsn['phptype'] == 'sqlite' && !file_exists($dsn['database']) && @!defined(DATABASE_INSTALL_MODE))
+		$host = $dsn['hostspec'];
+		if($dsn['phptype'] != 'sqlite')
 		{
-			$this->sql_error('Database offline');
+			$host = 'host='.$host.'?mode=0660';
+		}
+		else
+		{
+			unset($dsn['database']);
+			if(@!defined('DATABASE_INSTALL_MODE') || DATABASE_INSTALL_MODE != true)
+			{
+				if(!file_exists($host)){ $this->sql_error('Database offline '.$host); }
+			}
+		}
+		if(isset($dsn['database'])){
+			$connection_String = $dsn['phptype'].':'.$host.';dbname='.$dsn['database'];
+		} else {
+			$connection_String = $dsn['phptype'].':'.$host;
 		}
 		
 		$this->db_backend = MDB2::singleton($dsn, $options);
 
 		if (PEAR::isError($this->db_backend) or (MDB2::isError($this->db_backend)))
 		{
+			var_dump($this->db_backend);
 			$this->sql_error($this->db_backend->getMessage());
 		}
 
@@ -117,8 +132,11 @@ class database_execution_mdb2 extends database_execution
 		catch(PEAR_Exception $e)
 	    {
 			$this->sql_error($e->getMessage());
+			exit;
 	    }
-	    $final = array('resultset' => $resultset);
+	    
+		$final = array();
+	    if(isset($resultset)) { $final['resultset'] = $resultset; }
 	    if($error) { $final['error'] = $error; }
 
 		return $final;
@@ -139,9 +157,7 @@ class database_execution_mdb2 extends database_execution
 		      		$results[] = $row;
 		    }
 		}
-
-//		var_dump($resultset); die();
-		
+				
 		return $results;
 	}
 

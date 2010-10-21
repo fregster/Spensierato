@@ -145,7 +145,7 @@ class user
 		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
 		//Removed because I need it to be able to be worked out on the client side for the JS sha256 login stuff
 		###also on line 246###
-		$hash = hash(Settings::Singleton()->get_setting('site_option_encryption'), $password);
+		$hash = @hash(Settings::Singleton()->get_setting('site_option_encryption'), $password);
 
 		//Save the password in the DB
 		$this->update_password($hash);

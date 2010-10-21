@@ -59,6 +59,53 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
+	//detect the server OS and set the doc root accordingly.
+	if (stripos(PHP_OS, 'darwin') !== FALSE) {
+		$os = 'mac';
+		$doc_root_prefix = ''; //OSX has a unix-type folder structure
+	}
+	else if(stripos(PHP_OS, 'win') !== FALSE){
+		$os = 'windows';
+		$doc_root_prefix = $GLOBALS['site_root'].'/cms/';
+	}
+	else{
+		$os = 'unix';
+		$doc_root_prefix = '';
+	}
+	
+	if(!post::variable('cms_folder_use_custom'))
+	{
+		debug('Creating folders');
+		if(!is_writeable($doc_root_prefix.'writeable'))
+		{
+			debug('Unable to create folders, please create them manually after the install');
+		}
+		else
+		{
+			$dir_logs = $doc_root_prefix.'writeable'.DS.'logs';
+			$dir_uploads = $doc_root_prefix.'writeable'.DS.'uploads';
+			$dir_uploads_tmp = $doc_root_prefix.'writeable'.DS.'uploads'.DS.'tmp';
+			$dir_uploads_orig_images = $doc_root_prefix.'writeable'.DS.'uploads'.DS.'original_images';
+			$dir_cache = $doc_root_prefix.'writeable'.DS.'cache';
+			$dir_search = $doc_root_prefix.'writeable'.DS.'search';
+			
+			@mkdir($dir_logs);
+			@mkdir($dir_uploads);
+			@mkdir($dir_uploads_tmp);
+			@mkdir($dir_uploads_orig_images);
+			@mkdir($dir_cache);
+		}
+	}
+	else
+	{
+		$dir_logs = $doc_root_prefix.post::variable('cms_folder_logs');
+		$dir_uploads = $doc_root_prefix.post::variable('cms_folder_downloads');
+		$dir_uploads_tmp = $doc_root_prefix.post::variable('cms_folder_uploads');
+		$dir_uploads_orig_images = $doc_root_prefix.post::variable('cms_folder_orig_images');
+		$dir_cache = $doc_root_prefix.post::variable('cms_folder_cache');
+		$dir_search = $doc_root_prefix.post::variable('cms_folder_search');
+	}
+	
 	//SQL connection settings
 	$username = post::variable('username');
 	$password = post::variable('password');
@@ -82,7 +129,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	else { $rewrite = 'false'; }
 
 	//define $GLOBALS required by the database layer
-	if($driver == 'sqlite') { $database = $host; }
+	if($driver == 'sqlite') { @mkdir( $doc_root_prefix.'writeable'.DS.'database'); $host = $doc_root_prefix.'writeable'.DS.'database'.DS.'cms.db'; $database = $host; }
 	$GLOBALS['database_driver'] = $driver;
 	$GLOBALS['database_backend'] = $layer;
 	$GLOBALS['database_user_readwrite'] = $user_rw;
@@ -98,6 +145,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$install_folder = dirname(__FILE__);
 	$site_root = file_root();
 
+	//set the path for the settings file
+	$settings_file = $site_root.'/spensierato_setup.inc';
+	
 	/*
 	 * Create the db object
 	 */
@@ -192,23 +242,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	debug('Adding site administrator');
 	$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true);
 
-	//set the path for the settings file
-	$settings_file = $site_root.'/spensierato_setup.inc';
-
-	//detect the server OS and set the doc root accordingly.
-	if (stripos(PHP_OS, 'darwin') !== FALSE) {
-		$os = 'mac';
-		$doc_root_prefix = ''; //OSX has a unix-type folder structure
-	}
-	else if(stripos(PHP_OS, 'win') !== FALSE){
-		$os = 'windows';
-		$doc_root_prefix = $GLOBALS['site_root'].'/cms/';
-	}
-	else{
-		$os = 'unix';
-		$doc_root_prefix = '';
-	}
-
 	/**
 	* Build the settings file string
 	*/
@@ -239,11 +272,12 @@ $GLOBALS[\'smtp_username\'] = '. post::variable('smtp_username').';
 $GLOBALS[\'smtp_password\'] = '. post::variable('smtp_password').';
 
 //Paths to folders in the filesystem
-$GLOBALS[\'cms_folder_uploads\'] = \''.$doc_root_prefix.post::variable('cms_folder_uploads').'\';
-$GLOBALS[\'cms_folder_downloads\'] = \''.$doc_root_prefix.post::variable('cms_folder_downloads').'\';
-$GLOBALS[\'cms_folder_orig_images\'] = \''.$doc_root_prefix.post::variable('cms_folder_orig_images').'\';
-$GLOBALS[\'cms_folder_logs\'] = \''.$doc_root_prefix.post::variable('cms_folder_logs').'\';
-$GLOBALS[\'cms_folder_cache\'] = \''.$doc_root_prefix.post::variable('cms_folder_cache').'\';
+$GLOBALS[\'cms_folder_uploads\'] = \''.$dir_uploads_tmp.'\';
+$GLOBALS[\'cms_folder_downloads\'] = \''.$dir_uploads.'\';
+$GLOBALS[\'cms_folder_orig_images\'] = \''.$dir_uploads_orig_images.'\';
+$GLOBALS[\'cms_folder_logs\'] = \''.$dir_logs.'\';
+$GLOBALS[\'cms_folder_cache\'] = \''.$dir_cache.'\';
+$GLOBALS[\'cms_folder_search\'] = \''.$dir_search.'\';
 ';
 
 	/**

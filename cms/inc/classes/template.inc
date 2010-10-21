@@ -30,16 +30,22 @@ class Template
 
 	protected function __construct()
 	{
-		if(Settings::Singleton()->get_setting('use_external_skins') === true)
+		$this->default_path = Settings::Singleton()->get_setting('cms_root').'skins'.DS.'default';
+		
+		if(Settings::Singleton()->get_setting('use_external_skins') === true && Settings::Singleton()->get_setting('skin'))
 		{
 			$this->template_path = file_root().DS.'skins'.DS.Settings::Singleton()->get_setting('skin');
 		}
+		else if (Settings::Singleton()->get_setting('skin'))
+		{
+			$this->template_path = Settings::Singleton()->get_setting('cms_root').'skins'.DS.Settings::Singleton()->get_setting('skin');
+		}
 		else
 		{
-			$this->template_path = Settings::Singleton()->get_setting('cms_root').DS.'skins'.DS.Settings::Singleton()->get_setting('skin');
+			$this->template_path = $this->default_path;
 		}
 		
-		$this->default_path = Settings::Singleton()->get_setting('cms_root').'skins'.DS.'default';
+		
 
 		$templateinc = $this->template_path.DS.'template.inc';
 
@@ -122,7 +128,7 @@ class Template
 
 	public function edit()
 	{
-		$path = $this->template_path = Settings::Singleton()->get_setting('cms_root').DS.'skins'.DS.'edit'.DS.'edit.xml';
+		$path = $this->template_path = Settings::Singleton()->get_setting('cms_root').'skins'.DS.'edit'.DS.'edit.xml';
 		return $this->build_xslt_template(file_get_contents($path));
 	}
 

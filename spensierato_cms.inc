@@ -82,14 +82,15 @@ try
 	//Include the Site setup code
 	if(is_file(file_root().'/spensierato_setup.inc'))
 	{
-		require_once(file_root().'/spensierato_setup.inc');
+		require_once($index_root.'/spensierato_setup.inc');
 		$install = false; //cancel the install directive
 	}
 	
 	//Has the site extended the spensierato options?
-	require_once($include_path.'/spensierato_options.inc');
-	if(is_file(file_root().'/spensierato_options.inc')) { require_once(file_root().'/spensierato_options.inc'); }
-
+	if(!$install){
+		require_once($include_path.'/spensierato_options.inc');
+		if(is_file($index_root.'/spensierato_options.inc')) { require_once($index_root.'/spensierato_options.inc'); }
+	}
 	//run the installation
 	if($install || isset($force_install))
 	{

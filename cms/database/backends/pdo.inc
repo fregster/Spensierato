@@ -97,23 +97,30 @@ class database_execution_pdo extends database_execution
 			unset($sql);
 			if(isset($stmt))
 			{
+				var_dump($values);
 				$result = $stmt->execute($values);
 
 				if($result === false)
 				{
-					$error = 'Failed to issue query, error message : ' . $result->getMessage().', '. $result->getDebugInfo().'<br />';
+					var_dump($stmt);
+					var_dump($result);
+					$error = 'Failed to issue query<br />';
 				}
-				
-				$resultset = $stmt->fetchAll();
+				else
+				{
+					$resultset = $stmt->fetchAll();	
+				}
 			}
 			
 		}
 		catch(PDOException $e)
 	    {
 	   		$this->sql_error($e->getMessage());
+	   		exit;
 	    }
-
-		$final = array('resultset' => $resultset);
+		
+	    $final = array();
+	    if(isset($resultset)) { $final['resultset'] = $resultset; }
 	    if($error) { $final['error'] = $error; }
 
 		return $final;

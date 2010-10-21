@@ -365,6 +365,9 @@ if(!$install) //Settings that require the install to have been completed
 
 	//Log files
 	Settings::Singleton()->new_setting('cms_folder_logs', $GLOBALS['cms_folder_logs'], false, true);
+	
+	//Search Index files
+	Settings::Singleton()->new_setting('cms_folder_search', $GLOBALS['cms_folder_search'], false, true);
 
 	//Load the random key into the settings singleton
 	Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key'], true, true);

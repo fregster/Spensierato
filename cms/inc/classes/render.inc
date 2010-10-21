@@ -184,9 +184,13 @@ class Render
 
 	private function acceptsGZip()
 	{
-		$accept = str_replace(" ","",strtolower($_SERVER['HTTP_ACCEPT_ENCODING']) );
-		$accept = explode(",",$accept);
-		return in_array("gzip",$accept);
+		if(isset($_SERVER['HTTP_ACCEPT_ENCODING']))
+		{
+			$accept = str_replace(" ","",strtolower($_SERVER['HTTP_ACCEPT_ENCODING']) );
+			$accept = explode(",",$accept);
+			return in_array("gzip",$accept);
+		}
+		return false;
 	}
 
 	private function clean_html()

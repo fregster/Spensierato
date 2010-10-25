@@ -82,12 +82,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		}
 		else
 		{
-			$dir_logs = $doc_root_prefix.'writeable'.DS.'logs';
-			$dir_uploads = $doc_root_prefix.'writeable'.DS.'uploads';
-			$dir_uploads_tmp = $doc_root_prefix.'writeable'.DS.'uploads'.DS.'tmp';
-			$dir_uploads_orig_images = $doc_root_prefix.'writeable'.DS.'uploads'.DS.'original_images';
-			$dir_cache = $doc_root_prefix.'writeable'.DS.'cache';
-			$dir_search = $doc_root_prefix.'writeable'.DS.'search';
+			$dir_logs = realpath($doc_root_prefix.'writeable'.DS.'logs');
+			$dir_uploads = realpath($doc_root_prefix.'writeable'.DS.'uploads');
+			$dir_uploads_tmp = realpath($doc_root_prefix.'writeable'.DS.'uploads'.DS.'tmp');
+			$dir_uploads_orig_images = realpath($doc_root_prefix.'writeable'.DS.'uploads'.DS.'original_images');
+			$dir_cache = realpath($doc_root_prefix.'writeable'.DS.'cache');
+			$dir_search = realpath($doc_root_prefix.'writeable'.DS.'search');
 			
 			@mkdir($dir_logs);
 			@mkdir($dir_uploads);
@@ -98,12 +98,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	}
 	else
 	{
-		$dir_logs = $doc_root_prefix.post::variable('cms_folder_logs');
-		$dir_uploads = $doc_root_prefix.post::variable('cms_folder_downloads');
-		$dir_uploads_tmp = $doc_root_prefix.post::variable('cms_folder_uploads');
-		$dir_uploads_orig_images = $doc_root_prefix.post::variable('cms_folder_orig_images');
-		$dir_cache = $doc_root_prefix.post::variable('cms_folder_cache');
-		$dir_search = $doc_root_prefix.post::variable('cms_folder_search');
+		$dir_logs = realpath($doc_root_prefix.post::variable('cms_folder_logs'));
+		$dir_uploads = realpath($doc_root_prefix.post::variable('cms_folder_downloads'));
+		$dir_uploads_tmp = realpath($doc_root_prefix.post::variable('cms_folder_uploads'));
+		$dir_uploads_orig_images = realpath($doc_root_prefix.post::variable('cms_folder_orig_images'));
+		$dir_cache = realpath($doc_root_prefix.post::variable('cms_folder_cache'));
+		$dir_search = realpath($doc_root_prefix.post::variable('cms_folder_search'));
 	}
 	
 	//SQL connection settings

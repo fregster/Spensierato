@@ -578,4 +578,9 @@ class element_Default
 		}
 		return $this->build_search_text($this->data);
 	}
+	
+	public function title()
+	{
+		return $this->title;
+	}
 }

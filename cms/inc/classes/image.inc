@@ -27,7 +27,8 @@ class image
 		
 		$unscaled_image = Settings::Singleton()->get_setting('cms_folder_orig_images').$elementid;
 		$old_path = Settings::Singleton()->get_setting('cms_folder_uploads').$elementid.'-'.$revision;
-		if(!is_file($unscaled_image)) 
+		
+		if(!is_file($unscaled_image) && is_file($old_path)) 
 		{ 
 			$ok = copy($old_path, $unscaled_image);
 		}

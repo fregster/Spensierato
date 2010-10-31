@@ -514,8 +514,9 @@ class Search
 	private function build_file_index($element_id)
 	{
 		$fields = array('id', 'title', 'indexed', 'file', 'search');
-		$title = ''; //TODO lookup title
-		$values = array($element_id, $title, 0, 1, $this->get_search_string_for_elements(array($element_id)));
+		$element = Element::type($id);
+		
+		$values = array($element_id, $element->title(), 0, 1, $this->get_search_string_for_elements(array($element_id)));
 		$this->index($fields, $values);
 	}
 	
@@ -531,7 +532,7 @@ class Search
 		/**
 		 * Update the SQL search text
 		 */
-		database::singleton()->sql_update_or_insert('tbl_search', array('id', 'file'), array($values[0], $values[3]), $fields, $values, true, 'search_id');
+		database::singleton()->sql_update_or_insert('tbl_search', array('id', 'file',), array($values[0], $values[3]), $fields, $values, true, 'search_id');
 	}
 	
 	public function build_page_index($page_id)

@@ -182,6 +182,11 @@ class Security
 			array_push($pages, $page_ids);
 			$page_ids = $pages;
 		}
+		
+		if($page_ids == null or (is_array($page_ids) && !isset($page_ids[0])))
+		{
+			return false;
+		}
 
 		$cache = $this->check_cache($what, $page_ids, $user_id);
 
@@ -210,7 +215,7 @@ class Security
 		}
 		else if($what == 'view')  //Security is not set and were looking for view permissions
 		{
-			return true; //default to allow for testing
+			return $this->save_cache($what, $page_ids, $user_id, true); //default to allow for testing
 		}
 
 		/**

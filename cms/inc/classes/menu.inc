@@ -86,7 +86,10 @@ class Menu
 			unset($menu_array['parents'][0]);
 
 			$menu_array['parallel'] = $this->get_parallel_links();
-			$menu_array['current'] = $this->current_page_details;
+			if(isset($this->current_page_details))
+			{
+				$menu_array['current'] = $this->current_page_details;
+			}
 		}
 		$menu_array['full_menu'] = $this->get_full_menu();
 		if(isset($menu_array['top'][0]))

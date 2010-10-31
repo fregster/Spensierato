@@ -43,7 +43,7 @@ class Debug
 	{
 		if($this->debug_level > 0 or (get::variable('debug','is_set') and User::Singleton()->is_admin()))
 		{
-			$log = array('time' => time(), 'name' => $what, 'data' => $details);
+			$log = array('time' => microtime(true), 'name' => $what, 'data' => $details);
 			array_push($this->debug_log, $log);
 			$this->log_to_file($log);
 		}

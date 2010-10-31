@@ -30,9 +30,13 @@ class database_execution_mdb2 extends database_execution
 		
 		$this->db_backend = MDB2::singleton($dsn, $options);
 
+		if(!$this->db_backend)
+		{
+			$error = 'Unable to connect to the database';
+			$this->sql_error($error);
+		}
 		if (PEAR::isError($this->db_backend) or (MDB2::isError($this->db_backend)))
 		{
-			var_dump($this->db_backend);
 			$this->sql_error($this->db_backend->getMessage());
 		}
 
@@ -53,23 +57,6 @@ class database_execution_mdb2 extends database_execution
 		
 		$error = false;
 		//Query the database Object
-
-//		$db &= $this->read;
-//		if($writeuser == true)
-//		{
-//			$db &= $this->write;
-//		}
-//
-//		if($values == NULL)
-//		{
-//			//Values have not been passed so do simple SQL exec
-//			$resultset = $this->write->query($sql);
-//		}
-//		else
-//		{
-//			//Do prepeared statment
-//			$stmt = $this->write->prepare($sql, TRUE, MDB2_PREPARE_RESULT);
-//		}
 		try
 		{
 			if($writeuser == true)
@@ -109,7 +96,7 @@ class database_execution_mdb2 extends database_execution
 
 			if(isset($stmt))
 			{
-				if (PEAR::isError($stmt))
+				if (PEAR::isError($stmt) or (MDB2::isError($stmt)))
 				{
 					$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />';
 					if($this->show_error_sql)

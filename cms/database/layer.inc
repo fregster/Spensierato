@@ -177,7 +177,7 @@ class database
 		{
 			$percent = 100 / ($this->site_sql_count + $this->sql_cache_hits) * $this->sql_cache_hits;
 		}
-		return array($this->site_sql_count, $percent, $this->sql_cache_hits);
+		return array(($this->site_sql_count - $this->sql_cache_hits), $percent, $this->sql_cache_hits);
 	}
 
 	public function use_memcached()
@@ -256,7 +256,7 @@ class database
 				if ( ($sql_cache_hit == false) or (Settings::Singleton()->get_setting('debug') > 1)	)
 				{
 					$details = array('count' => $sql_count, 'query' => $sql_query, 'time' => $sql_exc_time, 'cached' => $sql_cache_hit);
-					if($sql_result != NULL) { $details['result'] = $sql_result; }
+//					if($sql_result != NULL) { $details['result'] = $sql_result; }
 					array_push($this->sql_log_array, $details);
 					$this->sql_time = $this->sql_time + $sql_exc_time;
 
@@ -875,6 +875,14 @@ class database
 
 	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)
 	{
+//		$backtrace_sql = "SELECT * FROM `cmv_tbl_pages` WHERE ((`id` = '')) LIMIT 1";
+//		if($sql == $backtrace_sql)
+//		{
+//			echo('<p>'. $sql . '</p>');
+//			var_dump(debug_backtrace());
+//			die();
+//		}
+		
 		$results = false;
 		//Check cache if not explecitly set not to
 		if(!$no_cache)
@@ -882,7 +890,7 @@ class database
 			$results = $this->sql_check_cache($sql, $this->sql_values);
 		}
 
-		//If cache fails or not checked to SQL query
+		//If cache fails or not checked do SQL query
 		if($results === false)
 		{
 			$results = $this->db->sql_select_exe_run($this->sql_exe($sql, $this->sql_values));
@@ -891,7 +899,6 @@ class database
 			$this->sql_cache($sql, $this->sql_values, $results);
 		}
 
-		$this->sql_log($this->site_sql_count, $sql, null, $this->sql_cache_hit, $results);
 		$this->sql_values = array();
 		$this->sql_prepared_count = 1;
 		return $results;
@@ -938,6 +945,7 @@ class database
 					//Result cached and current
 					$this->sql_cache_hit = true;
 					++$this->sql_cache_hits;
+					$this->site_sql_count ++;
 					$this->sql_log($this->site_sql_count, $sql, 0, true);
 
 					if(!$result['result']) { $result['result'] = NULL; }

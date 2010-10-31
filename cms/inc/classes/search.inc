@@ -114,19 +114,25 @@ class Search
 		$this->boolean = $boolean;
 		$this->string = strtolower($string);
 		$this->tokens = explode(' ', $this->string);
-		$this->get_results();
-		if($this->return_summary)
+		if(strlen($this->string) > 0)
 		{
-			$this->highlight();
+			$this->get_results();
+			if($this->return_summary)
+			{
+				$this->highlight();
+			}
 		}
 		return($this->build_xml());
 	}
 
 	private function highlight()
 	{
-		foreach($this->results as $key => $result){
-			$this->results[$key]['html'] = $this->process_search_text(stripslashes($result['search']));
-			unset($this->results[$key]['search']);
+		if(isset($this->results[0]))
+		{
+			foreach($this->results as $key => $result){
+				$this->results[$key]['html'] = $this->process_search_text(stripslashes($result['search']));
+				unset($this->results[$key]['search']);
+			}
 		}
 	}
 

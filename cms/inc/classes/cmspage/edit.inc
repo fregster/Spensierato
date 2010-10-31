@@ -3,7 +3,10 @@ class cmspage_edit extends cmspage
 {
 	public function initalise()
 	{
-		$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->value[1]));
+		if(isset($this->value[1]) && is_numeric($this->value[1]))
+		{
+			$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->value[1]));	
+		}
 
 		$this->value = CMS::Singleton()->path_vars;
 

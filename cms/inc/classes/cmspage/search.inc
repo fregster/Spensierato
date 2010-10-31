@@ -38,11 +38,11 @@ class cmspage_search extends cmspage
 		if(get::variable('ajax', 'isset'))
 		{
 			header('content-type: text/xml');
-			die(search::singleton()->search($_GET['searchtext']));
+			die(search::singleton()->search(get::variable('searchtext')));
 		}
 		
 		$element = Element::type('elementSearchResults');
-		$element->build('results', array('raw' => common::strip_external_xml_decleration(search::singleton()->search($_GET['searchtext']))));
+		$element->build('results', array('raw' => common::strip_external_xml_decleration(search::singleton()->search(get::variable('searchtext')))));
 
 		Render::Singleton()->render_html(Content::Singleton()->build());
 	}	

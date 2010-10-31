@@ -205,7 +205,7 @@ class CMS
 
 	public function delete_session()
 	{
-		$_SESSION = @array(); //Clear the session data
+		@$_SESSION = @array(); //Clear the session data
 
 		if (isset($_COOKIE[session_name()])) {
 		    setcookie(session_name(), '', time()-42000, '/');

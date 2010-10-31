@@ -2,15 +2,20 @@
 
 <xsl:element name="script">
 <xsl:attribute name="type">text/javascript</xsl:attribute>
-<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" /><xsl:choose>					
-<xsl:when test="/page/user/id != 0">
-<!-- User logged in -->
+<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />	
 <xsl:choose>
-<xsl:when test="/page/options/admin_mode = 1"><!-- User logged in and in admin mode-->mootools/mootools-1.2.4-core-yc.js,mootools/mootools-1.2.4.4-more-yc.js,public.js,logged_in.js,admin.js</xsl:when>
-<xsl:otherwise><!-- User logged in and NOT in admin mode-->mootools/mootools-1.2.4-core-yc.js,mootools/mootools-1.2.4.4-more-yc.js,public.js,logged_in.js</xsl:otherwise>
+	<xsl:when test="/page/settings/js_use_yui = 1">mootools/mt-c-yc.js,mootools/mt-m-yc.js</xsl:when>
+	<xsl:otherwise>mootools/mt-c.js,mootools/mt-m.js</xsl:otherwise>
 </xsl:choose>
-</xsl:when>
-<xsl:otherwise><!-- User Not logged in -->mootools/mootools-1.2.4-core-yc.js,mootools/mootools-1.2.4.4-more-yc.js,public.js</xsl:otherwise>
+<xsl:choose>		
+	<xsl:when test="/page/user/id != 0">
+		<!-- User logged in -->
+		<xsl:choose>
+			<xsl:when test="/page/options/admin_mode = 1"><!-- User logged in and in admin mode-->,public.js,logged_in.js,admin.js</xsl:when>
+			<xsl:otherwise><!-- User logged in and NOT in admin mode-->,public.js,logged_in.js</xsl:otherwise>
+		</xsl:choose>
+	</xsl:when>
+	<xsl:otherwise><!-- User Not logged in -->,public.js</xsl:otherwise>
 </xsl:choose>
 </xsl:attribute>
 </xsl:element>

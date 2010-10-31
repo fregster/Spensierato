@@ -68,6 +68,10 @@ class cmspage //This relies on CurentPage been loaded
 
 	public function title()
 	{
+		if(isset($this->page_details['title']))
+		{
+			return $this->page_details['title'];
+		}
 		return null;
 	}
 

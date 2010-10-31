@@ -150,6 +150,8 @@ Settings::Singleton()->new_setting('max_file_size', 25000000);
 //3 use JSMin
 Settings::Singleton()->new_setting('js_minify', 0, false, true);
 
+//Use YUI compressed version of MooTools
+Settings::Singleton()->new_setting('js_use_yui', 0, true, true);
 
 //Setting js_cache
 //This setting allows the javascript once built to be cached on the file system

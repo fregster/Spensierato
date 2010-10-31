@@ -191,7 +191,7 @@ class Template
 			
 			if(!isset($css['mtime']) || $css['mtime'] != $css_m_time || $css['paths'] != $css_paths)
 			{
-				$css = '@CHARSET "UTF-8";';
+				$css = '@charset "UTF-8";';
 				foreach($css_paths as $path)
 				{
 					$css .= str_replace('@CHARSET "UTF-8";', '', file_get_contents($path));

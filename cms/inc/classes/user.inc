@@ -180,21 +180,26 @@ class user
 	}
 
 	private function set_user_details($force = false)
-	{
-		$user_data = Database::Singleton()->sql_select_first(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
-
-		if($user_data != NULL)
+	{		
+		if(isset($this->userid) && $this->userid != 0)
 		{
-			$this->user_details = json_decode($user_data['data'], TRUE);
+			$user_data = Database::Singleton()->sql_select_first(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
+			if(!isset($user_data) or $user_data != NULL)
+			{
+				$this->user_details = json_decode($user_data['data'], TRUE);
+			}
+			
+			$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
+			$this->user_details['username'] = $user_details2['username'];
+			$this->user_details['administrator'] = $user_details2['admin'];
+	
+			$this->lists = Lists::Singleton()->get_lists_for_user($this->userid);
 		}
-
-		$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
-
-		$this->user_details['id'] = $this->userid;
-		$this->user_details['username'] = $user_details2['username'];
-		$this->user_details['administrator'] = $user_details2['admin'];
-
-		$this->lists = Lists::Singleton()->get_lists_for_user($this->userid);
+		
+		if(!isset($this->user_details['id']))
+		{
+			$this->user_details['id'] = $this->userid;
+		}
 	}
 
 	//Returns true on sucsess or error text on fail

@@ -82,8 +82,7 @@ div.autosearch ul li a
 	color: #ccc;
 	display: block;
 	text-decoration: none;
-	background-color: transparent;
-	text-shadow: #000 0px 0px 5px;
+	/* text-shadow: #000 0px 0px 5px; */
 	position: relative;
 	padding: 0;
 	width: 100%;
@@ -134,7 +133,6 @@ div.autosearch ul li.as_highlight a span
 div.autosearch ul li a .tl,
 div.autosearch ul li a .tr
 {
-	background-image: transparent;
 	background-repeat: no-repeat;
 	width: 6px;
 	height: 6px;

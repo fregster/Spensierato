@@ -37,9 +37,9 @@ class Database_mysql extends Database
 		{
 			$score = 10;
 		}
-		//Mysql search
-		$sql = 'SELECT '.$this->sql_build_select_string($select).', (MATCH('.$this->col_quote.$this->sql_clean_input($col).$this->col_quote.") AGAINST('".$this->sql_clean_input($query)."'".$boolean.") * 10) AS score FROM `".$this->prefix. $this->sql_clean_input($table).$this->col_quote.' WHERE ( MATCH('.$this->col_quote.$this->sql_clean_input($col).$this->col_quote.") AGAINST('".$this->sql_clean_input($query)."'".$boolean.') '.$where.' ) ORDER BY score '.$order.' LIMIT '.$from.', '.$to;
 		
+		//Mysql search
+		$sql = 'SELECT '.$this->sql_build_select_string($select).', (MATCH('.$this->sql_clean_input($col, $this->col_quote).') AGAINST('.$this->sql_clean_input($query, '\'').$boolean.') * 10) AS score FROM '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).' WHERE ( MATCH('.$this->sql_clean_input($col, $this->col_quote).') AGAINST('.$this->sql_clean_input($query, '\'').$boolean.') '.$where.' ) ORDER BY score '.$order.' LIMIT '.$from.', '.$to;
 		return database_execution::singleton()->sql_select_exe_run($this->sql_exe($sql, NULL));
 	}
 	

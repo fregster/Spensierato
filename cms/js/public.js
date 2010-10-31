@@ -60,6 +60,8 @@ function init(){
 if(initalised!=true){
 stepFontSize(readCookie("fontSize"));
 notes=$("notifications");
+var se = document.getElementById('searchtext'); 
+se.setAttribute("autocomplete", "off"); 
 autoSearch=$("ajaxSearchResults");
 //notes.fade.bind(notes,[0]);
 rounded();

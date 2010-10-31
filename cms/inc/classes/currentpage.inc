@@ -53,7 +53,7 @@ class currentPage
 
 	public function page_information()
 	{
-		return $this->page_details;
+		return cmspage::Singleton()->page_information();
 	}
 
 	public function id()
@@ -67,7 +67,7 @@ class currentPage
 
 	public function title()
 	{
-		return $this->page_details['title'];
+		return cmspage::Singleton()->title();
 	}
 
 	public function type()
@@ -77,7 +77,10 @@ class currentPage
 
 	private function get_page_details()
 	{
-		$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->id));
+		if(isset($this->id) && is_numeric($this->id))
+		{
+			$this->page_details = cmspage::Singleton()->page_information();	
+		}
 	}
 
 	private function command_lookup($command)
@@ -184,7 +187,15 @@ class currentPage
 			while($parents_exist == true)
 			{
 				$parents_exist = false;
-				$result = Database::Singleton()->sql_select(array('id', 'parent_id'), 'tbl_pages', array('id'), array($current_page));
+				if($current_page == $this->id)
+				{
+					$result = cmspage::Singleton()->page_information();
+				}
+				else
+				{
+					$result = Database::Singleton()->sql_select(array('id', 'parent_id'), 'tbl_pages', array('id'), array($current_page));
+				}
+				
 				if(isset($result[0]))
 				{
 					if(isset($result[0]['parent_id']))
@@ -249,6 +260,10 @@ class currentPage
 
 	public function get_page($id)
 	{
+		if(!isset($id) || is_numeric($id))
+		{
+			return false;
+		}
 		$page = Database::Singleton()->sql_select_first(NULL, 'tbl_pages', array('id'), array($id));
 		return $page;
 

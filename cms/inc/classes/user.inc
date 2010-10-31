@@ -132,7 +132,11 @@ class user
 
 	public function is_admin()
 	{
-		return $this->user_details['administrator'];
+		if($this->is_logged_in())
+		{
+			return $this->user_details['administrator'];
+		}
+		return false;
 	}
 
 	private function create_password($password = NULL)

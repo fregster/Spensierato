@@ -17,7 +17,7 @@ class database_execution_pdo extends database_execution
 				unset($dsn['database']);
 				if(@!defined('DATABASE_INSTALL_MODE') || DATABASE_INSTALL_MODE != true)
 				{
-					if(!file_exists($host)){ $this->sql_error('Database offline '.$host); }
+					if(!file_exists($host) || !is_writable($host)){ $this->sql_error('Database offline '.$host); }
 				}
 			}
 			if(isset($dsn['database'])){
@@ -26,12 +26,12 @@ class database_execution_pdo extends database_execution
 				$connection_String = $dsn['phptype'].':'.$host;
 			}
 
-			$this->db_backend = new PDO($connection_String, $dsn['username'], $dsn['password'], array(PDO::FETCH_ASSOC => PDO::ERRMODE_EXCEPTION));
+			$this->db_backend = @new PDO($connection_String, $dsn['username'], $dsn['password'], array(PDO::FETCH_ASSOC => PDO::ERRMODE_EXCEPTION));	
 			if(!$this->db_backend)
 			{
 				$error = 'Unable to connect to the database';
 				$this->sql_error($error);
-			}	
+			}
 		}	    
 		catch(PDOException $e)
 	    {

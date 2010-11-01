@@ -7,7 +7,11 @@ class database_execution_mdb2 extends database_execution
 	{
 		//Load the MDB2 code
 		//Doing this here only loads the code if a DB query is actually going to be done
-		require_once 'MDB2.php';
+		if(!@include 'MDB2.php')
+		{
+			$this->sql_error('Unable to load MDB2, ensure the class is available. Hint try installing the pear class');
+			exit;
+		}
 		
 		$host = $dsn['hostspec'];
 		if($dsn['phptype'] != 'sqlite')
@@ -19,7 +23,7 @@ class database_execution_mdb2 extends database_execution
 			unset($dsn['database']);
 			if(@!defined('DATABASE_INSTALL_MODE') || DATABASE_INSTALL_MODE != true)
 			{
-				if(!file_exists($host)){ $this->sql_error('Database offline '.$host); }
+				if(!file_exists($host) || !is_writable($host)){ $this->sql_error('Database offline '.$host); }
 			}
 		}
 		if(isset($dsn['database'])){
@@ -28,7 +32,12 @@ class database_execution_mdb2 extends database_execution
 			$connection_String = $dsn['phptype'].':'.$host;
 		}
 		
-		$this->db_backend = MDB2::singleton($dsn, $options);
+		$this->db_backend = @MDB2::singleton($dsn, $options);
+		if(!$this->db_backend)
+		{
+			$error = 'Unable to connect to the database';
+			$this->sql_error($error);
+		}
 
 		if(!$this->db_backend)
 		{

@@ -874,15 +874,7 @@ class database
 	}
 
 	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)
-	{
-//		$backtrace_sql = "SELECT * FROM `cmv_tbl_pages` WHERE ((`id` = '')) LIMIT 1";
-//		if($sql == $backtrace_sql)
-//		{
-//			echo('<p>'. $sql . '</p>');
-//			var_dump(debug_backtrace());
-//			die();
-//		}
-		
+	{		
 		$results = false;
 		//Check cache if not explecitly set not to
 		if(!$no_cache)
@@ -893,15 +885,29 @@ class database
 		//If cache fails or not checked do SQL query
 		if($results === false)
 		{
+			$values = $this->sql_values;
 			$results = $this->db->sql_select_exe_run($this->sql_exe($sql, $this->sql_values));
 
 			//Cache the result
-			$this->sql_cache($sql, $this->sql_values, $results);
+			$this->sql_cache($sql, $values, $results);
 		}
 
 		$this->sql_values = array();
 		$this->sql_prepared_count = 1;
 		return $results;
+	}
+	
+	private function build_sql_cache_string($sql, $values)
+	{
+		if($values != null)
+		{
+			if(isset($values) && is_array($values))
+			{
+				$sql .= '-'.sha1(implode('-',$values));
+			}
+		}
+		
+		return $sql;
 	}
 
 	private function sql_check_cache($sql, $values)
@@ -911,10 +917,9 @@ class database
 			//Set cache hit to false only set true if actually a hit
 			$this->sql_cache_hit = false;
 			$result = false;
-			if(isset($values) && is_array($values))
-			{
-				$sql .= implode('-',$values);
-			}
+			
+			$sql = $this->build_sql_cache_string($sql, $values);
+			
 			if($this->external_cache)
 			{
 				$result = persistantcache::Singleton()->get($sql);
@@ -972,23 +977,16 @@ class database
 
 	private function sql_cache($sql, $values, $result)
 	{
+		$sql = $this->build_sql_cache_string($sql, $values);
+
 		if($this->external_cache)
 		{
 			persistantcache::Singleton()->save($sql, array('time' => $this->time, 'result' => $result), $this->sql_cache_max_time);
 		}
 		else
 		{
-			if($values == NULL)
-			{
-				$_SESSION['sql_cache'][$sql]['time'] = $this->time;
-				$_SESSION['sql_cache'][$sql]['result'] = $result;
-			}
-			else
-			{
-				//This was a prepared statment so its results are cached slightly diffrently
-				$_SESSION['sql_cache'][$sql][$values]['time'] = $this->time;
-				$_SESSION['sql_cache'][$sql][$values] = $result;
-			}
+			$_SESSION['sql_cache'][$sql]['time'] = $this->time;
+			$_SESSION['sql_cache'][$sql]['result'] = $result;
 		}
 	}
 
@@ -1041,7 +1039,7 @@ class database
 			$i++;
 		}
 		$sql = rtrim($sql, ',') .')';
-		echo($sql.'<br/>');
+
 		$this->sql_exe($sql, NULL, true, true);
 	}
 	

@@ -47,6 +47,8 @@ class CMS
 		$this->time = time();
 		$this->microtime = microtime();
 
+		ob_start();
+				
 		//Start the session
 		$this->start_session();
 
@@ -103,9 +105,7 @@ class CMS
 	* It sets up all the vars required to use the run_cms method
 	*/
 	public function start()
-	{
-		ob_start();
-		
+	{		
 		//If required include PHPIDS
 //		if(Settings::singleton()->get_setting('phpids'))
 //		{

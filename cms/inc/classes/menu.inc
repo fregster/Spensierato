@@ -82,6 +82,7 @@ class Menu
 				}
 			}
 		}
+
 		if(!$toppage)
 		{
 			//pop the last parent off as it should be in the top array then reverse it

@@ -90,9 +90,11 @@ class cmspage //This relies on CurentPage been loaded
 	
 	public function menu_id()
 	{
-		if(is_int($this->id()))
+		$id = intval($this->value);
+		
+		if(is_int($id))
 		{
-			return $this->id();
+			return $id;
 		}
 	
 		return $this->get_homepage();

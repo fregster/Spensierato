@@ -9,6 +9,7 @@ class cmspage //This relies on CurentPage been loaded
 	protected $path;
 	protected $page_details;
 	protected $id = NULL;
+	protected $homepage;
 
 	public static function Singleton($force_type = null)
 	{
@@ -56,6 +57,45 @@ class cmspage //This relies on CurentPage been loaded
 		{
 			die('500 Unable in include any content because type (' . $this->type . ') unknown  (' . $this->value.')');
 		}
+	}
+	
+	public function get_homepage()
+	{
+		if(isset($this->homepage))
+		{
+			return $this->homepage;
+		}
+		
+		if(Settings::Singleton()->get_setting('homepage'))
+		{
+			$this->homepage = Settings::Singleton()->get_setting('homepage');
+		}
+		else
+		{
+			$page_details = database::singleton()->sql_select_first(array('*'), 'tbl_pages', NULL, NULL, array('id'), 'ASC');
+
+			if(is_numeric($page_details['id']))
+			{
+				$this->homepage = $page_details['id'];
+			}
+			else
+			{
+				//FIXME currently wont work with an empty DB
+				$this->homepage = 0;
+			}
+		}
+		
+		return $this->homepage;
+	}
+	
+	public function menu_id()
+	{
+		if(is_int($this->id()))
+		{
+			return $this->id();
+		}
+	
+		return $this->get_homepage();
 	}
 
 	public function id()

@@ -25,13 +25,16 @@ class database_execution_pdo extends database_execution
 			} else {
 				$connection_String = $dsn['phptype'].':'.$host;
 			}
-
+			
+			$old_track = ini_set('track_errors', '1');
 			$this->db_backend = @new PDO($connection_String, $dsn['username'], $dsn['password'], array(PDO::FETCH_ASSOC => PDO::ERRMODE_EXCEPTION));	
+			
 			if(!$this->db_backend)
 			{
-				$error = 'Unable to connect to the database';
+				$error = 'Unable to connect to the database '.$php_errormsg;
 				$this->sql_error($error);
 			}
+			ini_set('track_errors', $old_track);
 		}	    
 		catch(PDOException $e)
 	    {
@@ -81,7 +84,11 @@ class database_execution_pdo extends database_execution
 				if($values == NULL)
 				{
 					//Values have not been passed so do simple SQL exec
-					$resultset = $this->read->query($sql);
+					$resultset = array();
+					foreach($this->read->query($sql) as $row)
+					{
+						$resultset[] = $row;
+					}
 				}
 				else
 				{
@@ -102,13 +109,10 @@ class database_execution_pdo extends database_execution
 			unset($sql);
 			if(isset($stmt))
 			{
-				var_dump($values);
 				$result = $stmt->execute($values);
 
 				if($result === false)
 				{
-					var_dump($stmt);
-					var_dump($result);
 					$error = 'Failed to issue query<br />';
 				}
 				else

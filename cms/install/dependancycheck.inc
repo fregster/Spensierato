@@ -2,7 +2,7 @@
 require_once($include_path.'/cms/inc/static/functions.inc');
 
 $required = array('session', 'SimpleXML', 'mysqli', 'hash', 'xml', 'xmlreader', 'xmlwriter', 'xsl');
-$optional = array('ffmpeg', 'gd', 'mcrypt', 'tidy');
+$optional = array('ffmpeg', 'gd', 'mcrypt', 'tidy', 'pdo', 'pdo_mysql', 'pdo_sqlite');
 $pear = array('mdb2' => 'mdb2', 'sqlite' => 'MDB2_Driver_sqlite');
 
 $req_missing = array();

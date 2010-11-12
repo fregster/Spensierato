@@ -46,7 +46,7 @@ class Menu
 	public function build()
 	{
 		//Get current page details
-		$this->current_page = cmspage::Singleton()->id();
+		$this->current_page = cmspage::Singleton()->menu_id();
 
 		$this->current_page_details = cmspage::Singleton()->page_information();
 
@@ -57,8 +57,12 @@ class Menu
 		$this->get_parents();
 
 		//Get top level links of current tree
-		$menu_array['top'] = $this->get_children_of($this->path[0]);
-
+		if(!isset($menu_array) || !is_array($menu_array)){ $menu_array = array(); }
+		
+		if(isset($this->path[0]))
+		{
+			$menu_array['top'] = $this->get_children_of($this->path[0]);
+		}
 		//Get children of current page
 		$this->children = $this->get_children();
 
@@ -68,7 +72,7 @@ class Menu
 
 		//Test if we are on a top page and so don't need parents and parallel links
 		$toppage = false;
-		if(is_array($menu_array['top']))
+		if(isset($menu_array['top']) && is_array($menu_array['top']))
 		{
 			foreach($menu_array['top'] as $top)
 			{
@@ -138,11 +142,14 @@ class Menu
 			}
 			
 			$xml = '';
-			foreach($this->path as $key => $id)
+			if(is_array($this->path) && is_array($menu_link_map))
 			{
-				if(isset($menu_link_map[$id]))
+				foreach($this->path as $key => $id)
 				{
-					$xml .= '<menu_item sort="'.$key.'" id="'.$id.'">'.$menu_link_map[$id].'</menu_item>';
+					if(isset($id) && isset($menu_link_map[$id]))
+					{
+						$xml .= '<menu_item sort="'.$key.'" id="'.$id.'">'.$menu_link_map[$id].'</menu_item>';
+					}
 				}
 			}
 			
@@ -153,25 +160,31 @@ class Menu
 
 	public function get_path_to($id)
 	{
-		//The id of the current page.
-		$current_record = Database::Singleton()->sql_select_first(array('parent_id'), 'tbl_pages', array('id'), array($id));
-
-		//The array of ids to the current page.
-		$path = array();
-		while(true)
+		$id = intval($id);
+		if(is_int($id))
 		{
-			$record = Database::Singleton()->sql_select_first(array('parent_id'), 'tbl_pages', array('id'), array($id));
-			if(is_null($record['parent_id']))
+			//The id of the current page.
+			$current_record = Database::Singleton()->sql_select_first(array('parent_id'), 'tbl_pages', array('id'), array($id));
+	
+			//The array of ids to the current page.
+			$path = array();
+			while(true)
 			{
-				array_push($path,$id);
-				return $path;
-			}
-			else
-			{
-				array_push($path,$id);
-				$id = $record['parent_id'];
+				$record = Database::Singleton()->sql_select_first(array('parent_id'), 'tbl_pages', array('id'), array($id));
+				if(is_null($record['parent_id']))
+				{
+					array_push($path,$id);
+					return $path;
+				}
+				else
+				{
+					array_push($path,$id);
+					$id = $record['parent_id'];
+				}
 			}
 		}
+
+		return array();
 	}
 
 	private function get_children()

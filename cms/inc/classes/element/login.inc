@@ -17,7 +17,7 @@ class element_Login extends element_Default
 	{
 		if(Settings::Singleton()->get_setting('login_capthca'))
 		{
-			if((Settings::Singleton()->get_setting('login_capthca_remember')) and (cookie::Singleton()->get_cookie_value('username') != NULL) )
+			if((Settings::Singleton()->get_setting('login_capthca_remember')) && (cookie::Singleton()->get_cookie_value('username') != NULL)  || !Capthca::enabled())
 			{
 				$template = 'templates/login.html';
 			}

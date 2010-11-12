@@ -149,7 +149,8 @@ class Content
 
 	public function set_attribute($name, $value)
 	{
-		$this->page->setAttribute($name, utf8_encode($value));
+		if(is_array($value)) { $value = reset($value); }
+		$this->page->setAttribute($name, @utf8_encode($value));
 	}
 
 	private function attach_menu()

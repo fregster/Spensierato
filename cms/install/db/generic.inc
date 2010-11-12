@@ -30,12 +30,26 @@ if(!isset($increment))
 	$increment = 'AUTO_INCREMENT';
 }
 
+if(!isset($varchar))
+{
+	$varchar = 'VARCHAR';
+}
+
+function varchar($length)
+{
+	global $varchar;
+	if($varchar === 'TEXT'){
+		return $varchar;
+	}
+	return $varchar.'('.$length.')';
+}
+
 $tables['tbl_commands'] = array(
 								'cols_define' =>
 									array(
-										'command' => 'VARCHAR(32) NOT NULL',
-										'type' => 'VARCHAR(32) NOT NULL',
-										'instruction' => 'VARCHAR(256) NOT NULL'
+										'command' => varchar(32).' NOT NULL',
+										'type' => varchar(32).' NOT NULL',
+										'instruction' => varchar(256).' NOT NULL'
 									),
 								'primary_key' => 'command',
 								);
@@ -46,7 +60,7 @@ $tables['tbl_elements_revisions'] = array(
 													'id' => $int.' UNSIGNED NOT NULL '.$increment,
 													'element_id' => $int.' UNSIGNED NOT NULL',
 													'data' => 'TEXT',
-													'title' => 'VARCHAR(128) NOT NULL',
+													'title' => varchar(128).' NOT NULL',
 													'revisor' => $int.' UNSIGNED NOT NULL',
 													'revised' => $int.' UNSIGNED NOT NULL',
 													'approved' => $tiny_int." DEFAULT '0'",
@@ -59,7 +73,7 @@ $tables['tbl_elements'] = array(
 								'cols_define' =>
 									array(
 										'id' => $int.' UNSIGNED NOT NULL '.$increment,
-										'type' => 'VARCHAR(32) NOT NULL',
+										'type' => varchar(32).' NOT NULL',
 										'created' => $int." UNSIGNED DEFAULT '0'",
 										'creator' => $int.' UNSIGNED NOT NULL',
 										'edited' => $int.' UNSIGNED',
@@ -77,7 +91,7 @@ $tables['tbl_elements_data'] = array(
 									'cols_define' =>
 										array(
 											'id' => $int.' UNSIGNED NOT NULL',
-											'title' => 'VARCHAR(128) NOT NULL DEFAULT "Title"',
+											'title' => varchar(128).' NOT NULL DEFAULT "Title"',
 											'data' => 'TEXT NOT NULL',
 											),
 									'primary_key' => 'id',
@@ -89,7 +103,7 @@ $tables['tbl_search'] = array(
 											'search_id' => $int.' UNSIGNED NOT NULL '.$increment,
 											'id' => $int.' UNSIGNED NOT NULL',
 											'file' => $int." UNSIGNED DEFAULT '0'",
-											'title' => 'VARCHAR(128) NOT NULL',
+											'title' => varchar(128).' NOT NULL',
 											'search' => 'TEXT NOT NULL',
 											'keywords' => 'TEXT',
 											'indexed' => $int." UNSIGNED DEFAULT '0'",
@@ -104,7 +118,7 @@ $tables['tbl_elements_draft'] = array(
 											'element_id' => $int.' UNSIGNED NOT NULL',
 											'user_id' => $int.' UNSIGNED NOT NULL',
 											'ts' => $int.' UNSIGNED NOT NULL',
-											'title' => 'VARCHAR(128) NOT NULL',
+											'title' => varchar(128).' NOT NULL',
 											'data' => 'TEXT NOT NULL'
 											),
 									'primary_key' => 'id',
@@ -114,7 +128,7 @@ $tables['tbl_list_data'] = array(
 								'cols_define' =>
 									array(
 										'id' => $int.' UNSIGNED NOT NULL '.$increment,
-										'name' => 'VARCHAR(128) NOT NULL',
+										'name' => varchar(128).' NOT NULL',
 										'valid_from' => $int.' UNSIGNED',
 										'valid_to' => $int.' UNSIGNED NOT NULL',
 										'created' => $int.' UNSIGNED NOT NULL',
@@ -156,7 +170,7 @@ $tables['tbl_pages'] = array(
 								'parent_id' => $int.' UNSIGNED NOT NULL',
 								'append_tags' => 'TEXT',
 								'menu_type' => $tiny_int." DEFAULT '0'",
-								'title' => "VARCHAR(64) NOT NULL DEFAULT 'New Page'",
+								'title' => varchar(64)." NOT NULL DEFAULT 'New Page'",
 								'icon' => $tiny_int.' UNSIGNED',
 								'visible' => $tiny_int.' UNSIGNED NOT NULL DEFAULT 0',
 								'deleted' => $tiny_int.' UNSIGNED NOT NULL DEFAULT 0',
@@ -181,8 +195,8 @@ $tables['tbl_security'] = array(
 $tables['tbl_settings'] = array(
 								'cols_define' =>
 								array(
-									'setting' => 'VARCHAR(64) NOT NULL',
-									'value' => 'VARCHAR(128) NOT NULL'
+									'setting' => varchar(64).' NOT NULL',
+									'value' => varchar(128).' NOT NULL'
 									),
 								'primary_key' => 'setting',
 								);
@@ -201,11 +215,11 @@ $tables['tbl_users'] = array(
 							'cols_define' =>
 							array(
 								'id' => $int.' UNSIGNED NOT NULL '.$increment,
-								'username' => 'VARCHAR(32) NOT NULL',
-								'password' => 'VARCHAR(64)',
-								'hash_type' => 'VARCHAR(8)',
+								'username' => varchar(32).' NOT NULL',
+								'password' => varchar(64),
+								'hash_type' => varchar(8),
 								'last_login' => $int.' UNSIGNED',
-								'session_id' => 'VARCHAR(64)',
+								'session_id' => varchar(64),
 								'admin' => $tiny_int." UNSIGNED DEFAULT '0'",
 								'login_attempts' => $tiny_int." UNSIGNED DEFAULT '0'"
 								),
@@ -227,7 +241,7 @@ $tables['tbl_tags_to_pages'] = array(
 								array(
 									'id' => $int.' UNSIGNED NOT NULL '.$increment,
 									'page_id' => $int.' UNSIGNED NOT NULL',
-									'tag' => 'VARCHAR(64)',
+									'tag' => varchar(64),
 									),
 								'primary_key' => 'id',
 								);
@@ -236,7 +250,7 @@ $tables['tbl_tags_to_elements'] = array(
 								array(
 									'id' => $int.' UNSIGNED NOT NULL '.$increment,
 									'element_id' => $int.' UNSIGNED NOT NULL',
-									'tag' => 'VARCHAR(64)',
+									'tag' => varchar(64),
 									),
 								'primary_key' => 'id',
 								);
@@ -244,10 +258,10 @@ $tables['tbl_orders'] = array(
 								'cols_define' =>
 								array(
 									'id' => $int.' UNSIGNED NOT NULL '.$increment,
-									'email' => 'VARCHAR(64)',
+									'email' => varchar(64),
 									'data' => 'TEXT NOT NULL',
 									'paid' => $tiny_int.' UNSIGNED DEFAULT 0',
-									'payment_method' => 'VARCHAR(64)',
+									'payment_method' => varchar(64),
 									),
 								'primary_key' => 'id',
 								);

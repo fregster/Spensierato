@@ -62,15 +62,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	//detect the server OS and set the doc root accordingly.
 	if (stripos(PHP_OS, 'darwin') !== FALSE) {
 		$os = 'mac';
-		$doc_root_prefix = ''; //OSX has a unix-type folder structure
+		$doc_root_prefix = $GLOBALS['site_root'].'/'; //OSX has a unix-type folder structure
 	}
 	else if(stripos(PHP_OS, 'win') !== FALSE){
 		$os = 'windows';
-		$doc_root_prefix = $GLOBALS['site_root'].'/cms/';
+		$doc_root_prefix = $GLOBALS['site_root'].'/';
 	}
 	else{
 		$os = 'unix';
-		$doc_root_prefix = '';
+		$doc_root_prefix = $GLOBALS['site_root'].'/';
 	}
 	
 	if(!post::variable('cms_folder_use_custom'))
@@ -79,22 +79,22 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		if(!is_writeable($doc_root_prefix.'writeable'))
 		{
 			debug('Unable to create folders, please create them manually after the install');
+			debug($doc_root_prefix.'writeable was not a writeable folder' );
 		}
-		else
-		{
-			$dir_logs = realpath($doc_root_prefix.'writeable'.DS.'logs');
-			$dir_uploads = realpath($doc_root_prefix.'writeable'.DS.'uploads');
-			$dir_uploads_tmp = realpath($doc_root_prefix.'writeable'.DS.'uploads'.DS.'tmp');
-			$dir_uploads_orig_images = realpath($doc_root_prefix.'writeable'.DS.'uploads'.DS.'original_images');
-			$dir_cache = realpath($doc_root_prefix.'writeable'.DS.'cache');
-			$dir_search = realpath($doc_root_prefix.'writeable'.DS.'search');
-			
-			@mkdir($dir_logs);
-			@mkdir($dir_uploads);
-			@mkdir($dir_uploads_tmp);
-			@mkdir($dir_uploads_orig_images);
-			@mkdir($dir_cache);
-		}
+
+		$dir_logs = realpath($doc_root_prefix.'writeable'.DS.'logs');
+		$dir_uploads = realpath($doc_root_prefix.'writeable'.DS.'uploads');
+		$dir_uploads_tmp = realpath($doc_root_prefix.'writeable'.DS.'uploads'.DS.'tmp');
+		$dir_uploads_orig_images = realpath($doc_root_prefix.'writeable'.DS.'uploads'.DS.'original_images');
+		$dir_cache = realpath($doc_root_prefix.'writeable'.DS.'cache');
+		$dir_search = realpath($doc_root_prefix.'writeable'.DS.'search');
+		
+		@mkdir($dir_logs);
+		@mkdir($dir_uploads);
+		@mkdir($dir_uploads_tmp);
+		@mkdir($dir_uploads_orig_images);
+		@mkdir($dir_cache);
+
 	}
 	else
 	{
@@ -188,7 +188,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 											'database' => $database),
 											NULL,
 											array('Manager'));
-
 	debug('Connection replaced');
 	
 	//Include the file which processes the SQL code

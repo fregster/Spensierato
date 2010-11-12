@@ -129,7 +129,7 @@ class database
 
 	public static function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{
-		//A DSN has been set so create the connection with the specified options
+		//A DSN has been set so create the connection with the specified options		
 		return database_execution::factory()->custom_db_object($dsn, $options, $mods);
 	}
 
@@ -408,13 +408,12 @@ class database
 	{
 		$sql = $this->sql_max_field_build($table, $field, $where_fields, $where_values);
 		$result = $this->sql_select_exe($sql, NULL, TRUE);
-		if ($result == NULL) {
+		if ($result == NULL || !isset($result[0]['max( sort )'])) {
 			return 0;
 		}
-		else{
+		else {
 			return $result[0]['max( sort )'];
 		}
-
 	}
 
 	protected function sql_max_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
@@ -816,6 +815,7 @@ class database
 	//$Values is for when I get around to implimenting MDB2 properly!
 	protected function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{
+		//echo($sql.'<br />');
 		$this->db->sql_connect();
 
 		if($destroy_cache)

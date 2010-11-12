@@ -159,12 +159,6 @@ Settings::Singleton()->new_setting('js_use_yui', 0, true, true);
 //The folder with in the CMS 'writable' or '/tmp/cms' needs to be writeable by the web server
 Settings::Singleton()->new_setting('js_cache', false, false, true);
 
-//Setting js_use_growler
-//This setting is to include the growler style notifications
-//Aditional JS will be loaded to enable this
-//Fall back is to use Mootools Fade bar which also support's colours :-)
-Settings::singleton()->new_setting('js_use_growler', true, false, false, true);
-
 Settings::Singleton()->new_setting('css_minify', true, false, true);
 
 //Setting search

@@ -187,14 +187,15 @@ class currentPage
 			while($parents_exist == true)
 			{
 				$parents_exist = false;
-				if($current_page == $this->id)
-				{
-					$result = cmspage::Singleton()->page_information();
-				}
-				else
-				{
+//FIXME:	URGENT This currently causes a loop 
+//				if($current_page == $this->id)
+//				{
+//					$result = cmspage::Singleton()->page_information();
+//				}
+//				else
+//				{
 					$result = Database::Singleton()->sql_select(array('id', 'parent_id'), 'tbl_pages', array('id'), array($current_page));
-				}
+//				}
 				
 				if(isset($result[0]))
 				{

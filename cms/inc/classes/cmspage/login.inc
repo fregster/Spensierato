@@ -3,6 +3,8 @@ class cmspage_login extends cmspage_html
 {
 	public function initalise()
 	{
+		session::Singleton();
+		
 		$this->value = CMS::Singleton()->path_vars(1);
 		return parent::initalise();
 	}

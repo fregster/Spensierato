@@ -50,7 +50,7 @@ class enhancedLogin extends user
 			die('1');
 		}
 
-		CMS::Singleton()->delete_session();
+		session::Singleton()->delete_session();
 		die('0');
 	}
 

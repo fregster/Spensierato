@@ -1,6 +1,8 @@
 <?php
 //uncomment to force an install
 //	$force_install = true;
+//default is to install the cms
+$install = true;
 date_default_timezone_set('UTC');
 function exception_handler($exception)
 {
@@ -75,9 +77,6 @@ try
 
 	//site root is the filesystem root ie /var/www/spensierato/
 	$GLOBALS['site_root'] = get_file_root();
-
-	//default is to install the cms
-	$install = true;
 
 	//Include the Site setup code
 	if(is_file(file_root().'/spensierato_setup.inc'))

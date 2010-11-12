@@ -231,6 +231,7 @@ foreach ($tables as $table => $data){
 	$sql = "CREATE TABLE $table ($cols $primary_key $keys) $engine $charset;";
 
 	//execute sql
+	//echo($sql);
 	$result = $db->query($sql);
 
 	if(!$result)

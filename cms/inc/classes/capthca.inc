@@ -23,10 +23,19 @@ abstract class Capthca
 *
 */
 
+	public static function enabled()
+	{
+		if(!function_exists('imagettfbbox'))
+	   	{
+	   		return false;
+	   	}
+	   	return true;
+	}
+	
 	public static function create_Images($width='120',$height='40')
    {
-   		//Ensure teh GD lib's are available
-	   	if(!function_exists('imagettfbbox'))
+   		//Ensure the GD lib's are available
+	   	if(!Capthca::enabled())
 	   	{
 	   		return exit;
 	   	}
@@ -75,7 +84,7 @@ abstract class Capthca
 
 	public static function Code_check($security_code)
    {
-   		if(Settings::Singleton()->get_setting('login_capthca'))
+   		if(Settings::Singleton()->get_setting('login_capthca') && Capthca::enabled())
 		{
 			if((Settings::Singleton()->get_setting('login_capthca_remember')) and (cookie::Singleton()->get_cookie_value('username') != NULL) )
 			{

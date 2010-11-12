@@ -213,7 +213,7 @@ class user
 		$password = post::variable('password');
 
 		//Check security code first
-		if(!Capthca::Code_check(post::variable('security_code')))
+		if(Capthca::enabled() && !Capthca::Code_check(post::variable('security_code')))
 		{
 			return 'Security Code was incorect';
 			warnings::singleton()->register('Security Code was incorect');
@@ -236,7 +236,7 @@ class user
 		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
 		//Removed because I need it to be able to be worked out on the client side for the JS sha256 login stuff
 		###also on line 156###
-		$pwd = $password;
+
 		$hash_outdated = FALSE;
 		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_encryption'))
 		{
@@ -244,14 +244,15 @@ class user
 		}
 		if($hash_outdated == true)
 		{
-			$sql_password = hash($hash_type_db['hash_type'], $pwd);
+			$sql_password = hash($hash_type_db['hash_type'], $password);
 		}
 		else
 		{
-			$sql_password = Common::return_hash($pwd, false);
+			$sql_password = Common::return_hash($password, false);
 		}
-		$id = Database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('username', 'password'), array($username, $sql_password));
-		if(count($id) == 1)
+		$id = Database::Singleton()->sql_select_first('id', 'tbl_users', array('username', 'password'), array($username, $sql_password));
+		
+		if(isset($id['id']))
 		{
 			if($hash_outdated == true)
 			{
@@ -289,7 +290,7 @@ class user
 		Database::Singleton()->force_write_user();
 
 		//Regenerate the session ID
-		CMS::Singleton()->regenerate_session();
+		Session::Singleton()->regenerate_session();
 
 		$_SESSION['userid'] = $this->userid;
 		$this->set_user_details();

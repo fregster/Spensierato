@@ -56,17 +56,19 @@ var aSt;
 var t;
 var ToolTips;
 var SpriteTips;
+var growl;
 function init(){
 if(initalised!=true){
 stepFontSize(readCookie("fontSize"));
 notes=$("notifications");
 var se = document.getElementById('searchtext'); 
-se.setAttribute("autocomplete", "off"); 
+if(se != null){se.setAttribute("autocomplete", "off"); }
 autoSearch=$("ajaxSearchResults");
 //notes.fade.bind(notes,[0]);
 rounded();
 jsShow();
 jsHide();
+(!typeof(Browser.ie) == 'undefined') ? growl=new Growler.Classic() : growl=new Growler.Modern();
 if(typeof(window['n']) != "undefined"){
 notification(n);
 }
@@ -172,20 +174,25 @@ function jsShowID(id){
 	document.getElementById(id).style.display="block";
 };
 function notification(_a,_b,_c){
-if(typeof window.notes.fade == 'function'){
-var _d;
-if(!_c){
-_c="black";
+if(use_growl){
+	growl.notify(_a);
 }
-document.getElementById("notifications").style.backgroundColor=_b;
-document.getElementById("notifications").style.font=_c;
-document.getElementById("notifications").innerHTML=_a;
-notes.fade(-0,0.8);
-_d=setTimeout("notes.fade(0.8, 0)",3000);
+else{
+	if(typeof window.notes.fade == 'function'){
+		var _d;
+		if(!_c){
+		_c="black";
+		}
+		document.getElementById("notifications").style.backgroundColor=_b;
+		document.getElementById("notifications").style.font=_c;
+		document.getElementById("notifications").innerHTML=_a;
+		notes.fade(-0,0.8);
+		_d=setTimeout("notes.fade(0.8, 0)",3000);
+}
 }
 return false;
 };
-var fxSlideHorizontal = new Fx.Slide(null, {mode: 'horizontal'})();
+//var fxSlideHorizontal = new Fx.Slide(null, {mode: 'horizontal'})();
 function increaseFontSize(){
 stepFontSize(1);
 };

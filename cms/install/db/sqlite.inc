@@ -13,6 +13,7 @@ $full_text = 'TEXT';
 $tiny_int = 'INTEGER';
 $int = 'INTEGER';
 $increment = '';
+$varchar = 'TEXT';
 
 require_once 'mysqli.inc';
 

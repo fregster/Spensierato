@@ -32,18 +32,15 @@ class database_execution_mdb2 extends database_execution
 			$connection_String = $dsn['phptype'].':'.$host;
 		}
 		
+		$old_track = ini_set('track_errors', '1');
 		$this->db_backend = @MDB2::singleton($dsn, $options);
 		if(!$this->db_backend)
 		{
-			$error = 'Unable to connect to the database';
+			$error = 'Unable to connect to the database '.$php_errormsg;
 			$this->sql_error($error);
 		}
+		ini_set('track_errors', $old_track);
 
-		if(!$this->db_backend)
-		{
-			$error = 'Unable to connect to the database';
-			$this->sql_error($error);
-		}
 		if (PEAR::isError($this->db_backend) or (MDB2::isError($this->db_backend)))
 		{
 			$this->sql_error($this->db_backend->getMessage());

@@ -507,7 +507,20 @@ class database
 		/**
 		 * This currently does not work in MySQL and so 2 transactions are required unfortunatly
 		 */
-		$id_col = $where_fields[0];
+		if (!isset($where_fields))
+		{ 
+			return false;
+		}
+		else if(isset($where_fields) && !is_array($where_fields))
+		{
+			$id_col = $where_fields; 
+		}
+		else
+		{
+			if(!isset($where_fields[0])){ return false; } // passed in an empty array so quickly fail
+			$id_col = $where_fields[0];
+		}
+		
 		if($alternet_id_col)
 		{
 			$id_col = $alternet_id_col;

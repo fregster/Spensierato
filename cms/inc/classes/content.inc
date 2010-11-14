@@ -212,28 +212,28 @@ class Content
 
 	private function attach_debug()
 	{
-		$this->debug_data->appendXML(Debug::Singleton()->render());
+		$this->debug_data->appendXML(@utf8_encode(Debug::Singleton()->render()));
 		$this->debug->appendChild($this->debug_data);
 	}
 
 	private function attach_settings()
 	{
-		$this->settings_data->appendXML(Settings::Singleton()->settings_as_xml());
+		$this->settings_data->appendXML(@utf8_encode(Settings::Singleton()->settings_as_xml()));
 	}
 
 	private function attach_warnings()
 	{
-		$this->settings_data->appendXML(Warnings::Singleton()->get_as_xml());
+		$this->settings_data->appendXML(@utf8_encode(Warnings::Singleton()->get_as_xml()));
 	}
 
 	private function attach_user()
 	{
-		$this->user_data->appendXML(User::Singleton()->user_details_as_xml());
+		$this->user_data->appendXML(@utf8_encode(User::Singleton()->user_details_as_xml()));
 	}
 
 	private function attach_options()
 	{
-		$this->options_data->appendXML(options::Singleton()->options_as_xml());
+		$this->options_data->appendXML(@utf8_encode(options::Singleton()->options_as_xml()));
 	}
 
 	public function attach_content($xml)

@@ -256,6 +256,7 @@ class database
 				if ( ($sql_cache_hit == false) or (Settings::Singleton()->get_setting('debug') > 1)	)
 				{
 					$details = array('count' => $sql_count, 'query' => $sql_query, 'time' => $sql_exc_time, 'cached' => $sql_cache_hit);
+					if(isset($this->sql_values[0])) { $details['values'] = $this->sql_values; }
 //					if($sql_result != NULL) { $details['result'] = $sql_result; }
 					array_push($this->sql_log_array, $details);
 					$this->sql_time = $this->sql_time + $sql_exc_time;

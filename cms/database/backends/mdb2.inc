@@ -33,10 +33,10 @@ class database_execution_mdb2 extends database_execution
 		}
 		
 		$old_track = ini_set('track_errors', '1');
-		$this->db_backend = @MDB2::singleton($dsn, $options);
+		$this->db_backend = @MDB2::connect($dsn, $options);
 		if(!$this->db_backend)
 		{
-			$error = 'Unable to connect to the database '.$php_errormsg;
+			$error = 'Unable to connect to the database ('.$php_errormsg.')';
 			$this->sql_error($error);
 		}
 		ini_set('track_errors', $old_track);

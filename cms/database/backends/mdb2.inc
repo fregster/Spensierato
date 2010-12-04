@@ -122,7 +122,7 @@ class database_execution_mdb2 extends database_execution
 				
 			unset($sql);
 			
-			if (isset($error)){
+			if($error != false){
 				$this->sql_error($error);
 			}
 			

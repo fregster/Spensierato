@@ -92,6 +92,10 @@ class database
 		$this->microtime = microtime();
 		$this->prefix = DATABASE_TABLE_PREFIX;
 		
+		if(!class_exists('settings')){
+			$this->options['allow_external_calls'] = false;
+		}
+		
 		if(isset($db) && !is_null($db))
 		{
 			$this->db = $db;
@@ -758,7 +762,7 @@ class database
 		}
 		if(!is_array($where_values))
 		{
-			$where_fields = array($where_values);
+			$where_values = array($where_values);
 		}
 		$count_where = count($where_values) - 1;
 		$count_where_fields = count($where_fields) - 1;

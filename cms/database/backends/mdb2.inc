@@ -83,7 +83,6 @@ class database_execution_mdb2 extends database_execution
 				else
 				{
 					$error = 'Failed update database, write user disabled<br />';
-					$this->sql_error($error);
 				}
 			}
 			else
@@ -114,12 +113,18 @@ class database_execution_mdb2 extends database_execution
 				
 				$resultset = $stmt->execute($values);
 
-				if(PEAR::isError($resultset) || MDB2::isError($resultset))
-				{
-					$error = 'Failed to issue query, error message : ' . $resultset->getMessage().', '. $resultset->getDebugInfo().'<br />';
-				}
 			}
+			
+			if(PEAR::isError($resultset) || MDB2::isError($resultset))
+			{
+				$error = 'Failed to issue query, error message : ' . $resultset->getMessage().', '. $resultset->getDebugInfo().'<br />';
+			}
+				
 			unset($sql);
+			
+			if (isset($error)){
+				$this->sql_error($error);
+			}
 			
 		 }
 		catch(PEAR_Exception $e)

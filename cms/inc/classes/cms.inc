@@ -44,10 +44,9 @@ class CMS
 
 	protected function __construct()
 	{
+		ob_start();
 		$this->time = time();
 		$this->microtime = microtime();
-
-		ob_start();
 				
 		//Start the session
 		$this->start_session();
@@ -81,7 +80,7 @@ class CMS
 		$this->site_root = Common::site_root();
 
 		//Static includes folder
-		Settings::Singleton()->new_setting('site_folder_static_includes', ($this->cms_root . '/inc/static/'), false, true);
+		Settings::Singleton()->new_setting('site_folder_static_includes', ($this->cms_root.DS.'inc'.DS.'static'.DS), false, true);
 	}
 
 	public function time()
@@ -218,7 +217,7 @@ class CMS
 		{
 			//Force loading of all elements
 
-			require_once(dirname(__FILE__).'/../../cms_admin_includes.inc');
+			require_once(dirname(__FILE__).DS.'..'.DS.'..'.DS.'cms_admin_includes.inc');
 
 			//When in admin mode do extra code such as version checking
 			update::check();

@@ -99,6 +99,14 @@ abstract class Common
 
 	public static function site_root()
 	{
+		if(isset($GLOBALS['site_root']))
+		{
+			return $GLOBALS['site_root'];
+		}
+		$ext = substr($_SERVER['SCRIPT_FILENAME'], -4 , 4);
+		$a = substr($_SERVER['SCRIPT_FILENAME'], 0 , strripos($_SERVER['SCRIPT_FILENAME'], $ext));
+		$GLOBALS['site_root'] = substr($a, 0, strripos($a, '/'));
+		
 		return $GLOBALS['site_root'];
 	}
 
@@ -387,7 +395,7 @@ abstract class Common
 
     public static function rewrite_enabled()
     {
-    	if ( in_array("mod_rewrite", apache_get_modules()) )
+    	if ( in_array("mod_rewrite", apache_get_modules()) && file_exists(common::site_root().DIRECTORY_SEPARATOR.'.htaccess'))
     	{
     		return true;
     	}

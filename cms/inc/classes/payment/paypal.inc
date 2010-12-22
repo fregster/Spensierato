@@ -43,7 +43,7 @@ class payment_paypal extends payment
 			$number_of_valued_items = sizeof($valued_options);
 			$number_of_non_valued_items = sizeof($non_valued_options);
 
-			$html .= '<div class="paypal">'.$title.' Â£'.$ammount.' ';
+			$html .= '<div class="paypal">'.$title.' £'.$ammount.' ';
 
 			if($show_tax)
 			{
@@ -106,7 +106,7 @@ class payment_paypal extends payment
                             if(is_numeric($price))
                             {
                                    $html .= '
-                     <option value="'.$option.'">'.$option.' + Â£'. $price.'</option>';
+                     <option value="'.$option.'">'.$option.' + £'. $price.'</option>';
                                    ++$i;
                             }
                      }

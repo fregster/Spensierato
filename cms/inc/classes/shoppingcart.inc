@@ -129,7 +129,10 @@ class shoppingcart
 		{
 			$element = Element::type($id);
 			$element->build($id);
-			return $element->cart_data();
+			if(method_exists($element, 'cart_data'))
+			{
+				return $element->cart_data();
+			}
 		}
 		return false;
 	}

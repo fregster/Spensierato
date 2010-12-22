@@ -249,7 +249,8 @@ class user
 		else
 		{
 			$sql_password = Common::return_hash($password, false);
-		}
+		}		
+		
 		$id = Database::Singleton()->sql_select_first('id', 'tbl_users', array('username', 'password'), array($username, $sql_password));
 		
 		if(isset($id['id']))

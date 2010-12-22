@@ -31,8 +31,7 @@ class database_execution
    		{
 		    die('Unable to build the requested database layer '.DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc');
    		}
-   		
-	   return new $c;
+   		return new $c;
 	}
 	
 	public static function singleton()
@@ -170,7 +169,16 @@ class database_execution
 	 */
 	public function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{
-		$this->connect($dsn,$options,$mods);
+		
+		
+//		echo(__LINE__.' '.__FILE__);
+//   		var_dump($this->connect($dsn,$options,$mods));
+//   		echo(__LINE__.' '.__FILE__);
+//   		var_dump($this);
+
+//   		die('Hello');
+   		
+   		$this->connect($dsn,$options,$mods);
 		return $this;
 	}
 	

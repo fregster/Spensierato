@@ -4,10 +4,10 @@ class database_execution_mdb2 extends database_execution
 	protected $supports_prepared_statments = true;
 	
 	public function connect($dsn, $options = NULL, $mods = NULL)
-	{
+	{		
 		//Load the MDB2 code
 		//Doing this here only loads the code if a DB query is actually going to be done
-		if(!@include 'MDB2.php')
+		if(!@include_once 'MDB2.php')
 		{
 			$this->sql_error('Unable to load MDB2, ensure the class is available. Hint try installing the pear class');
 			exit;
@@ -32,6 +32,7 @@ class database_execution_mdb2 extends database_execution
 			$connection_String = $dsn['phptype'].':'.$host;
 		}
 		
+		
 		$old_track = ini_set('track_errors', '1');
 		$this->db_backend = @MDB2::connect($dsn, $options);
 		if(!$this->db_backend)
@@ -39,6 +40,7 @@ class database_execution_mdb2 extends database_execution
 			$error = 'Unable to connect to the database ('.$php_errormsg.')';
 			$this->sql_error($error);
 		}
+		
 		ini_set('track_errors', $old_track);
 
 		if (PEAR::isError($this->db_backend) or (MDB2::isError($this->db_backend)))
@@ -55,6 +57,7 @@ class database_execution_mdb2 extends database_execution
 		}
 
 		$this->db_backend->setFetchMode(MDB2_FETCHMODE_ASSOC);
+		
 		return $this->db_backend;
 	}
 

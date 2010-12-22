@@ -171,16 +171,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$db->createDatabase($database);
 	debug('DB Created');
 
-	/**
-	 * Add the db users with the appropriate permissions
-	 * Read user select on all
-	 * Write user select, update, insert, delete on all
-	 */
-
-	//TODO add grant sql
-
 	//Replace the db object with a new one in the database
+	$db->destroy();
 	unset($db);
+	
+	$GLOBALS['DEBUG'] = true;
+	
 	$db = database::custom_db_object(array('phptype'  => $driver,
 		    								'username' => $username,
 											'password' => $password,
@@ -188,6 +184,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 											'database' => $database),
 											NULL,
 											array('Manager'));
+
 	debug('Connection replaced');
 	
 	//Include the file which processes the SQL code
@@ -204,6 +201,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 	include($install_folder.DS.'db'.DS.$driver.'.inc');
 
+	/**
+	 * Add the db users with the appropriate permissions
+	 * Read user select on all
+	 * Write user select, update, insert, delete on all
+	 */
 	debug('Createing users and permissions');
 	if($create_db_users)
 	{

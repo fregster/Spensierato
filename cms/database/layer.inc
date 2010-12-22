@@ -708,7 +708,7 @@ class database
 			$where_values = array($where_values);
 		}
 
-		return 'SELECT count(*) FROM '.$this->table_quote.$this->prefix. $this->sql_clean_input($table).$this->table_quote.$this->sql_build_where_string($where_fields, $where_values);
+		return 'SELECT count(*) FROM '. $this->sql_clean_input($this->prefix.$table,$this->table_quote).$this->sql_build_where_string($where_fields, $where_values);
 
 		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 		return $result[0]['count(*)'];
@@ -723,7 +723,7 @@ class database
 		}
 		else if (!is_array($fields) )
 		{
-			$sql_temp_select = $this->sql_clean_input_value($fields);
+			$sql_temp_select = $this->sql_clean_input($fields, $this->col_quote);
 		}
 		else
 		{
@@ -731,7 +731,7 @@ class database
 			$count_fields = count($fields);
 			while($i <= ($count_fields - 1))
 			{
-				$sql_temp_select = $sql_temp_select . $this->sql_clean_input_value($fields[$i]);
+				$sql_temp_select = $sql_temp_select . $this->sql_clean_input($fields[$i], $this->col_quote);
 
 				if($i < ($count_fields - 1))
 				{
@@ -767,7 +767,7 @@ class database
 		$count_where = count($where_values) - 1;
 		$count_where_fields = count($where_fields) - 1;
 
-		if($where_fields != NULL and $where_values != NULL and ($count_where == $count_where_fields) )
+		if($where_fields != NULL and $where_values != NULL and ($count_where == $count_where_fields) and $count_where > 0)
 		{
 			$i = 0;
 			$sql_temp_where = '';

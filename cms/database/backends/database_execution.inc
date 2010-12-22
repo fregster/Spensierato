@@ -168,18 +168,8 @@ class database_execution
 	 * @return database object
 	 */
 	public function custom_db_object($dsn, $options = NULL, $mods = NULL)
-	{
-		
-		
-//		echo(__LINE__.' '.__FILE__);
-//   		var_dump($this->connect($dsn,$options,$mods));
-//   		echo(__LINE__.' '.__FILE__);
-//   		var_dump($this);
-
-//   		die('Hello');
-   		
-   		$this->connect($dsn,$options,$mods);
-		return $this;
+	{   		
+   		return $this->connect($dsn,$options,$mods);
 	}
 	
 	public function connect($dsn, $options = NULL, $mods = NULL)

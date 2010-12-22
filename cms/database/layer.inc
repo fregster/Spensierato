@@ -746,15 +746,17 @@ class database
 
 	protected function sql_build_where_string($where_fields, $where_values)
 	{
-		$part = $this->sql_build_where_string_part($where_fields, $where_values);
-		if(strlen($part) > 0)
-		{
-			return ' WHERE ('.$part.')';
+		if(isset($where_fields) || is_array($where_fields) && !is_null($where_fields)){
+			$part = $this->sql_build_where_string_part($where_fields, $where_values);
+			if(strlen($part) > 0)
+			{
+				return ' WHERE ('.$part.')';
+			}
 		}
 	}
 
 	protected function sql_build_where_string_part($where_fields, $where_values)
-	{
+	{		
 		//Include Where clause into sql if set
 		if(!is_array($where_fields))
 		{
@@ -767,7 +769,7 @@ class database
 		$count_where = count($where_values) - 1;
 		$count_where_fields = count($where_fields) - 1;
 
-		if($where_fields != NULL and $where_values != NULL and ($count_where == $count_where_fields) and $count_where > 0)
+		if($where_fields != NULL and $where_values != NULL and ($count_where == $count_where_fields) and $count_where >= 0)
 		{
 			$i = 0;
 			$sql_temp_where = '';
@@ -833,7 +835,7 @@ class database
 	//$Values is for when I get around to implimenting MDB2 properly!
 	protected function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{
-		//echo($sql.'<br />');
+//echo($sql.'<br />');
 		$this->db->sql_connect();
 
 		if($destroy_cache)
@@ -893,6 +895,7 @@ class database
 
 	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)
 	{		
+//		echo($sql);
 		$results = false;
 		//Check cache if not explecitly set not to
 		if(!$no_cache)

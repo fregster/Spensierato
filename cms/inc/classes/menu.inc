@@ -164,7 +164,7 @@ class Menu
 		if(is_int($id))
 		{
 			//The id of the current page.
-			$current_record = Database::Singleton()->sql_select('parent_id', 'tbl_pages', array('id'), array($id));
+			$current_record = Database::Singleton()->sql_select_first('parent_id', 'tbl_pages', array('id'), array($id));
 			//The array of ids to the current page.
 			$path = array();
 			$i = 0;
@@ -172,7 +172,7 @@ class Menu
 			{
 				if($i != 0)
 				{
-					$record = Database::Singleton()->sql_select('parent_id', 'tbl_pages', 'id', $id);
+					$record = Database::Singleton()->sql_select_first('parent_id', 'tbl_pages', 'id', $id);
 				}
 				else{
 					$record =& $current_record;

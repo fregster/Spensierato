@@ -30,7 +30,7 @@ abstract class Cache
 	{
 		//Build E-Tag from page id and date
 		$ETag = $page_id .'-'.$e_string.'-'.$mod_date;
-		if(!$public){
+		if(!$public || user::Singleton()->id() != 0){
 			$ETag .= '-'.user::Singleton()->id();
 		}
 		
@@ -138,7 +138,7 @@ abstract class Cache
 		
 		if(isset($headers['If-Modified-Since']))
 		{
-			if ($gmdate_mod == $headers['If-Modified-Since']) 
+			if ($gmdate_mod == $headers['If-Modified-Since']  || user::Singleton()->id() != 0) 
 			{
 				Cache::send_304();
 			}

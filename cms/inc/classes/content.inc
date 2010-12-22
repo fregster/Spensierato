@@ -315,7 +315,10 @@ class Content
 					{
 						if(isset($element_data[$key]) && $element_data[$key] != NULL)
 						{
-							$position = $positions[$element_data[$key]['id']]+1;
+							$position = 0;
+							if(isset($element_data[$key]['id'])){
+								$position = $positions[$element_data[$key]['id']]+1;
+							}
 
 							$element = Element::type($data['type']);							
 							$element->build($element_data[$key]['id'], $element_data[$key], null, $position);

@@ -315,8 +315,8 @@ class Content
 					{
 						if(isset($element_data[$key]) && $element_data[$key] != NULL)
 						{
-							$position = 0;
-							if(isset($element_data[$key]['id'])){
+							$position = 1;
+							if(isset($positions[$element_data[$key]['id']])){
 								$position = $positions[$element_data[$key]['id']]+1;
 							}
 

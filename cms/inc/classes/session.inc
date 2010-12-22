@@ -10,6 +10,7 @@
 //Increase the bits per Char so we can store it in a smaller DB field
 ini_set('session.hash_bits_per_character', 5);
 ini_set('session.hash_function', 1);
+ini_set('session.hash_function', 2);
 		
 class session
 {
@@ -36,6 +37,7 @@ class session
 			$this->session_user_agent_check();
 			$this->session_ip_check();
 			cookie::Singleton()->load();
+			$this->session_loaded = true;
 		}
 	}
 	
@@ -48,7 +50,7 @@ class session
 		}
 	}
 	
-private function session_user_agent_check()
+	private function session_user_agent_check()
 	{
 		//creates a hash of the user agent
 		if(Settings::Singleton()->get_setting('session_security_enhanced'))

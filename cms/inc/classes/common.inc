@@ -372,6 +372,7 @@ abstract class Common
 
 	public static function cookie_check()
 	{
+		session::Singleton()->force();
 		if(!isset($_SESSION['cookies_enabled']))
 		{
 			if(!isset($_GET['cookie_check']))

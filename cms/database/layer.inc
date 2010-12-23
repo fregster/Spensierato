@@ -126,11 +126,22 @@ class database
 
 	}
 	
+	/**
+	 * 
+	 * Use to force the destruction of the DB connection and if the object is destroyed, destroy the related DB object
+	 */
 	public function __destruct()
 	{
 		$this->db->destroy();
 	}
 
+	/**
+	 * 
+	 * Create a custom DB interface object rather than the singleton
+	 * @param array $dsn
+	 * @param array $options
+	 * @param array $mods
+	 */
 	public static function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{
 		//A DSN has been set so create the connection with the specified options		
@@ -139,23 +150,35 @@ class database
 
 	/**
 	 * Here for legacy purposes
-	 * @return unknown_type
+	 * @return true / false from DB method
 	 */
 	public function force_write_user()
 	{
 		$this->db->force_write_user();
 	}
 
+	/**
+	 * Here for legacy purposes
+	 * @return true / false from DB method
+	 */
 	public function destroy_write_user()
 	{
 		$this->db->destroy_write_user();
 	}
 
+	/**
+	 * 
+	 * DB objects should be singular and are created on demand and so should not be cloned
+	 */
 	public function __clone()
 	{
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 
+	/**
+	 * 
+	 * If internal db caching may cause problems IE time sensitive data then use this to disable PHP side DB caching
+	 */
 	public function sql_cache_disable()
 	{
 		//Disable cacheing
@@ -164,16 +187,29 @@ class database
 		session_unregister('sql_cache');
 	}
 
+	/**
+	 * 
+	 * Return the SQL query log and information as an array
+	 */
 	public function sql_show_log()
 	{
 		return $this->sql_log_array;
 	}
 
+	/**
+	 * 
+	 * Return int value of time spent waiting for SQL methods and queries
+	 */
 	public function sql_time()
 	{
 		return $this->sql_time;
 	}
 
+	/**
+	 * 
+	 * Return array int number of SQL queries since object created
+	 * array(DB SQL, %percent Cached, Cached SQL);
+	 */
 	public function sql_count()
 	{
 		$percent = 0;
@@ -184,6 +220,11 @@ class database
 		return array(($this->site_sql_count - $this->sql_cache_hits), $percent, $this->sql_cache_hits);
 	}
 
+	/**
+	 * 
+	 * Return Bool if external caching is enabled.
+	 * Currently writen to use PersistantCache class
+	 */
 	public function use_memcached()
 	{
 		if($this->options['allow_external_calls'])
@@ -228,6 +269,13 @@ class database
 		return $this->sql_clean_input($var);
 	}
 
+	/**
+	 * 
+	 * Return a clean SQL version of an input including the quotes
+	 * Works out the best available cleaning method and returns a string
+	 * @param $var
+	 * @param $quote
+	 */
 	protected function sql_clean_input($var, $quote = null)
 	{
 		//If the input is just a number just return it
@@ -241,7 +289,15 @@ class database
 		return $quote.addslashes($var).$quote;
 	}
 
-	//SQL Logging function
+	/**
+	 * 
+	 * Internal logging method, records SQL count, SQL, time initial SQL method was called, weather it was a cached result and an optional SQL result
+	 * @param $sql_count
+	 * @param $sql_query
+	 * @param $sql_start_time
+	 * @param $sql_cache_hit
+	 * @param $sql_result
+	 */
 	private function sql_log($sql_count, $sql_query, $sql_start_time, $sql_cache_hit, $sql_result = NULL)
 	{
 		if($this->options['allow_external_calls'])
@@ -272,6 +328,17 @@ class database
 	}
 
 	//Proxy to standard sql select forces limit to 1
+	/**
+	 * 
+	 * Standard SQL Select creation method with LIMIT 1 forced
+	 * @param $fields
+	 * @param $table
+	 * @param $where_fields
+	 * @param $where_values
+	 * @param $order_fields
+	 * @param $order_directions
+	 * @param $FORCE_NO_CACHE
+	 */
 	public function sql_select_first($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE)
 	{
 		$result = $this->sql_select($fields, $table, $where_fields, $where_values, $order_fields, $order_directions, $FORCE_NO_CACHE, 1);
@@ -281,6 +348,18 @@ class database
 
 	// Standard Select function
 	// sql_select(Fields(if Null *), Table, Where (array), Where values (array must match number of fields), Order fields (array), Prder direction (if not sec ASC)
+	/**
+	 * 
+	 * Standard SQL Select build statment
+	 * @param string $fields
+	 * @param string $table
+	 * @param array $where_fields
+	 * @param array $where_values
+	 * @param array $order_fields
+	 * @param ASC or DESC $order_directions
+	 * @param bool $FORCE_NO_CACHE
+	 * @param int $limit
+	 */
 	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
 		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions);
@@ -409,6 +488,14 @@ class database
 		return $sql;
 	}
 
+	/**
+	 * 
+	 * SQL Select the maximum value from a field
+	 * @param string $table
+	 * @param string $field
+	 * @param array $where_fields
+	 * @param array $where_values
+	 */
 	public function sql_max_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		$sql = $this->sql_max_field_build($table, $field, $where_fields, $where_values);
@@ -426,6 +513,14 @@ class database
 		return 'SELECT max( '.$this->sql_clean_input($field, $this->col_quote).' ) FROM '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values);;
 	}
 
+	/**
+	 * 
+	 * SQL Select the minimum from a field
+	 * @param string $table
+	 * @param string $field
+	 * @param array $where_fields
+	 * @param array $where_values
+	 */
 	public function sql_min_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		$sql = $this->sql_min_field_build($table, $field, $where_fields, $where_values);
@@ -447,11 +542,20 @@ class database
 		return $this->sql_update_exe($sql, null, $destroy_cache);
 	}
 
+	//TODO::This method need's updating to use correct sql cleaning functions and support optional TS field
 	protected function sql_update_time_build($table, $id)
 	{
 		return 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = ' . $this->value_quote . $this->time . $this->value_quote . ' WHERE id = ' . $this->sql_clean_input_value($id) . ' ';
 	}
 
+	/**
+	 * 
+	 * SQL toggle a int between 0 and 1
+	 * @param int $id
+	 * @param string $table
+	 * @param string $field
+	 * @param bool $destroy_cache
+	 */
 	public function sql_toggle_field_by_id($id, $table, $field, $destroy_cache = false)
 	{
 		$current_value = $this->sql_select_first(array($field), $table, array('id'), array($id));
@@ -468,10 +572,29 @@ class database
 	}
 
 	//SQL update fileds by id
+	/**
+	 * 
+	 * SQL update row fields by ID coloum
+	 * @param int $id
+	 * @param string $table
+	 * @param array $fields
+	 * @param array $values
+	 * @param bool $destroy_cache
+	 */
 	public function sql_update_by_id($id, $table, $fields = array(), $values = array(), $destroy_cache = false){
 		return $this->sql_update_by_col($table, array('ID'), array($id), $fields, $values, $destroy_cache);
 	}
 
+	/**
+	 * 
+	 * SQL update row fields with values by coloum where values
+	 * @param string $table
+	 * @param array $where_fields
+	 * @param array $where_values
+	 * @param array $fields
+	 * @param array $values
+	 * @param bool $destroy_cache
+	 */
 	public function sql_update_by_col($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false)
 	{
 		$sql = $this->sql_update_by_col_build($table, $where_fields, $where_values, $fields, $values);
@@ -507,6 +630,17 @@ class database
 		return $sql	. $sql_temp_fields . $this->sql_build_where_string($where_fields, $where_values);
 	}
 
+	/**
+	 * 
+	 * SQL Update or insert a row in the database as required
+	 * @param string $table
+	 * @param array $where_fields
+	 * @param array $where_values
+	 * @param array $fields
+	 * @param array $values
+	 * @param bool $destroy_cache
+	 * @param string $alternet_id_col
+	 */
 	public function sql_update_or_insert($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false, $alternet_id_col = false)
 	{
 		/**
@@ -690,6 +824,14 @@ class database
 		return null;
 	}
 
+	/**
+	 * 
+	 * SQL Count rows from an SQL select statment
+	 * @param string $table
+	 * @param array $where_fields
+	 * @param array $where_values
+	 * @param bool $FORCE_NO_CACHE
+	 */
 	public function sql_count_where($table, $where_fields, $where_values, $FORCE_NO_CACHE = FALSE)
 	{
 		$sql = $this->sql_count_where_build($table, $where_fields, $where_values);
@@ -768,8 +910,9 @@ class database
 		}
 		$count_where = count($where_values) - 1;
 		$count_where_fields = count($where_fields) - 1;
-
-		if($where_fields != NULL and $where_values != NULL and ($count_where == $count_where_fields) and $count_where >= 0)
+		
+		//SQL count starts at 1 and array positions start at 0 hence the >= 0 and not > 0 and the above reduction in count by 1
+		if($where_fields[0] != NULL and $where_values[0] != NULL and $count_where >= 0  and $count_where_fields >= 0 and ($count_where == $count_where_fields))
 		{
 			$i = 0;
 			$sql_temp_where = '';

@@ -22,14 +22,14 @@ class database_execution
 	public static function factory()
 	{
    		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = database_execution::$backends[0]; }
-   		if(file_exists(DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc'))
+   		if(file_exists(DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$GLOBALS['database_backend'].'.inc'))
    		{
-   			require_once(DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc');
+   			require_once(DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$GLOBALS['database_backend'].'.inc');
    			$c = 'database_execution_'.$GLOBALS['database_backend'];
    		}
    		else
    		{
-		    die('Unable to build the requested database layer '.DATABASE_LAYER_PATH.'/backends/'.$GLOBALS['database_backend'].'.inc');
+		    die('Unable to build the requested database layer '.DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$GLOBALS['database_backend'].'.inc');
    		}
    		return new $c;
 	}

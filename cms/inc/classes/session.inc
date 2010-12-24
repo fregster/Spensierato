@@ -10,8 +10,11 @@
 //Increase the bits per Char so we can store it in a smaller DB field
 ini_set('session.hash_bits_per_character', 5);
 ini_set('session.hash_function', 1);
-ini_set('session.hash_function', 2);
-		
+if(version_compare(phpversion(), '5.3', '>='))
+{
+	ini_set('session.hash_function', 2);
+}
+	
 class session
 {
 	private static $instance;

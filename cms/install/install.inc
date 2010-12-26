@@ -170,13 +170,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	debug('Attepmting to create DB');
 	$db->createDatabase($database);
 	debug('DB Created');
-
+	
 	//Replace the db object with a new one in the database
-	$db->destroy();
+	if(method_exists($db, 'destroy'))
+	{
+		$db->destroy();
+	}
 	unset($db);
-	
-	$GLOBALS['DEBUG'] = true;
-	
+
 	$db = database::custom_db_object(array('phptype'  => $driver,
 		    								'username' => $username,
 											'password' => $password,
@@ -184,7 +185,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 											'database' => $database),
 											NULL,
 											array('Manager'));
-
 	debug('Connection replaced');
 	
 	//Include the file which processes the SQL code
@@ -240,6 +240,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$element = Element::type('elementText');
 	$element->create($id, false);
 
+	//A random key is required in settings for creating more secure password hashes
+	Settings::singleton()->new_setting('random_key'.post::variable('random_key'));
+	
 	debug('Adding site administrator');
 	$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true);
 

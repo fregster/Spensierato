@@ -149,7 +149,7 @@ class user
 		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
 		//Removed because I need it to be able to be worked out on the client side for the JS sha256 login stuff
 		###also on line 246###
-		$hash = @hash(Settings::Singleton()->get_setting('site_option_encryption'), $password);
+		$hash = @hash(Settings::Singleton()->get_setting('site_option_encryption'), $password . Settings::singleton()->get_setting('random_key'));
 
 		//Save the password in the DB
 		$this->update_password($hash);
@@ -159,7 +159,7 @@ class user
 
 	public function reset_password()
 	{
-		$password = $this->create_password();
+		$password = $this->create_password() . Settings::singleton()->get_setting('random_key');
 
 		//Email the password out
 		$message = 'Your password for your account on '. Settings::singleton()->get_setting('site_name_long').' has been reset<br />Your password is '.$password;
@@ -210,7 +210,7 @@ class user
 	private function site_auth()
 	{
 		$username = post::variable('username');
-		$password = post::variable('password');
+		$password = post::variable('password') . Settings::singleton()->get_setting('random_key');
 
 		//Check security code first
 		if(Capthca::enabled() && !Capthca::Code_check(post::variable('security_code')))

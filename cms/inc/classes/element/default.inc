@@ -144,6 +144,7 @@ class element_Default
 			//PHP reports no error uploading the file
 			if($_FILES['uploadedfile']['error'] == 0)
 			{
+				unset($this->admin_mode_data['error']);
 				$file_size = (int)$_FILES['uploadedfile']['size'];
 				$max_size = (int)Settings::Singleton()->get_setting('max_file_size');
 				if($file_size <= $max_size)
@@ -194,6 +195,7 @@ class element_Default
 				}
 			}
 
+			$this->admin_mode_data['error'] .= '('.$_FILES['uploadedfile']['error'].')';
 			//Upload failed return false
 			return false;
 		}

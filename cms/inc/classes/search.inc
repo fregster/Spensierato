@@ -60,10 +60,11 @@ class Search
 			{
 	    		return true;
 			}
-			else if (is_writable(Settings::singleton()->get_setting('cms_folder_search')))
+			else if (is_writable(Settings::singleton()->get_setting('cms_folder_search')) && user::Singleton()->is_admin())
 			{
 				if(new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_search').'search_index', true))
 				{
+					Warnings::Singleton()->register('Enhanced Search Created', 'The enhanced search created an index rebuild will be required');
 					return true;
 				}
 			}
@@ -203,7 +204,7 @@ class Search
 	
 	private function get_results_from_index_sql()
 	{
-		$pull = array('id', 'title');
+		$pull = array('id', 'title', 'file');
 		if($this->return_summary) { $pull[] = 'search'; }
 		$results = Database::singleton()->sql_search('tbl_search', 'search', $this->string, $pull, $this->boolean, null, null, $this->drop, $this->max_results_per_query);
 
@@ -212,6 +213,12 @@ class Search
 		{
 			$this->ids[] = $ids;
 		}
+		
+		foreach ($results as $key => $result){
+			if($results[$key]['file'] == '0'){
+				$results[$key]['page'] = $result['id'];
+			}
+		}		
 		return $results;
 	}
 	
@@ -233,8 +240,8 @@ class Search
 			$result['page'] = $page;
 			if($this->return_summary) { $result['search'] = $r->search;}
 			$results[] = $result;
+			unset($result);
 		}
-		unset($result);
 		return $results;
 	}
 

@@ -117,7 +117,8 @@ class database_execution_pdo extends database_execution
 				}
 				else
 				{
-					$resultset = $stmt->fetchAll();	
+					//Some time's the default does not work so force fetch_assoc here
+					$resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				}
 			}
 			
@@ -127,7 +128,7 @@ class database_execution_pdo extends database_execution
 	   		$this->sql_error($e->getMessage());
 	   		exit;
 	    }
-		
+	    
 	    $final = array();
 	    if(isset($resultset)) { $final['resultset'] = $resultset; }
 	    if($error) { $final['error'] = $error; }

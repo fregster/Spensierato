@@ -123,7 +123,7 @@ Settings::Singleton()->new_setting('shop_email_orders', null, false, false, true
 //Setting skin
 //Set this to the path of the skin you wish to use
 //Folder name from cms/skins/
-Settings::Singleton()->new_setting('skin', 'default', false, true, true, 4);
+Settings::Singleton()->new_setting('skin', 'default', false, false, true, 4);
 
 //Setting skin_alternative_css
 //Set this to the css file if not css.css in the skins folder

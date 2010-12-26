@@ -195,7 +195,7 @@ class element_Default
 				}
 			}
 
-			$this->admin_mode_data['error'] .= '('.$_FILES['uploadedfile']['error'].')';
+			$this->admin_mode_data['error'] .= '( '.$_FILES['uploadedfile']['error'].')';
 			//Upload failed return false
 			return false;
 		}
@@ -466,7 +466,11 @@ class element_Default
 		if(!$this->attach_upload())
 		{
 			//FIXME: update to use debug / error class
-			die('Error uploading ' . $this->admin_mode_data['error']);
+			$error = 'Error uploading';
+			if(strlen($this->admin_mode_data['error']) < 1){
+				$error .= ' ('.($_FILES['uploadedfile']['error']).')';
+			}
+			die($error);
 		}
 
 		$details = array_merge($this->admin_mode_data['save_data'], $this->attach_extra_data());

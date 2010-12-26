@@ -364,7 +364,6 @@ class Menu
 			$menu = array();
 //			$ids = array(0);
 			$i=1;
-			
 			$where = array('parent_id', 'product', 'deleted', 'visible');
 			$values = array($ids,0, 0, 1);
 				
@@ -373,7 +372,10 @@ class Menu
 				array_pop($where); array_pop($where);
 				array_pop($values); array_pop($values);
 			}
-
+			
+			$menu[] = database::Singleton()->sql_select_first(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', 'id', $ids);
+			
+			//TODO: This pulls the entire menu structure to get the top menu which is just a bit rubish, recode perhalps with different logic for different senarios
 			while($i <= $this->options['top_menu_depth'])
 			{
 				$values[0] = $ids;
@@ -391,7 +393,7 @@ class Menu
 					}
 					
 					$result['level'] = $i;
-					$menu[] = $result;
+					$menu[0] = array_merge($menu, $result);
 				}
 				++$i;
 			}

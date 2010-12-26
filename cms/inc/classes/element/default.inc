@@ -144,14 +144,18 @@ class element_Default
 			//PHP reports no error uploading the file
 			if($_FILES['uploadedfile']['error'] == 0)
 			{
-				unset($this->admin_mode_data['error']);
 				$file_size = (int)$_FILES['uploadedfile']['size'];
 				$max_size = (int)Settings::Singleton()->get_setting('max_file_size');
 				if($file_size <= $max_size)
 				{
 					$path = $_FILES['uploadedfile']['tmp_name'];
 					$target = Settings::singleton()->get_setting('cms_folder_uploads').$this->id.'-'.$this->admin_mode_data['revision'];
-					return(filetransfer::move_file($path, $target));
+					if(filetransfer::move_file($path, $target)){
+						unset($this->admin_mode_data['error']);
+						return true;
+					}
+					$this->admin_mode_data['error'] = 'File was unable to be moved, upload failed. Check file system permissions';
+					return false;
 				}
 			}
 			else

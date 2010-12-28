@@ -15,6 +15,10 @@ class Database_mysql extends Database
 	
 	public function sql_search($table, $col, $query, $select = NULL, $boolean = false, $where_fields = array(), $where_values = array(), $from = 0 , $to = 100, $order = 'DESC', $score = 10)
 	{
+		if(!$this->fts())
+		{
+			return false;
+		}
 		$boolean = '';
 		$order = 'DESC';
 		$where = $this->sql_build_where_string_part($where_fields, $where_values);

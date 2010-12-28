@@ -15,6 +15,11 @@
 $create_db_users = true;
 $tables = array();
 
+if(!isset($primary_key_in_define))
+{
+	$primary_key_in_define = false;
+}
+
 if(!isset($int))
 {
 	$int = 'INT';

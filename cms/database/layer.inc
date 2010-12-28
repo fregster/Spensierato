@@ -1052,6 +1052,8 @@ class database
 			$results = $this->db->sql_select_exe_run($this->sql_exe($sql, $this->sql_values));
 
 			//Cache the result
+//			echo('<br/>'.$sql);
+//			var_dump($results);
 			$this->sql_cache($sql, $values, $results);
 		}
 

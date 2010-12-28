@@ -164,12 +164,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	 * Create the database
 	 */
 	debug('Attepmting to drop DB');
-	if(!method_exists($db, 'dropDatabase')){
-		var_dump($db);
-		die();
-	} else {
-		$db->dropDatabase($database);
-	}
+	$db->dropDatabase($database);
 	
 	debug('DB Dropped');
 	

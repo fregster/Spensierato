@@ -12,8 +12,10 @@ $long_text = 'TEXT';
 $full_text = 'TEXT';
 $tiny_int = 'INTEGER';
 $int = 'INTEGER';
-$increment = '';
+$increment = 'AUTOINCREMENT';
 $varchar = 'TEXT';
+$primary_key_in_define = true;
+$strip_unsigned_ints = true;
 
 require_once 'mysqli.inc';
 

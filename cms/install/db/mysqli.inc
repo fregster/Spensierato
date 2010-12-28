@@ -133,7 +133,7 @@ $tables['tbl_pages']['charset'] = $default_charset;
 $tables['tbl_pages']['cols_define']['append_tags'] = $long_text;
 if($allow_unique_keys)
 {
-	$tables['tbl_pages']['keys'] = array('KEY' => array('valid_child' => array('visible','deleted','parent_id')));
+	$tables['tbl_pages']['keys'] = array('KEY' => array('valid_child' => array('visible','deleted','parent_id'), 'primary_key' => array('id')));
 }
 $tables['tbl_security']['cols_define']['data'] = $long_text;
 $tables['tbl_security']['charset'] = $default_charset;
@@ -157,12 +157,16 @@ if($allow_unique_keys)
 {
 	$tables['tbl_users_data']['keys'] = array('KEY' => array('id' => array('user_id')));
 }
+
+$inc_length = strlen($increment);
+
 /** build sql strings and execute the table creation.
  *  this code is MySQL specific.
  */
 foreach ($tables as $table => $data){
 
 	//prefix the table with the unique string submitted by the user
+	$table_orig = $table;
 	$table = $prefix.'_'.$table;
 	
 	//Set default engine
@@ -171,16 +175,40 @@ foreach ($tables as $table => $data){
 	//build the column definitions
 	$cols = array();
 	foreach ($data['cols_define'] as $col_name => $definition){
-		$cols[] = $col_name.' '.$definition;
+		$col = $col_name.' '.$definition;
+		if((isset($primary_key_in_define) && $primary_key_in_define == true) && ($col_name == $data['primary_key']))
+		{
+			if(isset($strip_unsigned_ints) && $strip_unsigned_ints)
+			{
+				$col = str_replace('UNSIGNED', '', $col);
+			}
+			
+			$col = str_replace('NOT NULL', '', $col);
+			
+			if($inc_length > 0 && (substr($col, -$inc_length) == $increment)){
+//				echo('<p>triming '.$inc_length.'<br/>Start: '.substr($col, 0, -$inc_length).' End: '.substr($col, -$inc_length).'</p>');
+				$col = substr($col, 0, -$inc_length) . ' PRIMARY KEY '.substr($col, -$inc_length);
+			}
+			else
+			{
+				$col .= ' PRIMARY KEY';
+			}
+		}
+		
+		$cols[] = $col;
+		
 	}
 	unset($col_name, $definition);
 	$cols = implode(', ', $cols);
 
 	//add a column as the primary key, only if it is a column in cols_define
 	$primary_key = '';
-	if (!is_null($data['primary_key'])) {
+	if (!is_null($data['primary_key'])){
 		if (array_key_exists($data['primary_key'], $data['cols_define'])) {
-			$primary_key = ", PRIMARY KEY ({$data['primary_key']})";
+			 if(isset($primary_key_in_define) && $primary_key_in_define != true)
+			 {
+			 	$primary_key = ", PRIMARY KEY ({$data['primary_key']})";
+			 }
 		}
 		else{
 			die('<br />Failed to create table '.$table.' due to an invalid primary key: '.$data['primary_key']);
@@ -204,7 +232,9 @@ foreach ($tables as $table => $data){
 					die('<br />Failed to create table '.$table.' due to an invalid '.$key_type.': '.$column);
 				}
 			}
-			$keys[] = $key_type.' '.$alias.' ('.implode(', ', $key_data[$alias_key]).')';
+			$key = $key_type.' '.$alias.' ('.implode(', ', $key_data[$alias_key]).')';
+			echo($key);
+			$keys[] = $key;
 		}
 	}
 	unset($key_type, $key_data);
@@ -231,7 +261,8 @@ foreach ($tables as $table => $data){
 	$sql = "CREATE TABLE $table ($cols $primary_key $keys) $engine $charset;";
 
 	//execute sql
-	//echo($sql);
+//echo('<br/>'.$sql);
+//die();
 	$result = @$db->query($sql);
 
 	if(!$result)

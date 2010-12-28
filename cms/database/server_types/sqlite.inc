@@ -13,6 +13,6 @@ class Database_sqlite extends Database_mysql
 	protected $terminate_sql = ';';
 	protected $allow_extenal_escaping = true; //Force to true
 	protected $escape_method = 'sqlite_escape_string';
-	protected $sql_use_prepared_statments_if_available = false;
+	protected $sql_use_prepared_statments_if_available = true;
 	
 }

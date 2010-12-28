@@ -85,10 +85,13 @@ class database_execution_pdo extends database_execution
 				{
 					//Values have not been passed so do simple SQL exec
 					$resultset = array();
+					$result = $this->read->query($sql, PDO::FETCH_ASSOC);
 					foreach($this->read->query($sql) as $row)
 					{
 						$resultset[] = $row;
 					}
+					
+					unset($result);
 				}
 				else
 				{
@@ -121,7 +124,6 @@ class database_execution_pdo extends database_execution
 					$resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				}
 			}
-			
 		}
 		catch(PDOException $e)
 	    {

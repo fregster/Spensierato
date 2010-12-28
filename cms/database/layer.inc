@@ -321,6 +321,11 @@ class database
 					array_push($this->sql_log_array, $details);
 					$this->sql_time = $this->sql_time + $sql_exc_time;
 
+					if(Settings::Singleton()->get_setting('debug') > 2)
+					{
+						$details['called'] = $details['called'][3]['file']. ' '.$details['called'][3]['line'];
+					}
+					
 					Debug::Singleton()->record('SQL', $details);
 				}
 			}
@@ -977,7 +982,6 @@ class database
 	//$Values is for when I get around to implimenting MDB2 properly!
 	protected function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{
-//echo($sql.'<br />');
 		$this->db->sql_connect();
 
 		if($destroy_cache)

@@ -232,7 +232,7 @@ foreach ($tables as $table => $data){
 
 	//execute sql
 	//echo($sql);
-	$result = $db->query($sql);
+	$result = @$db->query($sql);
 
 	if(!$result)
 	{

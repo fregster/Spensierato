@@ -164,7 +164,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	 * Create the database
 	 */
 	debug('Attepmting to drop DB');
-	$db->dropDatabase($database);
+	if(!method_exists($db, 'dropDatabase')){
+		var_dump($db);
+		die();
+	} else {
+		$db->dropDatabase($database);
+	}
+	
 	debug('DB Dropped');
 	
 	debug('Attepmting to create DB');
@@ -241,7 +247,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$element->create($id, false);
 
 	//A random key is required in settings for creating more secure password hashes
-	Settings::singleton()->new_setting('random_key'.post::variable('random_key'));
+	Settings::singleton()->new_setting('random_key',post::variable('random_key'));
 	
 	debug('Adding site administrator');
 	$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true);

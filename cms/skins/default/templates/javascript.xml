@@ -8,6 +8,7 @@
 	<xsl:otherwise>mootools/mt-c.js,mootools/mt-m.js</xsl:otherwise>
 </xsl:choose>
 <xsl:if test="/page/settings/js_use_growler = 1">,growl.js</xsl:if>
+<xsl:if test="/page/settings/js_use_imgage_lazyload = 1">,lazyload.js</xsl:if>
 <xsl:choose>		
 	<xsl:when test="/page/user/id != 0">
 		<!-- User logged in -->

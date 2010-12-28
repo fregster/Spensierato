@@ -57,8 +57,10 @@ var t;
 var ToolTips;
 var SpriteTips;
 var growl;
+var lazyloader;
 function init(){
 if(initalised!=true){
+initalised=true;
 stepFontSize(readCookie("fontSize"));
 notes=$("notifications");
 var se = document.getElementById('searchtext'); 
@@ -80,7 +82,17 @@ if(typeof window.adminInit == 'function'){
 }
 ToolTips=new Tips($$(".ToolTip"),{className:"ToolTip"});
 SpriteTips=new Tips($$(".sprite"),{className:"ToolTip",fixed: true});
-initalised=true;
+if(typeof window.LazyLoad == 'function'){
+	lazyloader = new LazyLoad({
+		range: 200,
+		image: img_host+'blank.gif',
+		resetDimensions: true,
+		elements: 'img',
+		container: 'page_section_body',
+		mode: 'vertical',
+		startPosition: 0
+	});
+} 
 }
 };
 function delayedSearch(){

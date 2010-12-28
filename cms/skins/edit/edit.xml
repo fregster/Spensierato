@@ -165,9 +165,9 @@
 
 <xsl:template name="edit_header">
 	<div id="edit_header">
-		Created By: <xsl:value-of select="/page/body/element/@creator" /> ( ) |
+		Created By: <xsl:value-of select="/page/body/element/@creator" /> (<xsl:value-of select="/page/body/element/@created" />) |
 		<xsl:if test="/page/body/element/@editor">
-			Edited by: <xsl:value-of select="/page/body/element/@editor" /> ( ) |
+			Edited by: <xsl:value-of select="/page/body/element/@editor" /> (<xsl:value-of select="/page/body/element/@edited" />) |
 			Revision: <xsl:value-of select="/page/body/element/@revision" /><br />
 			<xsl:if test="/page/body/element/@approved">
 				Last Aproved By: <xsl:value-of select="/page/body/element/@approver" /><br />

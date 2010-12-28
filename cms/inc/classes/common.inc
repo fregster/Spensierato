@@ -488,4 +488,9 @@ abstract class Common
 		}
 		return false;
 	}
+	
+	public static function timestamp_to_date($ts)
+	{	
+		return date(settings::singleton()->get_setting('date_format'), intval($ts));
+	}
 }

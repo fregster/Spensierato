@@ -259,12 +259,12 @@ class element_Default
 	{
 		if(options::Singleton()->get_option('admin_mode'))
 		{
-			$this->element->setAttribute('created', $this->admin_mode_data['created']);
+			$this->element->setAttribute('created', Common::timestamp_to_date($this->admin_mode_data['created']));
 			$this->element->setAttribute('creator', $this->admin_mode_data['creator']);
 
 			if($this->admin_mode_data['edited'] != NULL)
 			{
-				$this->element->setAttribute('edited', $this->admin_mode_data['edited']);
+				$this->element->setAttribute('edited', Common::timestamp_to_date($this->admin_mode_data['edited']));
 				$this->element->setAttribute('editor', $this->admin_mode_data['editor']);
 			}
 
@@ -296,7 +296,7 @@ class element_Default
 
 			if(isset($this->admin_mode_data['approved']))
 			{
-				$this->element->setAttribute('approved', date(settings::singleton()->get_setting('date_format'), $this->admin_mode_data['approved']));
+				$this->element->setAttribute('approved', Common::timestamp_to_date($this->admin_mode_data['approved']));
 			}
 
 			if(isset($this->admin_mode_data['approver']))
@@ -389,6 +389,7 @@ class element_Default
 				else if (security::singleton()->can_edit() && !security::singleton()->can_approve()) {
 					$data = database::Singleton()->sql_select_first(array('title', 'data'), 'tbl_elements_revisions', array('element_id', 'revisor', 'approved'), array($this->id, user::singleton()->id(), '0'), array('id'), array('DESC'));
 				}
+				
 			}
 
 			//if no data was set yet, just get the default element data
@@ -445,9 +446,10 @@ class element_Default
 				}
 			}
 
-			//if admin mode is on, save array for saving process before converting to xml
 			if (options::singleton()->get_option('admin_mode')){
+				//if admin mode is on, save array for saving process before converting to xml
 				$this->admin_mode_data['save_data'] = $this->data;
+
 			}
 
 			$this->build_data_xml();
@@ -543,11 +545,11 @@ class element_Default
 
 			//save admin_mode data
 			$this->admin_mode_data['created'] = $element_details['created'];
-			$this->admin_mode_data['creator'] = $element_details['creator'];
+			$this->admin_mode_data['creator'] = user::Singleton()->username($element_details['creator']);
 			$this->admin_mode_data['edited'] = $element_details['edited'];
-			$this->admin_mode_data['editor'] = $element_details['editor'];
+			$this->admin_mode_data['editor'] = user::Singleton()->username($element_details['editor']);
 			$this->admin_mode_data['approved'] = $element_details['approved'];
-			$this->admin_mode_data['approver'] = $element_details['approver'];
+			$this->admin_mode_data['approver'] = user::Singleton()->username($element_details['approver']);
 			$this->admin_mode_data['visible'] = $element_details['visible'];
 			$this->admin_mode_data['deleted'] = $element_details['deleted'];
 			unset($element_details);

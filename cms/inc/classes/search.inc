@@ -214,11 +214,14 @@ class Search
 			$this->ids[] = $ids;
 		}
 		
-		foreach ($results as $key => $result){
-			if($results[$key]['file'] == '0'){
-				$results[$key]['page'] = $result['id'];
+		if(isset($results[0]))
+		{
+			foreach ($results as $key => $result){
+				if($results[$key]['file'] == '0'){
+					$results[$key]['page'] = $result['id'];
+				}
 			}
-		}		
+		}
 		return $results;
 	}
 	

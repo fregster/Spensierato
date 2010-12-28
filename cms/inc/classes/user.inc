@@ -305,5 +305,21 @@ class user
 
 		Database::Singleton()->destroy_write_user();
 	}
+	
+	public function username($id = NULL)
+	{
+		if(is_null($id))
+		{
+			return $this->user_details['username'];
+		}
+		
+		$username = database::Singleton()->sql_select_first('username', 'tbl_users', 'id', $id);
+		if(isset($username['username']))
+		{
+			return $username['username'];
+		}
+		
+		return 'Unknown';
+	}
 
 }

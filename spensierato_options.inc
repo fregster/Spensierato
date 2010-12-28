@@ -269,7 +269,7 @@ Settings::Singleton()->new_setting('login_capthca', true, false, false, true);
 //Setting login_javascript_secure
 //If the users webbrowser suports JS then the users login is encrptyed using the capthca as part of the key
 //true / false
-Settings::Singleton()->new_setting('login_secure', true, false, false, true);
+Settings::Singleton()->new_setting('login_secure', false, false, false, true);
 
 //Setting login_capthca_length
 //Sets the length of the image
@@ -288,6 +288,7 @@ Settings::Singleton()->new_setting('login_capthca_remember', true, false, false,
 //Default 	0 Off
 //			1 Log SQL (Non cached only)
 //			2 Log SQL (All)
+//			3 Log with stack trace
 //			5 Force Displaying SQL
 //			10 Save debug to file
 Settings::Singleton()->new_setting('debug', 0, false, true);

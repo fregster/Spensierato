@@ -165,6 +165,13 @@ Settings::Singleton()->new_setting('js_cache', false, false, true);
 //Fall back is to use Mootools Fade bar which also support's colours :-)
 Settings::singleton()->new_setting('js_use_growler', true, false, false, true);
 
+//Setting js_use_imgage_lazyload
+//This setting is to use Javascript to stop loading of images that are in the HTML but not in the current view 
+//Images are dynamically loaded with a nice holding image when they become viewable
+//Aditional JS will be loaded to enable this
+Settings::singleton()->new_setting('js_use_imgage_lazyload', false, false, false, true);
+
+
 Settings::Singleton()->new_setting('css_minify', true, false, true);
 
 //Setting search

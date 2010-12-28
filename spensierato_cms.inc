@@ -22,7 +22,7 @@ $default_include_path = get_include_path();
 try {
 	$external_path = $include_path.DIRECTORY_SEPARATOR.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR;
 	set_include_path($external_path);
-	require_once 'IDS/Init.php';
+	require_once 'IDS'.DIRECTORY_SEPARATOR.'Init.php';
 	$request = array(
 	        'REQUEST' => $_REQUEST,
 	        'GET' => $_GET,
@@ -30,7 +30,7 @@ try {
 	        'COOKIE' => $_COOKIE
 	    );
 	
-	$ids_init = IDS_Init::init($external_path.'IDS/Config/Config.ini.php');
+	$ids_init = IDS_Init::init($external_path.'IDS'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'Config.ini.php');
 	$ids_init->config['General']['use_base_path'] = false;
 	$ids_init->config['General']['base_path'] = $external_path;
 	$ids_init->config['General']['filter_path'] = 'default_filter.xml';
@@ -46,6 +46,8 @@ try {
 			exit;
 		}
     }
+    //Clean up now redundent vars
+    unset($request);
 	unset($ids_init);
 	unset($ids);
 	unset($result);	
@@ -56,7 +58,8 @@ catch(Exception $e)
     exit;
 }
 set_include_path($default_include_path);
-require_once($include_path.'/cms/inc/static/defines.inc');
+unset($default_include_path);
+require_once($include_path.DIRECTORY_SEPARATOR.'cms'.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'defines.inc');
 
 ini_set('error_log', DIR_LOG.'php_error.log');
 //ini_set('display_errors', 'Off');
@@ -79,22 +82,22 @@ try
 	$GLOBALS['site_root'] = get_file_root();
 
 	//Include the Site setup code
-	if(is_file(file_root().'/spensierato_setup.inc'))
+	if(is_file(file_root().DS.'spensierato_setup.inc'))
 	{
-		require_once($index_root.'/spensierato_setup.inc');
+		require_once($index_root.DS.'spensierato_setup.inc');
 		$install = false; //cancel the install directive
 	}
 	
 	//Has the site extended the spensierato options?
 	if(!$install){
-		require_once($include_path.'/spensierato_options.inc');
-		if(is_file($index_root.'/spensierato_options.inc')) { require_once($index_root.'/spensierato_options.inc'); }
+		require_once($include_path.DS.'spensierato_options.inc');
+		if(is_file($index_root.DS.'spensierato_options.inc')) { require_once($index_root.DS.'spensierato_options.inc'); }
 	}
 	//run the installation
 	if($install || isset($force_install))
 	{
 		$install = true;
-		include($include_path.'/cms/install/install.inc');
+		include($include_path.DS.'cms'.DS.'install'.DS.'install.inc');
 	}
 	
 	//Start site
@@ -102,7 +105,7 @@ try
 
 	//Make any custom changes here after the CMS code has loaded but before the site is ran
 	
-	if(is_file(file_root().'/custom.inc')) { include(file_root().'/custom.inc'); }
+	if(is_file(file_root().DS.'custom.inc')) { include(file_root().DS.'custom.inc'); }
 
 	//Run the CMS
 	CMS::Singleton()->run_cms();

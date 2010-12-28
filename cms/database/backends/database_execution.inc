@@ -31,6 +31,7 @@ class database_execution
    		{
 		    die('Unable to build the requested database layer '.DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$GLOBALS['database_backend'].'.inc');
    		}
+   		
    		return new $c;
 	}
 	
@@ -169,7 +170,8 @@ class database_execution
 	 */
 	public function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{   		
-   		return $this->connect($dsn,$options,$mods);
+   		 $this->connect($dsn,$options,$mods);
+   		 return $this;
 	}
 	
 	public function connect($dsn, $options = NULL, $mods = NULL)

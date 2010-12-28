@@ -280,7 +280,7 @@ class database
 	{
 		//If the input is just a number just return it
 		if(is_numeric($var)) { return $var; }
-		if($quote == null) { $quote = $this->value_quote; }
+		if($quote === null) { $quote = $this->value_quote; }
 		
 		if($this->allow_extenal_escaping)
 		{
@@ -708,8 +708,7 @@ class database
 			if($i < ($count_values - 1)) { $sql_temp_values .=', '; }
 			$i++;
 		}
-
-
+		
 		return 'INSERT INTO '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
 	}
 

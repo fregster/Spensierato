@@ -75,12 +75,12 @@ class database_execution_mdb2 extends database_execution
 					if($values == NULL)
 					{
 						//Values have not been passed so do simple SQL exec
-						$resultset = $this->write->query($sql);
+						$resultset = @$this->write->query($sql);
 					}
 					else
 					{
 						//Do prepeared statment
-						$stmt = $this->write->prepare($sql);
+						$stmt = @$this->write->prepare($sql);
 					}
 				}
 				else
@@ -93,12 +93,12 @@ class database_execution_mdb2 extends database_execution
 				if($values == NULL)
 				{
 					//Values have not been passed so do simple SQL exec
-					$resultset = $this->read->query($sql);
+					$resultset = @$this->read->query($sql);
 				}
 				else
 				{
 					//Do prepeared statment
-					$stmt = $this->read->prepare($sql);
+					$stmt = @$this->read->prepare($sql);
 				}
 			}
 

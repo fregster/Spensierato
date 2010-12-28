@@ -269,7 +269,7 @@ class MimeTypeGetter {
 	{
 		$info = pathinfo($file);
 		
-		if(isset(self::$extensions[$info['extension']])) {
+		if(@isset($info['extension']) && @isset(self::$extensions[$info['extension']])) {
 			return self::$extensions[$info['extension']];
 		}
 		else {

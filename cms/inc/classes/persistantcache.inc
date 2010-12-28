@@ -47,7 +47,8 @@ class persistantcache
 	protected $allow_memcache = true;
 	protected $allow_file_cache = true;
 	protected $allow_session_cache = true;
-	protected static $cache_preference_order = array('memcache', 'file', 'session');
+//	protected static $cache_preference_order = array('memcache', 'file', 'session');
+	protected static $cache_preference_order = array('memcache', 'file');
 
 	/**
 	 * DO NOT CHANGE THESE

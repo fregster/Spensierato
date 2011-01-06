@@ -94,6 +94,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		@mkdir($dir_uploads_tmp);
 		@mkdir($dir_uploads_orig_images);
 		@mkdir($dir_cache);
+		@mkdir($dir_search);
 
 	}
 	else

@@ -88,6 +88,10 @@ class Search
 			}
 			else if (is_writable(Settings::singleton()->get_setting('cms_folder_search')) && user::Singleton()->is_admin())
 			{
+				if(!file_exists(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index'))
+				{
+					@mkdir(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index');
+				}
 				if(new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index', true))
 				{
 					Warnings::Singleton()->register('Enhanced Search Created', 'The enhanced search created an index rebuild will be required');
@@ -108,7 +112,7 @@ class Search
 		
 		if(search::lucence())
 		{
-			$this->lucene_search = new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_search').'search_index');
+			$this->lucene_search = new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index');
 		}
 		else
 		{

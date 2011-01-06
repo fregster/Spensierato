@@ -61,7 +61,7 @@ class database_execution_mdb2 extends database_execution
 		return $this->db_backend;
 	}
 
-	public function sql_run($sql, $values, $writeuser)
+	public function sql_run($sql, $values, $writeuser, $mode = null)
 	{
 		
 		$error = false;
@@ -135,6 +135,15 @@ class database_execution_mdb2 extends database_execution
 			$this->sql_error($e->getMessage());
 			exit;
 	    }
+	    
+//	    if(isset($stmt))
+//	    {
+//	    	echo('Mode: '.$mode.' ');
+//	    	var_dump($stmt);
+//	    	var_dump($result);
+//	    }
+//	    var_dump($resultset);
+//	    die(__LINE__);
 	    
 		$final = array();
 	    if(isset($resultset)) { $final['resultset'] = $resultset; }

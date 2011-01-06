@@ -27,7 +27,7 @@ class database_execution_pdo extends database_execution
 			}
 			
 			$old_track = ini_set('track_errors', '1');
-			$this->db_backend = @new PDO($connection_String, $dsn['username'], $dsn['password'], array(PDO::FETCH_ASSOC => PDO::ERRMODE_EXCEPTION));	
+			$this->db_backend = @new PDO($connection_String, $dsn['username'], $dsn['password']);
 			
 			if(!$this->db_backend)
 			{
@@ -44,7 +44,7 @@ class database_execution_pdo extends database_execution
 		return $this->db_backend;
 	}
 
-	public function sql_run($sql, $values, $writeuser)
+	public function sql_run($sql, $values, $writeuser, $mode = PDO::FETCH_ASSOC)
 	{
 		$error = false;
 		try
@@ -62,6 +62,7 @@ class database_execution_pdo extends database_execution
 					{
 						//Do prepeared statment
 						$stmt = $this->write->prepare($sql);
+						$stmt->setFetchMode($mode);
 						if($stmt === false)
 						{
 							$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />';
@@ -85,7 +86,7 @@ class database_execution_pdo extends database_execution
 				{
 					//Values have not been passed so do simple SQL exec
 					$resultset = array();
-					$result = $this->read->query($sql, PDO::FETCH_ASSOC);
+					$result = $this->read->query($sql, $mode);
 					foreach($this->read->query($sql) as $row)
 					{
 						$resultset[] = $row;
@@ -97,6 +98,7 @@ class database_execution_pdo extends database_execution
 				{
 					//Do prepeared statment
 					$stmt = $this->read->prepare($sql);
+					$stmt->setFetchMode($mode);
 					if($stmt === false)
 					{
 						$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />';
@@ -120,8 +122,7 @@ class database_execution_pdo extends database_execution
 				}
 				else
 				{
-					//Some time's the default does not work so force fetch_assoc here
-					$resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					$resultset = $stmt->fetchAll($mode);
 				}
 			}
 		}
@@ -130,6 +131,15 @@ class database_execution_pdo extends database_execution
 	   		$this->sql_error($e->getMessage());
 	   		exit;
 	    }
+	    
+//	    if(isset($stmt))
+//	    {
+//	    	echo('Mode: '.$mode.' ');
+//	    	var_dump($stmt);
+//	    	var_dump($result);
+//	    }
+//	    var_dump($resultset);
+//	    die(__LINE__);
 	    
 	    $final = array();
 	    if(isset($resultset)) { $final['resultset'] = $resultset; }

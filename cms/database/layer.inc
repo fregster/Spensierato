@@ -323,7 +323,13 @@ class database
 
 					if(Settings::Singleton()->get_setting('debug') > 2)
 					{
-						$details['called'] = $details['called'][3]['file']. ' '.$details['called'][3]['line'];
+						$details['called'] = debug_backtrace();
+						$i = 1;
+						while((basename($details['called'][$i]['file']) == 'layer.inc' || basename($details['called'][$i]['class']) == 'database' || basename($details['called'][($i+1)]['file']) == 'layer.inc' || basename($details['called'][($i+2)]['file']) == 'layer.inc' || basename($details['called'][($i+3)]['file']) == 'layer.inc' && $i < 6)){
+							++$i;
+						}
+						
+						$details['called'] = $details['called'][$i]['file']. ' '.$details['called'][$i]['line'];
 					}
 					
 					Debug::Singleton()->record('SQL', $details);

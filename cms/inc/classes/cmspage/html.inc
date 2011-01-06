@@ -14,24 +14,7 @@ class cmspage_html extends cmspage
 			
 			if($this->value == NULL or !is_numeric($this->value))
 			{	
-				if(Settings::Singleton()->get_setting('homepage'))
-				{
-					$this->value = Settings::Singleton()->get_setting('homepage');
-				}
-				else
-				{
-					$this->page_details = database::singleton()->sql_select_first(array('*'), 'tbl_pages', NULL, NULL, array('id'), 'ASC');
-
-					if(is_numeric($this->page_details['id']))
-					{
-						$this->value = $this->page_details['id'];
-					}
-					else
-					{
-						//FIXME currently wont work with an empty DB
-						$this->value = 0;
-					}
-				}
+				$this->value = $this->get_homepage();
 			}
 			
 			//Get current page details if not already found

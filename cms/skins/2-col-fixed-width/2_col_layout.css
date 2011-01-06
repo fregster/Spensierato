@@ -21,7 +21,7 @@ div[id^="wrapper"] #block_2 .verticalalign{width:700px !important}
 * >#footer, * >form, * >#notes, * >.output{position:relative; z-index:400}
 #site_frame{margin-left:auto; margin-right:auto; text-align:center; background-color:#FFF; width:902px}
 
-#banner_submenu{position:absolute; bottom:6px; right:3px; margin-right:3px; text-align:right; background: white; padding-left:5px; padding-right:5px; border-style:solid; border-width: 1px 1px 0px 1px;}
+#banner_submenu{position:absolute; bottom:-1px; right:3px; margin-right:3px; text-align:right; background: white; padding-left:5px; padding-right:5px; border-style:solid; border-width: 1px 1px 0px 1px;}
 
 #jump_to_contents{display:none}
 

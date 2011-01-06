@@ -39,17 +39,16 @@ var LazyLoad = new Class({
 		this.container = document.id(this.options.container || null);
 		this.elements = $$(this.options.elements);
 		var axis = (this.options.mode == 'vertical' ? 'y': 'x');
-		alert(document.getElementById('page_section_body'));
-//		alert(this.container);
 
 		this.containerDimension = this.container.getSize()[axis];
-//		alert('init');
 		this.startPosition = 0;
 
 		/* find elements remember and hold on to */
 		this.elements = this.elements.filter(function(el) {
+			alert(el.getPosition(this.container)[axis]+' '+(this.containerDimension + this.options.range));
 			/* reset image src IF the image is below the fold and range */
 			if(el.getPosition(this.container)[axis] > this.containerDimension + this.options.range) {
+				alert(el.get('src'));
 				el.store('oSRC',el.get('src')).set('src',this.options.image);
 				if(this.options.resetDimensions) {
 					el.store('oWidth',el.get('width')).store('oHeight',el.get('height')).set({'width':'','height':''});

@@ -4,7 +4,6 @@
 			<xsl:call-template name="header"/>
 				
 			<xsl:element name="body">
-			<xsl:attribute name="onload">init();</xsl:attribute>
 			<div id="jump_to_contents"><a href="#contents">Jump To Contents</a></div>
 			<div id="notifications" style="visibility: hidden; background-color: red;">Notifications</div>
 			<div id="site_frame">

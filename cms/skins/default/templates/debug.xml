@@ -16,5 +16,8 @@
 			<div>
 				<xsl:value-of select="./data/query"/>
 			</div>
+			<div>
+				<xsl:value-of select="./data/called"/>
+			</div>
 		</div>
 	</xsl:template>

@@ -31,7 +31,7 @@ class user
 	{
 		if(isset($_SESSION['userid']))
 		{
-			$this->userid = $_SESSION['userid'];
+			$this->userid =& $_SESSION['userid'];
 		}
 
 		$this->set_user_details();
@@ -132,7 +132,7 @@ class user
 
 	public function is_admin()
 	{
-		if($this->is_logged_in())
+		if($this->is_logged_in() && isset($this->user_details['administrator']))
 		{
 			return $this->user_details['administrator'];
 		}
@@ -165,6 +165,10 @@ class user
 		$message = 'Your password for your account on '. Settings::singleton()->get_setting('site_name_long').' has been reset<br />Your password is '.$password;
 		$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
 		$subject = 'Password change at '.settings::singleton()->get_setting('site_name_long');
+		
+		if(isset($_SESSION['user_details'])){
+			unset($_SESSION['user_details']);
+		}
 
 		return common::email($this->email(), $from, $subject, $message, true);
 	}
@@ -187,17 +191,28 @@ class user
 	{		
 		if(isset($this->userid) && $this->userid != 0)
 		{
-			$user_data = Database::Singleton()->sql_select_first(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
-			if(!isset($user_data) or $user_data != NULL)
+			if(!isset($_SESSION['user_details']) || $force)
 			{
-				$this->user_details = json_decode($user_data['data'], TRUE);
+				$user_data = Database::Singleton()->sql_select_first(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
+				if(!isset($user_data) or $user_data != NULL)
+				{
+					$_SESSION['user_details'] = json_decode($user_data['data'], TRUE);
+				}
+				
+				$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
+				$_SESSION['user_details']['username'] = $user_details2['username'];
+				$_SESSION['user_details']['administrator'] = $user_details2['admin'];
 			}
+
+			$this->user_details =& $_SESSION['user_details'];
 			
-			$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
-			$this->user_details['username'] = $user_details2['username'];
-			$this->user_details['administrator'] = $user_details2['admin'];
-	
-			$this->lists = Lists::Singleton()->get_lists_for_user($this->userid);
+			if(!isset($_SESSION['lists']) || $force)
+			{
+				$_SESSION['lists'] = Lists::Singleton()->get_lists_for_user($this->userid);
+			}
+
+			$this->lists =& $_SESSION['lists'];
+			
 		}
 		
 		if(!isset($this->user_details['id']))

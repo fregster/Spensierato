@@ -46,7 +46,8 @@ Growler.Classic = new Class({
 				width: this.options.width,
 				position: 'fixed',
 				top: 0,
-				right: 0
+				right: 0,
+				zIndex: 4000
 			}
 		});
 		$(document.body).grab(this.container);
@@ -116,9 +117,10 @@ Growler.Modern = new Class({
 			fontSize: '12px',
 			opacity: 0,
 			WebkitBoxShadow: '2px 2px 12px #777777',
-			MozBoxShadow: '2px 2px 12px #777777' 
+			MozBoxShadow: '2px 2px 12px #777777', 
+			zIndex: 4000	
 		},
-		timeOut: 2000,
+		timeOut: 2000
 	},
 	container: null,
 	

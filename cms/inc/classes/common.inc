@@ -383,6 +383,7 @@ abstract class Common
 			else
 			{
 				warnings::singleton()->register('Cookies', 'Cookies must be enabled to be able to login');
+				common::redirect('cookiecheckfailed');
 				return false;
 			}
 		}

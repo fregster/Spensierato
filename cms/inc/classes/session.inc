@@ -36,6 +36,7 @@ class session
 		//Only load cookie data if a cookie has been sent to help comply with EU reg's
 		if(isset($_COOKIE['PHPSESSID']) || isset($_COOKIE['CMS']))
 		{
+//			session_set_cookie_params(0, Settings::singleton()->get_setting('document_root'));
 			session_start();
 			$this->session_user_agent_check();
 			$this->session_ip_check();

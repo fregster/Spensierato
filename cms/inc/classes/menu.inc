@@ -72,16 +72,22 @@ class Menu
 
 		//Test if we are on a top page and so don't need parents and parallel links
 		$toppage = false;
-		if(isset($menu_array['top']) && is_array($menu_array['top']))
-		{
-			foreach($menu_array['top'] as $top)
-			{
-				if($top['id'] == $this->current_page)
-				{
-					$toppage = true;
-				}
-			}
+		
+		if($this->current_page_details['parent_id'] == 0){
+			$toppage = true;
 		}
+		
+//NOTE: Not sure if this is needed anymore, seems to cause more problems than it was suposed to fix so I'll leave it commented out until I rember why it was here
+//		if(!$toppage && isset($menu_array['top']) && is_array($menu_array['top']))
+//		{
+//			foreach($menu_array['top'] as $top)
+//			{
+//				if($top['id'] == $this->current_page)
+//				{
+//					$toppage = true;
+//				}
+//			}
+//		}
 
 		if(!$toppage)
 		{
@@ -96,11 +102,13 @@ class Menu
 				$menu_array['current'] = $this->current_page_details;
 			}
 		}
-		$menu_array['full_menu'] = $this->get_full_menu();
+		
 		if(isset($menu_array['top'][0]))
 		{
 			$menu_array['top_menu'] = $this->get_top_menu($menu_array['top'][0]['parent_id']);
 		}
+		
+		$menu_array['full_menu'] = $this->get_full_menu();
 		
 		$menu_array['children'] = $this->children;
 		
@@ -359,7 +367,7 @@ class Menu
 	
 	private function get_top_menu($ids = array(0))
 	{
-		if($this->options['top_menu_depth'] > 1)
+		if($this->options['top_menu_depth'] >= 1)
 		{
 			$menu = array();
 //			$ids = array(0);
@@ -374,6 +382,11 @@ class Menu
 			}
 			
 			$menu[] = database::Singleton()->sql_select_first(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', 'id', $ids);
+			
+			if($ids[0] == $this->current_page_details['id'] )
+			{
+				$menu[0]['selected'] = true;
+			}
 			
 			//TODO: This pulls the entire menu structure to get the top menu which is just a bit rubish, recode perhalps with different logic for different senarios
 			while($i <= $this->options['top_menu_depth'])
@@ -394,6 +407,11 @@ class Menu
 					
 					$result['level'] = $i;
 					$menu[0] = array_merge($menu, $result);
+				}
+				else
+				{
+					//There were no children do not waste cycles fetching more menu levels
+					return $menu;
 				}
 				++$i;
 			}

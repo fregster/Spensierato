@@ -42,7 +42,7 @@
 	<xsl:template name="menu">
 		<div id="page_section_left_menu">
 			<ul class="link_menu">
-				<xsl:for-each select="/page/menu/menu/top_menu/menu_item//menu_item">
+				<xsl:for-each select="/page/menu/menu/top_menu/menu_item/menu_item">
 					<xsl:choose>
 						<xsl:when test="id = /page/menu/menu/current/id">
 							<li class="menu_top_selected"><xsl:call-template name="menu_link"/></li>

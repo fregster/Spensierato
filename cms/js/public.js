@@ -86,11 +86,7 @@ if(typeof window.LazyLoad == 'function'){
 	lazyloader = new LazyLoad({
 		range: 200,
 		image: img_host+'blank.gif',
-		resetDimensions: true,
-		elements: 'img',
-		container: 'page_section_body',
-		mode: 'vertical',
-		startPosition: 0
+		container: window
 	});
 } 
 }
@@ -435,4 +431,4 @@ hex+=("0"+parseInt(_4f[i]).toString(16)).slice(-2);
 return "#"+hex;
 };
 
-init();
+window.addEvent('domready',function() { init(); });

@@ -1,22 +1,22 @@
 <?php
 if (!user::Singleton()->is_admin()) common::bounce_to_referer();
-if(is_writable(Settings::singleton()->get_setting('cms_folder_logs'))) //Is the log folder writable
+if(is_writable(Settings::singleton()->get_setting('cms_folder_search'))) //Is the log folder writable
 {
 	//Can we use lucene search?
-	if(is_readable(Settings::singleton()->get_setting('cms_folder_logs').'search_index/segments.gen'))
+	if(is_readable(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index'.DS.'segments.gen'))
 	{
 		echo('<p>Deleting Old Index</p>');
-		foreach (glob(Settings::singleton()->get_setting('cms_folder_logs').'search_index/*') as $filename) 
+		foreach (glob(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index'.DS.'*') as $filename) 
 		{
-			unlink(Settings::singleton()->get_setting('cms_folder_logs').'search_index/'.basename($filename));
+			unlink(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index'.DS.basename($filename));
 		}
 		
-//	    $lucene_search = new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index');
+//	    $lucene_search = new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_search').'search_index');
 	}
 
 	
 	echo('<p>Creating New Index</p>');
-	new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_logs').'search_index', true);
+	new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index', true);
 	
 	$pages = Database::Singleton()->sql_select(array('id'), 'tbl_pages');
 	foreach($pages as $page)
@@ -29,6 +29,6 @@ if(is_writable(Settings::singleton()->get_setting('cms_folder_logs'))) //Is the 
 	die('done');
 	
 }
-echo(Settings::singleton()->get_setting('cms_folder_logs'));
+echo(Settings::singleton()->get_setting('cms_folder_search'));
 die('Unknown error');
 ?>

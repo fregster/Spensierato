@@ -82,12 +82,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 			debug($doc_root_prefix.'writeable was not a writeable folder' );
 		}
 
-		$dir_logs = realpath($doc_root_prefix.'writeable'.DS.'logs');
-		$dir_uploads = realpath($doc_root_prefix.'writeable'.DS.'uploads');
-		$dir_uploads_tmp = realpath($doc_root_prefix.'writeable'.DS.'uploads'.DS.'tmp');
-		$dir_uploads_orig_images = realpath($doc_root_prefix.'writeable'.DS.'uploads'.DS.'original_images');
-		$dir_cache = realpath($doc_root_prefix.'writeable'.DS.'cache');
-		$dir_search = realpath($doc_root_prefix.'writeable'.DS.'search');
+		$dir_logs = $doc_root_prefix.'writeable'.DS.'logs';
+		$dir_uploads = $doc_root_prefix.'writeable'.DS.'uploads';
+		$dir_uploads_tmp = $doc_root_prefix.'writeable'.DS.'uploads'.DS.'tmp';
+		$dir_uploads_orig_images = $doc_root_prefix.'writeable'.DS.'uploads'.DS.'original_images';
+		$dir_cache = $doc_root_prefix.'writeable'.DS.'cache';
+		$dir_search = $doc_root_prefix.'writeable'.DS.'search';
 		
 		@mkdir($dir_logs);
 		@mkdir($dir_uploads);
@@ -99,6 +99,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	}
 	else
 	{
+		debug('Setting custom folders');
 		$dir_logs = realpath($doc_root_prefix.post::variable('cms_folder_logs'));
 		$dir_uploads = realpath($doc_root_prefix.post::variable('cms_folder_downloads'));
 		$dir_uploads_tmp = realpath($doc_root_prefix.post::variable('cms_folder_uploads'));
@@ -278,12 +279,12 @@ $GLOBALS[\'smtp_username\'] = '. post::variable('smtp_username').';
 $GLOBALS[\'smtp_password\'] = '. post::variable('smtp_password').';
 
 //Paths to folders in the filesystem
-$GLOBALS[\'cms_folder_uploads\'] = \''.$dir_uploads_tmp.'\';
-$GLOBALS[\'cms_folder_downloads\'] = \''.$dir_uploads.'\';
-$GLOBALS[\'cms_folder_orig_images\'] = \''.$dir_uploads_orig_images.'\';
-$GLOBALS[\'cms_folder_logs\'] = \''.$dir_logs.'\';
-$GLOBALS[\'cms_folder_cache\'] = \''.$dir_cache.'\';
-$GLOBALS[\'cms_folder_search\'] = \''.$dir_search.'\';
+$GLOBALS[\'cms_folder_uploads\'] = \''.realpath($dir_uploads_tmp).'\';
+$GLOBALS[\'cms_folder_downloads\'] = \''.realpath($dir_uploads).'\';
+$GLOBALS[\'cms_folder_orig_images\'] = \''.realpath($dir_uploads_orig_images).'\';
+$GLOBALS[\'cms_folder_logs\'] = \''.realpath($dir_logs).'\';
+$GLOBALS[\'cms_folder_cache\'] = \''.realpath($dir_cache).'\';
+$GLOBALS[\'cms_folder_search\'] = \''.realpath($dir_search).'\';
 ';
 
 	/**

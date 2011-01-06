@@ -1,4 +1,30 @@
 <?php
+/**
+ * Perform a simple text replace
+ * This should be used when the string does not contain HTML
+ * (off by default)
+ */
+define('STR_HIGHLIGHT_SIMPLE', 1);
+
+/**
+ * Only match whole words in the string
+ * (off by default)
+ */
+define('STR_HIGHLIGHT_WHOLEWD', 2);
+
+/**
+ * Case sensitive matching
+ * (off by default)$id
+ */
+define('STR_HIGHLIGHT_CASESENS', 4);
+
+/**
+ * Overwrite links if matched
+ * This should be used when the replacement string is a link
+ * (off by default)
+ */
+define('STR_HIGHLIGHT_STRIPLINKS', 8);
+		
 class Search
 {
 	private static $instance;
@@ -56,13 +82,13 @@ class Search
 		//Can we use lucene search?
 		if(Settings::singleton()->get_setting('use_lucence_search'))
 		{
-			if(is_readable(Settings::singleton()->get_setting('cms_folder_search').'search_index/segments.gen'))
+			if(is_readable(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index'.DS.'segments.gen'))
 			{
 	    		return true;
 			}
 			else if (is_writable(Settings::singleton()->get_setting('cms_folder_search')) && user::Singleton()->is_admin())
 			{
-				if(new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_search').'search_index', true))
+				if(new Zend_Search_Lucene(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index', true))
 				{
 					Warnings::Singleton()->register('Enhanced Search Created', 'The enhanced search created an index rebuild will be required');
 					return true;
@@ -294,6 +320,7 @@ class Search
 		$output_text = '...';
 		$output_array_store = array();
 		$output_array_keys = array();
+		$i = 0;
 
 		//word_possition[position in string] => length
 		$word_position = array();
@@ -421,32 +448,6 @@ class Search
 
 	private function str_highlight($text, $needle, $options = null, $highlight = null)
 	{
-		/**
-		 * Perform a simple text replace
-		 * This should be used when the string does not contain HTML
-		 * (off by default)
-		 */
-		define('STR_HIGHLIGHT_SIMPLE', 1);
-
-		/**
-		 * Only match whole words in the string
-		 * (off by default)
-		 */
-		define('STR_HIGHLIGHT_WHOLEWD', 2);
-
-		/**
-		 * Case sensitive matching
-		 * (off by default)$id
-		 */
-		define('STR_HIGHLIGHT_CASESENS', 4);
-
-		/**
-		 * Overwrite links if matched
-		 * This should be used when the replacement string is a link
-		 * (off by default)
-		 */
-		define('STR_HIGHLIGHT_STRIPLINKS', 8);
-
 		/**
 		 * Highlight a string in text without corrupting HTML tags
 		 *

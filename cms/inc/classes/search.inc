@@ -25,6 +25,14 @@ define('STR_HIGHLIGHT_CASESENS', 4);
  */
 define('STR_HIGHLIGHT_STRIPLINKS', 8);
 		
+/**
+ * 
+ * Simple old school style class for providing a standard interface for a search engine.
+ * The class is more a container and interfaced through a single Singleton object.
+ * 
+ * @author paulfryer
+ *
+ */
 class Search
 {
 	private static $instance;
@@ -77,6 +85,11 @@ class Search
 		return $this->disabled;
 	}
 	
+	/**
+	 * 
+	 * Is Lucence enabled and available?
+	 * If it is not available but is enabled attempt to create the index
+	 */
 	public static function lucence()
 	{
 		//Can we use lucene search?
@@ -182,6 +195,10 @@ class Search
 		return $xml;
 	}
 
+	/**
+	 * 
+	 * The main method to get the results and process the results returned from the DB to account for security etc
+	 */
 	private function get_results()
 	{		
 		$results = $this->get_results_from_index();
@@ -221,6 +238,10 @@ class Search
 		}
 	}
 	
+	/**
+	 * 
+	 * Standard interface method to always retrieve the search results from the best posible search type
+	 */
 	private function get_results_from_index()
 	{		
 		if($this->lucene_search !== false)
@@ -508,6 +529,11 @@ class Search
 	    return $text;
 	}
 	
+	/**
+	 * 
+	 * Public method to recreate the search index object for a specific element, this forces a complete page build that this element exsists on
+	 * @param element ID int $id
+	 */
 	public function add_to_index($id)
 	{
 		$element = Element::type($id); //Quickly create a blank element of the same type to see if it has files

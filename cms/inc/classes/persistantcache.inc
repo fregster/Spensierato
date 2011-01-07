@@ -25,9 +25,14 @@
 * Version 2.1 Released Dec 2009
 */
 
-if(!defined('PREFIX'))
+if(!defined('CACHE_PREFIX'))
 {
-	define('PREFIX', 'cache_kljliouo_'); //Prefix the key names to help prevent collisions
+	define('CACHE_PREFIX', 'cache_kljliouo_'); //Prefix the key names to help prevent collisions
+}
+
+if(!defined('CACHE_PATH'))
+{
+	define('CACHE_PATH', sys_get_temp_dir().DS);
 }
 
 /**
@@ -153,7 +158,7 @@ class persistantcache
 	 */
 	protected function build_key($name)
 	{
-		return sha1(PREFIX.$name);
+		return sha1(CACHE_PREFIX.$name);
 	}
 
 	/**
@@ -330,6 +335,7 @@ class persistantcache_memcache extends persistantcache
 		{
 			return unserialize($this->decrypt($result['value']));
 		}
+		
 		return false;
 	}
 
@@ -399,7 +405,7 @@ class persistantcache_file extends persistantcache
 	 * Please ensure this folder is kept purley for this cache, else the purge and drop might delete your files
 	 */
 
-	private $file_cache_path = '/tmp/cms_cache/'; //Remeber trailing /
+	private $file_cache_path = CACHE_PATH; //Remeber trailing /
 	private $max_file_size = 20480; //The max string length of the serialized array
 	private $file_system_maintance = true;
 	private $max_time_before_maintance = 3600; //Seconds before maintance is ran
@@ -427,11 +433,11 @@ class persistantcache_file extends persistantcache
 	public function save($name, $value, $time = 0)
 	{
 		if(!$this->enabled){ return false; }
-		$data = build_save($name, $value, $time);
+		$data = $this->build_save($name, $value, $time);
 
-		if($file = fopen($this->build_file_path($data['name']), 'wb'))
+		if(isset($data['data']) && $file = fopen($this->build_file_path($data['name']), 'wb'))
 		{
-			$result = fwrite($file, $data['data']);
+			$result = fwrite($file, serialize($data['data']));
 			fclose($file);
 			return $result;
 		}
@@ -441,19 +447,20 @@ class persistantcache_file extends persistantcache
 	public function get($name)
 	{
 		if(!$this->enabled){ return false; }
-		$name = $this->build_key($name);
-
+		$name = $this->build_file_path($this->build_key($name));
+		
 		if(file_exists($name))
 		{
-			$result['time'] = filemtime($file);
-			$result['value'] = file_get_contents($file);
+			$result = array();
+			$result['time'] = filemtime($name);
+			$result['value'] = unserialize(file_get_contents($name));
 		}
 
-		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate']))
-		{
-			return unserialize($this->decrypt($result['value']));
+		if(isset($result) && $result['value']['time'] > $this->time && $this->validate_data($result['value']['value'], $result['value']['validate']))
+		{		
+			return unserialize($this->decrypt($result['value']['value']));
 		}
-
+		
 		return false;
 	}
 
@@ -470,7 +477,7 @@ class persistantcache_file extends persistantcache
 
 	private function build_file_path($name)
 	{
-		return $this->file_cache_path.PREFIX.'_'.$name.'.cache';
+		return $this->file_cache_path.CACHE_PREFIX.'_'.$name.'.cache';
 	}
 }
 

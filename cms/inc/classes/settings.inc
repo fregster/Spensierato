@@ -26,6 +26,8 @@ class Settings
 		$this->new_setting('static_host_skin', $document_root);
 
 		$this->new_setting('static_host_js', $document_root);
+		
+		$this->new_setting('allow_db_settings', true);
 	}
 
 	public function __clone()
@@ -69,7 +71,7 @@ class Settings
 
 	public function get_setting($name)
 	{
-		if(!$this->db_loaded)
+		if(!$this->db_loaded && isset($this->settings['allow_db_settings'][0]) && $this->settings['allow_db_settings'][0])
 		{
 			$this->get_database_settings();
 		}
@@ -83,16 +85,6 @@ class Settings
 
 	public function settings_as_xml()
 	{
-//		$serializer_options = array (
-//			   'addDecl' => FALSE,
-//			   'encoding' => Settings::Singleton()->get_setting('char_set'),
-//			   'indent' => '  ',
-//			   'rootName'  => 'settings',
-//			   'defaultTagName'  => 'setting'
-//			);
-
-		
-//		return xml::array_to_xml($settings, $serializer_options);
 		return xml::array_to_xml_simple($this->get_all_settings(), 'settings', 'setting');
 	}
 	

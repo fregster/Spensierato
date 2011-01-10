@@ -75,6 +75,10 @@ class Menu
 		
 		if($this->current_page_details['parent_id'] == 0){
 			$toppage = true;
+			if(!isset($menu_array['top'][0]))
+			{
+				$menu_array['top'][0] =& $this->current_page_details;
+			}
 		}
 		
 //NOTE: Not sure if this is needed anymore, seems to cause more problems than it was suposed to fix so I'll leave it commented out until I rember why it was here

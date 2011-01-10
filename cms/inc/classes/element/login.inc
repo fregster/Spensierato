@@ -46,10 +46,12 @@ class element_Login extends element_Default
 		{
 			$checked = NULL;
 		}
+		
+		
 
 		$html = '<div id="login_background">'.str_replace('**CMS**username', cookie::Singleton()->get_cookie_value('username'), Template::Singleton()->get_file_content($template)).'</div>';
 
-		$html = str_replace('**CMS**remembered', $checked, $html);
+		$html = str_replace(array('**CMS**remembered', '**CMS**error'), array($checked, User::Singleton()->retrieve('login_error')), $html);
 
 		$this->data = '<data>'. Common::html($html) .'</data>';
 		$this->search = NULL;

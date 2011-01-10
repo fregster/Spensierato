@@ -24,6 +24,7 @@
 						<a name="contents" />
 							<xsl:call-template name="body"/>
 							<!-- <form action="" id="mcetest"><div><textarea cols="20" rows="10">Test</textarea></div></form>  -->
+							<xsl:call-template name="debug"/>
 						</div>
 					</div>
 				</div>
@@ -31,6 +32,5 @@
 				</div>
 			</div>
 			</xsl:element>
-			<xsl:call-template name="debug"/>
         </html>
 </xsl:template>

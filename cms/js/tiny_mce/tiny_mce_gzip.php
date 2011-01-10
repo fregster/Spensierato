@@ -12,6 +12,7 @@
 
 	// Set the error reporting to minimal.
 	@error_reporting(E_ERROR | E_WARNING | E_PARSE);
+	error_reporting(E_ALL);
 
 	// Get input
 	$plugins = explode(',', getParam("plugins", ""));
@@ -92,30 +93,31 @@
 
 	// Add core
 	if ($core == "true") {
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/tiny_mce' . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/tiny_mce' . $suffix . ".js");
 
 		// Patch loading functions
 		$content .= "tinyMCE_GZ.start();";
 	}
-
+echo(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/tiny_mce' . $suffix . '.js');
+die('Content ');
 	// Add core languages
 	foreach ($languages as $lang)
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/langs/' . $lang . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/langs/' . $lang . ".js");
 
 	// Add themes
 	foreach ($themes as $theme) {
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/themes/' . $theme . "/editor_template" . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/themes/' . $theme . "/editor_template" . $suffix . ".js");
 
 		foreach ($languages as $lang)
-			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/themes/' . $theme . "/langs/" . $lang . ".js");
+			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/themes/' . $theme . "/langs/" . $lang . ".js");
 	}
 
 	// Add plugins
 	foreach ($plugins as $plugin) {
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/plugins/' . $plugin . "/editor_plugin" . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/plugins/' . $plugin . "/editor_plugin" . $suffix . ".js");
 
 		foreach ($languages as $lang)
-			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/plugins/' . $plugin . "/langs/" . $lang . ".js");
+			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/plugins/' . $plugin . "/langs/" . $lang . ".js");
 	}
 
 	// Add custom files
@@ -135,9 +137,10 @@
 			$cacheData = $content;
 
 		// Write gz file
-		if ($diskCache && $cacheKey != "")
-			putFileContents($cacheFile, $cacheData);
-
+//		if ($diskCache && $cacheKey != "")
+//			putFileContents($cacheFile, $cacheData);
+die($content);
+die('Hello '.__LINE__. ' ' .__FILE__);
 		// Stream to client
 		echo $cacheData;
 	} else {
@@ -146,14 +149,14 @@
 	}
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
+die('Hello '.__LINE__. ' ' .__FILE__);
 	function getParam($name, $def = false) {
 		if (!isset($_GET[$name]))
 			return $def;
 
 		return preg_replace("/[^0-9a-z\-_,]+/i", "", $_GET[$name]); // Remove anything but 0-9,a-z,-_
 	}
-
+die('Hello '.__LINE__. ' ' .__FILE__);
 	function getFileContents($path) {
 		$path = realpath($path);
 

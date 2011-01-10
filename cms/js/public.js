@@ -70,7 +70,9 @@ autoSearch=$("ajaxSearchResults");
 rounded();
 jsShow();
 jsHide();
-(!typeof(Browser.ie) == 'undefined') ? growl=new Growler.Classic() : growl=new Growler.Modern();
+if(typeof Growler == 'function'){
+	(!typeof(Browser.ie) == 'undefined') ? growl=new Growler.Classic() : growl=new Growler.Modern();
+}
 if(typeof(window['n']) != "undefined"){
 notification(n);
 }

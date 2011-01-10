@@ -28,8 +28,8 @@ abstract class javascript
 {
 	public static function run($files)
 	{
-		$cachedir = Settings::singleton()->get_setting('cms_root') . '/writeable/cache';
-		$jsdir    = Settings::singleton()->get_setting('cms_root') . '/js';
+		$cachedir = Settings::singleton()->get_setting('cms_folder_cache');
+		$jsdir    = Settings::singleton()->get_setting('cms_root') . DS . 'js';
 
 		if(Settings::singleton()->get_setting('js_cache'))
 		{
@@ -39,11 +39,17 @@ abstract class javascript
 			}
 			else
 			{
-				if(is_writable(Settings::singleton()->get_setting('cms_root') . '/writeable'))
+				if(is_writable(Settings::singleton()->get_setting('cms_root') . DS .'writeable'))
 				{
 					mkdir($cachedir);
 				}
-				$cachedir = '/tmp/cms';
+				$cachedir = sys_get_temp_dir().DS.'cms';
+				
+				if(is_writeable(sys_get_temp_dir()))
+				{
+					mkdir($cachedir);
+				}
+				
 				if(is_writable($cachedir))
 				{
 					$cache 	  = true;
@@ -216,20 +222,24 @@ abstract class javascript
 		$contents = str_replace('__CMS__PAGE_ID', currentPage::singleton()->id(), $contents);
 
 		//Remove comments from the string
-		switch (Settings::Singleton()->get_setting('js_minify'))
+		if(!get::variable('full', 'isset'))
 		{
-			case '1':
-				//Use internal code minification
-				$contents = Common::remove_js_comments(file_get_contents($contents));
-			    break;
-
-			case '2':
-				//Use external minification
-				$contents = JSMin::minify(file_get_contents($contents));
-			    break;
-
-			default:
-				break;
+			$notice = '/* add ?full=1 to download the full JS including licence information as parts of this JS file may be licence restricted */ ';
+			switch (Settings::Singleton()->get_setting('js_minify'))
+			{
+				case '1':
+					//Use internal code minification
+					$contents = $notice.Common::remove_js_comments(file_get_contents($contents));
+				    break;
+	
+				case '2':
+					//Use external minification
+					$contents = $notice.JSMin::minify(file_get_contents($contents));
+				    break;
+	
+				default:
+					break;
+			}
 		}
 
 		return($contents);

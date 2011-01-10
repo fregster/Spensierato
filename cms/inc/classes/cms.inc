@@ -77,7 +77,7 @@ class CMS
 		Settings::Singleton()->new_setting('cms_root', $this->cms_root, true, true);
 
 		//Work out the Site file system root
-		$this->site_root = Common::site_root();
+		$this->site_root = SITE_ROOT;
 
 		//Static includes folder
 		Settings::Singleton()->new_setting('site_folder_static_includes', ($this->cms_root.DS.'inc'.DS.'static'.DS), false, true);

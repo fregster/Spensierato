@@ -23,14 +23,12 @@ function file_root()
 
 function get_site_document_root()
 {
-    $document_root = $GLOBALS['document_root_folder_only'];
-
     if(!Common::rewrite_enabled() && isset($GLOBALS['allow_rewrite']) && $GLOBALS['allow_rewrite']) //We use the globals here as the settings class might not be loaded
     {
-    	$document_root .= '/index.php';
+    	return DOCUMENT_ROOT_FOLDER_ONLY . '/index.php';
     }
 
-	return $document_root;
+	return DOCUMENT_ROOT_FOLDER_ONLY;
 }
 
 function get_site_document_root_folder_only() //This does NOT work if we have a front end proxy, needs thought on a possible solution.

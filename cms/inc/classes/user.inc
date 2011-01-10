@@ -101,11 +101,14 @@ class user
 		$auth = $this->site_auth();
 		if($auth === true)
 		{
+			user::Singleton()->store('login_error', null);
+			warnings::Singleton()->drop('login_error', 0);
 			$this->do_login();
 		}
 		else
 		{
 			warnings::Singleton()->register('Login Failed', 'Either your Username or Password was incorrect or you are not registered', 0);
+			user::Singleton()->store('login_error', 'Either your Username or Password was incorrect or you are not registered');
 			Common::redirect_inc_vars(implode('/', common::get_path_vars()), array('authfailed' => $auth));
 		}
 		Common::bounce_to_referer();
@@ -337,4 +340,16 @@ class user
 		return 'Unknown';
 	}
 
+	public function store($name, $value)
+	{
+		return $_SESSION[$name] = $value;
+	}
+	
+	public function retrieve($name)
+	{
+		if(!isset($_SESSION[$name])){
+			return null;
+		}
+		return $_SESSION[$name];
+	}
 }

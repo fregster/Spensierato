@@ -62,15 +62,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	//detect the server OS and set the doc root accordingly.
 	if (stripos(PHP_OS, 'darwin') !== FALSE) {
 		$os = 'mac';
-		$doc_root_prefix = $GLOBALS['site_root'].'/'; //OSX has a unix-type folder structure
+		$doc_root_prefix = SITE_ROOT.'/'; //OSX has a unix-type folder structure
 	}
 	else if(stripos(PHP_OS, 'win') !== FALSE){
 		$os = 'windows';
-		$doc_root_prefix = $GLOBALS['site_root'].'/';
+		$doc_root_prefix = SITE_ROOT.'/';
 	}
 	else{
 		$os = 'unix';
-		$doc_root_prefix = $GLOBALS['site_root'].'/';
+		$doc_root_prefix = SITE_ROOT.'/';
 	}
 	
 	if(!post::variable('cms_folder_use_custom'))
@@ -143,12 +143,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 	debug('Vars set ('.$GLOBALS['table_prefix'].')');
 	
-	require_once($include_path.'/cms/database/database.inc');
+	require_once($include_path.DIRECTORY_SEPARATOR.'cms'.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.'database.inc');
 	$install_folder = dirname(__FILE__);
 	$site_root = file_root();
 
 	//set the path for the settings file
-	$settings_file = $site_root.'/spensierato_setup.inc';
+	$settings_file = $site_root.DIRECTORY_SEPARATOR.'spensierato_setup.inc';
 	
 	/*
 	 * Create the db object
@@ -302,7 +302,7 @@ $GLOBALS[\'cms_folder_search\'] = \''.realpath($dir_search).'\';
 	else
 		debug('Settings file created');
 
-	debug('The site is now setup<br/><strong>Note: If you manual set the install directive you will need to remove it now!</strong><br />You can log in with the user '.$username.' and the password '.$password.'<br/>Click <a href="'.$GLOBALS['document_root'].'">here</a> to login');
+	debug('The site is now setup<br/><strong>Note: If you manual set the install directive you will need to remove it now!</strong><br />You can log in with the user '.$username.' and the password '.$password.'<br/>Click <a href="'.DOCUMENT_ROOT.'">here</a> to login');
 	exit;
 }
 

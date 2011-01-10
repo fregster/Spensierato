@@ -32,7 +32,10 @@ class warnings
 
 	protected function __construct()
 	{
-		$this->warnings = array();
+		if(!isset($_SESSION['warnings'])){
+			$_SESSION['warnings'] = array();
+		}
+		$this->warnings =& $_SESSION['warnings'];
 		//Do standard warning checks here for easy of code finding.
 
 		//Check paths are writable
@@ -140,6 +143,25 @@ class warnings
 		}
 
 		return null;
+	}
+	
+	public function drop($warning_title, $level = null)
+	{
+		if(isset($level) && $level != null && is_int($level)){
+			unset($this->warnings[$level][$warning_title]);
+			return true;
+		}
+		
+		$i = 0;
+		while ($i < 6)
+		{
+			if(isset($this->warnings[$i][$warning_title])){
+				unset($this->warnings[$i][$warning_title]);
+				return true;
+			}
+			++$i;
+		}
+		return false;
 	}
 
 	public function get_as_xml($level = 0)

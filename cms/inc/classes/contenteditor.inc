@@ -4,13 +4,12 @@ abstract class ContentEditor
 	public static function run($value)
 	{
 		//Get TinyMCE file
-		$value = Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/'.$value;
-
-		if($value == Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/tiny_mce_gzip.php')
+		$value = Settings::Singleton()->get_setting('cms_root').'js'.DS.'tiny_mce'.DS.$value;
+		if($value == Settings::Singleton()->get_setting('cms_root').'js'.DS.'tiny_mce'.DS.'tiny_mce_gzip.php')
 		{
 			//TinyMCE Compressor so just let it run
-			include($value);
-			die();
+			require($value);
+			die('Compressor');
 		}
 
 		if(file_exists($value))

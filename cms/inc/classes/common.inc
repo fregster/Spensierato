@@ -25,6 +25,14 @@ abstract class Common
 		}
 		Common::redirect($url);
 	}
+	
+	public static function valid_url($url)
+	{
+		$urlregex = "^(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
+		if (eregi($urlregex, $url)) { return true; }
+		
+		return false;
+	}
 
 	public static function redirect($url)
 	{
@@ -89,25 +97,20 @@ abstract class Common
 
 	public static function document_root()
     {
-		return $GLOBALS['document_root'];
+		return DOCUMENT_ROOT;
     }
 
 	public static function document_root_folder_only()
     {
-		return $GLOBALS['document_root_folder_only'];
+		return DOCUMENT_ROOT_FOLDER_ONLY;
     }
 
 	public static function site_root()
 	{
-		if(isset($GLOBALS['site_root']))
-		{
-			return $GLOBALS['site_root'];
-		}
 		$ext = substr($_SERVER['SCRIPT_FILENAME'], -4 , 4);
 		$a = substr($_SERVER['SCRIPT_FILENAME'], 0 , strripos($_SERVER['SCRIPT_FILENAME'], $ext));
-		$GLOBALS['site_root'] = substr($a, 0, strripos($a, '/'));
 		
-		return $GLOBALS['site_root'];
+		return substr($a, 0, strripos($a, '/'));
 	}
 
 	public static function post_sql_safe($var)
@@ -397,7 +400,12 @@ abstract class Common
 
     public static function rewrite_enabled()
     {
-    	if ( in_array("mod_rewrite", apache_get_modules()) && file_exists(common::site_root().DIRECTORY_SEPARATOR.'.htaccess'))
+    	if(defined('SITE_ROOT')){
+    		$root = SITE_ROOT;
+    	} else {
+    		$root = common::site_root();
+    	}
+    	if ( in_array("mod_rewrite", apache_get_modules()) && file_exists($root.DIRECTORY_SEPARATOR.'.htaccess'))
     	{
     		return true;
     	}

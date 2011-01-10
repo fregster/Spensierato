@@ -12,6 +12,7 @@ class element_RSS extends element_Default
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'RSS Feed';
+		$this->rss_data = false;
 		$this->allowed_tags(array('href' => 'href', 'Use_Internal_template' => 'checkbox', 'Remote_xslt' => 'href'));
 		if(Settings::Singleton()->get_setting('uploads_enabled'))
 		{
@@ -58,21 +59,27 @@ class element_RSS extends element_Default
 	
 	private function load_remote_data($url, $maxage)
 	{
-		$name = 'rss_'.$url;
-		$data = persistantcache::Singleton()->get($name);
-		if(!$data)
+		if(Common::valid_url($url))
 		{
-			$data = $this->get_url_contents($url);
-			persistantcache::Singleton()->save($name, $data, $maxage);
+			$name = 'rss_'.$url;
+			$data = persistantcache::Singleton()->get($name);
+			if(!$data)
+			{
+				$data = $this->get_url_contents($url);
+				persistantcache::Singleton()->save($name, $data, $maxage);
+			}
+			return $data; 
 		}
-		return $data; 
+		return false;
 	}
 	
 	protected function transform_data()
 	{
-		
-		$this->rss_data = @simplexml_load_string($this->get_url_contents($this->href)); //Load the RSS as XML to check validity		
-					
+		if(Common::valid_url($this->href))
+		{
+			$this->rss_data = @simplexml_load_string($this->get_url_contents($this->href)); //Load the RSS as XML to check validity		
+		}
+				
 		if($this->rss_data !== FALSE && $this->xslt !== FALSE) 
 		{
 
@@ -89,20 +96,23 @@ class element_RSS extends element_Default
 	}
 	
 	private function get_url_contents($url){
-		if(function_exists('curl_init'))
+		if (common::valid_url($url))
 		{
-	        $crl = curl_init();
-	        $timeout = 3;
-	        curl_setopt ($crl, CURLOPT_URL,$url);
-	        curl_setopt ($crl, CURLOPT_RETURNTRANSFER, 1);
-	        curl_setopt ($crl, CURLOPT_CONNECTTIMEOUT, $timeout);
-	        $ret = curl_exec($crl);
-	        curl_close($crl);
-	        return $ret;
-		}
-		else
-		{
-			return file_get_contents($url);
+			if(function_exists('curl_init'))
+			{
+		        $crl = curl_init();
+		        $timeout = 3;
+		        curl_setopt ($crl, CURLOPT_URL,$url);
+		        curl_setopt ($crl, CURLOPT_RETURNTRANSFER, 1);
+		        curl_setopt ($crl, CURLOPT_CONNECTTIMEOUT, $timeout);
+		        $ret = curl_exec($crl);
+		        curl_close($crl);
+		        return $ret;
+			}
+			else
+			{
+				return file_get_contents($url);
+			}
 		}
 	}
 }

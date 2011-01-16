@@ -21,7 +21,7 @@
 	$isJS = getParam("js", "") == "true";
 	$compress = getParam("compress", "true") == "true";
 	$core = getParam("core", "true") == "true";
-	$suffix = getParam("suffix", "_src") == "_src" ? "_src" : "";
+	$suffix = getParam("suffix", '') == "_src" ? "_src" : "";
 	$cachePath = $GLOBALS['cms_folder_cache']; // Cache path, this is where the .gz files will be stored
 	if(is_writable($cachePath))
 	{
@@ -51,7 +51,6 @@
 
 	// Is called directly then auto init with default settings
 	if (!$isJS) {
-		echo getFileContents(Settings::Singleton()->get_setting('cms_root').'/js/tiny_mce/tiny_mce_gzip.js');
 		die("tinyMCE_GZ.init({});");
 	}
 
@@ -68,9 +67,9 @@
 		$cacheKey = md5($cacheKey);
 
 		if ($compress)
-			$cacheFile = $cachePath . "/tiny_mce_" . $cacheKey . ".gz";
+			$cacheFile = $cachePath . DS . "tiny_mce_" . $cacheKey . ".gz";
 		else
-			$cacheFile = $cachePath . "/tiny_mce_" . $cacheKey . ".js";
+			$cacheFile = $cachePath . DS . "tiny_mce_" . $cacheKey . ".js";
 	}
 
 	// Check if it supports gzip
@@ -87,43 +86,41 @@
 		if ($compress)
 			header("Content-Encoding: " . $enc);
 
-		echo getFileContents($cacheFile);
-		die();
+		die (getFileContents($cacheFile));
+
 	}
 
 	// Add core
 	if ($core == "true") {
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/tiny_mce' . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js'.DS.'tiny_mce'.DS.'tiny_mce' . $suffix . '.js');
 
 		// Patch loading functions
 		$content .= "tinyMCE_GZ.start();";
 	}
-echo(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/tiny_mce' . $suffix . '.js');
-die('Content ');
+
 	// Add core languages
 	foreach ($languages as $lang)
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/langs/' . $lang . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js'.DS.'tiny_mce'.DS.'langs' . $lang . '.js');
 
 	// Add themes
 	foreach ($themes as $theme) {
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/themes/' . $theme . "/editor_template" . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js'.DS.'tiny_mce'.DS.'themes'.DS . $theme . DS. 'editor_template' . $suffix . '.js');
 
 		foreach ($languages as $lang)
-			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/themes/' . $theme . "/langs/" . $lang . ".js");
+			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js'.DS.'tiny_mce'.DS.'themes' . $theme . DS . 'langs' . DS . $lang . '.js');
 	}
 
 	// Add plugins
 	foreach ($plugins as $plugin) {
-		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/plugins/' . $plugin . "/editor_plugin" . $suffix . ".js");
+		$content .= getFileContents(Settings::Singleton()->get_setting('cms_root'). 'js'. DS.'tiny_mce'.DS.'plugins' . DS . $plugin . DS . 'editor_plugin' . $suffix . '.js');
 
 		foreach ($languages as $lang)
-			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js/tiny_mce/plugins/' . $plugin . "/langs/" . $lang . ".js");
+			$content .= getFileContents(Settings::Singleton()->get_setting('cms_root').'js'.DS.'tiny_mce'.DS.'plugins' . DS . $plugin . DS .'langs' . DS . $lang . '.js');
 	}
 
 	// Add custom files
 	foreach ($custom as $file)
 		$content .= getFileContents($file);
-
 	// Restore loading functions
 	if ($core == "true")
 		$content .= "tinyMCE_GZ.end();";
@@ -139,24 +136,22 @@ die('Content ');
 		// Write gz file
 //		if ($diskCache && $cacheKey != "")
 //			putFileContents($cacheFile, $cacheData);
-die($content);
-die('Hello '.__LINE__. ' ' .__FILE__);
+
 		// Stream to client
-		echo $cacheData;
+		die($cacheData);
 	} else {
 		// Stream uncompressed content
-		echo $content;
+		die($content);
 	}
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-die('Hello '.__LINE__. ' ' .__FILE__);
 	function getParam($name, $def = false) {
 		if (!isset($_GET[$name]))
 			return $def;
 
 		return preg_replace("/[^0-9a-z\-_,]+/i", "", $_GET[$name]); // Remove anything but 0-9,a-z,-_
 	}
-die('Hello '.__LINE__. ' ' .__FILE__);
+
 	function getFileContents($path) {
 		$path = realpath($path);
 
@@ -164,10 +159,11 @@ die('Hello '.__LINE__. ' ' .__FILE__);
 			return "";
 
 		if (function_exists("file_get_contents"))
-			return @file_get_contents($path);
+			return file_get_contents($path);
 
 		$content = "";
 		$fp = @fopen($path, "r");
+		var_dump($fp);
 		if (!$fp)
 			return "";
 
@@ -189,4 +185,3 @@ die('Hello '.__LINE__. ' ' .__FILE__);
 			fclose($fp);
 		}
 	}
-?>

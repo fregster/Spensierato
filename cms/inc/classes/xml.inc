@@ -53,9 +53,6 @@ class xml
 
 	public static function array_to_xml($array, $serializer_options = NULL)
 	{
-		// include class file
-		require_once('XML/Serializer.php');
-
 		// An array of serializer options
 		if(is_null($serializer_options))
 		{
@@ -66,6 +63,12 @@ class xml
 			   'rootName'  => 'xml',
 			   'defaultTagName'  => 'item'
 			);
+		}
+		
+		// include class file
+		if(!@include_once('XML/Serializer.php'))
+		{
+			return xml::array_to_xml_simple($array, $serializer_options['rootName'], $serializer_options['defaultTagName']);
 		}
 
 		// create object

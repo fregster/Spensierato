@@ -101,8 +101,8 @@ if (strcmp($postVars->variable('newPass', 'string'), $postVars->variable('newPas
 
 //get the user id and hash the old/new password values
 $userid = user::Singleton()->id();
-$hashedNewPass = common::return_hash($postVars->variable('newPass', 'string'), false);
-$hashedOldPass = common::return_hash($postVars->variable('oldPass', 'string'), false);
+$hashedNewPass = common::return_hash($postVars->variable('newPass', 'string') . Settings::singleton()->get_setting('random_key'), false);
+$hashedOldPass = common::return_hash($postVars->variable('oldPass', 'string') . Settings::singleton()->get_setting('random_key'), false);
 
 //verify that the old password given is the correct one.
 $verifyInfo = database::Singleton()->sql_select_first(array('id'), 'tbl_users', array('id', 'password'), array($userid, $hashedOldPass));
@@ -121,8 +121,8 @@ if ($postVars->variable('emailPass')) {
 	$to = user::Singleton()->email();
 	$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
 	$subject = 'New password at '.settings::singleton()->get_setting('site_name_long');
-	$message = '<p>Dear user. You have changed your password.<br />The new password is: '.$postVars->variable('newPass', 'string').'.
-				<br />Please keep your passwords safe and secret.
+	$message = '<p>Dear user. You have changed your password.<br /><br />The new password is: '.$postVars->variable('newPass', 'string').'.
+				<br />Please keep your passwords safe and secret.<br />
 				<br />Best regards, <br />'.Settings::singleton()->get_setting('site_name_long').' team.</p>';
 
 	common::email($to, $from, $subject, $message, true);
@@ -130,4 +130,3 @@ if ($postVars->variable('emailPass')) {
 
 //display the success msg
 send_msg(PASS_SUCCESS);
-?>

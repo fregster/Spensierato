@@ -30,8 +30,15 @@ abstract class error
 	
 	public static function do404()
 	{
-		header('HTTP/1.1 404 Forbidden');
+		header('HTTP/1.1 404 File Not Found');
 		die('404 File not found');
+	}
+	
+	public static function nice404()
+	{
+		header('HTTP/1.1 404 File Not Found');
+		error::error_page(404, 'Page not found, perhalps it has moved, try searching for it');
+		exit;
 	}
 	
 	/**

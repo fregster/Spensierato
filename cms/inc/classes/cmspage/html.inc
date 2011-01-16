@@ -5,8 +5,6 @@ class cmspage_html extends cmspage
 	
 	public function initalise()
 	{
-		if(CMS::Singleton()->page_exists(CMS::Singleton()->path_vars(0)) == true)
-		{
 			if(!isset($this->value))
 			{
 				$this->value = CMS::Singleton()->path_vars(0);
@@ -21,6 +19,11 @@ class cmspage_html extends cmspage
 			if(!isset($this->page_details['id']) and isset($this->value) and is_numeric($this->value))
 			{
 				$this->page_details = Database::Singleton()->sql_select_first(array('*'), 'tbl_pages', array('id'), array($this->value));
+			}
+			
+			if(!isset($this->page_details['id']))
+			{
+				error::do404();
 			}
 
 			if(isset($this->page_details['append_tags']) && strlen($this->page_details['append_tags']) > 0)
@@ -71,8 +74,6 @@ class cmspage_html extends cmspage
 			}
 			
 			return true;
-		}
-		return false;
 	}
 	
 	public function run()

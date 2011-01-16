@@ -342,7 +342,7 @@ class database
 					{
 						$details['called'] = debug_backtrace();
 						$i = 1;
-						while((basename($details['called'][$i]['file']) == 'layer.inc' || basename($details['called'][$i]['class']) == 'database' || basename($details['called'][($i+1)]['file']) == 'layer.inc' || basename($details['called'][($i+2)]['file']) == 'layer.inc' || basename($details['called'][($i+3)]['file']) == 'layer.inc' && $i < 6)){
+						while((basename($details['called'][$i]['file']) == 'layer.inc' || (isset($details['called'][$i]['class']) && basename($details['called'][$i]['class']) == 'database') || @basename($details['called'][($i+1)]['file']) == 'layer.inc' || @basename($details['called'][($i+2)]['file']) == 'layer.inc' || @basename($details['called'][($i+3)]['file']) == 'layer.inc' && $i < 6)){
 							++$i;
 						}
 						

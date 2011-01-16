@@ -343,7 +343,6 @@
 					plugins : 'safari,paste,fullscreen,spellchecker,inlinepopups,table',
 					themes : 'simple,advanced',
 					languages : 'en',
-					disk_cache : true,
 					debug : true
 				});
 				</script>

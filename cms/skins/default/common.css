@@ -150,3 +150,4 @@ a.link_item:visited{}
 a.link_item:hover{text-decoration:underline; color:#06F}
 #login_welcome{font-style:bold;}
 #login_error{color:red; font-style:bold italics;}
+.highlighted{color:blue; background-color:yellow;}

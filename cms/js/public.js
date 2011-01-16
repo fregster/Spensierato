@@ -58,6 +58,7 @@ var ToolTips;
 var SpriteTips;
 var growl;
 var lazyloader;
+var highlight;
 function init(){
 if(initalised!=true){
 initalised=true;
@@ -72,7 +73,7 @@ jsShow();
 jsHide();
 if(typeof Growler == 'function'){
 	(!typeof(Browser.ie) == 'undefined') ? growl=new Growler.Classic() : growl=new Growler.Modern();
-}
+} else { use_growl = false; }
 if(typeof(window['n']) != "undefined"){
 notification(n);
 }
@@ -90,7 +91,13 @@ if(typeof window.LazyLoad == 'function'){
 		image: img_host+'blank.gif',
 		container: window
 	});
-} 
+}
+highlight = getQueryVariable("highlight");
+if(highlight.length > 1)
+{
+//	alert(unescape(highlight));
+	highlightSearchTerms(unescape(highlight), false);
+}
 }
 };
 function delayedSearch(){
@@ -432,5 +439,117 @@ hex+=("0"+parseInt(_4f[i]).toString(16)).slice(-2);
 }
 return "#"+hex;
 };
+
+/*
+ * This is the function that actually highlights a text string by
+ * adding HTML tags before and after all occurrences of the search
+ * term. You can pass your own tags if you'd like, or if the
+ * highlightStartTag or highlightEndTag parameters are omitted or
+ * are empty strings then the default <font> tags will be used.
+ */
+
+function doHighlight(bodyText, searchTerm, highlightStartTag, highlightEndTag) 
+{
+	if(!searchTerm) {
+		return bodyText;
+	}
+  // the highlightStartTag and highlightEndTag parameters are optional
+  if ((!highlightStartTag) || (!highlightEndTag)) {
+    highlightStartTag = "<font class='highlighted'>";
+    highlightEndTag = "</font>";
+  }
+ 
+  // find all occurences of the search term in the given text,
+  // and add some "highlight" tags to them (we're not using a
+  // regular expression search, because we want to filter out
+  // matches that occur within HTML tags and script blocks, so
+  // we have to do a little extra validation)
+  var newText = "";
+  var i = -1;
+  var lcSearchTerm = searchTerm.toLowerCase();
+  var lcBodyText = bodyText.toLowerCase();
+    
+  while (bodyText.length > 0) {
+    i = lcBodyText.indexOf(lcSearchTerm, i+1);
+    if (i < 0) {
+      newText += bodyText;
+      bodyText = "";
+    } else {
+      // skip anything inside an HTML tag
+      if (bodyText.lastIndexOf(">", i) >= bodyText.lastIndexOf("<", i)) {
+        // skip anything inside a <script> block
+        if (lcBodyText.lastIndexOf("/script>", i) >= lcBodyText.lastIndexOf("<script", i)) {
+          newText += bodyText.substring(0, i) + highlightStartTag + bodyText.substr(i, searchTerm.length) + highlightEndTag;
+          bodyText = bodyText.substr(i + searchTerm.length);
+          lcBodyText = bodyText.toLowerCase();
+          i = -1;
+        }
+      }
+    }
+  }
+  return newText;
+}
+
+
+/*
+ * This is sort of a wrapper function to the doHighlight function.
+ * It takes the searchText that you pass, optionally splits it into
+ * separate words, and transforms the text on the current web page.
+ * Only the "searchText" parameter is required; all other parameters
+ * are optional and can be omitted.
+ */
+
+function highlightSearchTerms(searchText, treatAsPhrase, warnOnFailure, highlightStartTag, highlightEndTag)
+{
+  // if the treatAsPhrase parameter is true, then we should search for 
+  // the entire phrase that was entered; otherwise, we will split the
+  // search string so that each word is searched for and highlighted
+  // individually
+
+  if (treatAsPhrase) {
+    searchArray = [searchText];
+  } else {
+    searchArray = searchText.split(" ");
+  }
+  
+  if (!document.body || typeof(document.body.innerHTML) == "undefined" || typeof(document.getElementById('page_section_body').innerHTML) == "undefined") {
+    if (warnOnFailure) {
+      alert("Sorry, for some reason the text of this page is unavailable. Highlighting will not work.");
+    }
+    return false;
+  }
+
+  var bodyText = document.getElementById('page_section_body').innerHTML;
+  for (var i = 0; i < searchArray.length; i++) {
+	 if(searchArray[i]){
+		 bodyText = doHighlight(bodyText, searchArray[i], highlightStartTag, highlightEndTag);
+	 }
+  }
+  document.getElementById('page_section_body').innerHTML = bodyText;
+  return true;
+}
+
+function getQueryVariable(variable) {
+	  var query = window.location.href;
+	  var anchor = query.indexOf("?");
+
+	  if(anchor != -1)
+	  {
+	  	var query = query.substring(anchor+1);
+	  }
+	  else
+	  {
+	  	return '';
+	  }
+
+	  var vars = query.split("&");
+	  for (var i=0;i<vars.length;i++) {
+	    var pair = vars[i].split("=");
+	    if (pair[0] == variable) {
+	      return pair[1];
+	    }
+	  } 
+	  return '';
+}
 
 window.addEvent('domready',function() { init(); });

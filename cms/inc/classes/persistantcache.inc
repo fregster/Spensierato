@@ -30,9 +30,19 @@ if(!defined('CACHE_PREFIX'))
 	define('CACHE_PREFIX', 'cache_kljliouo_'); //Prefix the key names to help prevent collisions
 }
 
+if(!defined('DS'))
+{
+	define('DS', DIRECTORY_SEPARATOR);
+}
+
 if(!defined('CACHE_PATH'))
 {
 	define('CACHE_PATH', sys_get_temp_dir().DS);
+}
+
+if(!defined('CACHE_ENCRYPTION_KEY'))
+{
+	define('CACHE_ENCRYPTION_KEY', sha1($_SERVER['SERVER_SIGNATURE']));
 }
 
 /**
@@ -43,7 +53,7 @@ if(!defined('CACHE_PATH'))
 class persistantcache
 {
 	private $encrypt_data = false;
-	private $encryption_key = 'mnbvcfde4567890poiuytrazsxv';
+	private $encryption_key;
 	private $encryption_type = array('MCRYPT_RIJNDAEL_256', 'MCRYPT_TWOFISH256', 'MCRYPT_3DES', 'MCRYPT_CRYPT'); //In order of preference
 	protected $max_cache_time = 300;
 	protected $max_object_size = 20480; //The string length of the serialized array
@@ -71,6 +81,7 @@ class persistantcache
 
 	protected function __construct()
 	{
+		$this->encryption_key = sha1($_SERVER['HTTP_HOST']).CACHE_ENCRYPTION_KEY;
 		$this->init();
 		return false; //Unable to use a persistant cache
 	}
@@ -111,6 +122,7 @@ class persistantcache
 	{
 		$c = __CLASS__;
 //		unset($_SESSION['persistant_cache_type']);
+		if(defined('CACHE_TYPE')) { $c = CACHE_TYPE; }
 		if(isset($_SESSION['persistant_cache_type']) && class_exists($_SESSION['persistant_cache_type']['type'])) { $c = $_SESSION['persistant_cache_type']['type']; } //If a cache type is set ensure it is still available
 
     	if(!isset($_SESSION['persistant_cache_type']) || $_SESSION['persistant_cache_type']['time'] > (persistantcache::$time - persistantcache::$retry_time)) //Check if we have recently checked for a cache type this is per session checking, but still reduces load

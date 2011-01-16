@@ -147,7 +147,7 @@ class user
 		//Create a password
 		if($password == NULL)
 		{
-			$password = common::generate_random_string(8);
+			$password = common::generate_random_string(10);
 		}
 		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
 		//Removed because I need it to be able to be worked out on the client side for the JS sha256 login stuff
@@ -162,7 +162,7 @@ class user
 
 	public function reset_password()
 	{
-		$password = $this->create_password() . Settings::singleton()->get_setting('random_key');
+		$password = $this->create_password();
 
 		//Email the password out
 		$message = 'Your password for your account on '. Settings::singleton()->get_setting('site_name_long').' has been reset<br />Your password is '.$password;

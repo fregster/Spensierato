@@ -28,6 +28,14 @@ Settings::Singleton()->new_setting('site_name_short', 'Spensierato', false, fals
 //For language template (Not implemented)
 Settings::Singleton()->new_setting('site_lang', 'en_gb', false, false, array('en_gb'), 10);
 
+//Setting pspell_lang
+//For language pspell
+Settings::Singleton()->new_setting('pspell_lang', 'en', false, false, array('en'), 10);
+
+//Setting pspell_spelling
+//For language pspell
+Settings::Singleton()->new_setting('pspell_spelling', 'british', false, false, array('british, canadian, american'), 10);
+
 //Setting meta_description
 //
 Settings::singleton()->new_setting('meta_description', 'A free and easy to use, open source content managment system', false, false, true, 2);

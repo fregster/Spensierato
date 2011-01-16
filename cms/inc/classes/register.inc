@@ -60,19 +60,19 @@ class Register
 	{
 		if(capthca::Code_check(post::variable('security_code','is_set')))
 		{
-		//build post data
-		$this->username = post::variable('username','string');
-		$this->email =  post::variable('email','string');
-
-		//Generate a random password this makes the hash even more random
-		$this->salt = common::generate_random_string(16);
-
-		//TODO use POST class!
-		$string = $_SERVER['SERVER_NAME'].Settings::singleton()->get_setting('random_key').CMS::time().$this->username.$this->email.$this->salt;
-		$this->hash = md5($string).sha1($string);
-
-		$this->save_registration();
-		return $this->send_registration();
+			//build post data
+			$this->username = post::variable('username','string');
+			$this->email =  post::variable('email','string');
+	
+			//Generate a random password this makes the hash even more random
+			$this->salt = common::generate_random_string(16);
+	
+			//TODO use POST class!
+			$string = $_SERVER['SERVER_NAME'].Settings::singleton()->get_setting('random_key').CMS::time().$this->username.$this->email.$this->salt;
+			$this->hash = md5($string).sha1($string);
+			
+			$this->save_registration();
+			return $this->send_registration();
 		}
 
 		return false;

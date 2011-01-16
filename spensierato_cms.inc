@@ -98,6 +98,7 @@ try
 	{
 		$install = true;
 		include($include_path.DS.'cms'.DS.'install'.DS.'install.inc');
+		exit;
 	}
 	
 	//Start site

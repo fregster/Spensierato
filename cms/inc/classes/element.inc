@@ -52,6 +52,6 @@ abstract class Element
 			if(is_null($edit_icon)) { $edit_icon = $icon; }
 			array_push($types, array('name' => $name, 'class' => $class, 'icon' => $icon, 'edit_icon' => $edit_icon));
 		}
-		Settings::singleton()->overwrite_setting('elementTypes', $types);
+		Settings::singleton()->overwrite_setting('elementTypes', $types, false);
 	}
 }

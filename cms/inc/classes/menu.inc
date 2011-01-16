@@ -4,7 +4,8 @@ class Menu
 	private static $instance;
 
 	private $menu_xml;
-	private $path;
+	private $path = false;
+	private $path_cache = array();
 
 	//vars needed to work out XML
 	private $current_page; //id
@@ -51,7 +52,7 @@ class Menu
 		$this->current_page_details = cmspage::Singleton()->page_information();
 
 		//Get path to current page
-		$this->path = array_reverse($this->get_path());
+		$this->get_path();
 
 		//Get the parents of the current page
 		$this->get_parents();
@@ -132,7 +133,12 @@ class Menu
 
 	public function get_path()
 	{
-		return $this->get_path_to($this->current_page);
+		if(!$this->path)
+		{
+			$this->path = array_reverse($this->get_path_to($this->current_page));
+			$this->path_cache[$this->current_page] &= $this->path;
+		}
+		return $this->path;
 	}
 	
 	private function breadcrumbs()
@@ -169,9 +175,41 @@ class Menu
 			return $xml;
 		}
 	}
+	
+	private function get_path_to_loop_results($id, $path = array())
+	{
+		$recursion = 10;
+		$results = database::singleton()->sql_select_recursive('id', 'tbl_pages', 'parent_id', null, 'id', $id, $recursion);
+		if(isset($results[0]) && is_array($results[0])){
+			foreach($results[0] as $value)
+			{
+				if($value == null){ break; }
+				$path[] = $value;
+			}
+			if(count($path) == $recursion)
+			{
+				return $this->get_path_to_loop_results($path[$recursion-1], $path);
+			}
+		}
+		else {
+			$path[] = $id;
+		}
+		$this->path_cache[$path[0]] = $path;
+		return $path;
+	}
 
 	public function get_path_to($id)
 	{
+		if(isset($this->path_cache[$id]))
+		{
+			return $this->path_cache[$id];
+		}
+		/**
+		 * Function replaced with a self joining SQL statment to significantly reduce the number of SQL statments at the cost of increased PHP SQL build statment time
+		 * Previous method left in here incase there is a need to revert quickly
+		 */
+		return $this->get_path_to_loop_results($id);
+		
 		$id = intval($id);
 		if(is_int($id))
 		{

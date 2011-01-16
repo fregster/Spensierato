@@ -76,7 +76,7 @@ class cmspage //This relies on CurentPage been loaded
 		}
 		else
 		{
-			$page_details = database::singleton()->sql_select_first(array('*'), 'tbl_pages', NULL, NULL, array('id'), 'ASC');
+			$page_details = database::singleton()->sql_select_first('id', 'tbl_pages', NULL, NULL, array('id'), 'ASC');
 
 			if(is_numeric($page_details['id']))
 			{

@@ -75,11 +75,11 @@ try
 	
 
 	//document root is the URL root ie spensierato.net
-	$GLOBALS['document_root_folder_only'] = get_site_document_root_folder_only();
-	$GLOBALS['document_root'] = get_site_document_root();
+	define('DOCUMENT_ROOT_FOLDER_ONLY', get_site_document_root_folder_only());
+	define('DOCUMENT_ROOT', get_site_document_root());
 
 	//site root is the filesystem root ie /var/www/spensierato/
-	$GLOBALS['site_root'] = get_file_root();
+	define('SITE_ROOT', get_file_root());
 
 	//Include the Site setup code
 	if(is_file(file_root().DS.'spensierato_setup.inc'))

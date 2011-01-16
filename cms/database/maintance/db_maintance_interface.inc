@@ -10,9 +10,9 @@ interface database_maintenance
 	{
 	   if (!isset(self::$instance)) {
 		   
-	   		if(file_exists('./extra/'.$GLOBALS['database_driver'].'.inc'))
+	   		if(file_exists('.'.DS.'extra'.DS.DATABASE_DRIVER.'.inc'))
 	   		{
-	   			$c = 'database_maintenance_'.$GLOBALS['database_driver'];
+	   			$c = 'database_maintenance_'.DATABASE_DRIVER;
 	   		}
 	   		else
 	   		{

@@ -171,16 +171,14 @@ class Security
 		 */
 		if($page_ids == NULL or $page_ids == '')
 		{
-			$page_ids = currentPage::Singleton()->page_path();
+			$page_ids = Menu::Singleton()->get_path();
 		}
 		/**
 		 * A page id has been passed in but it is not an array so get its parents for inherited security
 		 */
 		if(!is_array($page_ids))
 		{
-			$pages = currentPage::Singleton()->get_page_parents($page_ids);
-			array_push($pages, $page_ids);
-			$page_ids = $pages;
+			$page_ids = menu::Singleton()->get_path_to($page_ids);
 		}
 		
 		if($page_ids == null or (is_array($page_ids) && !isset($page_ids[0])))
@@ -192,6 +190,10 @@ class Security
 
 		if($cache !== NULL and $cache !== false)
 		{
+			if($cache === 'no')
+			{
+				return false;
+			}
 			return $cache;
 		}
 
@@ -295,7 +297,7 @@ class Security
 			}
 		}
 
-		return false;
+		return $this->save_cache($what, $page_ids, $user_id, false);
 	}
 
 	public function get_who_can_do($what, $page_ids = NULL)
@@ -378,12 +380,24 @@ class Security
 
 	private function check_cache($what, $page_ids, $user_id)
 	{
+		if(isset($page_ids) && !is_array($page_ids)){
+			$page_ids = array($page_ids);
+		}
 		$key = 'security_'.$what.'_'.implode("_", $page_ids).'_'.$user_id;
-		return persistantcache::singleton()->get($key);
+		$result = persistantcache::singleton()->get($key);
+
+		return $result;
 	}
 
 	private function save_cache($what, $page_ids, $user_id, $result)
 	{
+		//Because the cache return's false on object not found, security failures are not cached so alter the key to allow caching
+		if(!$result){
+			$result = 'no';
+		}
+		if(isset($page_ids) && !is_array($page_ids)){
+			$page_ids = array($page_ids);
+		}
 		$key = 'security_'.$what.'_'.implode("_", $page_ids).'_'.$user_id;
 		persistantcache::singleton()->save($key, $result, $this->security_cache_time);
 		return $result;

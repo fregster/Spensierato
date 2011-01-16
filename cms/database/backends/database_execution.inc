@@ -1,4 +1,11 @@
 <?php
+/**
+ * 
+ * Main interface to the backend database abstraction
+ * Currently supports MDB2, PHP's built in PDO and pure PHP in MySQL
+ * @author Paul Fryer
+ *
+ */
 class database_execution
 {
 	private static $backends = array('mdb2', 'pdo', 'php'); //Preference order of backends

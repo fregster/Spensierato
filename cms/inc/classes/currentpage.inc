@@ -176,55 +176,19 @@ class currentPage
 		return $this->path;
 	}
 
+	/**
+	 * 
+	 * Function replaced in menu
+	 * @param unknown_type $id
+	 */
 	public function get_page_parents($id)
 	{
 		if($id != 0)
 		{
-			$parents_exist = true;
-			$parents = array();
-			$current_page = $id;
+			return menu::Singleton()->get_path_to($id);
+		}
 
-			while($parents_exist == true)
-			{
-				$parents_exist = false;
-//FIXME:	URGENT This currently causes a loop 
-//				if($current_page == $this->id)
-//				{
-//					$result = cmspage::Singleton()->page_information();
-//				}
-//				else
-//				{
-					$result = Database::Singleton()->sql_select(array('id', 'parent_id'), 'tbl_pages', array('id'), array($current_page));
-//				}
-				
-				if(isset($result[0]))
-				{
-					if(isset($result[0]['parent_id']))
-					{
-						$id = $result[0]['parent_id'];
-		
-						array_push($parents, $id);
-		
-						if(($id != 0) && ($id != null) )
-						{
-							$current_page = $id;
-							$parents_exist = true;
-							
-						}
-					}
-					else
-					{
-						$current_page = $id;
-					}
-				}
-			}
-			array_pop($parents);
-		}
-		else
-		{
-			$parents = array();
-		}
-		return $parents;
+		return array();
 	}
 
 	public function include_page($page_id)

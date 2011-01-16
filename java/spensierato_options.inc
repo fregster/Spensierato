@@ -205,19 +205,19 @@ Settings::singleton()->new_setting('phpids', false, false, true, true);
 //Static files hosts
 //If not set then the main document_root var / ajax is used
 //Ajax
-//Settings::Singleton()->new_setting('static_host_ajax', ('ajax.'.$GLOBALS['document_root']));
+//Settings::Singleton()->new_setting('static_host_ajax', ('ajax.'.DOCUMENT_ROOT));
 //Skin and images
-//Settings::Singleton()->new_setting('static_host_skin', ('skin.'.$GLOBALS['document_root']));
+//Settings::Singleton()->new_setting('static_host_skin', ('skin.'.DOCUMENT_ROOT));
 //JS host
-//Settings::Singleton()->new_setting('static_host_js', ('js.'.$GLOBALS['document_root']));
+//Settings::Singleton()->new_setting('static_host_js', ('js.'.DOCUMENT_ROOT));
 
 //Paths
-Settings::Singleton()->new_setting('site_option_css', ($GLOBALS['document_root'] . '/css'));
-Settings::Singleton()->new_setting('site_folder_graphics', ($GLOBALS['document_root'] . '/graphics/'));
+Settings::Singleton()->new_setting('site_option_css', (DOCUMENT_ROOT . '/css'));
+Settings::Singleton()->new_setting('site_folder_graphics', (DOCUMENT_ROOT . '/graphics/'));
 
 /* This has been changed from javascript to js-combine due to debians prototype package url rewriting */
-Settings::Singleton()->new_setting('site_folder_js', ($GLOBALS['document_root'] . '/js-combine/'));
-Settings::Singleton()->new_setting('site_folder_js_direct', ($GLOBALS['document_root'] . '/js/'));
+Settings::Singleton()->new_setting('site_folder_js', (DOCUMENT_ROOT . '/js-combine/'));
+Settings::Singleton()->new_setting('site_folder_js_direct', (DOCUMENT_ROOT . '/js/'));
 
 //Uploads alowed, other options may disable this
 //true / false

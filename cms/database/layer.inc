@@ -1,4 +1,11 @@
 <?php
+/**
+ * 
+ * Main database class
+ * Included from database.inc to ensure the required defines and values are configured
+ * @author Paul Fryer
+ *
+ */
 class database
 {
 	private $options = array('allow_external_calls' => true);
@@ -66,7 +73,7 @@ class database
 		if (!isset(self::$instance))
 		{
 			$c = 'database_'.DATABASE_DRIVER;
-			include(DATABASE_LAYER_PATH.'/server_types/'.DATABASE_DRIVER.'.inc');
+			include(DATABASE_LAYER_PATH . DS . 'server_types' . DS . DATABASE_DRIVER.'.inc');
 		   	if(!class_exists($c))
 		   	{
 		   		die('Unable to create correct database layer type ('.$c.')');
@@ -105,13 +112,18 @@ class database
 			$this->db = database_execution::singleton();
 		}
 		
-		if($this->db->supports_prepared_statments() && $this->sql_use_prepared_statments_if_available)
+		if($this->db->supports_prepared_statments() && $this->sql_use_prepared_statments_if_available && !defined('DATABASE_DISABLE_PREPARED_SQL_STATMENTS'))
 		{
 			$this->sql_can_prepare_statments = true;
 			$this->sql_use_prepared_statments = true;
 			$this->sql_values = array();
 			$this->sql_types = null;
 			$this->sql_prepared_statment_placeholder_prefix = $this->db->prepared_statment_placeholder();
+		}
+		
+		if(defined('DATABASE_DISABLE_SQL_CACHE'))
+		{
+			$this->sql_cache_enabled = false;
 		}
 		
 		if(!function_exists($this->escape_method))
@@ -121,7 +133,7 @@ class database
 
 		if(!$this->error_file)
 		{
-			$this->error_file = DATABASE_LAYER_PATH.'/dberror.html';
+			$this->error_file = DATABASE_LAYER_PATH . DS . 'dberror.html';
 		}
 
 	}
@@ -241,6 +253,11 @@ class database
 		return $this->full_text_search;
 	}
 	
+	/**
+	 * 
+	 * Return a cleaned value or the aprorate prepared statment place holder
+	 * @param mixed $var
+	 */
 	protected function sql_clean_input_value($var)
 	{
 		if($this->sql_use_prepared_statments)
@@ -377,6 +394,104 @@ class database
 		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
 	}
 	
+	/**
+	 * 
+	 * This is a self joining SQL statment to allow selection recursivly where hierarchical or linked data is stored in a single table
+	 * @param string | array $fields
+	 * @param string $table
+	 * @param string $join_col
+	 * @param string | int $join_value
+	 * @param string $where_id_field
+	 * @param string | int $where_id_value
+	 * @param int $max_recursion
+	 * @param bool $FORCE_NO_CACHE
+	 */
+	public function sql_select_recursive($fields = NULL, $table, $join_col, $join_value, $where_id_field = null, $where_id_value = null, $max_recursion = 5, $FORCE_NO_CACHE = FALSE)
+	{
+		$sql = $this->sql_select_recursive_build($fields, $table, $join_col, $join_value, $where_id_field, $where_id_value, $max_recursion);
+		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+	}
+	
+	private function sql_select_recursive_build($fields = NULL, $table, $join_col, $join_value, $where_id_field, $where_id_value, $max_recursion)
+	{
+		if($where_id_field == null){
+			$where_id_field = $join_col;
+		}
+		
+		if($where_id_value == null){
+			$where_id_value = $join_value;
+		}
+		
+		$sql_temp_select = '';
+
+		if(!is_int($max_recursion) || $max_recursion < 1)
+		{
+			return false;
+		}
+		
+		$recursion = 0;
+		while ($recursion <= $max_recursion)
+		{
+			if($fields == NULL)
+			{
+				$sql_temp_select .= " t$recursion.*";
+				if($recursion < $max_recursion)
+				{
+					$sql_temp_select .= ', ';
+				}
+			}
+			else if (!is_array($fields) )
+			{
+				$sql_temp_select .= ' ' . $this->sql_clean_input('t'.$recursion.'.'.$fields, ''). ' AS '.$this->sql_clean_input($fields, '').$recursion;
+				if($recursion < $max_recursion)
+				{
+					$sql_temp_select .= ', ';
+				}
+			}
+			else
+			{
+				$i = 0;
+				$count_fields = count($fields);
+				while($i <= ($count_fields - 1))
+				{
+					$sql_temp_select .= $this->sql_clean_input('t'.$recursion.'.'.$fields[$i], '') . ' AS '.$this->sql_clean_input($fields[$i], '').$recursion;
+	
+					if($i < ($count_fields - 1) || $recursion < $max_recursion)
+					{
+						$sql_temp_select .= ', ';
+					}
+	
+					$i++;
+				}
+			}
+			$recursion++;
+		}
+		
+		$recursion = 0;
+		
+		$sql_temp_join = '';
+		
+		while($recursion < $max_recursion)
+		{
+			$sql_temp_join .= ' LEFT JOIN '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).' AS t'.($recursion+1).' ON t'.($recursion+1).'.'.$where_id_field . ' = t'.($recursion).'.'.$join_col  ;
+			$recursion++;
+		}
+
+		return "SELECT $sql_temp_select FROM ".$this->sql_clean_input($this->prefix.$table, $this->table_quote).' AS t0 '.$sql_temp_join.' WHERE t0.'.$where_id_field.' = '.$this->sql_clean_input_value($where_id_value);
+
+	}
+	
+	/**
+	 * 
+	 * SQL Count statment
+	 * @param string $fields
+	 * @param string $table
+	 * @param string $group_col
+	 * @param array $where_fields
+	 * @param array $where_values
+	 * @param bool $ORDER_BY_COUNT
+	 * @param int $HAVING_COUNT
+	 */
 	public function sql_select_count_group_by_col($fields = NULL, $table, $group_col, $where_fields= NULL, $where_values= NULL, $ORDER_BY_COUNT = TRUE, $HAVING_COUNT = FALSE)
 	{
 		$sql_temp_select = '';
@@ -419,6 +534,16 @@ class database
 		return $this->sql_select_exe($sql, NULL);
 	}
 
+	/**
+	 * 
+	 * Internal build method for building standard parts of SQL quieries
+	 * @param array $fields
+	 * @param string $table
+	 * @param array $where_fields
+	 * @param array $where_values
+	 * @param array $order_fields
+	 * @param string (ASC|DESC) $order_directions
+	 */
 	protected function sql_select_build($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL)
 	{
 		$sql_temp_select = '';
@@ -519,6 +644,14 @@ class database
 		}
 	}
 
+	/**
+	 * 
+	 * Internal method to build the SQL statment for SQL Select max from a field
+	 * @param string $table
+	 * @param string $field
+	 * @param array $where_fields
+	 * @param array $where_values
+	 */
 	protected function sql_max_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		return 'SELECT max( '.$this->sql_clean_input($field, $this->col_quote).' ) FROM '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values);;
@@ -539,12 +672,26 @@ class database
 		return $result[0]['min( sort )'];
 	}
 
+	/**
+	 * 
+	 * Internal method to build the SQL statment for SQL Select min from a field
+	 * @param string $table
+	 * @param string $field
+	 * @param array $where_fields
+	 * @param array $where_values
+	 */
 	protected function sql_min_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		return 'SELECT min( '.$this->sql_clean_input_value($field).' ) FROM '.$this->table_quote.$this->prefix. $this->sql_clean_input($table).$this->table_quote.$this->sql_build_where_string($where_fields, $where_values);
 	}
 
-	//SQL Update time field query
+	/**
+	 * 
+	 * SQL Update timestamp standard filed where ID
+	 * @param string $table
+	 * @param int $id
+	 * @param bool $destroy_cache
+	 */
 	public function sql_update_time($table, $id, $destroy_cache = false)
 	{
 		$sql = $this->sql_update_time_build($table, $id);
@@ -553,10 +700,17 @@ class database
 		return $this->sql_update_exe($sql, null, $destroy_cache);
 	}
 
-	//TODO::This method need's updating to use correct sql cleaning functions and support optional TS field
-	protected function sql_update_time_build($table, $id)
+	/**
+	 * 
+	 * Update timestamp in table based on ID, optional id col, optional timestamp col
+	 * @param string $table
+	 * @param int $id
+	 * @param string $id_col
+	 * @param string $ts_field
+	 */
+	protected function sql_update_time_build($table, $id, $id_col = 'id', $ts_field = 'update_ts')
 	{
-		return 'UPDATE '. $this->prefix. $this->sql_clean_input($table) . ' SET update_ts = ' . $this->value_quote . $this->time . $this->value_quote . ' WHERE id = ' . $this->sql_clean_input_value($id) . ' ';
+		return 'UPDATE '. $this->sql_clean_input($this->prefix.$table, $this->table_quote) . ' SET '.$this->sql_clean_input($ts_field, $this->col_quote).' = ' . $this->sql_clean_input($this->time) . ' WHERE '.$this->sql_clean_input($id_col, $this->col_quote).' = ' . $this->sql_clean_input($id) . ' ';
 	}
 
 	/**
@@ -687,6 +841,14 @@ class database
 		}
 	}
 
+	/**
+	 * 
+	 * SQL insert statment
+	 * Insert in to a table an array of field names and an array of values
+	 * @param string $table
+	 * @param array $fields
+	 * @param array $values
+	 */
 	public function sql_insert($table, $fields, $values)
 	{
 		$this->sql_exe($this->sql_insert_build($table, $fields, $values), $this->sql_values, true);

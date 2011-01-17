@@ -61,6 +61,20 @@
 		</xsl:if>
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
+	
+	<xsl:template match="element[@type = 'element_YouTubeChannel']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:if test="string-length(./data/load) > 1">
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+			<div id="videoBar{./@id}" class="videoBar" style="width:100px">Loading...</div>
+			<script type="text/javascript">LoadVideoBar('<xsl:value-of select="./@id" />','<xsl:value-of select="./data/load" />');</script>
+		</xsl:element>
+		</xsl:if>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
 
 	<xsl:template match="element[@type = 'element_Gallery']">
 		<xsl:call-template name="element_admin_header"/>

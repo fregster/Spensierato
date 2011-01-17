@@ -82,12 +82,7 @@ return false;
 }
 return true;
 };
-function dhtmlLoadScript(_a){
-var e=document.createElement("script");
-e.src=_a;
-e.type="text/javascript";
-document.getElementsByTagName("head")[0].appendChild(e);
-};
+
 function dhtmlLoadCSS(_c){
 var e=document.createElement("link");
 e.href=_c;

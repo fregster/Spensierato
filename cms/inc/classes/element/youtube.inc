@@ -11,10 +11,6 @@ class element_YouTube extends element_Default
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'You Tube Embeded Video';
-		$this->allowed_tags(array('video_id' => 'text'));
-		if (options::singleton()->get_option('admin_mode')) {
-			$this->admin_mode_data['image'] = 'help.png';
-			$this->admin_mode_data['image_edit'] = '';
-		}
+		$this->allowed_tags(array('video_id' => 'text', 'width' => 'numeric', ));
 	}
 }

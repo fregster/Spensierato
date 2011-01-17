@@ -10,6 +10,10 @@ class xml
 	{
 		return array_merge_recursive(xml_to_array($xml1), xml_to_array($xml2));
 	}
+	
+	public static function xmlspecialchars($text, $double = false) {
+		return htmlspecialchars(str_replace('&#039;', '&apos;', htmlspecialchars($text, ENT_QUOTES)), $double);
+	}
 
 	public static function xml_to_array($xml)
 	{

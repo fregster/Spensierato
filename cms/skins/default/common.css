@@ -143,11 +143,12 @@
 #page_section_body{
 	padding-bottom:45px;	
 }
-#link_menu{list-style: none; margin-left: 3px ;margin-right: 3px ;padding-left: 1em;text-indent: -1em; text-align:center;}
-#link_item{margin-left: 5px ;margin-right: 5px}
+#link_menu{list-style:none; margin-left:3px; margin-right:3px; padding-left:1em; text-indent:-1em; text-align:center;}
+#link_item{margin-left:5px; margin-right:5px}
 a.link_item{color:black; text-decoration:none;}
 a.link_item:visited{}
 a.link_item:hover{text-decoration:underline; color:#06F}
 #login_welcome{font-style:bold;}
 #login_error{color:red; font-style:bold italics;}
 .highlighted{color:blue; background-color:yellow;}
+.videoBar{margin-right:5px; margin-left:5px; padding-top:4px; padding-right:4px; padding-left:4px; padding-bottom:0px;}

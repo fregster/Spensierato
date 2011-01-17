@@ -552,4 +552,11 @@ function getQueryVariable(variable) {
 	  return '';
 }
 
+function dhtmlLoadScript(_a){
+	var e=document.createElement("script");
+	e.src=_a;
+	e.type="text/javascript";
+	document.getElementsByTagName("head")[0].appendChild(e);
+	};
+
 window.addEvent('domready',function() { init(); });

@@ -405,7 +405,7 @@ abstract class Common
     	} else {
     		$root = common::site_root();
     	}
-    	if ( in_array("mod_rewrite", apache_get_modules()) && file_exists($root.DIRECTORY_SEPARATOR.'.htaccess'))
+    	if(function_exsists('apache_get_modules') && in_array("mod_rewrite", apache_get_modules()) && file_exists($root.DIRECTORY_SEPARATOR.'.htaccess'))
     	{
     		return true;
     	}

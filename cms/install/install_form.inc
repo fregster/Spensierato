@@ -170,10 +170,11 @@ if(!$rewrite_enabled && !check_inc_restrictions())
 		<div>Database Layer: <select name="db-layer" id="db-layer" onchange="jsCheckHostType();"><?php if(!array_search('MDB2.php', $opt_missing)) { echo '<option value="mdb2">MDB2 (Default)</option>'; } ?><option value="pdo">PDO (Cross SQL platform)</option><option value="php">PHP's Builtin Functions (Not recomended)</option></select></div>
 		<div id="db-driver">
 			<div>Host type: <select id="db-host" name="type" onchange="jsCheckHostTypeDetail();">
-				<option value="mysqli">MySQL 4+</option>
-				<option value="mysql">MySQL 4</option>
-				<option value="mssql">MSSQL (2000, 2005 and 2008)</option>		
-				<option value="sqlite">SQLite (Filesystem based)</option>		
+				<?php if(class_exists('mysqli', false) || class_exists('pdo_mysql', false)) { ?><option value="mysqli">MySQL 4+</option><?php } ?>
+				<?php if(class_exists('mysql', false)) { ?><option value="mysql">MySQL 4</option><?php } ?>
+				<?php if(class_exists('pdo_sqlsrv', false)) { ?><option value="sqlsrv">MSSQL (MS SQL Driver 2005+)</option><?php } ?>
+				<?php if(class_exists('mssql', false)) { ?><option value="mssql">MSSQL (2000, 2005 and 2008)</option><?php } ?>
+				<?php if(class_exists('pdo_sqlite', false) || class_exists('sqlite3', false)) { ?><option value="sqlite">SQLite (Filesystem based)</option><?php } ?>
 			</select></div>
 		</div>
 		<div id="db-host-detail">

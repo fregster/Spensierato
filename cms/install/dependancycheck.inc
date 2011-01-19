@@ -8,6 +8,12 @@ $pear = array('mdb2' => 'mdb2', 'sqlite' => 'MDB2_Driver_sqlite');
 $req_missing = array();
 $opt_missing = array();
 
+$pdo_drivers = array();
+if(class_exists('PDO'))
+{
+	$pdo_drivers = PDO::getAvailableDrivers();
+}
+
 if(!version_compare(phpversion(), '5.2', '>=')) 
 {
 	if(!extension_loaded($req)) { array_push($req_missing, '<strong>PHP5.2 or greater is required</strong>'); }

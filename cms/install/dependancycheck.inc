@@ -1,17 +1,20 @@
 <?php
 require_once($include_path.DIRECTORY_SEPARATOR.'cms'.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'functions.inc');
 
-$required = array('session', 'SimpleXML', 'mysqli', 'hash', 'xml', 'xmlreader', 'xmlwriter', 'xsl');
-$optional = array('ffmpeg', 'gd', 'mcrypt', 'tidy', 'pdo', 'pdo_mysql', 'pdo_sqlite', 'pspell');
+$required = array('session', 'SimpleXML', 'mysqli', 'hash', 'xml', 'xmlreader', 'xmlwriter', 'xsl', 'mcrypt');
+$recomended = array('ffmpeg', 'gd', 'pdo', 'pdo_mysql', 'pdo_sqlite');
+$optional = array('tidy', 'pspell');
 $pear = array('mdb2' => 'mdb2', 'sqlite' => 'MDB2_Driver_sqlite');
 
 $req_missing = array();
+$rec_missing = array();
 $opt_missing = array();
 
 $pdo_drivers = array();
 if(class_exists('PDO'))
 {
 	$pdo_drivers = PDO::getAvailableDrivers();
+	$pdo_drivers = array_flip($pdo_drivers);
 }
 
 if(!version_compare(phpversion(), '5.2', '>=')) 
@@ -22,6 +25,11 @@ if(!version_compare(phpversion(), '5.2', '>='))
 foreach($required as $req)
 {
 	if(!extension_loaded($req)) { array_push($req_missing, $req); }
+}
+
+foreach($recomended as $rec)
+{
+	if(!extension_loaded($rec)) { array_push($rec_missing, $rec); }
 }
 
 foreach($optional as $opt)

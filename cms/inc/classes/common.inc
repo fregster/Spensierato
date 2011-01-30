@@ -239,14 +239,20 @@ abstract class Common
 	return $output;
 }
 
-	public static function generate_random_string($length, $allow_numbers = false)
+	public static function generate_random_string($length, $allow_numbers = false, $allow_special = false)
 	{
 		/* list all possible characters, similar looking characters and vowels have been removed */
-		$possible = 'abcdfghjkmnpqrstvwxyz';
+		$possible = 'abcdfghjkmnpqrstvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		if($allow_numbers)
 		{
-			$possible .= '23456789';
+			$possible .= '1234567890';
 		}
+		
+		if($allow_special)
+		{
+			$possible .= '!@£$%*()_-+=[]#';
+		}
+		
 		$code = '';
 		$i = 0;
 		while ($i < $length)

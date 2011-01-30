@@ -71,9 +71,9 @@ autoSearch=$("ajaxSearchResults");
 rounded();
 jsShow();
 jsHide();
-if(typeof Growler == 'function'){
+if(typeof Growler == 'object' && use_growl){
 	(!typeof(Browser.ie) == 'undefined') ? growl=new Growler.Classic() : growl=new Growler.Modern();
-} else { use_growl = false; }
+} else { use_growl = false;}
 if(typeof(window['n']) != "undefined"){
 notification(n);
 }

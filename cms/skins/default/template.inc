@@ -47,4 +47,3 @@ if($inherirted_css)
 Settings::Singleton()->overwrite_setting('template_inherits_css', $include, false, true);
 unset($include);
 unset($inherirted_css);
-?>

@@ -22,7 +22,7 @@
 * @license http://www.opensource.org/licenses/lgpl-3.0.html LGPL
 * @link http://www.fryer.org.uk/
 *
-* Version 2.1 Released Dec 2009
+* Version 2.2 Released Feb 2011
 */
 
 if(!defined('CACHE_PREFIX'))
@@ -42,7 +42,15 @@ if(!defined('CACHE_PATH'))
 
 if(!defined('CACHE_ENCRYPTION_KEY'))
 {
-	define('CACHE_ENCRYPTION_KEY', sha1($_SERVER['SERVER_SIGNATURE']));
+	if(isset($_SERVER['SERVER_SIGNATURE']))
+	{
+		define('CACHE_ENCRYPTION_KEY', sha1($_SERVER['SERVER_SIGNATURE']));
+	}elseif (isset($_SERVER['SERVER_SOFTWARE'])){
+		define('CACHE_ENCRYPTION_KEY', sha1($_SERVER['SERVER_SOFTWARE']));
+	}
+	else {
+		define('CACHE_ENCRYPTION_KEY', sha1('oi2hf98y1g1¤iugh9r8y90¤i23hoh¤'));
+	}
 }
 
 /**
@@ -53,25 +61,23 @@ if(!defined('CACHE_ENCRYPTION_KEY'))
 class persistantcache
 {
 	private $encrypt_data = false;
-	private $encryption_key;
-	private $encryption_type = array('MCRYPT_RIJNDAEL_256', 'MCRYPT_TWOFISH256', 'MCRYPT_3DES', 'MCRYPT_CRYPT'); //In order of preference
 	protected $max_cache_time = 300;
 	protected $max_object_size = 20480; //The string length of the serialized array
 	protected static $retry_time = 30; //Time in seconds before reworking out the best cache type
 
 	protected $allow_memcache = true;
 	protected $allow_file_cache = true;
-	protected $allow_session_cache = true;
-//	protected static $cache_preference_order = array('memcache', 'file', 'session');
-	protected static $cache_preference_order = array('memcache', 'file');
+	protected $allow_session_cache = false; //Should only be enabled for testing as this would be a per user cache in the session handler
+	protected static $cache_preference_order = array('memcache', 'file', 'session');
+//	protected static $cache_preference_order = array('memcache', 'file');
 
 	/**
 	 * DO NOT CHANGE THESE
 	 */
 	protected $enabled = false; //Don't change this it is set in the constructors if connected
-	protected $easy_cache_type_name = 'none';
+	protected $easy_cache_type_name = 'none'; //Default cache name type, overridden as required
 	protected static $time; //Local cache of the time
-	public static $cache_type_inuse;
+	public static $cache_type_inuse; //Dirty method to get the cache type name externally.
 	private static $instance;
 
 	public function __clone()
@@ -110,7 +116,7 @@ class persistantcache
 	 */
 	protected static function rebuild_singleton()
 	{
-		$c =persistantcache::get_type();
+		$c = persistantcache::get_type();
 		self::$instance = new $c;
 	}
 
@@ -145,9 +151,13 @@ class persistantcache
 		return $c;
 	}
 
+	/**
+	 * 
+	 * As the class is also a standalone public class this method returns the PersistantCache version int
+	 */
 	public function version()
 	{
-		return 0;
+		return '2.2';
 	}
 
 	/**
@@ -158,6 +168,10 @@ class persistantcache
 		return $this->enabled;
 	}
 
+	/**
+	 * 
+	 * Returns a string with the name of the backend cache type
+	 */
 	public function type()
 	{
 		return $this->easy_cache_type_name;
@@ -180,10 +194,9 @@ class persistantcache
 	 */
 	protected function encrypt($data)
 	{
-		//TODO Write encrypt method
-		if($this->encrypt_data)
+		if($this->encrypt_data && class_exists('encryption'))
 		{
-			$data = $data;
+			$data = encryption::encrypt($data);
 		}
 		return $data;
 	}
@@ -195,10 +208,9 @@ class persistantcache
 	 */
 	protected function decrypt($data)
 	{
-		//TODO Test data is encrypted and write decrypt method
-		if($this->encrypt_data)
+		if($this->encrypt_data && class_exists('encryption'))
 		{
-			$data = $data;
+			$data = encryption::decrypt($data);
 		}
 		return $data;
 	}
@@ -230,6 +242,12 @@ class persistantcache
 		return array('name'=>$this->build_key($name), 'data'=>$value);
 	}
 
+	/**
+	 * 
+	 * Cached data contains a crc value, this validates the input and returns true if valid or false on error
+	 * @param string $data
+	 * @param crc32 check value $check
+	 */
 	protected function validate_data($data, $check)
 	{
 		if(crc32($data) == $check)
@@ -478,13 +496,16 @@ class persistantcache_file extends persistantcache
 
 	public function drop($name)
 	{
-		$name = $this->build_key($name);
-		//TODO Write drop file method
+		return unlink($this->build_file_path($this->build_key($name)));
 	}
 
 	public function purge()
 	{
-		//TODO Write purge file method
+		$files = glob($this->file_cache_path.'*');
+		foreach ($files as $file)
+		{
+			unlink($file);
+		}
 	}
 
 	private function build_file_path($name)
@@ -573,8 +594,8 @@ class persistantcache_session extends persistantcache
  * Memcached call back function on server fail
  * This is a function as the call back works better
  *
- * @param unknown_type $server
- * @param unknown_type $port
+ * @param string $server
+ * @param int|string $port
  */
 function memcached_server_fail($server = NULL, $port = NULL)
 {

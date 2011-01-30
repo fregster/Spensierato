@@ -135,9 +135,8 @@ class database
 		{
 			$this->error_file = DATABASE_LAYER_PATH . DS . 'dberror.html';
 		}
-
 	}
-	
+
 	/**
 	 * 
 	 * Use to force the destruction of the DB connection and if the object is destroyed, destroy the related DB object

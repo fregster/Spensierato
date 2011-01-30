@@ -33,6 +33,7 @@ if(!$rewrite_enabled)
 			div#notices, div.notices { background:white; margin-left:50px; margin-right:50px; margin-top:5px; margin-bottom:5px; padding:5px;}
 			div#notices_critical, div.notices_critical{ background:red; border:thin solid darkred; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
 			div#notices_warning, div.notices_warning{ background:LemonChiffon ; border:thin solid gold; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
+			div#notices_information, div.notices_information {background:LightGreen ; border:thin solid green; margin-left:5px; margin-right:5px; margin-top:5px; margin-bottom:5px; padding:5px;}
 			div#create { text-align:right;}
 			.title{color:white;text-align:center;}
 		</style>
@@ -101,11 +102,21 @@ if(isset($req_missing[0]) or isset($opt_missing[0]))
 			echo "<li>$req</li>";
 		}
 		echo'</ul></div>';
+	}	
+
+	if(count($rec_missing) > 0)
+	{
+		echo'<div id="notices_warning"><h3>The following packages are not install and are strongly recomended</h3><ul>';
+		foreach($rec_missing as $rec)
+		{
+			echo "<li>$rec</li>";
+		}
+		echo'</ul></div>';
 	}
 
 	if(count($opt_missing) > 0)
 	{
-		echo'<div id="notices_warning"><h4>The following packages are not install and are recomended</h4><ul>';
+		echo'<div id="notices_information"><h4>The following packages are not install and are optional but recomended if posible</h4><ul>';
 		foreach($opt_missing as $opt)
 		{
 			echo "<li>$opt</li>";
@@ -171,11 +182,11 @@ if(!$rewrite_enabled && !check_inc_restrictions())
 		<div id="db-driver">
 			<div>Host type: <select id="db-host" name="type" onchange="jsCheckHostTypeDetail();">
 				<?php /*TODO:: This need's rewriting to be cleaver about the options shown*/ ?>
-				<?php if(class_exists('mysqli', false) || isset($pdo_drivers['pdo_mysql'])) { ?><option value="mysqli">MySQL 4+</option><?php } ?>
+				<?php if(class_exists('mysqli', false) || isset($pdo_drivers['mysql'])) { ?><option value="mysqli">MySQL 4+</option><?php } ?>
 				<?php if(class_exists('mysql', false)) { ?><option value="mysql">MySQL 4</option><?php } ?>
-				<?php if(isset($pdo_drivers['pdo_sqlsrv'])) { ?><option value="sqlsrv">MSSQL (MS SQL Driver 2005+)</option><?php } ?>
+				<?php if(isset($pdo_drivers['sqlsrv'])) { ?><option value="sqlsrv">MSSQL (MS SQL Driver 2005+)</option><?php } ?>
 				<?php if(class_exists('mssql', false)) { ?><option value="mssql">MSSQL (2000, 2005 and 2008)</option><?php } ?>
-				<?php if(isset($pdo_drivers['pdo_sqlite']) || class_exists('sqlite3', false)) { ?><option value="sqlite">SQLite (Filesystem based)</option><?php } ?>
+				<?php if(isset($pdo_drivers['sqlite']) || class_exists('sqlite3', false)) { ?><option value="sqlite">SQLite (Filesystem based)</option><?php } ?>
 			</select></div>
 		</div>
 		<div id="db-host-detail">

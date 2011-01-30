@@ -6,27 +6,37 @@ class database_execution_pdo extends database_execution
 	public function connect($dsn, $options = NULL, $mods = NULL)
 	{
 		try {
+			$db_dsn_string = 'dbname=';
 			$host = $dsn['hostspec'];
-			if($dsn['phptype'] == 'mysqli'){ $dsn['phptype'] = 'mysql'; }
-			if($dsn['phptype'] != 'sqlite')
-			{
-				$host = 'host='.$host;
+			
+			switch ($dsn['phptype']){
+				case 'mysqli':
+				case 'mysql':
+					$host = 'host='.$host;
+					break;
+					
+				case 'sqlsrv':
+					$host = 'server='.$host.'';
+					$db_dsn_string = 'Database=';
+					break;
+					
+				case 'sqlite':
+					unset($dsn['database']);
+						if(@!defined('DATABASE_INSTALL_MODE') || DATABASE_INSTALL_MODE != true)
+						{
+							if(!file_exists($host) || !is_writable($host)){ $this->sql_error('Database offline '.$host); }
+						}
+					break;
 			}
-			else
-			{
-				unset($dsn['database']);
-				if(@!defined('DATABASE_INSTALL_MODE') || DATABASE_INSTALL_MODE != true)
-				{
-					if(!file_exists($host) || !is_writable($host)){ $this->sql_error('Database offline '.$host); }
-				}
-			}
+			
 			if(isset($dsn['database'])){
-				$connection_String = $dsn['phptype'].':'.$host.';dbname='.$dsn['database'];
+				$connection_String = $dsn['phptype'].':'.$host.';'.$db_dsn_string.$dsn['database'];
 			} else {
 				$connection_String = $dsn['phptype'].':'.$host;
 			}
 			
 			$old_track = ini_set('track_errors', '1');
+//			$this->db_backend = new PDO($connection_String, $dsn['username'], $dsn['password']);
 			$this->db_backend = @new PDO($connection_String, $dsn['username'], $dsn['password']);
 			
 			if(!$this->db_backend)
@@ -34,6 +44,7 @@ class database_execution_pdo extends database_execution
 				$error = 'Unable to connect to the database '.$php_errormsg;
 				$this->sql_error($error);
 			}
+
 			ini_set('track_errors', $old_track);
 		}	    
 		catch(PDOException $e)
@@ -87,11 +98,13 @@ class database_execution_pdo extends database_execution
 					//Values have not been passed so do simple SQL exec
 					$resultset = array();
 					$result = $this->read->query($sql, $mode);
-					foreach($this->read->query($sql) as $row)
-					{
-						$resultset[] = $row;
+					if($result){
+						foreach($this->read->query($sql) as $row)
+						{
+							$resultset[] = $row;
+						}
 					}
-					
+
 					unset($result);
 				}
 				else
@@ -110,36 +123,27 @@ class database_execution_pdo extends database_execution
 					}
 				}
 			}
-			
-			unset($sql);
+
 			if(isset($stmt))
 			{
 				$result = $stmt->execute($values);
 
 				if($result === false)
 				{
-					$error = 'Failed to issue query<br />';
+					$error = 'Failed to issue query<br />'.$sql;
 				}
 				else
 				{
 					$resultset = $stmt->fetchAll($mode);
 				}
 			}
+			unset($sql);
 		}
 		catch(PDOException $e)
 	    {
 	   		$this->sql_error($e->getMessage());
 	   		exit;
 	    }
-	    
-//	    if(isset($stmt))
-//	    {
-//	    	echo('Mode: '.$mode.' ');
-//	    	var_dump($stmt);
-//	    	var_dump($result);
-//	    }
-//	    var_dump($resultset);
-//	    die(__LINE__);
 	    
 	    $final = array();
 	    if(isset($resultset)) { $final['resultset'] = $resultset; }

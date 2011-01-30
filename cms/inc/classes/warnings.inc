@@ -35,7 +35,7 @@ class warnings
 		if(!isset($_SESSION['warnings'])){
 			$_SESSION['warnings'] = array();
 		}
-		$this->warnings =& $_SESSION['warnings'];
+//		$this->warnings =& $_SESSION['warnings'];
 		//Do standard warning checks here for easy of code finding.
 
 		//Check paths are writable

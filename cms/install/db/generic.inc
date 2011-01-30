@@ -25,6 +25,11 @@ if(!isset($int))
 	$int = 'INT';
 }
 
+if(!isset($tiny_int))
+{
+	$tiny_int = 'TINYINT';
+}
+
 if(!isset($long_text))
 {
 	$long_text = 'LONGTEXT';
@@ -38,6 +43,11 @@ if(!isset($increment))
 if(!isset($varchar))
 {
 	$varchar = 'VARCHAR';
+}
+
+if(!isset($col_quote))
+{
+	$col_quote = '';
 }
 
 function varchar($length)
@@ -96,7 +106,7 @@ $tables['tbl_elements_data'] = array(
 									'cols_define' =>
 										array(
 											'id' => $int.' UNSIGNED NOT NULL',
-											'title' => varchar(128).' NOT NULL DEFAULT "Title"',
+											'title' => varchar(128)." NOT NULL DEFAULT 'Title'",
 											'data' => 'TEXT NOT NULL',
 											),
 									'primary_key' => 'id',
@@ -270,3 +280,8 @@ $tables['tbl_orders'] = array(
 									),
 								'primary_key' => 'id',
 								);
+								
+//set the db name and the user info in a SQL compliant manner fot use in the GRANT queries.
+$grant_db = "$database.*";
+$grant_user_rw = "'$user_rw'@'localhost' IDENTIFIED BY '$user_db_password'";
+$grant_user_r = "'$user_r'@'localhost' IDENTIFIED BY '$user_db_password'";

@@ -161,7 +161,7 @@ if($allow_unique_keys)
 $inc_length = strlen($increment);
 
 /** build sql strings and execute the table creation.
- *  this code is MySQL specific.
+ *  this code is MySQL and SQLite specific.
  */
 foreach ($tables as $table => $data){
 
@@ -272,7 +272,5 @@ foreach ($tables as $table => $data){
 }
 unset($table, $data);
 
-//set the db name and the user info in a mysql-compliant manner fot use in the GRANT queries.
-$grant_db = "$database.*";
-$grant_user_rw = "'$user_rw'@'localhost' IDENTIFIED BY '$user_db_password'";
-$grant_user_r = "'$user_r'@'localhost' IDENTIFIED BY '$user_db_password'";
+$user_create_sql = array('GRANT SELECT, INSERT, UPDATE, DELETE ON '.$grant_db.'	TO '.$grant_user_rw,
+							 'GRANT SELECT ON '.$grant_db.'	TO '.$grant_user_r);

@@ -44,7 +44,7 @@ class cookie
 		}
 
 		if (isset($_COOKIE[$this->cookie_name])) {
-			$this->cookie_information = unserialize(stripslashes($_COOKIE[$this->cookie_name]));
+			$this->cookie_information = @unserialize(stripslashes($_COOKIE[$this->cookie_name]));
 		}
 		else $this->cookie_information = FALSE;
 

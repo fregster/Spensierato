@@ -55,7 +55,7 @@ function get_file_root()
 {
 	$ext = substr($_SERVER['SCRIPT_FILENAME'], -4 , 4);
 	$a = substr($_SERVER['SCRIPT_FILENAME'], 0 , strripos($_SERVER['SCRIPT_FILENAME'], $ext));
-	return substr($a, 0, strripos($a, '/'));
+	return substr($a, 0, strripos($a, DIRECTORY_SEPARATOR));
 }
 
 /**
@@ -246,8 +246,8 @@ function load($url,$options=array()) {
         {
         	$info['header_size'] = '';
         }
-        $header_text = substr($response, 0, $info['header_size']);
-        $body = substr($response, $info['header_size']);
+        $header_text = @substr($response, 0, $info['header_size']);
+        $body = @substr($response, $info['header_size']);
         
         foreach(explode("\n",$header_text) as $line) {
             $parts = explode(": ",$line);

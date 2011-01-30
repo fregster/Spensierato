@@ -59,18 +59,16 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
+	$doc_root_prefix = SITE_ROOT.DIRECTORY_SEPARATOR;
 	//detect the server OS and set the doc root accordingly.
 	if (stripos(PHP_OS, 'darwin') !== FALSE) {
 		$os = 'mac';
-		$doc_root_prefix = SITE_ROOT.'/'; //OSX has a unix-type folder structure
 	}
 	else if(stripos(PHP_OS, 'win') !== FALSE){
 		$os = 'windows';
-		$doc_root_prefix = SITE_ROOT.'/';
 	}
 	else{
 		$os = 'unix';
-		$doc_root_prefix = SITE_ROOT.'/';
 	}
 	
 	if(!post::variable('cms_folder_use_custom'))
@@ -78,6 +76,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		debug('Creating folders');
 		if(!is_writeable($doc_root_prefix.'writeable'))
 		{
+			if(!isset($_GET['skip_folders']))
+			{
+				Debug('Unable to create folders, installation cancled. Ensure that '.$doc_root_prefix.'writeable is writable');
+				die();
+			}
 			debug('Unable to create folders, please create them manually after the install');
 			debug($doc_root_prefix.'writeable was not a writeable folder' );
 		}
@@ -100,6 +103,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	else
 	{
 		debug('Setting custom folders');
+		
 		$dir_logs = realpath($doc_root_prefix.post::variable('cms_folder_logs'));
 		$dir_uploads = realpath($doc_root_prefix.post::variable('cms_folder_downloads'));
 		$dir_uploads_tmp = realpath($doc_root_prefix.post::variable('cms_folder_uploads'));
@@ -162,6 +166,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 											array('Manager'));
 	
 	debug('DB Connected');
+//	var_dump($db);
 	/*
 	 * Create the database
 	 */
@@ -210,15 +215,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	 * Write user select, update, insert, delete on all
 	 */
 	debug('Createing users and permissions');
-	if($create_db_users)
+	if($create_db_users && is_array($user_create_sql))
 	{
 		//Create the DB users and give permissions over the database
 		//TODO allow connections from specified places
-		$user_create_sql = array('GRANT SELECT, INSERT, UPDATE, DELETE ON '.$grant_db.'	TO '.$grant_user_rw,
-							 'GRANT SELECT ON '.$grant_db.'	TO '.$grant_user_r);
 		
 		foreach($user_create_sql as $sql)
 		{
+//			echo('<br/>'.$sql.'<br/>');
 			$result = $db->query($sql);
 	
 			if(!$result)
@@ -245,9 +249,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 	//A random key is required in settings for creating more secure password hashes
 	Settings::singleton()->new_setting('random_key',post::variable('random_key'));
-	
-	debug('Adding site administrator');
-	$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true);
 
 	/**
 	* Build the settings file string
@@ -300,10 +301,22 @@ $GLOBALS[\'cms_folder_search\'] = \''.realpath($dir_search).'\';
 		exit;
 	}
 	else
+	{
 		debug('Settings file created');
+		if(!masterpassword::Singleton()->set_password(true) || !masterpassword::Singleton()->set_password_secondary(true))
+		{
+			debug('<strong>Random Encryption key file output failed. Fix folder permissions and re run the installer</strong>');
+			exit;
+		}
 
-	debug('The site is now setup<br/><strong>Note: If you manual set the install directive you will need to remove it now!</strong><br />You can log in with the user '.$username.' and the password '.$password.'<br/>Click <a href="'.DOCUMENT_ROOT.'">here</a> to login');
-	exit;
+		debug('Random Encryption key files created');
+		
+		debug('Adding site administrator');
+		$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true);
+			
+		debug('The site is now setup<br/><strong>Note: If you manual set the install directive you will need to remove it now!</strong><br />You can log in with the user '.$username.' and the password '.$password.'<br/>Click <a href="'.DOCUMENT_ROOT.'">here</a> to login');
+		exit;
+	}
 }
 
 function debug($text)

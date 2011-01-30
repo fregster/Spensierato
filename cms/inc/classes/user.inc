@@ -80,7 +80,7 @@ class user
 		}
 		$this->userid = database::singleton()->sql_insert('tbl_users', $cols, $data);
 
-		database::singleton()->sql_insert('tbl_users_data', array('data', 'user_id'), array('{"email":"'.$email.'"}', $this->userid));
+		database::singleton()->sql_insert('tbl_users_data', array('data', 'user_id'), array(encryption::encrypt('{"email":"'.$email.'"}'), $this->userid));
 		$this->set_user_details();
 		if($admin)
 		{
@@ -127,7 +127,7 @@ class user
 						'email' => post::variable('email')
 					);
 
-		$data = json_encode($values);
+		$data = encryption::encrypt(json_encode($values));
 
 		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array($data), true);
 		$this->set_user_details(true); //Reload the users details
@@ -199,7 +199,7 @@ class user
 				$user_data = Database::Singleton()->sql_select_first(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
 				if(!isset($user_data) or $user_data != NULL)
 				{
-					$_SESSION['user_details'] = json_decode($user_data['data'], TRUE);
+					$_SESSION['user_details'] = json_decode(encryption::decrypt($user_data['data']), TRUE);
 				}
 				
 				$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
@@ -259,9 +259,14 @@ class user
 		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_encryption'))
 		{
 			$hash_outdated = true;
+			$hash_types_supported = array_flip(hash_algos());
 		}
-		if($hash_outdated == true)
+		if($hash_outdated == true && isset($hash_types_supported[Settings::Singleton()->get_setting('site_option_encryption')]))
 		{
+			echo(Settings::Singleton()->get_setting('site_option_encryption'));
+			var_dump($hash_types_supported);
+			echo($hash_type_db['hash_type']);
+			die();
 			$sql_password = hash($hash_type_db['hash_type'], $password);
 		}
 		else
@@ -275,7 +280,7 @@ class user
 		{
 			if($hash_outdated == true)
 			{
-				$this->update_password($hash);
+				$this->update_password($sql_password);
 			}
 			$this->userid = $id['id'];
 			return true;

@@ -101,6 +101,9 @@ try
 		exit;
 	}
 	
+	//Set any custom defines
+	DEFINE('CACHE_PATH', $GLOBALS['cms_folder_cache'].DS);
+	
 	//Start site
 	CMS::Singleton()->start(); 
 

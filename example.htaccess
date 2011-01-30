@@ -10,14 +10,20 @@ DirectoryIndex index.php
         Deny from all
 </FilesMatch>
 
-#By convention, any file or directory name beginning with a "." is not meant to be served
-<FilesMatch "^\.">
-        Order  deny,allow
-        Deny  from  all
+#Prevent access to any password files
+<FilesMatch "\.pwd$">
+        Order allow,deny
+        Deny from all
 </FilesMatch>
 
+#By convention, any file or directory name beginning with a "." is not meant to be served
+#<FilesMatch "^\.">
+#        Order  deny,allow
+#        Deny  from  all
+#</FilesMatch>
+
 #Prevent access to hidden directoryies
-<DirectoryMatch "/\.">
-        Order  deny,allow
-        Deny  from  all
-</DirectoryMatch>
+#<DirectoryMatch "/\.">
+#        Order  deny,allow
+#        Deny  from  all
+#</DirectoryMatch>

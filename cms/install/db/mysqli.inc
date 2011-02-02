@@ -233,7 +233,6 @@ foreach ($tables as $table => $data){
 				}
 			}
 			$key = $key_type.' '.$alias.' ('.implode(', ', $key_data[$alias_key]).')';
-			echo($key);
 			$keys[] = $key;
 		}
 	}

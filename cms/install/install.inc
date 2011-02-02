@@ -179,6 +179,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$db->createDatabase($database);
 	debug('DB Created');
 	
+	debug('Loading required settings');
+	//A random key is required in settings for creating more secure password hashes
+	Settings::singleton()->new_setting('random_key',post::variable('random_key'));
+	Settings::singleton()->new_setting('site_option_hash_type',max_sha_hash());
+	Settings::singleton()->new_setting('user_min_password_length', 10);
+	
 	//Replace the db object with a new one in the database
 	if(method_exists($db, 'destroy'))
 	{
@@ -205,7 +211,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	}
 
 	//Execute sql
-	debug('Running...');
+	debug('Running SQL...');
 
 	include($install_folder.DS.'db'.DS.$driver.'.inc');
 
@@ -247,9 +253,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$element = Element::type('elementText');
 	$element->create($id, false);
 
-	//A random key is required in settings for creating more secure password hashes
-	Settings::singleton()->new_setting('random_key',post::variable('random_key'));
-
 	/**
 	* Build the settings file string
 	*/
@@ -272,6 +275,8 @@ $GLOBALS[\'allow_rewrite\'] = '. $rewrite.'; //Apache + mod rewrite gives clean 
 $GLOBALS[\'random_key\'] = \''.post::variable('random_key').'\'; //A random key used for generating more secure hash\'s
 $GLOBALS[\'server_os\'] = \''.$os.'\'; //Should be unix, windows or osx
 
+//Default options
+$GLOBALS[\'max_sha_hash\'] = \''.max_sha_hash().'\'; //Max SHA hash type supported at install time
 
 //Settings for email
 $GLOBALS[\'smtp_server\'] = \''. post::variable('smtp_host').'\'; //Where should email submissions be sent

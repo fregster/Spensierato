@@ -19,6 +19,12 @@ class Settings
 
 	protected function __construct()
 	{
+		//Backwards compatability
+		if(!isset($GLOBALS['max_sha_hash']))
+		{
+			$GLOBALS['max_sha_hash'] = 'sha256';
+		}
+		
 		//Force some default settings
 		$document_root = Common::document_root();
 		$this->new_setting('static_host_ajax', $document_root.'/ajax');

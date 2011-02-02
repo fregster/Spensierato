@@ -79,7 +79,6 @@ class user
 			array_push($data, 1);
 		}
 		$this->userid = database::singleton()->sql_insert('tbl_users', $cols, $data);
-
 		database::singleton()->sql_insert('tbl_users_data', array('data', 'user_id'), array(encryption::encrypt('{"email":"'.$email.'"}'), $this->userid));
 		$this->set_user_details();
 		if($admin)
@@ -147,13 +146,12 @@ class user
 		//Create a password
 		if($password == NULL)
 		{
-			$password = common::generate_random_string(10);
+			$password = common::generate_random_string(Settings::Singleton()->get_setting('user_min_password_length'));
 		}
 		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
 		//Removed because I need it to be able to be worked out on the client side for the JS sha256 login stuff
 		###also on line 246###
-		$hash = @hash(Settings::Singleton()->get_setting('site_option_encryption'), $password . Settings::singleton()->get_setting('random_key'));
-
+		$hash = @hash(Settings::Singleton()->get_setting('site_option_hash_type'), $password . Settings::singleton()->get_setting('random_key'));
 		//Save the password in the DB
 		$this->update_password($hash);
 
@@ -256,17 +254,13 @@ class user
 		###also on line 156###
 
 		$hash_outdated = FALSE;
-		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_encryption'))
+		if($hash_type_db['hash_type'] != Settings::Singleton()->get_setting('site_option_hash_type'))
 		{
 			$hash_outdated = true;
 			$hash_types_supported = array_flip(hash_algos());
 		}
-		if($hash_outdated == true && isset($hash_types_supported[Settings::Singleton()->get_setting('site_option_encryption')]))
+		if($hash_outdated == true && isset($hash_types_supported[Settings::Singleton()->get_setting('site_option_hash_type')]))
 		{
-			echo(Settings::Singleton()->get_setting('site_option_encryption'));
-			var_dump($hash_types_supported);
-			echo($hash_type_db['hash_type']);
-			die();
 			$sql_password = hash($hash_type_db['hash_type'], $password);
 		}
 		else
@@ -280,7 +274,7 @@ class user
 		{
 			if($hash_outdated == true)
 			{
-				$this->update_password($sql_password);
+				$this->create_password($password);
 			}
 			$this->userid = $id['id'];
 			return true;
@@ -293,7 +287,7 @@ class user
 
 	private function update_password($hash)
 	{
-		return Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('password', 'hash_type'), array($hash, Settings::Singleton()->get_setting('site_option_encryption')));
+		return Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('password', 'hash_type'), array($hash, Settings::Singleton()->get_setting('site_option_hash_type')));
 	}
 
 	protected function do_login()

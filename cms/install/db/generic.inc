@@ -231,7 +231,7 @@ $tables['tbl_users'] = array(
 							array(
 								'id' => $int.' UNSIGNED NOT NULL '.$increment,
 								'username' => varchar(32).' NOT NULL',
-								'password' => varchar(64),
+								'password' => varchar(250),
 								'hash_type' => varchar(8),
 								'last_login' => $int.' UNSIGNED',
 								'session_id' => varchar(64),

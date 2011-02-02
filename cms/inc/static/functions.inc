@@ -274,3 +274,17 @@ function check_inc_restrictions()
 	
 	return false;
 } 
+
+function max_sha_hash()
+{
+	$hashes = hash_algos();
+	$max_sha = 1;
+	foreach ($hashes as $hash)
+	{
+		if(strtolower(substr($hash, 0, 3)) == 'sha')
+		{
+			$max_sha = max(array($max_sha, substr($hash, 3)));
+		}
+	}
+	return 'sha'.$max_sha;
+}

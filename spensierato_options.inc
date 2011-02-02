@@ -306,9 +306,9 @@ Settings::Singleton()->new_setting('debug', 0, false, true);
 //Default = '/var/log/cms'
 Settings::Singleton()->new_setting('debug_log_folder', '/var/log/cms', false, true);
 
-//Encryption hash type used for passwords standard is md5 or sha1 (min recomended) other types may require PECL hash installing
+//Hash type used for passwords standard is md5 or sha1 (min recomended) other types may require PECL hash installing
 //Note changing this once users have entered there passwords will require reseting ALL there accounts.
-Settings::Singleton()->new_setting('site_option_encryption', 'sha256', false, true);
+Settings::Singleton()->new_setting('site_option_hash_type', $GLOBALS['max_sha_hash'], false, true);
 
 //Setting google_ads
 //This requires google_ad_slot and google_ad_client to also be set
@@ -343,6 +343,10 @@ Settings::Singleton()->new_setting('update_version_check_schedule', 7, false, tr
 //To enable brute force login protection set the max number of failed logins per username
 //On reaching the value a new password is generated
 Settings::Singleton()->new_setting('user_incorect_logins', 10, false, true, false, false, true);
+
+//Setting user_min_password_length
+//To enhance security a minimum password length can be defined
+Settings::Singleton()->new_setting('user_min_password_length', 10, false, true, false, false, true);
 
 //Setting user_auto_email_password
 //To enable the system to automatacily email new passwords if re-set by the system

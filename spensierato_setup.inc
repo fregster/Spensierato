@@ -16,6 +16,7 @@ $GLOBALS['table_prefix'] = 'cmv_'; //A random table prefix to help prevent 0 day
 $GLOBALS['allow_rewrite'] = true; //Apache + mod rewrite gives clean URL's anything else is untested
 $GLOBALS['random_key'] = '2fe8b327381ba67d770d22fddff246dca71f0b4e'; //A random key used for generating more secure hash's
 $GLOBALS['server_os'] = 'unix'; //Should be unix, windows or osx
+$GLOBALS['max_sha_hash'] = 'SHA256';
 
 
 //Settings for email
@@ -25,9 +26,9 @@ $GLOBALS['smtp_username'] = null;
 $GLOBALS['smtp_password'] = null;
 
 //Paths to folders in the filesystem
-$GLOBALS['cms_folder_uploads'] = 'writeable/uploads/tmp/';
-$GLOBALS['cms_folder_downloads'] = 'writeable/uploads/';
-$GLOBALS['cms_folder_orig_images'] = 'writeable/uploads/original_images/';
-$GLOBALS['cms_folder_logs'] = 'writeable/logs/';
-$GLOBALS['cms_folder_cache'] = 'writeable/cache/';
-$GLOBALS['cms_folder_search'] = 'writeable/search/';
+$GLOBALS['cms_folder_uploads'] = '/mnt/writeable/uploads/tmp/';
+$GLOBALS['cms_folder_downloads'] = '/mnt/writeable/uploads/';
+$GLOBALS['cms_folder_orig_images'] = '/mnt/writeable/uploads/original_images/';
+$GLOBALS['cms_folder_logs'] = '/mnt/writeable/logs/';
+$GLOBALS['cms_folder_cache'] = '/mnt/writeable/cache/';
+$GLOBALS['cms_folder_search'] = '/mnt/writeable/search/';

@@ -19,43 +19,46 @@ $default_include_path = get_include_path();
 /**
  * Check this is not an attack using IDS
  */
-try {
-	$external_path = $include_path.DIRECTORY_SEPARATOR.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR;
-	set_include_path($external_path);
-	require_once 'IDS'.DIRECTORY_SEPARATOR.'Init.php';
-	$request = array(
-	        'REQUEST' => $_REQUEST,
-	        'GET' => $_GET,
-	        'POST' => $_POST,
-	        'COOKIE' => $_COOKIE
-	    );
-	
-	$ids_init = IDS_Init::init($external_path.'IDS'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'Config.ini.php');
-	$ids_init->config['General']['use_base_path'] = false;
-	$ids_init->config['General']['base_path'] = $external_path;
-	$ids_init->config['General']['filter_path'] = 'default_filter.xml';
-    if(file_exists($ids_init->config['General']['filter_path']))
-    {
-		//Initiate the PHPIDS and fetch the results
-		$ids = new IDS_Monitor($request, $ids_init);
-		$result = $ids->run();
-		
-		if(!$result->isEmpty())
-		{
-			echo $result;
-			exit;
-		}
-    }
-    //Clean up now redundent vars
-    unset($request);
-	unset($ids_init);
-	unset($ids);
-	unset($result);	
-}
-catch(Exception $e)
+if(file_exists('IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 {
-	printf('An IDS error occured: %s',$e->getMessage());
-    exit;
+	try {
+		$external_path = $include_path.DIRECTORY_SEPARATOR.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR;
+		set_include_path($external_path);
+		require_once 'IDS'.DIRECTORY_SEPARATOR.'Init.php';
+		$request = array(
+		        'REQUEST' => $_REQUEST,
+		        'GET' => $_GET,
+		        'POST' => $_POST,
+		        'COOKIE' => $_COOKIE
+		    );
+		
+		$ids_init = IDS_Init::init($external_path.'IDS'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'Config.ini.php');
+		$ids_init->config['General']['use_base_path'] = false;
+		$ids_init->config['General']['base_path'] = $external_path;
+		$ids_init->config['General']['filter_path'] = 'default_filter.xml';
+	    if(file_exists($ids_init->config['General']['filter_path']))
+	    {
+			//Initiate the PHPIDS and fetch the results
+			$ids = new IDS_Monitor($request, $ids_init);
+			$result = $ids->run();
+			
+			if(!$result->isEmpty())
+			{
+				echo $result;
+				exit;
+			}
+	    }
+	    //Clean up now redundent vars
+	    unset($request);
+		unset($ids_init);
+		unset($ids);
+		unset($result);	
+	}
+	catch(Exception $e)
+	{
+		printf('An IDS error occured: %s',$e->getMessage());
+	    exit;
+	}
 }
 set_include_path($default_include_path);
 unset($default_include_path);

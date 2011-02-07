@@ -2,19 +2,30 @@
 /**
  * 
  * This is the container class for the master encryption password
- * @author Paul
+ * The class is maintaned seperatly for object size resons
+ * @author Paul Fryer
  *
  */
+
 class masterpassword {
         private static $instance;
         
-        private $password;
-        private $site_root;
+        private $options = array('path' => null, 'key1' => 'encryption_key1.pwd', 'key2' => 'encryption_key2.pwd');
+        
+        private $password_primary = false;
+        private $password_seconday = false;
 
-        public static function Singleton(){
+        /**
+         * 
+         * Master password singleton method with optional options array to pass through to the constructor
+         * Returns the standard object
+         * 
+         * @param array $options
+         */
+        public static function Singleton($options = array()){
            if (!isset(self::$instance)) {
                    $c = __CLASS__;
-                   self::$instance = new $c;
+                   self::$instance = new $c($options);
            }
 
            return self::$instance;
@@ -24,8 +35,19 @@ class masterpassword {
            trigger_error('Clone is not allowed.', E_USER_ERROR);
         }
 
-        protected function __construct(){
-                $this->site_root = file_root();
+        /**
+         * 
+         * Basic construct method
+         * Options paramater sets the contaniner path and / or key file names
+         * @param $options
+         */
+		protected function __construct($options = array()){
+        	foreach ($options as $key => $value){
+        		if(isset($this->$options[$key])){
+        			$this->$options[key] = $value;
+        		}
+        	}
+        	if(is_null($this->options['path'])) { $this->options['path'] = site_root().DIRECTORY_SEPARATOR; }
         }
         
         /**
@@ -34,7 +56,10 @@ class masterpassword {
          */
         
         public function get_password(){
-                return file_get_contents($this->site_root.DIRECTORY_SEPARATOR.'spensierato_key.pwd');
+        	if(!$this->password_primary){
+        		$this->password_primary = file_get_contents($this->options['path'].$this->options['key1']);
+        	}
+        	return $this->password_primary;
         }
         
         /**
@@ -42,7 +67,7 @@ class masterpassword {
          * Set's the master password
          */
         public function set_password($overwrite = false){
-        		$filename = $this->site_root.DIRECTORY_SEPARATOR.'spensierato_key.pwd';
+        		$filename = $this->options['path'].$this->options['key1'];
       			if($overwrite && file_exists($filename))
         		{
         			unset($filename);
@@ -56,8 +81,15 @@ class masterpassword {
                 return @file_put_contents($filename, Common::generate_random_string(2048, true, true));
         }
         
+        /**
+         * 
+         * Returns the secondary password
+         */
         public function get_password_secondary(){
-                return file_get_contents($this->site_root.DIRECTORY_SEPARATOR.'spensierato_key2.pwd');
+        	if(!$this->password_seconday){
+        		$this->password_seconday = file_get_contents($this->options['path'].$this->options['key2']);
+        	}
+        	return $this->password_seconday;
         }
         
         /**
@@ -66,7 +98,7 @@ class masterpassword {
          * @param unknown_type $overwrite
          */
         public function set_password_secondary($overwrite = false, $password_similarity_check = true){
-        		$filename = $this->site_root.DIRECTORY_SEPARATOR.'spensierato_key2.pwd';
+        		$filename = $this->options['path'].$this->options['key2'];
         		if($overwrite && file_exists($filename))
         		{
         			unset($filename);
@@ -77,7 +109,7 @@ class masterpassword {
         			return false;
         		}
         		
-      			if($password_similarity_check)
+      			if($password_similarity_check && class_exists('StringMatch'))
       			{
 	                $password = Common::generate_random_string(2048, true, true);
 	                $comparison = new StringMatch;
@@ -90,5 +122,4 @@ class masterpassword {
 	       		}
                 return @file_put_contents($filename, $password);
         }
-        
 }

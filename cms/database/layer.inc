@@ -19,7 +19,7 @@ class database
 	private $sql_cache_enabled = true;
 	private $sql_cache = array();
 	private $sql_cache_max_results = 50;
-	private $sql_cache_max_time = 30;
+	private $sql_cache_max_time = 300;
 	private $sql_cache_hit = false;
 	private $sql_cache_hits = 0;
 
@@ -389,8 +389,9 @@ class database
 	 */
 	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
+		die('Table: '.$table);
 		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions);
-		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table);
 	}
 	
 	/**
@@ -408,7 +409,7 @@ class database
 	public function sql_select_recursive($fields = NULL, $table, $join_col, $join_value, $where_id_field = null, $where_id_value = null, $max_recursion = 5, $FORCE_NO_CACHE = FALSE)
 	{
 		$sql = $this->sql_select_recursive_build($fields, $table, $join_col, $join_value, $where_id_field, $where_id_value, $max_recursion);
-		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table);
 	}
 	
 	private function sql_select_recursive_build($fields = NULL, $table, $join_col, $join_value, $where_id_field, $where_id_value, $max_recursion)
@@ -530,7 +531,7 @@ class database
 		{
 			$sql .= ' HAVING COUNT(*) = '.$this->sql_clean_input_value($HAVING_COUNT);
 		}
-		return $this->sql_select_exe($sql, NULL);
+		return $this->sql_select_exe($sql, NULL, $table);
 	}
 
 	/**
@@ -634,7 +635,7 @@ class database
 	public function sql_max_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		$sql = $this->sql_max_field_build($table, $field, $where_fields, $where_values);
-		$result = $this->sql_select_exe($sql, NULL, TRUE);
+		$result = $this->sql_select_exe($sql, NULL, TRUE, $table);
 		if ($result == NULL || !isset($result[0]['max( sort )'])) {
 			return 0;
 		}
@@ -667,7 +668,7 @@ class database
 	public function sql_min_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		$sql = $this->sql_min_field_build($table, $field, $where_fields, $where_values);
-		$result = $this->sql_select_exe($sql, NULL, TRUE);
+		$result = $this->sql_select_exe($sql, NULL, TRUE, $table);
 		return $result[0]['min( sort )'];
 	}
 
@@ -696,7 +697,7 @@ class database
 		$sql = $this->sql_update_time_build($table, $id);
 
 		//Run the SQL
-		return $this->sql_update_exe($sql, null, $destroy_cache);
+		return $this->sql_update_exe($sql, null, $destroy_cache, $table);
 	}
 
 	/**
@@ -763,7 +764,7 @@ class database
 	{
 		$sql = $this->sql_update_by_col_build($table, $where_fields, $where_values, $fields, $values);
 		//Run the SQL
-		return $this->sql_update_exe($sql, NULL, $destroy_cache);
+		return $this->sql_update_exe($sql, NULL, $destroy_cache, $table);
 	}
 
 	protected function sql_update_by_col_build($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array())
@@ -1007,7 +1008,7 @@ class database
 	{
 		$sql = $this->sql_count_where_build($table, $where_fields, $where_values);
 
-		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table);
 		return $result[0]['count(*)'];
 	}
 
@@ -1023,7 +1024,7 @@ class database
 
 		return 'SELECT count(*) FROM '. $this->sql_clean_input($this->prefix.$table,$this->table_quote).$this->sql_build_where_string($where_fields, $where_values);
 
-		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table);
 		return $result[0]['count(*)'];
 	}
 
@@ -1201,19 +1202,23 @@ class database
 	    die(str_replace('***ERROR***', $message, str_replace($strip_from_message, '', $theData)));
 	}
 
-	protected function sql_update_exe($sql, $values = NULL, $destroy_cache = false)
+	protected function sql_update_exe($sql, $values = NULL, $destroy_cache = false, $namespace = NULL)
 	{
+		if($this->external_cache)
+		{
+			persistantcache::Singleton()->cycle_namespace($namespace);
+		}
+		
 		return $this->sql_exe($sql, $this->sql_values, true, $destroy_cache);
 	}
 
-	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE)
+	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE, $namespace = NULL)
 	{		
-//		echo($sql);
 		$results = false;
 		//Check cache if not explecitly set not to
 		if(!$no_cache)
 		{
-			$results = $this->sql_check_cache($sql, $this->sql_values);
+			$results = $this->sql_check_cache($sql, $this->sql_values, $namespace);
 		}
 
 		//If cache fails or not checked do SQL query
@@ -1223,9 +1228,7 @@ class database
 			$results = $this->db->sql_select_exe_run($this->sql_exe($sql, $this->sql_values));
 
 			//Cache the result
-//			echo('<br/>'.$sql);
-//			var_dump($results);
-			$this->sql_cache($sql, $values, $results);
+			$this->sql_cache($sql, $values, $results, $namespace);
 		}
 
 		$this->sql_values = array();
@@ -1246,7 +1249,7 @@ class database
 		return $sql;
 	}
 
-	private function sql_check_cache($sql, $values)
+	private function sql_check_cache($sql, $values, $namespace = null)
 	{
 		if($this->sql_cache_enabled)
 		{
@@ -1258,7 +1261,7 @@ class database
 			
 			if($this->external_cache)
 			{
-				$result = persistantcache::Singleton()->get($sql);
+				$result = persistantcache::Singleton()->get($sql, $namespace);
 			}
 			else
 			{
@@ -1297,7 +1300,7 @@ class database
 					//SQL Query is old so delete it and re-check the DB
 					if($this->external_cache)
 					{
-						$result = persistantcache::Singleton()->drop($sql);
+						$result = persistantcache::Singleton()->drop($sql, $namespace);
 					}
 					else
 					{
@@ -1311,13 +1314,13 @@ class database
 		return false;
 	}
 
-	private function sql_cache($sql, $values, $result)
+	private function sql_cache($sql, $values, $result, $namespace = null)
 	{
 		$sql = $this->build_sql_cache_string($sql, $values);
 
 		if($this->external_cache)
 		{
-			persistantcache::Singleton()->save($sql, array('time' => $this->time, 'result' => $result), $this->sql_cache_max_time);
+			persistantcache::Singleton()->save($sql, array('time' => $this->time, 'result' => $result), $this->sql_cache_max_time, $namespace);
 		}
 		else
 		{

@@ -235,11 +235,11 @@ abstract class Common
          }
          if(!$sc && !$mc)
              $output .= $l;
+		}
+		return $output;
 	}
-	return $output;
-}
 
-	public static function generate_random_string($length, $allow_numbers = false, $allow_special = false)
+	public static function generate_random_string($length = 12, $allow_numbers = false, $allow_special = false)
 	{
 		/* list all possible characters, similar looking characters and vowels have been removed */
 		$possible = 'abcdfghjkmnpqrstvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -250,7 +250,7 @@ abstract class Common
 		
 		if($allow_special)
 		{
-			$possible .= '!@£$%*()_-+=[]#';
+			$possible .= '!@£$%*()_-+=[]# |~`¤±;:{}';
 		}
 		
 		$code = '';

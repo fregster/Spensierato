@@ -10,7 +10,7 @@ class Database_mysql extends Database
 		{
 			$sql = $sql	. ' LIMIT ' . $limit;
 		}
-		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE);
+		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table);
 	}
 	
 	public function sql_search($table, $col, $query, $select = NULL, $boolean = false, $where_fields = array(), $where_values = array(), $from = 0 , $to = 100, $order = 'DESC', $score = 10)

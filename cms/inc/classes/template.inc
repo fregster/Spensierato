@@ -187,7 +187,7 @@ class Template
 				$css_m_time = max($css_m_time, filemtime($path));
 			}
 			$estring = md5($estring);			
-			$css = persistantcache::Singleton()->get('template_css');
+			$css = persistantcache::Singleton()->get('template_css', 'templates');
 			
 			if(!isset($css['mtime']) || $css['mtime'] != $css_m_time || $css['paths'] != $css_paths)
 			{
@@ -198,7 +198,7 @@ class Template
 				}
 				$css = array('css' => $css, 'mtime' => $css_m_time, 'paths' => $css_paths);
 				
-				persistantcache::Singleton()->save('template_css', $css);
+				persistantcache::Singleton()->save('template_css', $css, 'templates');
 			}
 			
 			// send the requisite header information and character set
@@ -246,7 +246,7 @@ class Template
 
 	private function load_xslt_template()
 	{		
-		$xslt = persistantcache::Singleton()->get('template_xslt');
+		$xslt = persistantcache::Singleton()->get('template_xslt', 'templates');
 
 		if(!isset($xslt['mtime']) || $xslt['mtime'] != $this->lastmodified)
 		{
@@ -261,7 +261,7 @@ class Template
 			$xslt = $xslt['xslt']; //Overwrite the array
 		}
 
-		persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified));
+		persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified), 'templates');
 
 		return $xslt;
 	}

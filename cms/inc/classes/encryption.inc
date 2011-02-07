@@ -1,4 +1,12 @@
 <?php
+/**
+ * 
+ * Encryption is a container class for encryption methods
+ * All methods here should really just be static methods for performance
+ * @author Paul Fryer
+ *
+ */
+
 class encryption{
         
 		/**

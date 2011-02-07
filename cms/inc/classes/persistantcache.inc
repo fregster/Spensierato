@@ -74,6 +74,8 @@ class persistantcache
 	/**
 	 * DO NOT CHANGE THESE
 	 */
+	protected $namespace_version_map = array();
+	protected $supports_namespaces = false;
 	protected $enabled = false; //Don't change this it is set in the constructors if connected
 	protected $easy_cache_type_name = 'none'; //Default cache name type, overridden as required
 	protected static $time; //Local cache of the time
@@ -157,7 +159,7 @@ class persistantcache
 	 */
 	public function version()
 	{
-		return '2.2';
+		return '2.3';
 	}
 
 	/**
@@ -182,9 +184,12 @@ class persistantcache
 	 * As memcache can support a key with a max length of 240 bytes build a sha1 hash (256 bits)
 	 * Should be safe as there are no currently known collisions in sha1
 	 */
-	protected function build_key($name)
+	protected function build_key($name, $namespace = null)
 	{
-		return sha1(CACHE_PREFIX.$name);
+		if(!is_null($namespace)){
+			$namespace = $this->build_namespace($namespace).'_';
+		}	
+		return $namespace.sha1(CACHE_PREFIX.$name);
 	}
 
 	/**
@@ -222,7 +227,7 @@ class persistantcache
 	 * @param $time
 	 * @return array();
 	 */
-	protected function build_save($name, $value, $time)
+	protected function build_save($name, $value, $time, $namespace = null)
 	{
 		//Build the expire time
 		$expire_time = $this->time + $this->max_cache_time;
@@ -239,7 +244,25 @@ class persistantcache
 		$data = serialize($value);
 		$value = array('value' => $this->encrypt($data), 'time' => $expire_time, 'validate' => crc32($data), 'encrypted' => $this->encrypt_data);
 
-		return array('name'=>$this->build_key($name), 'data'=>$value);
+		return array('name'=>$this->build_key($name, $namespace), 'data'=>$value);
+	}
+	
+	/**
+	 * 
+	 * Return the namespace, as certian backends do not support namespaces fake it with a version number
+	 * @param string $namespace
+	 */
+	protected function build_namespace($namespace)
+	{
+		if(isset($namespace) && !isset($this->namespace_version_map[$namespace])){
+			$this->namespace_version_map[$namespace] = 1;
+		}
+		
+		if(!$this->supports_namespaces){
+			return $namespace.$this->namespace_version_map[$namespace];
+		}
+		
+		return $namespace;
 	}
 
 	/**
@@ -263,7 +286,7 @@ class persistantcache
 	 * value is what you want to cache
 	 * time max storage time
 	 */
-	public function save($name, $value, $time = 0)
+	public function save($name, $value, $time = 0, $namespace = null)
 	{
 		return false;
 	}
@@ -271,7 +294,7 @@ class persistantcache
 	/**
 	 * Get an object from the cache by key name
 	 */
-	public function get($name)
+	public function get($name, $namespace = null)
 	{
 		return false;
 	}
@@ -279,9 +302,21 @@ class persistantcache
 	/**
 	 * Delete an object from the cache
 	 */
-	public function drop($name)
+	public function drop($name, $namespace = null)
 	{
 		return false;
+	}
+	
+	/**
+	 * Invalidates a whole namespace
+	 */
+	public function cycle_namespace($namespace)
+	{
+		if(!isset($this->namespace_version_map[$namespace])){
+			$this->namespace_version_map[$namespace] = 1;
+		}else{
+			$this->namespace_version_map[$namespace] = $this->namespace_version_map[$namespace] + 1;
+		}
 	}
 
 	/**
@@ -337,10 +372,10 @@ class persistantcache_memcache extends persistantcache
 		return false;
 	}
 
-	public function save($name, $value, $time = 0)
+	public function save($name, $value, $time = 0, $namespace = null)
 	{
 		if(!$this->enabled){ return false; }
-		$data = $this->build_save($name, $value, $time);
+		$data = $this->build_save($name, $value, $time, $namespace);
 		if(strlen($data['data']['value']) < $this->max_object_size && $this->store != false)
 		{
 			$result = $this->store->replace($data['name'], $data['data'], MEMCACHE_COMPRESSED, $data['data']['time']);
@@ -353,14 +388,14 @@ class persistantcache_memcache extends persistantcache
 		return false;
 	}
 
-	public function get($name)
+	public function get($name, $namespace = null)
 	{
 		if($this->store == false)
 		{
 			return false;
 		}
-		$name = $this->build_key($name);
-		$result = $this->store->get($name);
+
+		$result = $this->store->get($this->build_key($name, $namespace));
 		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate'])  && $this->store != false)
 		{
 			return unserialize($this->decrypt($result['value']));
@@ -369,12 +404,11 @@ class persistantcache_memcache extends persistantcache
 		return false;
 	}
 
-	public function drop($name)
+	public function drop($name, $namespace = null)
 	{
 		if($this->store != false)
 		{
-			$name = $this->build_key($name);
-			return $this->store->delete($name);
+			return $this->store->delete($this->build_key($name, $namespace));
 		}
 		return false;
 	}
@@ -435,6 +469,7 @@ class persistantcache_file extends persistantcache
 	 * Please ensure this folder is kept purley for this cache, else the purge and drop might delete your files
 	 */
 
+	protected $supports_namespaces = true;
 	private $file_cache_path = CACHE_PATH; //Remeber trailing /
 	private $max_file_size = 20480; //The max string length of the serialized array
 	private $file_system_maintance = true;
@@ -460,24 +495,26 @@ class persistantcache_file extends persistantcache
 		return false;
 	}
 
-	public function save($name, $value, $time = 0)
+	public function save($name, $value, $time = 0, $namespace = null)
 	{
 		if(!$this->enabled){ return false; }
 		$data = $this->build_save($name, $value, $time);
-
-		if(isset($data['data']) && $file = fopen($this->build_file_path($data['name']), 'wb'))
+		
+		if(isset($data['data']) && $file = fopen($this->build_file_path($data['name'], $namespace), 'wb'))
 		{
 			$result = fwrite($file, serialize($data['data']));
 			fclose($file);
+//			var_dump($result);
+//			die();
 			return $result;
 		}
 		return false;
 	}
 
-	public function get($name)
+	public function get($name, $namespace = null)
 	{
 		if(!$this->enabled){ return false; }
-		$name = $this->build_file_path($this->build_key($name));
+		$name = $this->build_file_path($this->build_key($name), $namespace);
 		
 		if(file_exists($name))
 		{
@@ -494,9 +531,9 @@ class persistantcache_file extends persistantcache
 		return false;
 	}
 
-	public function drop($name)
+	public function drop($name, $namespace = null)
 	{
-		return unlink($this->build_file_path($this->build_key($name)));
+		return unlink($this->build_file_path($this->build_key($name, $namespace)));
 	}
 
 	public function purge()
@@ -507,10 +544,34 @@ class persistantcache_file extends persistantcache
 			unlink($file);
 		}
 	}
-
-	private function build_file_path($name)
+	
+	public function cycle_namespace($namespace)
 	{
-		return $this->file_cache_path.CACHE_PREFIX.'_'.$name.'.cache';
+		$path = $this->file_cache_path.$namespace.DS;
+		if(!file_exists($path))
+		{
+			return true;
+		}
+		
+		$files = glob($path.'*');
+		foreach ($path as $file)
+		{
+			unlink($file);
+		}
+		return rmdir($path);
+	}
+
+	private function build_file_path($name, $namespace = null)
+	{
+		$path = $this->file_cache_path;
+		if(!is_null($namespace)){
+			$path = $this->file_cache_path . $namespace . DS;
+		}
+		if(!file_exists($path)){
+			mkdir($path, 0750);
+		}
+
+		return $path.CACHE_PREFIX.'_'.$name.'.cache';
 	}
 }
 
@@ -520,6 +581,7 @@ class persistantcache_session extends persistantcache
 	 * Session caching
 	 * CAUTION Only use this on site where your going to have a small number of users
 	 */
+	protected $supports_namespaces = true;
 	private $max_objects_in_session_cache = 50; //Prevent the sessions getting to big note there is no way of knowing how many users there are at once.
 
 	protected function __construct()
@@ -537,7 +599,7 @@ class persistantcache_session extends persistantcache
 		return false;
 	}
 
-	public function save($name, $value, $time = 0)
+	public function save($name, $value, $time = 0, $namespace = null)
 	{
 		if(!$this->enabled){ return false; }
 		$data = $this->build_save($name, $value, $time);
@@ -558,7 +620,7 @@ class persistantcache_session extends persistantcache
 		return false;
 	}
 
-	public function get($name)
+	public function get($name, $namespace = null)
 	{
 		if(!$this->enabled){ return false; }
 		$name = $this->build_key($name);
@@ -575,7 +637,7 @@ class persistantcache_session extends persistantcache
 		return false;
 	}
 
-	public function drop($name)
+	public function drop($name, $namespace)
 	{
 		if(!$this->enabled){ return false; }
 		$name = $this->build_key($name);
@@ -587,6 +649,16 @@ class persistantcache_session extends persistantcache
 	{
 		$_SESSION['cache'] = array();
 		$_SESSION['cache_count'] = 0;
+	}
+	
+	public function cycle_namespace($namespace)
+	{
+		if(isset($_SESSION[$namespace]))
+		{
+			unset($_SESSION[$namespace]);
+			return true;
+		}
+		return false;
 	}
 }
 

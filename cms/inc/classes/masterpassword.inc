@@ -47,7 +47,7 @@ class masterpassword {
         			$this->$options[key] = $value;
         		}
         	}
-        	if(is_null($this->options['path'])) { $this->options['path'] = site_root().DIRECTORY_SEPARATOR; }
+        	if(is_null($this->options['path'])) { $this->options['path'] = SITE_ROOT.DIRECTORY_SEPARATOR; }
         }
         
         /**

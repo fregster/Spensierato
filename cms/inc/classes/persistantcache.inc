@@ -90,6 +90,10 @@ class persistantcache
 	protected function __construct()
 	{
 		$this->encryption_key = sha1($_SERVER['HTTP_HOST']).CACHE_ENCRYPTION_KEY;
+		if($this->encrypt_data && !class_exists('encryption'))
+		{
+			$this->encrypt_data = false;
+		}
 		$this->init();
 		return false; //Unable to use a persistant cache
 	}
@@ -197,9 +201,9 @@ class persistantcache
 	 * @param $data
 	 * @return encrypted data
 	 */
-	protected function encrypt($data)
+	protected function encrypt($data, $try_to_force_encryption = false)
 	{
-		if($this->encrypt_data && class_exists('encryption'))
+		if($this->encrypt_data || ($try_to_force_encryption && class_exists('encryption')))
 		{
 			$data = encryption::encrypt($data);
 		}
@@ -213,7 +217,7 @@ class persistantcache
 	 */
 	protected function decrypt($data)
 	{
-		if($this->encrypt_data && class_exists('encryption'))
+		if($this->encrypt_data)
 		{
 			$data = encryption::decrypt($data);
 		}
@@ -227,9 +231,14 @@ class persistantcache
 	 * @param $time
 	 * @return array();
 	 */
-	protected function build_save($name, $value, $time, $namespace = null)
+	protected function build_save($name, $value, $time, $namespace = null, $try_to_force_encryption = false)
 	{
 		//Build the expire time
+		$encrypted = $this->encrypt_data;
+		if($try_to_force_encryption && class_exists('encryption')){
+			$encrypted = true;
+		}
+		
 		$expire_time = $this->time + $this->max_cache_time;
 		if($time != 0)
 		{
@@ -242,7 +251,7 @@ class persistantcache
 
 		//Build the value
 		$data = serialize($value);
-		$value = array('value' => $this->encrypt($data), 'time' => $expire_time, 'validate' => crc32($data), 'encrypted' => $this->encrypt_data);
+		$value = array('value' => $this->encrypt($data, $try_to_force_encryption), 'time' => $expire_time, 'validate' => crc32($data), 'encrypted' => $this->encrypt_data);
 
 		return array('name'=>$this->build_key($name, $namespace), 'data'=>$value);
 	}
@@ -286,7 +295,7 @@ class persistantcache
 	 * value is what you want to cache
 	 * time max storage time
 	 */
-	public function save($name, $value, $time = 0, $namespace = null)
+	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false)
 	{
 		return false;
 	}
@@ -372,10 +381,10 @@ class persistantcache_memcache extends persistantcache
 		return false;
 	}
 
-	public function save($name, $value, $time = 0, $namespace = null)
+	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false)
 	{
 		if(!$this->enabled){ return false; }
-		$data = $this->build_save($name, $value, $time, $namespace);
+		$data = $this->build_save($name, $value, $time, $namespace, $try_to_force_encryption);
 		if(strlen($data['data']['value']) < $this->max_object_size && $this->store != false)
 		{
 			$result = $this->store->replace($data['name'], $data['data'], MEMCACHE_COMPRESSED, $data['data']['time']);
@@ -495,10 +504,10 @@ class persistantcache_file extends persistantcache
 		return false;
 	}
 
-	public function save($name, $value, $time = 0, $namespace = null)
+	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false)
 	{
 		if(!$this->enabled){ return false; }
-		$data = $this->build_save($name, $value, $time);
+		$data = $this->build_save($name, $value, $time, null, $try_to_force_encryption);
 		
 		if(isset($data['data']) && $file = fopen($this->build_file_path($data['name'], $namespace), 'wb'))
 		{
@@ -554,9 +563,12 @@ class persistantcache_file extends persistantcache
 		}
 		
 		$files = glob($path.'*');
-		foreach ($path as $file)
+		if(is_array($files))
 		{
-			unlink($file);
+			foreach($files as $file)
+			{
+				unlink($file);
+			}
 		}
 		return rmdir($path);
 	}
@@ -599,10 +611,10 @@ class persistantcache_session extends persistantcache
 		return false;
 	}
 
-	public function save($name, $value, $time = 0, $namespace = null)
+	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false)
 	{
 		if(!$this->enabled){ return false; }
-		$data = $this->build_save($name, $value, $time);
+		$data = $this->build_save($name, $value, $time, null, $try_to_force_encryption);
 
 		if(strlen($data['data']['value']) < $this->max_object_size)
 		{

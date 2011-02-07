@@ -122,7 +122,10 @@ class CMS
 
 		if(Options::singleton()->get_option('admin_mode'))
 		{
-			Database::Singleton()->sql_cache_disable();
+			if(options::Singleton()->get_option('disable_sql_cache'))
+			{
+				Database::Singleton()->sql_cache_disable();
+			}
 		}
 
 		//Setup the user
@@ -167,9 +170,9 @@ class CMS
 
 		$sql_string = $sql_info[0].' SQL Querys (';
 		
-		if(Options::singleton()->get_option('admin_mode'))
+		if(Options::singleton()->get_option('disable_sql_cache'))
 		{
-			$sql_string .= 'Database cache disabled in Admin mode) ';
+			$sql_string .= 'Database cache disabled) ';
 		}
 		else
 		{

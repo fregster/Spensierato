@@ -12,8 +12,9 @@ class options
 					'admin_mode' => array(false, true),
 					'test' => array(true),
 					'force_reload' => array(false, true),
-					'display_warnings' =>array(true, false),
-					'suppress_warnings' =>array(false, true),
+					'display_warnings' => array(true, false),
+					'suppress_warnings' => array(false, true),
+					'disable_sql_cache' => array(false, true),
 							);
 
 	public static function Singleton()

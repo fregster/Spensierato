@@ -533,7 +533,7 @@ class persistantcache_file extends persistantcache
 
 	public function drop($name, $namespace = null)
 	{
-		return unlink($this->build_file_path($this->build_key($name, $namespace)));
+		return unlink($this->build_file_path($this->build_key($name), $namespace));
 	}
 
 	public function purge()

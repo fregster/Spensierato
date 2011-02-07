@@ -179,30 +179,38 @@ class Template
 			$css_files[] = $this->css_path();
 			$css_paths = array();
 			$estring = '';
-			foreach($css_files as $file)
-			{
-				$path = $this->get_file_path(basename($file));
-				$css_paths[] = $path;
-				$estring .= $path;
-				$css_m_time = max($css_m_time, filemtime($path));
-			}
-			$estring = md5($estring);			
+			
 			$css = persistantcache::Singleton()->get('template_css', 'templates');
 			
-			if(!isset($css['mtime']) || $css['mtime'] != $css_m_time || $css['paths'] != $css_paths)
+			//Quick cache return to save stating the FS every hit
+			if(!isset($css['created']) || ($css['created'] + 5 < CMS::Singleton()->time()))
 			{
-				$css = '@charset "UTF-8";';
-				foreach($css_paths as $path)
+				//Cycle the cache files to check for updates
+				foreach($css_files as $file)
 				{
-					$css .= str_replace('@CHARSET "UTF-8";', '', file_get_contents($path));
+					$path = $this->get_file_path(basename($file));
+					$css_paths[] = $path;
+					$estring .= $path;
+					$css_m_time = max($css_m_time, filemtime($path));
 				}
-				$css = array('css' => $css, 'mtime' => $css_m_time, 'paths' => $css_paths);
+				$estring = md5($estring);			
 				
-				persistantcache::Singleton()->save('template_css', $css, 'templates');
+				
+				//If any file has been updated
+				if(!isset($css['mtime']) || $css['mtime'] != $css_m_time || $css['paths'] != $css_paths)
+				{
+					$css = '@charset "UTF-8";';
+					foreach($css_paths as $path)
+					{
+						$css .= str_replace('@CHARSET "UTF-8";', '', file_get_contents($path));
+					}
+					$css = array('css' => $css, 'mtime' => $css_m_time, 'paths' => $css_paths, 'created' => CMS::Singleton()->time());
+					
+					persistantcache::Singleton()->save('template_css', $css, 3600, 'templates');
+				}
 			}
 			
 			// send the requisite header information and character set
-
 			header ('Content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
 			Cache::headers_allow_cache_dynamic('css', $css_m_time, $estring, true, 31536000, 31536000);
 

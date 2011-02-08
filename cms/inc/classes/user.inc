@@ -9,7 +9,6 @@ class user
 	private static $instance;
 	protected $userid = 0;
 	private $lists;
-	private $user_details;
 
 	public static function Singleton()
 	{
@@ -31,13 +30,13 @@ class user
 	{
 		if(isset($_SESSION['userid']))
 		{
-			$this->userid =& $_SESSION['userid'];
+			$this->userid = $_SESSION['userid'];
 		}
 
 		$this->set_user_details();
 
 		//Check that default required values are set
-		if(!isset($this->lists))
+		if(!isset($this->lists[0]))
 		{
 			$this->lists = array(0 => 0);
 		}
@@ -110,6 +109,7 @@ class user
 			user::Singleton()->store('login_error', 'Either your Username or Password was incorrect or you are not registered');
 			Common::redirect_inc_vars(implode('/', common::get_path_vars()), array('authfailed' => $auth));
 		}
+
 		Common::bounce_to_referer();
 	}
 
@@ -291,7 +291,7 @@ class user
 	}
 
 	protected function do_login()
-	{
+	{		
 		if(post::variable('login_rememberme') == 'true')
 		{
 			cookie::Singleton()->set_cookie('username', post::variable('username'));

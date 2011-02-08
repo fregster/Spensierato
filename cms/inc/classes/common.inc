@@ -105,14 +105,6 @@ abstract class Common
 		return DOCUMENT_ROOT_FOLDER_ONLY;
     }
 
-	public static function site_root()
-	{
-		$ext = substr($_SERVER['SCRIPT_FILENAME'], -4 , 4);
-		$a = substr($_SERVER['SCRIPT_FILENAME'], 0 , strripos($_SERVER['SCRIPT_FILENAME'], $ext));
-		
-		return substr($a, 0, strripos($a, '/'));
-	}
-
 	public static function post_sql_safe($var)
 	{
 		return(Common::sql_clean(post::variable('string',$var)));
@@ -384,7 +376,7 @@ abstract class Common
 		session::Singleton()->force();
 		if(!isset($_SESSION['cookies_enabled']))
 		{
-			if(!isset($_GET['cookie_check']))
+			if(!get::variable('cookie_check', 'isset'))
 			{
 				$_SESSION['cookies_enabled'] = true;
 				common::redirect_inc_vars(Common::clean_and_combine_url(CMS::Singleton()->path_vars, 0), array('cookie_check' => 1));
@@ -406,12 +398,7 @@ abstract class Common
 
     public static function rewrite_enabled()
     {
-    	if(defined('SITE_ROOT')){
-    		$root = SITE_ROOT;
-    	} else {
-    		$root = common::site_root();
-    	}
-    	if(function_exists('apache_get_modules') && in_array("mod_rewrite", apache_get_modules()) && file_exists($root.DIRECTORY_SEPARATOR.'.htaccess'))
+    	if(function_exists('apache_get_modules') && in_array("mod_rewrite", apache_get_modules()) && file_exists(DIR_INDEX.'.htaccess'))
     	{
     		return true;
     	}

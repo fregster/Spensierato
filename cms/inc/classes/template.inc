@@ -34,7 +34,7 @@ class Template
 		
 		if(Settings::Singleton()->get_setting('use_external_skins') === true && Settings::Singleton()->get_setting('skin'))
 		{
-			$this->template_path = file_root().DS.'skins'.DS.Settings::Singleton()->get_setting('skin');
+			$this->template_path = DIR_INDEX.'skins'.DS.Settings::Singleton()->get_setting('skin');
 		}
 		else if (Settings::Singleton()->get_setting('skin'))
 		{
@@ -302,9 +302,9 @@ class Template
 		
 			if(Settings::Singleton()->get_setting('template_extends') != false)
 			{
-				if(file_exists(file_root().'skins'.DS.Settings::Singleton()->get_setting('template_extends')))
+				if(file_exists(DIR_INDEX.'skins'.DS.Settings::Singleton()->get_setting('template_extends')))
 				{
-					$this->working_template_path = file_exists(file_root().'skins'.DS.Settings::Singleton()->get_setting('template_extends'));
+					$this->working_template_path = file_exists(INDEX_PATH.'skins'.DS.Settings::Singleton()->get_setting('template_extends'));
 				}
 				else
 				{
@@ -335,97 +335,6 @@ class Template
 			}
 		}
 	}
-	
-	/*
-	private function load_xslt_template()
-	{
-		$path = $this->default_path .'/templates/*.xml';
-		$files = array();
-		$this->list_of_files = glob($path);
-		foreach ($this->list_of_files as $filepath)
-		{
-			$filename = basename($filepath);
-			if(file_exists($this->template_path .'/templates/'.$filename))
-			{
-				$filepath = $this->template_path .'/templates/'.$filename;
-
-			}
-			$this->filenames[$filename] = true;
-			$files[$filepath] = true;
-			$this->lastmodified = max($this->lastmodified, filemtime($filepath));
-		}
-
-		$replace_files = $this->build_and_extend_template();
-		if(is_array($replace_files))
-		{
-			$files = array_merge($files, $replace_files);
-		}
-		
-//		print_r($this->list_of_files);
-		print_r($files); die('end');
-		
-		unset($this->list_of_files);
-
-		$xslt = persistantcache::Singleton()->get('template_xslt');
-
-		if(!isset($xslt['mtime']) || $xslt['mtime'] != $this->lastmodified)
-		{
-			$xslt = ''; //drop the array
-			foreach($files as $key => $value)
-			{
-				$xslt .= file_get_contents($key);
-			}
-		}
-		else
-		{
-			$xslt = $xslt['xslt']; //Overwrite the array
-		}
-
-		persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified));
-
-		return $xslt;
-	}
-	
-	private function build_and_extend_template()
-	{		
-		if($this->default_path != $this->template_path)
-		{
-			if(file_exists(file_root().'skins/'.Settings::Singleton()->get_setting('template_extends')))
-			{
-				$this->template_path = file_exists(file_root().'skins/'.Settings::Singleton()->get_setting('template_extends'));
-			}
-			else
-			{
-				$this->template_path = Settings::Singleton()->get_setting('cms_root').'skins/'.Settings::Singleton()->get_setting('template_extends');
-			}
-			if(file_exists($this->template_path.'/template.inc'))
-			{
-				require_once($this->template_path.'/template.inc');
-			}
-			
-			if(Settings::Singleton()->get_setting('template_extends') != false && $this->child_template != $this->template_path)
-			{
-				$this->list_of_files = glob($this->template_path.'/templates/*.xml');
-				foreach ($this->list_of_files as $filepath)
-				{
-					if(!isset($this->filenames[basename($filepath)]))
-					{
-						$files[$filepath] = true;
-						$this->lastmodified = max($this->lastmodified, filemtime($filepath));
-					}
-				}
-				
-				$this->child_template = $this->template_path;
-				$new_files = $this->build_and_extend_template();
-				if(is_array($new_files))
-				{
-					$files = array_merge($files);
-				}
-			}
-		}
-		return $files;
-	}
-*/
 
 	private function load_template_options()
 	{

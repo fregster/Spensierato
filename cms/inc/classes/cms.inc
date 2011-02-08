@@ -12,8 +12,6 @@ class CMS
 	private static $document_root;
 	//File system root for the CMS folder
 	private static $cms_root;
-	//File system root for the outer site
-	private static $site_root;
 
 	//Private vars
 	private $microtime;
@@ -75,9 +73,6 @@ class CMS
 		//Work out the CMS file system root
 		CMS::$cms_root = cms_root();
 		Settings::Singleton()->new_setting('cms_root', CMS::$cms_root, true, true);
-
-		//Work out the Site file system root
-		CMS::$site_root = SITE_ROOT;
 
 		//Static includes folder
 		Settings::Singleton()->new_setting('site_folder_static_includes', (CMS::$cms_root.DS.'inc'.DS.'static'.DS), false, true);

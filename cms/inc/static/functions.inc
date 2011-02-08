@@ -1,24 +1,7 @@
 <?php
 function cms_root()
 {
-	global $include_path;
-	return($include_path.DIRECTORY_SEPARATOR.'cms'.DIRECTORY_SEPARATOR);
-}
-
-//This gets the file system root to the index.php
-$index_root = '';
-function file_root()
-{
-	global $index_root;
-	
-	if(isset($index_root[1]))
-	{
-		return $index_root;
-	}
-	$list = get_included_files();
-	$index_root = dirname($list[0]);
-	
-	return $index_root;
+	return(INCLUDE_PATH.DIRECTORY_SEPARATOR.'cms'.DIRECTORY_SEPARATOR);
 }
 
 function get_site_document_root()
@@ -49,13 +32,6 @@ function get_site_document_root_folder_only() //This does NOT work if we have a 
 
     }
 	return $document_root;
-}
-
-function get_file_root()
-{
-	$ext = substr($_SERVER['SCRIPT_FILENAME'], -4 , 4);
-	$a = substr($_SERVER['SCRIPT_FILENAME'], 0 , strripos($_SERVER['SCRIPT_FILENAME'], $ext));
-	return substr($a, 0, strripos($a, DIRECTORY_SEPARATOR));
 }
 
 /**

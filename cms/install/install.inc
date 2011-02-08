@@ -38,7 +38,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 	if(isset($path_vars[0]) && $path_vars[0] == 'skin' && isset($path_vars[1]))
 	{
 		//ini_set('display_errors', 'off');
-		$file = $include_path.DS.'cms'.DS.'skins'.DS.'default'.DS.'graphics'.DS.$path_vars[1];
+		$file = INCLUDE_PATH.DS.'cms'.DS.'skins'.DS.'default'.DS.'graphics'.DS.$path_vars[1];
 		FileTransfer::singleton()->get_file($file, false, false, true, true);
 		exit;
 	}
@@ -147,12 +147,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 
 	debug('Vars set ('.$GLOBALS['table_prefix'].')');
 	
-	require_once($include_path.DIRECTORY_SEPARATOR.'cms'.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.'database.inc');
+	require_once(INCLUDE_PATH.DIRECTORY_SEPARATOR.'cms'.DIRECTORY_SEPARATOR.'database'.DIRECTORY_SEPARATOR.'database.inc');
 	$install_folder = dirname(__FILE__);
-	$site_root = file_root();
 
 	//set the path for the settings file
-	$settings_file = $site_root.DIRECTORY_SEPARATOR.'spensierato_setup.inc';
+	$settings_file = DIR_INDEX.'spensierato_setup.inc';
 	
 	/*
 	 * Create the db object

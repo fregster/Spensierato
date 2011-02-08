@@ -34,8 +34,9 @@ class session
 	protected function __construct()
 	{
 		//Only load cookie data if a cookie has been sent to help comply with EU reg's
-		if(isset($_COOKIE['PHPSESSID']) || isset($_COOKIE['CMS']))
+		if(isset($_COOKIE['PHPSESSID']) || cookie::Singleton()->is_cookie_value_set('CMS'))
 		{
+			//This causes problems for some reason need to figure out why the F the doc root gives the wrong path at login
 //			session_set_cookie_params(0, Settings::singleton()->get_setting('document_root'));
 			$this->force();
 			$this->timeout_check();
@@ -58,8 +59,9 @@ class session
 	
 	private function timeout_check()
 	{
-		if(isset($_SESSION['last_activity']) && ($_SESSION['last_activity'] + Settings::singleton()->get_setting('session_force_timeout') < CMS::$time)){
+		if(isset($_SESSION['last_activity']) && ($_SESSION['last_activity'] + (Settings::singleton()->get_setting('session_force_timeout') * 60) < CMS::$time)){
 			$this->delete_session();
+			warnings::Singleton()->register('Session Timed Out', 'Your session was inactive for tolong and you have been logged out', 0);
 		}
 		$_SESSION['last_activity'] = CMS::$time;
 	}
@@ -75,6 +77,7 @@ class session
 				{
 					/* The user agent is not the same as when the session was created the cookie might have been hijacked */
 					$this->destroy_session();
+					$this->force();
 				}
 			}
 			else
@@ -103,7 +106,7 @@ class session
 			}
 			else
 			{
-				$_SESSION['CREATED_TIME'] = CMS::singleton()->time();
+				$_SESSION['CREATED_TIME'] = CMS::$time;
 			}
 		}
 	}
@@ -144,7 +147,7 @@ class session
 		@$_SESSION = @array(); //Clear the session data
 
 		if (isset($_COOKIE[session_name()])) {
-		    setcookie(session_name(), '', CMS::$time-42000, '/');
+		    cookie::Singleton()->destroy();
 		}
 
 		session_destroy();

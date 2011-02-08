@@ -8,7 +8,19 @@
  */
 
 class encryption{
-        
+
+		/**
+		 * 
+		 * Simple method to test if encryption is available
+		 */
+		static public function supported(){
+			if(class_exists('mcrypt') && function_exists('mcrypt_encrypt') && function_exists('mcrypt_decrypt'))
+			{
+				return true;
+			}
+			return false;
+		}
+	
 		/**
 		 * 
 		 * Default Encryption method

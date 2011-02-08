@@ -7,7 +7,7 @@
 <?php
 if(is_writable(dirname($_SERVER['SCRIPT_FILENAME'])))
 {
-	if(copy(($include_path.DS.'example.htaccess'), (dirname($_SERVER['SCRIPT_FILENAME']).DS.'.htaccess')))
+	if(copy((INCLUDE_PATH.DS.'example.htaccess'), (dirname($_SERVER['SCRIPT_FILENAME']).DS.'.htaccess')))
 	{
 		echo('<p>File copy was sucsesful<p>');
 	}

@@ -2,10 +2,7 @@
 class cookie
 {
 	private static $instance;
-	private $key_value;
     private $decypted;
-	private $iv;
-	private $id;
 	private $cookie_array = array();
 	private $cookie_update;
 	private $salt;
@@ -32,11 +29,10 @@ class cookie
 
 	protected function __construct()
 	{
-		if(function_exists('mcrypt_get_iv_size') && settings::singleton()->get_setting('cookie_encryption'))
+		$this->cookie_name = sha1(($this->cookie_name.Settings::singleton()->get_setting('random_string')));
+		if(settings::singleton()->get_setting('cookie_encryption') && encryption::supported())
 		{
 			$this->encryption = true;
-			$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
-	   		$this->iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
 		}
 		else
 		{
@@ -93,6 +89,16 @@ class cookie
 		$this->cookie_update = true;
 		unset($this->cookie_array[$name]);
 	}
+	
+	public function destroy()
+	{
+		setcookie($this->cookie_name, '', CMS::$time-42000, Settings::singleton()->get_setting('document_root'));
+	}
+	
+	public function is_cookie_value_set($name)
+	{
+		return isset($this->cookie_array[$name]);
+	}
 
 	public function get_cookie_value($name)
 	{
@@ -133,7 +139,7 @@ class cookie
 			$cookie_information_new = serialize(array('salt' => $this->salt(), 'data' => $data));
 
 			// save the cookie array
-			setcookie($this->cookie_name, $cookie_information_new, time()+$this->cookie_life , Settings::Singleton()->get_setting('document_root'), FALSE, FALSE, TRUE);
+			setcookie($this->cookie_name, $cookie_information_new, CMS::$time+$this->cookie_life , Settings::Singleton()->get_setting('document_root'), FALSE, FALSE, TRUE);
 			$this->cookie_update = false;
 		}
 	}
@@ -142,8 +148,7 @@ class cookie
 	{
 		if($this->encryption)
 		{
-			if($key == NULL) { $key = $this->key_value(); }
-			return mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $decrypted_text, MCRYPT_MODE_ECB, $this->iv);
+			return encryption::encrypt($decrypted_text);
 		}
 
 		return $decrypted_text;
@@ -153,8 +158,7 @@ class cookie
 	{
 		if($this->encryption)
 		{
-			if($key == NULL) { $key = $this->key_value(); }
-			return mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $encrypted_text, MCRYPT_MODE_ECB, $this->iv);
+			return encryption::decrypt($encrypted_text);
 		}
 
 		return $encrypted_text;

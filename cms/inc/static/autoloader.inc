@@ -13,7 +13,6 @@ $class_profile = array(array('class' => 'inital code', 'mem_diff' => (memory_get
 function __autoload($class_name)
 {
 	global $class_block_list;
-	global $include_path;
 	global $class_profile;
 	global $class_profile_use_true_memory;
 	$trace = false;
@@ -87,9 +86,7 @@ function __autoload($class_name)
 }
 
 function get_extended_class_path($base_class, $new_class)
-{
-	global $include_path;
-	
+{	
 	$base_len = strlen($base_class)+1;
 	$class_filename = $new_class;
 	if(substr($new_class, 0, $base_len) == ($base_class.'_'))
@@ -97,11 +94,11 @@ function get_extended_class_path($base_class, $new_class)
 		$class_filename = substr($new_class, $base_len);
 	}
 
-	return($include_path.'/cms/inc/classes/'.$base_class.'/'.$class_filename.'.inc');
+	return(INCLUDE_PATH.DS.'cms'.DS.'inc'.DS.'classes'.DS.$base_class.DS.$class_filename.'.inc');
 }
 
 
-$extra_include_paths = array($include_path . '/cms/external/');
+$extra_include_paths = array(INCLUDE_PATH . DS .'cms' . DS . 'external' . DS);
 
 foreach ($extra_include_paths AS $path)
 {

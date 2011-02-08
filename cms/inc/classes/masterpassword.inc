@@ -10,7 +10,7 @@
 class masterpassword {
         private static $instance;
         
-        private $options = array('path' => null, 'key1' => 'encryption_key1.pwd', 'key2' => 'encryption_key2.pwd');
+        private $options = array('path' => null, 'key1' => 'spensierato_key1.pwd', 'key2' => 'spensierato_key2.pwd');
         
         private $password_primary = false;
         private $password_seconday = false;
@@ -57,7 +57,7 @@ class masterpassword {
         
         public function get_password(){
         	if(!$this->password_primary){
-        		$this->password_primary = file_get_contents($this->options['path'].$this->options['key1']);
+        		$this->password_primary = @file_get_contents($this->options['path'].$this->options['key1']);
         	}
         	return $this->password_primary;
         }
@@ -87,7 +87,7 @@ class masterpassword {
          */
         public function get_password_secondary(){
         	if(!$this->password_seconday){
-        		$this->password_seconday = file_get_contents($this->options['path'].$this->options['key2']);
+        		$this->password_seconday = @file_get_contents($this->options['path'].$this->options['key2']);
         	}
         	return $this->password_seconday;
         }

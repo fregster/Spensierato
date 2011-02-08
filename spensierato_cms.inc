@@ -3,18 +3,71 @@
 //	$force_install = true;
 //default is to install the cms
 $install = true;
+
+//Force a timezone to stop PHP complaning
 date_default_timezone_set('UTC');
-function exception_handler($exception)
+
+//Force any PHP settings
+ini_set('error_log', DIR_LOG.'php_error.log');
+//ini_set('display_errors', 'Off');
+
+function exception_handler($exception = NULL)
 {
-  echo 'Uncaught exception: ' , $exception->getMessage(), "\n";
+	header('HTTP/1.1 500 Internal Server Error');
+	echo('<html><head></head><body>');
+	echo('<h1>Opps</h1><p>Unfortunatly an uncaught exception happened.<br/>Exception: ' . $exception->getMessage().'</p>');
+	$backtrace = debug_backtrace();
+//			var_dump($backtrace);
+	echo($backtrace[0]['args'][1].'<br/>');
+	echo(basename($backtrace[0]['args'][2]).' : '. $backtrace[0]['args'][3].'<br/>');
+	echo('</body></html>');
+	exit;
+  
 }
+
+function uncaught_error_handler($errno, $errstr, $errfile, $errline)
+{
+	if (!(error_reporting() & $errno)) {
+        // This error code is not included in error_reporting probably intentially supressed
+        return;
+    }
+    
+	switch ($errno) {
+	
+	    case E_USER_WARNING:
+	    case E_WARNING:
+	        echo "<b>WARNING</b> [$errno] $errstr ".basename($errfile) . ' ' . $errline."<br />\n";
+	        break;
+	
+	    case E_USER_NOTICE:
+	    case E_NOTICE:
+	    	 echo "<b>NOTICE</b> [$errno] $errstr ".basename($errfile) . ' ' . $errline."<br />\n";
+	        break;
+	
+	    default:
+	        header('HTTP/1.1 500 Internal Server Error');
+	        echo('<html><head></head><body>');
+			echo('<h1>Opps</h1><p>Unfortunatly an uncaught error happened.<br/>Error Code: '.$errno.'</p>');
+			$backtrace = debug_backtrace();
+//			var_dump($backtrace);
+			echo($backtrace[0]['args'][1].'<br/>');
+			echo(basename($backtrace[0]['args'][2]).' : '. $backtrace[0]['args'][3].'<br/>');
+			echo('</body></html>');
+			exit;
+	        break;
+	   }
+}
+
+set_error_handler('uncaught_error_handler');
+
 
 $class_block_list = array(
 //'elementvideo' => 1,
 //'elementgallery' => 1,
 //'elementlink' => 1,
 );
-$include_path = dirname(__FILE__);
+
+define('INCLUDE_PATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
 $default_include_path = get_include_path();
 /**
  * Check this is not an attack using IDS
@@ -22,7 +75,7 @@ $default_include_path = get_include_path();
 if(file_exists('IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 {
 	try {
-		$external_path = $include_path.DIRECTORY_SEPARATOR.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR;
+		$external_path = INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR;
 		set_include_path($external_path);
 		require_once 'IDS'.DIRECTORY_SEPARATOR.'Init.php';
 		$request = array(
@@ -62,11 +115,9 @@ if(file_exists('IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 }
 set_include_path($default_include_path);
 unset($default_include_path);
-require_once($include_path.DIRECTORY_SEPARATOR.'cms'.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'defines.inc');
 
-ini_set('error_log', DIR_LOG.'php_error.log');
-//ini_set('display_errors', 'Off');
-
+//Do static requires
+require_once(INCLUDE_PATH.'cms'.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'defines.inc');
 require_once(DIR_STATIC.'autoloader.inc');
 require_once(DIR_STATIC.'functions.inc');
 
@@ -81,26 +132,24 @@ try
 	define('DOCUMENT_ROOT_FOLDER_ONLY', get_site_document_root_folder_only());
 	define('DOCUMENT_ROOT', get_site_document_root());
 
-	//site root is the filesystem root ie /var/www/spensierato/
-	define('SITE_ROOT', get_file_root());
-
 	//Include the Site setup code
-	if(is_file(file_root().DS.'spensierato_setup.inc'))
+	if(is_file(DIR_INDEX.'spensierato_setup.inc'))
 	{
-		require_once($index_root.DS.'spensierato_setup.inc');
+		require_once(DIR_INDEX.'spensierato_setup.inc');
 		$install = false; //cancel the install directive
 	}
 	
 	//Has the site extended the spensierato options?
 	if(!$install){
-		require_once($include_path.DS.'spensierato_options.inc');
-		if(is_file($index_root.DS.'spensierato_options.inc')) { require_once($index_root.DS.'spensierato_options.inc'); }
+		require_once(INCLUDE_PATH.'spensierato_options.inc');
+		if(is_file(DIR_INDEX.'spensierato_options.inc')) { require_once(DIR_INDEX.'spensierato_options.inc'); }
 	}
+	
 	//run the installation
 	if($install || isset($force_install))
 	{
 		$install = true;
-		include($include_path.DS.'cms'.DS.'install'.DS.'install.inc');
+		include(INCLUDE_PATH.DS.'cms'.DS.'install'.DS.'install.inc');
 		exit;
 	}
 	
@@ -112,7 +161,7 @@ try
 
 	//Make any custom changes here after the CMS code has loaded but before the site is ran
 	
-	if(is_file(file_root().DS.'custom.inc')) { include(file_root().DS.'custom.inc'); }
+	if(is_file(DIR_INDEX.'custom.inc')) { include(DIR_INDEX.'custom.inc'); }
 
 	//Run the CMS
 	CMS::Singleton()->run_cms();

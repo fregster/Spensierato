@@ -4,6 +4,7 @@ class CMS
 	public static $cms_version = '0.0.1';
 	public $path_vars = array();
 	public $page_id;
+	public static $time;
 
 	//Page details
 	public $page_details;
@@ -15,7 +16,6 @@ class CMS
 	private static $site_root;
 
 	//Private vars
-	private $time;
 	private $microtime;
 	private $time_start;
 	private $time_finish;
@@ -45,11 +45,11 @@ class CMS
 	protected function __construct()
 	{
 		ob_start();
-		$this->time = time();
+		CMS::$time = time();
 		$this->microtime = microtime();
 				
-		//Start the session
-		$this->start_session();
+		//Start the session object
+		session::Singleton();
 
 		//Is a persistant_cache available ie memcached supported
 		if(persistantcache::Singleton()->enabled() == true)
@@ -69,28 +69,31 @@ class CMS
 		$this->path_vars = Common::get_path_vars();
 
 		//Work out document root (URL)
-		$this->document_root = Common::document_root();
-		Settings::Singleton()->new_setting('document_root', $this->document_root, true);
+		CMS::$document_root = Common::document_root();
+		Settings::Singleton()->new_setting('document_root', CMS::$document_root, true);
 
 		//Work out the CMS file system root
-		$this->cms_root = cms_root();
-		Settings::Singleton()->new_setting('cms_root', $this->cms_root, true, true);
+		CMS::$cms_root = cms_root();
+		Settings::Singleton()->new_setting('cms_root', CMS::$cms_root, true, true);
 
 		//Work out the Site file system root
-		$this->site_root = SITE_ROOT;
+		CMS::$site_root = SITE_ROOT;
 
 		//Static includes folder
-		Settings::Singleton()->new_setting('site_folder_static_includes', ($this->cms_root.DS.'inc'.DS.'static'.DS), false, true);
+		Settings::Singleton()->new_setting('site_folder_static_includes', (CMS::$cms_root.DS.'inc'.DS.'static'.DS), false, true);
 	}
 
-	public function time()
+	public function time($microtime = false)
 	{
-		return Common::time_with_microseconds();
+		if($microtime){
+			return Common::time_with_microseconds();
+		}
+		return CMS::$time;
 	}
 
 	public function cms_root()
 	{
-		return $this->cms_root;
+		return CMS::$cms_root;
 	}
 
 	public function microtime()
@@ -203,11 +206,6 @@ class CMS
 			return $this->path_vars[$index];
 		}
 		return NULL;
-	}
-
-	private function start_session()
-	{
-		session::Singleton();
 	}
 
 	/**

@@ -102,7 +102,7 @@ class persistantcache
 	protected function init()
 	{
 		//Internaly cache time
-		$this->time = time();
+		persistantcache::$time = time();
 	}
 
 	public static function Singleton()
@@ -239,7 +239,7 @@ class persistantcache
 			$encrypted = true;
 		}
 		
-		$expire_time = $this->time + $this->max_cache_time;
+		$expire_time = persistantcache::$time + $this->max_cache_time;
 		if($time != 0)
 		{
 			$expire_time = $expire_time + $time;
@@ -532,7 +532,7 @@ class persistantcache_file extends persistantcache
 			$result['value'] = unserialize(file_get_contents($name));
 		}
 
-		if(isset($result) && $result['value']['time'] > $this->time && $this->validate_data($result['value']['value'], $result['value']['validate']))
+		if(isset($result) && $result['value']['time'] > persistantcache::$time && $this->validate_data($result['value']['value'], $result['value']['validate']))
 		{		
 			return unserialize($this->decrypt($result['value']['value']));
 		}
@@ -649,7 +649,7 @@ class persistantcache_session extends persistantcache
 		return false;
 	}
 
-	public function drop($name, $namespace)
+	public function drop($name, $namespace = null)
 	{
 		if(!$this->enabled){ return false; }
 		$name = $this->build_key($name);

@@ -1,7 +1,7 @@
 <?php
 class spellcheck
 {
-	public function spellcheck_autocorrect($string, $highlight = true)
+	public static function spellcheck_autocorrect($string, $highlight = true)
 	{
 		if(function_exists('pspell_new'))
 		{
@@ -61,7 +61,7 @@ class spellcheck
 		return $string;
 	}
 	
-	private function check_word($word)
+	private static function check_word($word)
 	{
 
 	}

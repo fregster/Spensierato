@@ -115,7 +115,7 @@ class element_Default
 		$this->element->setAttribute('title', $this->title);
 		$this->element->setAttribute('sort', $this->position);
 
-		$this->admin(&$dom);
+		$this->admin($dom);
 
 		//Transform the data field
 		$this->transform_data();

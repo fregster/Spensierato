@@ -37,7 +37,8 @@ class session
 		if(isset($_COOKIE['PHPSESSID']) || isset($_COOKIE['CMS']))
 		{
 //			session_set_cookie_params(0, Settings::singleton()->get_setting('document_root'));
-			session_start();
+			$this->force();
+			$this->timeout_check();
 			$this->session_user_agent_check();
 			$this->session_ip_check();
 			cookie::Singleton()->load();
@@ -50,8 +51,17 @@ class session
 		if(!$this->session_loaded)
 		{
 			//Force a session to start
-			@session_start();
+			return @session_start();
 		}
+		return true;
+	}
+	
+	private function timeout_check()
+	{
+		if(isset($_SESSION['last_activity']) && ($_SESSION['last_activity'] + Settings::singleton()->get_setting('session_force_timeout') < CMS::$time)){
+			$this->delete_session();
+		}
+		$_SESSION['last_activity'] = CMS::$time;
 	}
 	
 	private function session_user_agent_check()
@@ -69,11 +79,11 @@ class session
 			}
 			else
 			{
-				$_SESSION['CMS_SALT'] = md5(CMS::time());;
+				$_SESSION['CMS_SALT'] = md5(CMS::$time);;
 				$_SESSION['HTTP_USER_AGENT'] = md5($_SERVER['HTTP_USER_AGENT']. $_SESSION['CMS_SALT']);
 			}
 
-			//Regerates the session id every 10 minuites but still keeps session data
+			//Regerates the session id every 5 minuites but still keeps session data
 			/* Why?
 			This only helps if the cookie has been sniffed it must be used within the timeframe set
 			If it gets sniffed and used before the time is up and previous checks pass then both users
@@ -85,7 +95,7 @@ class session
 			*/
 			if (isset($_SESSION['CREATED_TIME']))
 			{
-				if ($_SESSION['CREATED_TIME'] > (CMS::time()+ 600))
+				if ($_SESSION['CREATED_TIME'] > (CMS::$time + 300))
 				{
 					/* The session is old regerate the id */
 					$this->regenerate_session();
@@ -93,7 +103,7 @@ class session
 			}
 			else
 			{
-				$_SESSION['CREATED_TIME'] = CMS::time();
+				$_SESSION['CREATED_TIME'] = CMS::singleton()->time();
 			}
 		}
 	}
@@ -134,7 +144,7 @@ class session
 		@$_SESSION = @array(); //Clear the session data
 
 		if (isset($_COOKIE[session_name()])) {
-		    setcookie(session_name(), '', time()-42000, '/');
+		    setcookie(session_name(), '', CMS::$time-42000, '/');
 		}
 
 		session_destroy();

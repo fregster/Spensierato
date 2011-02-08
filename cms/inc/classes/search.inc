@@ -167,6 +167,7 @@ class Search
 				$this->highlight();
 			}
 		}
+
 		return($this->build_xml());
 	}
 
@@ -208,6 +209,8 @@ class Search
 	private function get_results()
 	{		
 		$results = $this->get_results_from_index();
+		var_dump($results);
+		die(__LINE__.' : '.__FILE__);
 //		$this->build_link_array();
 		$security = security::Singleton()->bulk_page_security_check($this->ids);
 
@@ -283,9 +286,9 @@ class Search
 	}
 	
 	private function get_results_from_index_lucene()
-	{
+	{	
 		$results = array();
-		
+//		var_dump($this->lucene_search->find('homepage'));
 		foreach($this->lucene_search->find($this->string) as $r) //Loop through the results to format them in the required array style
 		{
 			$page = $r->element_id;
@@ -302,6 +305,7 @@ class Search
 			$results[] = $result;
 			unset($result);
 		}
+		var_dump($results);die(__LINE__);
 		return $results;
 	}
 

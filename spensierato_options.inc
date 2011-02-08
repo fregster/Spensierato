@@ -259,6 +259,11 @@ Settings::Singleton()->new_setting('stream', '/video/');
 //true / false
 Settings::Singleton()->new_setting('session_security_enhanced', true, false, true, true);
 
+//Setting session_force_timeout
+//If a session is started X minutes after the last action kill the session and return not logged in
+//int timeout in minutes
+Settings::Singleton()->new_setting('session_force_timeout', 30, false, true, true);
+
 //Setting session_security_ip
 //Requires the origonating IP to be constant with when the session was created
 //true / false

@@ -291,6 +291,7 @@ class user
 
 	private function update_password($hash)
 	{
+		database::Singleton()->force_write_user();
 		return Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('password', 'hash_type'), array($hash, Settings::Singleton()->get_setting('site_option_hash_type')));
 	}
 

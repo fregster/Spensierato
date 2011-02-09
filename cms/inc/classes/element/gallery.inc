@@ -12,7 +12,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			parent::__construct();
 			$this->type = __CLASS__;
 			$this->name = 'Image Gallery';
-			$this->allowed_tags(array('elementid'));
+			$this->allowed_tags(array('elementid', 'display_type' => array('3D Gallery', 'Slide', 'Carrousel')));
 		}
 
 		protected function add_header()

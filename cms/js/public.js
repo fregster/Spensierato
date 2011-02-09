@@ -83,8 +83,8 @@ imageFlowLoad();
 if(typeof window.adminInit == 'function'){
 	adminInit();
 }
-ToolTips=new Tips($$(".ToolTip"),{className:"ToolTip"});
-SpriteTips=new Tips($$(".sprite"),{className:"ToolTip",fixed: true});
+ToolTips=new Tips($$(".ToolTip"),{className:"ToolTip-tip"});
+SpriteTips=new Tips($$(".sprite"),{className:"ToolTip-tip",fixed: true});
 if(typeof window.LazyLoad == 'function'){
 	lazyloader = new LazyLoad({
 		range: 200,

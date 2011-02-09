@@ -118,7 +118,7 @@ class database_execution_mdb2 extends database_execution
 
 			}
 			
-			if(PEAR::isError($resultset) || MDB2::isError($resultset))
+			if(isset($resultset) && (PEAR::isError($resultset) || MDB2::isError($resultset)))
 			{
 				$error = 'Failed to issue query, error message : ' . $resultset->getMessage().', '. $resultset->getDebugInfo().'<br />';
 			}

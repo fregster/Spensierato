@@ -405,7 +405,7 @@ class persistantcache_memcache extends persistantcache
 		}
 
 		$result = $this->store->get($this->build_key($name, $namespace));
-		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate'])  && $this->store != false)
+		if($result['time'] > persistantcache::$time && $this->validate_data($result['value'], $result['validate'])  && $this->store != false)
 		{
 			return unserialize($this->decrypt($result['value']));
 		}
@@ -455,7 +455,7 @@ class persistantcache_memcache extends persistantcache
 	protected function disable_memcached()
 	{
 		$this->enabled = false;
-		$_SESSION['disable_memcached'] = $this->time;
+		$_SESSION['disable_memcached'] = persistantcache::$time;
 		$this->rebuild_singleton();
 	}
 }
@@ -639,7 +639,7 @@ class persistantcache_session extends persistantcache
 
 		$result = isset($_SESSION['cache'][$name])?$_SESSION['cache'][$name]:NULL;
 
-		if($result['time'] > $this->time && $this->validate_data($result['value'], $result['validate']))
+		if($result['time'] > persistantcache::$time && $this->validate_data($result['value'], $result['validate']))
 		{
 			return unserialize($this->decrypt($result['value']));
 		}

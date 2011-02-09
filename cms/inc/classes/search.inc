@@ -209,8 +209,8 @@ class Search
 	private function get_results()
 	{		
 		$results = $this->get_results_from_index();
-		var_dump($results);
-		die(__LINE__.' : '.__FILE__);
+//		var_dump($results);
+//		die(__LINE__.' : '.__FILE__);
 //		$this->build_link_array();
 		$security = security::Singleton()->bulk_page_security_check($this->ids);
 

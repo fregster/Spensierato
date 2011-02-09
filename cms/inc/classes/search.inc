@@ -305,7 +305,7 @@ class Search
 			$results[] = $result;
 			unset($result);
 		}
-		var_dump($results);die(__LINE__);
+
 		return $results;
 	}
 
@@ -430,7 +430,7 @@ class Search
 
 				$current_char = '';
 				$temp_position = $end_position;
-				while($current_char != '. ' && $temp_position > ($pos + $len) )
+				while($current_char != '. ' && $temp_position > ($pos + $len) && isset($result[($temp_position -1)]) && isset($result[($temp_position)]) )
 				{
 					$current_char = $result[($temp_position -1)].$result[$temp_position--];
 				}

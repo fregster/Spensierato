@@ -225,6 +225,10 @@ class user
 	//Returns true on sucsess or error text on fail
 	private function site_auth()
 	{
+		if(!post::variable('username', 'isset')){
+			return 'Username and password was not set';
+			warnings::singleton()->register('Username and password was not set');
+		}
 		$username = post::variable('username');
 		$password = post::variable('password') . Settings::singleton()->get_setting('random_key');
 

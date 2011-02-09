@@ -42,7 +42,6 @@ class CMS
 
 	protected function __construct()
 	{
-		ob_start();
 		CMS::$time = time();
 		$this->microtime = microtime();
 				

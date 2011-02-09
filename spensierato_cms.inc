@@ -1,4 +1,7 @@
 <?php
+//Start Output buffering
+ob_start();
+
 //uncomment to force an install
 //	$force_install = true;
 //default is to install the cms
@@ -6,10 +9,6 @@ $install = true;
 
 //Force a timezone to stop PHP complaning
 date_default_timezone_set('UTC');
-
-//Force any PHP settings
-ini_set('error_log', DIR_LOG.'php_error.log');
-//ini_set('display_errors', 'Off');
 
 function exception_handler($exception = NULL)
 {
@@ -120,6 +119,10 @@ unset($default_include_path);
 require_once(INCLUDE_PATH.'cms'.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'defines.inc');
 require_once(DIR_STATIC.'autoloader.inc');
 require_once(DIR_STATIC.'functions.inc');
+
+//Force any PHP settings
+ini_set('error_log', DIR_LOG.'php_error.log');
+//ini_set('display_errors', 'Off');
 
 set_exception_handler('exception_handler');
 try

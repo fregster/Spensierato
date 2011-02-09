@@ -356,7 +356,7 @@ class persistantcache_memcache extends persistantcache
 	{
 		$this->init();
 
-		if(isset($_SESSION['disable_memcached']) && ($_SESSION['disable_memcached'] + persistantcache::$retry_time) > $this->time )
+		if(isset($_SESSION['disable_memcached']) && ($_SESSION['disable_memcached'] + persistantcache::$retry_time) > time() )
 		{
 			return false;
 		}

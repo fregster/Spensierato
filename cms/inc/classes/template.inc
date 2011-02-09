@@ -269,7 +269,7 @@ class Template
 			$xslt = $xslt['xslt']; //Overwrite the array
 		}
 
-		persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified), 'templates');
+		persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified), null, 'templates');
 
 		return $xslt;
 	}

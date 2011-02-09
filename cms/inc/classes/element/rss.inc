@@ -62,11 +62,11 @@ class element_RSS extends element_Default
 		if(Common::valid_url($url))
 		{
 			$name = 'rss_'.$url;
-			$data = persistantcache::Singleton()->get($name);
+			$data = persistantcache::Singleton()->get($name, $this->type);
 			if(!$data)
 			{
 				$data = $this->get_url_contents($url);
-				persistantcache::Singleton()->save($name, $data, $maxage);
+				persistantcache::Singleton()->save($name, $data, $maxage, $this->type);
 			}
 			return $data; 
 		}

@@ -30,11 +30,12 @@ class cookie
 	protected function __construct()
 	{
 		$this->cookie_name = sha1(($this->cookie_name.Settings::singleton()->get_setting('random_string')));
+		
 		if(settings::singleton()->get_setting('cookie_encryption') && encryption::supported())
 		{
 			$this->encryption = true;
 		}
-		else
+		else if(settings::singleton()->get_setting('cookie_encryption'))
 		{
 			warnings::Singleton()->register('Encryption Failed', 'Your server does not support encryption. Your users cookies are not been encrypted');
 		}

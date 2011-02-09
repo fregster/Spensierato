@@ -19,7 +19,7 @@ class xml
 	{
 		if(class_exists('persistantcache', false))
 		{
-			$result = persistantcache::Singleton()->get('xml_to_array_'.$xml);
+			$result = persistantcache::Singleton()->get('xml_to_array_'.$xml, 'XML');
 			if($result != false) { return $result; }
 		}
 
@@ -45,7 +45,7 @@ class xml
 
 				if(class_exists('persistantcache', false))
 				{
-					persistantcache::Singleton()->save('xml_to_array_'.$xml, $php_array);
+					persistantcache::Singleton()->save('xml_to_array_'.$xml, $php_array, 'XML');
 				}
 
 				return $php_array;

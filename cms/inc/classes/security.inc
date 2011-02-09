@@ -384,7 +384,7 @@ class Security
 			$page_ids = array($page_ids);
 		}
 		$key = 'security_'.$what.'_'.implode("_", $page_ids).'_'.$user_id;
-		$result = persistantcache::singleton()->get($key);
+		$result = persistantcache::singleton()->get($key, 'security');
 
 		return $result;
 	}
@@ -399,7 +399,7 @@ class Security
 			$page_ids = array($page_ids);
 		}
 		$key = 'security_'.$what.'_'.implode("_", $page_ids).'_'.$user_id;
-		persistantcache::singleton()->save($key, $result, $this->security_cache_time);
+		persistantcache::singleton()->save($key, $result, $this->security_cache_time, 'security');
 		return $result;
 	}
 }

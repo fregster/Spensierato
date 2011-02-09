@@ -346,16 +346,14 @@ class Menu
 	{
 		$where = array('parent_id', 'product');
 		$values = array($id, 0);
-		if(!options::Singleton()->get_option('admin_mode'))
+		if(!options::Singleton()->get_option('admin_mode') || !user::singleton()->is_logged_in())
 		{
 			$where[] = 'deleted';
 			$values[] = '0';
 
-			if(!user::singleton()->is_logged_in())
-			{
-				$where[] =  'visible';
-				$values[] =  1;
-			}
+			$where[] =  'visible';
+			$values[] =  1;
+
 		}
 		$details = Database::Singleton()->sql_select(array('id', 'title', 'parent_id', 'visible', 'deleted', 'sort'), 'tbl_pages', $where, $values, array('sort'));
 

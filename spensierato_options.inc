@@ -358,6 +358,10 @@ Settings::Singleton()->new_setting('user_min_password_length', 10, false, true, 
 //The email includes a note about account security
 Settings::Singleton()->new_setting('user_auto_email_password', true, false, true, true);
 
+//Setting cache_xslt_transformation
+//Allow full page render caching for X seconds, this will disable the SQL and page render information
+Settings::Singleton()->new_setting('cache_xslt_transformation', true, false, true, false, false, true);
+
 Settings::singleton()->new_setting('memcached_sql', false, false, true, true);
 Settings::singleton()->new_setting('memcached_session', false, false, true, true);
 

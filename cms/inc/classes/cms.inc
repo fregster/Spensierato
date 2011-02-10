@@ -101,13 +101,7 @@ class CMS
 	* It sets up all the vars required to use the run_cms method
 	*/
 	public function start()
-	{		
-		//If required include PHPIDS
-//		if(Settings::singleton()->get_setting('phpids'))
-//		{
-//			require_once(cms_root().'/external/phpids/phpids.inc');
-//		}
-
+	{	
 		if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'])
 		{
 			Settings::singleton()->new_setting('https',$_SERVER['HTTPS'] ,false,false);
@@ -157,6 +151,11 @@ class CMS
 	 */
 	public function end_cms()
 	{
+		if(Settings::singleton()->get_setting('cache_xslt_transformation'))
+		{
+			return ('<div id="page_section_footer">XSLT Cache Enabled, Render information not available</div>');
+		}
+		
 		$this->time_finish = Common::time_with_microseconds();
 		$totaltime = ($this->time_finish - $this->time_start);
 		$phptime = $totaltime - Database::Singleton()->sql_time();
@@ -237,12 +236,11 @@ class CMS
 	/**
 	 * shutdown()
 	 * This is a shutdown method that can be called after the page has finished rendering.
-	 * Currently does nothing
 	 * @return unknown_type
 	 */
 	public function shutdown()
 	{
-
+		persistantcache::Singleton()->garbage_collection();
 	}
 
 

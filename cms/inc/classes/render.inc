@@ -115,6 +115,14 @@ class Render
 	{
 		if(strlen($xml) > 0 && strlen($template) > 0)
 		{
+			if(Settings::singleton()->get_setting('cache_xslt_transformation') && Settings::singleton()->get_setting('debug') == 0){
+				$key = sha1($xml).sha1($template);
+				$cached = persistantcache::Singleton()->get($key, 'render');
+				if ($cached){
+					return $cached;
+				}
+			}
+
 			$xslt = new xsltProcessor;
 			$xslt->registerPHPFunctions();
 	
@@ -125,7 +133,13 @@ class Render
 	
 			/* transform the xml document */
 			@$dom->loadXML($xml);
-			return $xslt->transformToXML($dom);
+			$output = $xslt->transformToXML($dom);
+			
+			if(Settings::singleton()->get_setting('cache_xslt_transformation') && Settings::singleton()->get_setting('debug') == 0){
+				persistantcache::Singleton()->save($key, $output, 3600, 'render');
+			}	
+			
+			return $output;
 		}
 		return null;
 	}

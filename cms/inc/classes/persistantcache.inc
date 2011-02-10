@@ -64,6 +64,8 @@ class persistantcache
 	protected $max_cache_time = 300;
 	protected $max_object_size = 20480; //The string length of the serialized array
 	protected static $retry_time = 30; //Time in seconds before reworking out the best cache type
+	protected static $garbage_collection_max_age = 86400; //Time in seconds 24 hours = 86400
+	protected static $garbage_collection_retry_time = 86400; //Time in seconds between clean up attempts 24 hours = 86400
 
 	protected $allow_memcache = true;
 	protected $allow_file_cache = true;
@@ -163,7 +165,7 @@ class persistantcache
 	 */
 	public function version()
 	{
-		return '2.3';
+		return '2.4';
 	}
 
 	/**
@@ -326,6 +328,19 @@ class persistantcache
 		}else{
 			$this->namespace_version_map[$namespace] = $this->namespace_version_map[$namespace] + 1;
 		}
+	}
+	
+	/**
+	 * 
+	 * Some backends will require backends if they use permanant storage
+	 */
+	public function garbage_collection()
+	{
+		if(!persistantcache::Singleton()->get('gc_time') || (persistantcache::Singleton()->get('gc_time') + persistantcache::$garbage_collection_retry_time) < persistantcache::$time){
+			persistantcache::Singleton()->save('gc_time', persistantcache::$time, (persistantcache::$garbage_collection_retry_time * 10));
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -513,8 +528,6 @@ class persistantcache_file extends persistantcache
 		{
 			$result = fwrite($file, serialize($data['data']));
 			fclose($file);
-//			var_dump($result);
-//			die();
 			return $result;
 		}
 		return false;
@@ -571,6 +584,44 @@ class persistantcache_file extends persistantcache
 			}
 		}
 		return rmdir($path);
+	}
+	
+	/**
+	 * As file based caching is typically long term, cycle through the store and drop old cache files
+	 * Default is 24 hours old
+	 */
+	public function garbage_collection()
+	{
+		//Check the parent function to see if we should be doing this now
+		if(!parent::garbage_collection()){
+			return false;
+		}
+		
+		$files = $this->scandir_through($this->file_cache_path);
+
+		foreach ($files as $file){
+			if(is_dir($file)){
+				$filelastmodified = filemtime($file);
+		
+		        if(($filelastmodified-persistantcache::$time) > persistantcache::$garbage_collection_max_age){
+					unlink($file);
+				}
+			}
+		}
+	}
+	
+	private function scandir_through($dir)
+	{
+	    $items = glob($dir . DS . '*');
+	
+	    for ($i = 0; $i < count($items); $i++) {
+	        if (is_dir($items[$i])) {
+	            $add = glob($items[$i] . DS . '*');
+	            $items = array_merge($items, $add);
+	        }
+	    }
+	
+	    return $items;
 	}
 
 	private function build_file_path($name, $namespace = null)

@@ -90,6 +90,10 @@
 	border-right: medium solid #FFFFFF;
 }
 
+.element_edit_frame{
+	margin-bottom: 10px;
+}
+
 .download{
 	cursor: pointer;	
 }

@@ -231,6 +231,13 @@ abstract class Common
 		return $output;
 	}
 
+	/**
+	 * 
+	 * Random string generating function
+	 * @param int $length
+	 * @param bool $allow_numbers
+	 * @param bool $allow_special
+	 */
 	public static function generate_random_string($length = 12, $allow_numbers = false, $allow_special = false)
 	{
 		/* list all possible characters, similar looking characters and vowels have been removed */
@@ -256,6 +263,12 @@ abstract class Common
 		return $code;
 	}
 
+	/**
+	 * 
+	 * Standard HTML encode / decode interface for consistant decoding
+	 * @param string $input
+	 * @param bool $decode
+	 */
 	public static function html($input, $decode = false)
 	{
 		if($decode)

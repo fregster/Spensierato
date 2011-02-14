@@ -49,6 +49,7 @@
 									<xsl:attribute name="id">e_<xsl:value-of select="/page/body/element/@id" /></xsl:attribute>
 									<xsl:call-template name="edit_header"/>
 									<xsl:apply-templates select="/page/body/element/data"/>
+									<xsl:call-template name="additional_inputs"/>
 									<xsl:call-template name="edit_footer"/>
 								</xsl:element>
 							</div>
@@ -59,9 +60,14 @@
         </html>
 </xsl:template>
 
-<xsl:template match="*[@type = 'html']">
+<xsl:template name="additional_inputs">
+	<xsl:if test="//@type = 'html'">
+		<input type="checkbox" name="skip_validation_html" id="skip_validation_html"/> Skip HTML validation and cleaning
+	</xsl:if>
+</xsl:template>
 
-	<div>
+<xsl:template match="*[@type = 'html']">
+	<div class="element_edit_frame">
 		<xsl:element name="textarea">
 		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
 		<xsl:attribute name="style">width:100%</xsl:attribute>
@@ -81,11 +87,10 @@
 		<xsl:if test="string-length(.) = 0">Enter your text here</xsl:if>
 		</xsl:element>
 	</div>
-
 </xsl:template>
 
 <xsl:template match="*[@type = 'text']">
-	<div>
+	<div class="element_edit_frame">
 		<xsl:value-of select="name()" />: <xsl:element name="input">
 		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
 		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
@@ -95,7 +100,7 @@
 </xsl:template>
 
 <xsl:template match="*[@type = 'file']">
-	<div>
+	<div class="element_edit_frame">
 		<xsl:element name="input">
 			<xsl:attribute name="type">hidden</xsl:attribute>
 			<xsl:attribute name="name">MAX_FILE_SIZE</xsl:attribute>
@@ -114,14 +119,14 @@
 
 <xsl:template match="*[@type = 'auto']">
 	<xsl:if test="string(.)">
-		<div>
+		<div class="element_edit_frame">
 			<xsl:value-of select="name()" />: <xsl:value-of select="." />
 		</div>
 	</xsl:if>
 </xsl:template>
 
 <xsl:template match="*[@type = 'href']">
-	<div>
+	<div class="element_edit_frame">
 		<xsl:value-of select="name()" />: <xsl:element name="input">
 		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
 		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
@@ -131,7 +136,7 @@
 </xsl:template>
 
 <xsl:template match="*[@type = 'numeric']">
-	<div>
+	<div class="element_edit_frame">
 		<xsl:value-of select="name()" />: <xsl:element name="input">
 		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
 		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
@@ -141,7 +146,7 @@
 </xsl:template>
 
 <xsl:template match="*[@type = 'email']">
-	<div>
+	<div class="element_edit_frame">
 		<xsl:value-of select="name()" />: <xsl:element name="input">
 		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
 		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
@@ -151,7 +156,7 @@
 </xsl:template>
 
 <xsl:template match="*[@type = 'checkbox']">
-	<div>
+	<div class="element_edit_frame">
 		<xsl:value-of select="name()" />: <xsl:element name="input">
 		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
 		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
@@ -174,7 +179,7 @@
 				Approved On: <xsl:value-of select="/page/body/element/@approved" /><br />
 			</xsl:if>
 		</xsl:if>
-		<div>
+		<div class="element_edit_frame">
 		Title:  <xsl:element name="input">
 		<xsl:attribute name="name">title</xsl:attribute>
 		<xsl:attribute name="id">title</xsl:attribute>

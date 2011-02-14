@@ -215,7 +215,12 @@ Settings::Singleton()->new_setting('site_option_showpagetime', true);
 //Setting tidy
 //Askes the render method to call tidy on the html output, the default skin should not need this but its here anyway.
 //true / false
-Settings::Singleton()->new_setting('tidy', true, false, true);
+Settings::Singleton()->new_setting('tidy', false, false, true);
+
+//Setting tidy
+//Askes the save method to call tidy on the html input.
+//true / false
+Settings::Singleton()->new_setting('tidy_html_input', true, false, true);
 
 //Setting phpids
 //Use PHPIDS (Intrusion Detection System)

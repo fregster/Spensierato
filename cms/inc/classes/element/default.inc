@@ -126,8 +126,8 @@ class element_Default
 		//Attach the data
 		if(strlen($this->data) > 0)
 		{
-			$element_data->appendXML($this->data);
-			$this->element->appendChild($element_data);
+			@$element_data->appendXML($this->data);
+			@$this->element->appendChild($element_data);
 		}
 		//Attach the element to the root dom
 		$dom->appendChild($this->element);
@@ -487,6 +487,37 @@ class element_Default
 			switch ($key)
 			{
 				case 'html':
+					if( (Settings::Singleton()->get_setting('tidy_html_input')) and (function_exists('tidy_parse_string')) && !post::variable('skip_validation_html', 'isset'))
+					{
+						/**
+						 * Set configuration options for HTML tidy.
+						 */
+						$config = array('indent' => false,
+										'doctype' => 'omit',
+										'output-xhtml' => true,
+										'wrap' => 0,
+										'bare' => true,
+										'drop-font-tags' => true,
+										'drop-empty-paras' => true,
+										'hide-comments'=> true,
+										'join-classes' => true,
+										'join-styles' => true,
+										'word-2000' => true,
+										'fix-backslash' => true,
+										'show-body-only' => true,
+										'doctype' => 'strict');
+			
+						/**
+						 * Run HTML tidy on the html code
+						 */
+						
+						$tidy = tidy_parse_string($value, $config, 'UTF8');
+						$tidy->cleanRepair();
+			
+						$value = $tidy;
+						unset($tidy);
+					}
+					
 					$value = Common::html($value);
 					break;
 

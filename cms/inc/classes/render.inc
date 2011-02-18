@@ -136,7 +136,7 @@ class Render
 			$output = $xslt->transformToXML($dom);
 			
 			if(Settings::singleton()->get_setting('cache_xslt_transformation') && Settings::singleton()->get_setting('debug') == 0){
-				persistantcache::Singleton()->save($key, $output, 3600, 'render');
+				persistantcache::Singleton()->save($key, $output, 3600, 'render', false, true);
 			}	
 			
 			return $output;

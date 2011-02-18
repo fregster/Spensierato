@@ -136,7 +136,6 @@ class persistantcache
 		$c = __CLASS__;
 //		unset($_SESSION['persistant_cache_type']);
 		if(defined('CACHE_TYPE')) { $c = 'persistantcache_'.CACHE_TYPE; array_splice(persistantcache::$cache_preference_order, 0, 0, CACHE_TYPE); }
-		var_dump(persistantcache::$cache_preference_order);
 		if(isset($_SESSION['persistant_cache_type']) && class_exists($_SESSION['persistant_cache_type']['type'])) { $c = $_SESSION['persistant_cache_type']['type']; } //If a cache type is set ensure it is still available
 
     	if(!isset($_SESSION['persistant_cache_type']) || $_SESSION['persistant_cache_type']['time'] > (persistantcache::$time - persistantcache::$retry_time)) //Check if we have recently checked for a cache type this is per session checking, but still reduces load

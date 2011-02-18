@@ -85,7 +85,7 @@ $tables['tbl_commands']['keys'] = array();
 $tables['tbl_elements_revisions']['cols_define']['data'] = $long_text;
 $tables['tbl_elements_revisions']['cols_define']['search'] = $long_text;
 $tables['tbl_elements_revisions']['charset'] = $default_charset;
-$tables['tbl_elements_revisions']['keys'] = array();
+$tables['tbl_elements_revisions']['keys'] = array('KEY' => array('id_element_approved' => array('id', 'element_id', 'approved')));
 
 $tables['tbl_elements']['charset'] = $default_charset;
 $tables['tbl_elements']['keys'] = array();
@@ -124,17 +124,16 @@ if($allow_unique_keys)
 }
 
 $tables['tbl_page_elements']['charset'] = $default_charset;
+$tables['tbl_page_elements']['keys'] = array('KEY' => array('pageid_and_visible' => array('page_id','visible','sort')));
 if($allow_unique_keys)
 {
-	$tables['tbl_page_elements']['keys'] = array('UNIQUE KEY' => array('elements_to_page_link' => array('page_id','element_id')), 'UNIQUE KEY' => array('only_one_main_element' => array('element_id','main')));
+	$tables['tbl_page_elements']['keys']['UNIQUE KEY'] = array('elements_to_page_link' => array('page_id','element_id'), array('only_one_main_element' => array('element_id','main')));
 }
 
 $tables['tbl_pages']['charset'] = $default_charset;
 $tables['tbl_pages']['cols_define']['append_tags'] = $long_text;
-if($allow_unique_keys)
-{
-	$tables['tbl_pages']['keys'] = array('KEY' => array('valid_child' => array('visible','deleted','parent_id'), 'primary_key' => array('id')));
-}
+$tables['tbl_pages']['keys'] = array('KEY' => array('valid_child' => array('visible','deleted','parent_id'), 'parent_product' => array('parent_id', 'product'), 'primary_key' => array('id')));
+
 $tables['tbl_security']['cols_define']['data'] = $long_text;
 $tables['tbl_security']['charset'] = $default_charset;
 $tables['tbl_security']['keys'] = array();

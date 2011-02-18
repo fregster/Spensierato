@@ -22,7 +22,7 @@
 * @license http://www.opensource.org/licenses/lgpl-3.0.html LGPL
 * @link http://www.fryer.org.uk/
 *
-* Version 2.2 Released Feb 2011
+* Version 2.5 Released Feb 2011
 */
 
 if(!defined('CACHE_PREFIX'))
@@ -135,7 +135,8 @@ class persistantcache
 	{
 		$c = __CLASS__;
 //		unset($_SESSION['persistant_cache_type']);
-		if(defined('CACHE_TYPE')) { $c = CACHE_TYPE; }
+		if(defined('CACHE_TYPE')) { $c = 'persistantcache_'.CACHE_TYPE; array_splice(persistantcache::$cache_preference_order, 0, 0, CACHE_TYPE); }
+		var_dump(persistantcache::$cache_preference_order);
 		if(isset($_SESSION['persistant_cache_type']) && class_exists($_SESSION['persistant_cache_type']['type'])) { $c = $_SESSION['persistant_cache_type']['type']; } //If a cache type is set ensure it is still available
 
     	if(!isset($_SESSION['persistant_cache_type']) || $_SESSION['persistant_cache_type']['time'] > (persistantcache::$time - persistantcache::$retry_time)) //Check if we have recently checked for a cache type this is per session checking, but still reduces load
@@ -164,7 +165,7 @@ class persistantcache
 	 */
 	public function version()
 	{
-		return '2.4';
+		return '2.5';
 	}
 
 	/**
@@ -188,6 +189,7 @@ class persistantcache
 	 * Build the key name
 	 * As memcache can support a key with a max length of 240 bytes build a sha1 hash (256 bits)
 	 * Should be safe as there are no currently known collisions in sha1
+	 * You could probably safely change to MD5 for a few miliseconds performance improvment
 	 */
 	protected function build_key($name, $namespace = null)
 	{
@@ -216,13 +218,41 @@ class persistantcache
 	 * @param $data
 	 * @return decrypted data
 	 */
-	protected function decrypt($data)
+	protected function decrypt($data, $try_to_force_encryption = false)
 	{
-		if($this->encrypt_data)
+		if($this->encrypt_data || ($try_to_force_encryption && class_exists('encryption')))
 		{
 			$data = encryption::decrypt($data);
 		}
 		return $data;
+	}
+	
+	/**
+	 * 
+	 * Interface to gzcompress
+	 * @param string $data
+	 */
+	protected static function compress($data)
+	{
+		if(function_exists('gzcompress'))
+		{
+			return gzcompress($data);
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * interface to gzuncompress
+	 * @param string $data
+	 */
+	protected static function uncompress($data)
+	{
+		if(function_exists('gzuncompress'))
+		{
+			return gzuncompress($data);
+		}
+		return false;
 	}
 
 	/**
@@ -232,8 +262,9 @@ class persistantcache
 	 * @param $time
 	 * @return array();
 	 */
-	protected function build_save($name, $value, $time, $namespace = null, $try_to_force_encryption = false)
+	protected function build_save($name, $value, $time, $namespace = null, $try_to_force_encryption = false, $compress = false)
 	{
+		$compressed = false;
 		//Build the expire time
 		$encrypted = $this->encrypt_data;
 		if($try_to_force_encryption && class_exists('encryption')){
@@ -252,9 +283,43 @@ class persistantcache
 
 		//Build the value
 		$data = serialize($value);
-		$value = array('value' => $this->encrypt($data, $try_to_force_encryption), 'time' => $expire_time, 'validate' => crc32($data), 'encrypted' => $this->encrypt_data);
+		$crc = crc32($data);
+		if($compress){
+			$cdata = persistantcache::compress($data);
+			if($cdata)
+			{
+				$data =& $cdata;
+				$compressed = true;
+			}
+		}
+		$value = array('value' => $this->encrypt($data, $try_to_force_encryption), 'time' => $expire_time, 'validate' => $crc, 'encrypted' => $encrypted, 'compressed' => $compressed);
 
 		return array('name'=>$this->build_key($name, $namespace), 'data'=>$value);
+	}
+	
+	/**
+	 * 
+	 * Reverse the saved data process returning false on error
+	 * @param array $data
+	 */
+	protected function process_get($data)
+	{
+		if($data['time'] > persistantcache::$time)
+		{
+			if($data['encrypted'])
+			{
+				$data['value'] = $this->decrypt($data['value'], true);
+			}
+
+			if($data['compressed'])
+			{
+				$data['value'] = persistantcache::uncompress($data['value']);
+			}
+
+			return unserialize(persistantcache::validate_data($data['value'], $data['validate']));
+			
+		}
+		return false;
 	}
 	
 	/**
@@ -277,15 +342,15 @@ class persistantcache
 
 	/**
 	 * 
-	 * Cached data contains a crc value, this validates the input and returns true if valid or false on error
+	 * Cached data contains a crc value, this validates the input and returns input if valid or false on error
 	 * @param string $data
 	 * @param crc32 check value $check
 	 */
-	protected function validate_data($data, $check)
+	protected static function validate_data($data, $check)
 	{
 		if(crc32($data) == $check)
 		{
-			return true;
+			return $data;
 		}
 		return false;
 	}
@@ -296,7 +361,7 @@ class persistantcache
 	 * value is what you want to cache
 	 * time max storage time
 	 */
-	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false)
+	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false, $compress = false)
 	{
 		return false;
 	}
@@ -395,10 +460,10 @@ class persistantcache_memcache extends persistantcache
 		return false;
 	}
 
-	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false)
+	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false, $compress = false)
 	{
 		if(!$this->enabled){ return false; }
-		$data = $this->build_save($name, $value, $time, $namespace, $try_to_force_encryption);
+		$data = $this->build_save($name, $value, $time, $namespace, $try_to_force_encryption, $compress);
 		if(strlen($data['data']['value']) < $this->max_object_size && $this->store != false)
 		{
 			$result = $this->store->replace($data['name'], $data['data'], MEMCACHE_COMPRESSED, $data['data']['time']);
@@ -419,12 +484,7 @@ class persistantcache_memcache extends persistantcache
 		}
 
 		$result = $this->store->get($this->build_key($name, $namespace));
-		if($result['time'] > persistantcache::$time && $this->validate_data($result['value'], $result['validate'])  && $this->store != false)
-		{
-			return unserialize($this->decrypt($result['value']));
-		}
-		
-		return false;
+		return $this->process_get($result);
 	}
 
 	public function drop($name, $namespace = null)
@@ -518,16 +578,16 @@ class persistantcache_file extends persistantcache
 		return false;
 	}
 
-	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false)
+	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false, $compress = false)
 	{
 		if(!$this->enabled){ return false; }
-		$data = $this->build_save($name, $value, $time, null, $try_to_force_encryption);
+		$data = $this->build_save($name, $value, $time, null, $try_to_force_encryption, $compress);
 		
 		if(isset($data['data']) && $file = fopen($this->build_file_path($data['name'], $namespace), 'wb'))
 		{
 			$result = fwrite($file, serialize($data['data']));
 			fclose($file);
-			return $result;
+			return (bool) $result;
 		}
 		return false;
 	}
@@ -544,12 +604,7 @@ class persistantcache_file extends persistantcache
 			$result['value'] = unserialize(file_get_contents($name));
 		}
 
-		if(isset($result) && $result['value']['time'] > persistantcache::$time && $this->validate_data($result['value']['value'], $result['value']['validate']))
-		{		
-			return unserialize($this->decrypt($result['value']['value']));
-		}
-		
-		return false;
+		return $this->process_get($result['value']);
 	}
 
 	public function drop($name, $namespace = null)
@@ -661,10 +716,10 @@ class persistantcache_session extends persistantcache
 		return false;
 	}
 
-	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false)
+	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false, $compress = false)
 	{
 		if(!$this->enabled){ return false; }
-		$data = $this->build_save($name, $value, $time, null, $try_to_force_encryption);
+		$data = $this->build_save($name, $value, $time, null, $try_to_force_encryption, $compress);
 
 		if(strlen($data['data']['value']) < $this->max_object_size)
 		{
@@ -689,14 +744,13 @@ class persistantcache_session extends persistantcache
 
 		$result = isset($_SESSION['cache'][$name])?$_SESSION['cache'][$name]:NULL;
 
-		if($result['time'] > persistantcache::$time && $this->validate_data($result['value'], $result['validate']))
+		if($result['time'] < persistantcache::$time)
 		{
-			return unserialize($this->decrypt($result['value']));
+			//The data in the session cache is outdated so delete it
+			unset($_SESSION['cache'][$name]);
 		}
 
-		//The data in the session cache is outdated so delete it
-		unset($_SESSION['cache'][$name]);
-		return false;
+		return $this->process_get($result);
 	}
 
 	public function drop($name, $namespace = null)

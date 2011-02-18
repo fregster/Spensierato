@@ -83,7 +83,7 @@ class shoppingcart
 		if(isset($_SESSION[ORDER]['id']))
 		{
 			$result = database::singleton()->sql_select_first(array('data'), 'tbl_orders', array('id'), array($_SESSION[ORDER]['id']));
-			return xml::array_to_xml_simple(array_merge(json_decode($result['data'],true),array('order' => $_SESSION[ORDER]['id'])), 'order', 'item');
+			return xml::array_to_xml_simple(array_merge(json_decode(encryption::decrypt($result['data']),true),array('order' => $_SESSION[ORDER]['id'])), 'order', 'item');
 		}
 		return false;
 	}
@@ -172,7 +172,7 @@ class shoppingcart
 		if(count($_SESSION[CART][ITEM]) > 0)
 		{
 			database::singleton()->force_write_user();
-			$_SESSION[ORDER]['id'] = database::singleton()->sql_insert('tbl_orders', array('email', 'data'), array($email, json_encode(array_merge($_SESSION[CART], $details))));
+			$_SESSION[ORDER]['id'] = database::singleton()->sql_insert('tbl_orders', array('email', 'data'), array(encryption::encrypt($email), encryption::encrypt(json_encode(array_merge($_SESSION[CART], $details)))));
 			database::singleton()->destroy_write_user();
 			if(is_numeric($_SESSION[ORDER]['id']))
 			{

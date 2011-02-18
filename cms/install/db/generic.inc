@@ -216,6 +216,15 @@ $tables['tbl_settings'] = array(
 								'primary_key' => 'setting',
 								);
 
+$tables['tbl_system'] = array(
+								'cols_define' =>
+								array(
+									'name' => varchar(64).' NOT NULL',
+									'value' => varchar(128).' NOT NULL'
+									),
+								'primary_key' => 'name',
+								);								
+								
 $tables['tbl_temp'] = array(
 							'cols_define' =>
 							array(
@@ -280,6 +289,8 @@ $tables['tbl_orders'] = array(
 									),
 								'primary_key' => 'id',
 								);
+								
+
 								
 //set the db name and the user info in a SQL compliant manner fot use in the GRANT queries.
 $grant_db = "$database.*";

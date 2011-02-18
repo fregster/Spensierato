@@ -1,5 +1,5 @@
 <?php
-class clamav extends virusscan
+class virusscan_clamav extends virusscan
 {
 	private $use_deamon_version = true;
 	private $command_minimal;

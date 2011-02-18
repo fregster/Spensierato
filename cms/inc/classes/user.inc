@@ -198,6 +198,10 @@ class user
 				if(!isset($user_data) or $user_data != NULL)
 				{
 					$_SESSION['user_details'] = json_decode(encryption::decrypt($user_data['data']), TRUE);
+					if(!is_array($_SESSION['user_details']))
+					{
+						$_SESSION['user_details'] = array();
+					}
 				}
 				
 				$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));

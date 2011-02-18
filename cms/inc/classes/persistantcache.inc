@@ -49,7 +49,7 @@ if(!defined('CACHE_ENCRYPTION_KEY'))
 		define('CACHE_ENCRYPTION_KEY', sha1($_SERVER['SERVER_SOFTWARE']));
 	}
 	else {
-		define('CACHE_ENCRYPTION_KEY', sha1('oi2hf98y1g1¤iugh9r8y90¤i23hoh¤'));
+		define('CACHE_ENCRYPTION_KEY', sha1('oi2hf98y1g1ï¿½iugh9r8y90ï¿½i23hohï¿½'));
 	}
 }
 
@@ -71,7 +71,6 @@ class persistantcache
 	protected $allow_file_cache = true;
 	protected $allow_session_cache = false; //Should only be enabled for testing as this would be a per user cache in the session handler
 	protected static $cache_preference_order = array('memcache', 'file', 'session');
-//	protected static $cache_preference_order = array('memcache', 'file');
 
 	/**
 	 * DO NOT CHANGE THESE
@@ -575,7 +574,7 @@ class persistantcache_file extends persistantcache
 			return true;
 		}
 		
-		$files = glob($path.'*');
+		$files = glob($path.'*', GLOB_NOSORT);
 		if(is_array($files))
 		{
 			foreach($files as $file)
@@ -612,11 +611,11 @@ class persistantcache_file extends persistantcache
 	
 	private function scandir_through($dir)
 	{
-	    $items = glob($dir . DS . '*');
+	    $items = glob($dir . DS . '*', GLOB_NOSORT);
 	
 	    for ($i = 0; $i < count($items); $i++) {
 	        if (is_dir($items[$i])) {
-	            $add = glob($items[$i] . DS . '*');
+	            $add = glob($items[$i] . DS . '*', GLOB_NOSORT);
 	            $items = array_merge($items, $add);
 	        }
 	    }

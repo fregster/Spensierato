@@ -14,8 +14,8 @@ abstract class Common
 	}
 
 	public static function bounce_to_referer()
-	{
-		if($_SERVER['HTTP_REFERER'] != NULL)
+	{		
+		if($_SERVER['HTTP_REFERER'] != NULL && !isset($_GET['bounce']))
 		{
 			$url = $_SERVER['HTTP_REFERER'];
 		}
@@ -249,7 +249,7 @@ abstract class Common
 		
 		if($allow_special)
 		{
-			$possible .= '!@£$%*()_-+=[]# |~`¤±;:{}';
+			$possible .= '!@ï¿½$%*()_-+=[]# |~`ï¿½ï¿½;:{}';
 		}
 		
 		$code = '';

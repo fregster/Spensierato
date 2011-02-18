@@ -7,7 +7,7 @@ Settings::Singleton()->new_setting('template_header_graphic_background', 'bg1-90
 Settings::Singleton()->overwrite_setting('template_verstion', cms::$cms_version, true);
 Settings::Singleton()->overwrite_setting('template_extends', 'default', false, true);
 
-foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/*') as $filename) 
+foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/*', GLOB_NOSORT) as $filename) 
 {
 	array_push($this->preload, basename($filename));
 }

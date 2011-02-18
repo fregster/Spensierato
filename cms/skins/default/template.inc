@@ -11,7 +11,7 @@ Settings::Singleton()->overwrite_setting('template_version', cms::$cms_version, 
  * All files in the pre-load-images folder are always included with the code below
  */
 
-foreach (glob(Settings::Singleton()->get_setting('cms_root').DS.'skins'.DS.Settings::Singleton()->get_setting('skin').DS.'pre-load-images'.DS.'*') as $filename) 
+foreach (glob(Settings::Singleton()->get_setting('cms_root').DS.'skins'.DS.Settings::Singleton()->get_setting('skin').DS.'pre-load-images'.DS.'*', GLOB_NOSORT) as $filename) 
 {
 	array_push($this->preload, basename($filename));
 }

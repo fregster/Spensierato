@@ -15,7 +15,7 @@
 	
 	if($exec['result'])
 	{
-		foreach (glob($path.'*.javascript') as $filename) 
+		foreach (glob($path.'*.javascript', GLOB_NOSORT) as $filename) 
 		{
 			if(filemtime($filename.'.cleaned') < filemtime($filename) or !file_exists($filename) )
 			{

@@ -277,7 +277,7 @@ class Template
 	private function build_template()
 	{
 		$path = $this->template_path.DS.'templates'.DS.'*.xml';
-		$files = glob($path);
+		$files = glob($path, GLOB_NOSORT);
 		
 		foreach($files as $filepath)
 		{
@@ -319,7 +319,7 @@ class Template
 						require_once($this->working_template_path.DS.'template.inc');
 					}
 					
-					$files = glob($this->working_template_path.DS.'templates'.DS.'*.xml');
+					$files = glob($this->working_template_path.DS.'templates'.DS.'*.xml', GLOB_NOSORT);
 					foreach ($files as $filepath)
 					{
 						$filename = basename($filepath);

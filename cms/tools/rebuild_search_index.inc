@@ -6,7 +6,7 @@ if(is_writable(Settings::singleton()->get_setting('cms_folder_search'))) //Is th
 	if(is_readable(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index'.DS.'segments.gen'))
 	{
 		echo('<p>Deleting Old Index</p>');
-		foreach (glob(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index'.DS.'*') as $filename) 
+		foreach (glob(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index'.DS.'*', GLOB_NOSORT) as $filename) 
 		{
 			unlink(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index'.DS.basename($filename));
 		}

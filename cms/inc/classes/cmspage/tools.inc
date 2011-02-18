@@ -10,7 +10,7 @@ class cmspage_tools extends cmspage
 	public function run()
 	{
 		//CMS Included Functions no security checks
-		$file = CMS::Singleton()->cms_root() . '/tools/' . Common::clean_path($this->value) .'.inc'; //FIXME path needs made public, a method writing or ref the GLOBAL
+		$file = CMS::Singleton()->cms_root() . DS . 'tools' . DS . Common::clean_path($this->value) .'.inc'; //FIXME path needs made public, a method writing or ref the GLOBAL
 		if(file_exists($file))
 		{
 			include($file);

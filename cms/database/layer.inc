@@ -46,9 +46,9 @@ class database
 	/**
 	 * Prepared Statment work
 	 */
-	protected $sql_use_prepared_statments_if_available = true;
-	protected $sql_can_prepare_statments = false;
-	protected $sql_use_prepared_statments = false;
+	protected $sql_use_prepared_statments_if_available = true; //Option
+	protected $sql_can_prepare_statments = false; //DB specific automatically set option
+	protected $sql_use_prepared_statments = false; //Calculated value
 	protected $sql_prepared_statment_placeholder_name = 'v';
 	protected $sql_prepared_statment_placeholder_prefix = ':';
 	protected $sql_prepared_statment_use_short_holder = true;
@@ -830,7 +830,8 @@ class database
 			$id_col = $alternet_id_col;
 		}
 
-		$exsists = $this->sql_select_first(array($id_col), $table, $where_fields, $where_values);
+		$exsists = $this->sql_select_first($id_col, $table, $where_fields, $where_values, null, null, true);
+
 		if($exsists != NULL)
 		{
 			return $this->sql_update_by_col($table, array($id_col), array($exsists[$id_col]), $fields, $values);
@@ -851,7 +852,7 @@ class database
 	 */
 	public function sql_insert($table, $fields, $values)
 	{
-		$this->sql_exe($this->sql_insert_build($table, $fields, $values), $this->sql_values, true);
+		$this->sql_update_exe($this->sql_insert_build($table, $fields, $values), $this->sql_values, true, $table);
 		return $this->db->lastInsertID($table,'id');
 	}
 
@@ -900,7 +901,7 @@ class database
 	public function sql_delete_where($table, $where_fields, $where_values)
 	{
 		$sql = $this->sql_delete_where_build($table, $where_fields, $where_values);
-		return $this->sql_exe($sql, NULL, true);
+		return $this->sql_update_exe($sql, NULL, true);
 	}
 
 	protected function sql_delete_where_build($table, $where_fields, $where_values)
@@ -1147,7 +1148,6 @@ class database
 		}
 	}
 
-	//$Values is for when I get around to implimenting MDB2 properly!
 	protected function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{
 		$this->db->sql_connect();

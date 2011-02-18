@@ -42,24 +42,28 @@ class Settings
 	}
 
 	//Update the settings with those from the DB
-	public function get_database_settings()
+	public function get_database_settings($force_reload = false)
 	{
-		if(!$this->db_loaded)
+		if(!$this->db_loaded || $force_reload)
 		{
 			$this->db_loaded = true;
-			//TODO write if load from db do this else skip
-			$settings = Database::Singleton()->sql_select(array('setting', 'value'), 'tbl_settings');
-
-			if(	($this->get_setting('protect_db_settings') != true) and ($this->get_setting('protect_db_settings') != false) )
-			{
-				die('must be true or false');
-			}
-
-			if(is_array($settings))
-			{
-				foreach($settings as $setting)
+			if(isset($this->settings['allow_db_settings'][0]) && $this->settings['allow_db_settings'][0]){
+				$settings = Database::Singleton()->sql_select(array('setting', 'value'), 'tbl_settings', null, null, null, null, true);
+	
+				if(	($this->get_setting('protect_db_settings') != true) and ($this->get_setting('protect_db_settings') != false) )
 				{
-					$this->overwrite_setting($setting['setting'], $setting['value'], $this->get_setting('protect_db_settings'));
+					die('must be true or false');
+				}
+	
+				if(is_array($settings))
+				{
+					foreach($settings as $setting)
+					{
+						if ($setting['value'] == 'false') { $setting['value'] = false; }
+						if ($setting['value'] == 'true') { $setting['value'] = true; }
+	
+						$this->overwrite_setting($setting['setting'], $setting['value'], $this->get_setting('protect_db_settings'));
+					}
 				}
 			}
 		}
@@ -77,7 +81,7 @@ class Settings
 
 	public function get_setting($name)
 	{
-		if(!$this->db_loaded && isset($this->settings['allow_db_settings'][0]) && $this->settings['allow_db_settings'][0])
+		if(!$this->db_loaded)
 		{
 			$this->get_database_settings();
 		}
@@ -137,22 +141,23 @@ class Settings
 		}
 	}
 
-	public function overwrite_setting($name, $value, $protected = false, $editable = false)
+	public function overwrite_setting($name, $value, $protected = false, $editable = null)
 	{
 		//Check if the setting exists. if not, create a new one.
 		if (!isset($this->settings[$name])) {
-			$this->new_setting($name, $value, $protected);
+			$this->new_setting($name, $value, $protected, $editable);
 			return TRUE;
 		}
 		//Check the old setting is not protected
 		else if($this->settings[$name][0]['protected'] != true)
 		{
 			//Remove old settings
-			$hidden = $this->settings[$name][0]['hidden'];
+			$old_details = $this->settings[$name][0];
+			if(is_null($editable)){ $editable = $old_details['editable']; }
 			unset($this->settings[$name]);
 
 			//Push the new setting
-			$this->new_setting($name, $value, $protected, $hidden, $editable);
+			$this->new_setting($name, $value, $protected, $old_details['hidden'], $editable, $old_details['edit_group']);
 
 			return true;
 		}

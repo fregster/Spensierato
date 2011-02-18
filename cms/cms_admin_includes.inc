@@ -16,7 +16,7 @@ foreach($admin_paths as $paths)
 	if(is_dir($paths))
 	{
 		$path_to_class = implode('_', explode(DS, substr($paths, $path_len)));
-		foreach (glob($paths.'*.inc') as $filename) 
+		foreach (glob($paths.'*.inc', GLOB_NOSORT) as $filename) 
 		{
 			$class = splitFilename($filename);
 			$pos_class_name = $path_to_class.$class[0];

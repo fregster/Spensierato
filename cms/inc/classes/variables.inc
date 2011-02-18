@@ -11,7 +11,7 @@ abstract class variables
 			return false;
 		}
 		$type .= '';
-		if(function_exists($type))
+		if(method_exists('variables', $type))
 		{
 			return variables::$type($input);
 		}

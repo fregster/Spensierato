@@ -117,7 +117,7 @@ echo "NOT OK";
 <script type="text/javascript">	
 	treeObj = new JSDragDropTree();
 	treeObj.setTreeId('site_structure');
-	treeObj.setMaximumDepth(7);
+	treeObj.setMaximumDepth(20);
 	treeObj.setMessageMaximumDepthReached('Maximum depth reached'); // If you want to show a message when maximum depth is reached, i.e. on drop.
 	treeObj.initTree();
 	treeObj.expandAll();

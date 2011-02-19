@@ -23,6 +23,7 @@ define('SETTING_GROUP_CONTENT_CONTROL', 80);
 define('SETTING_GROUP_LOGIN', 90);
 define('SETTING_GROUP_SEARCH', 100);
 define('SETTING_GROUP_PERFORMANCE', 500);
+define('SETTING_GROUP_SECURITY', 750);
 define('SETTING_GROUP_SYSTEM', 1000);
 define('SETTING_GROUP_UPDATE_CONTROL', 1100);
 
@@ -180,10 +181,10 @@ Settings::Singleton()->new_setting('max_file_size', 25000000);
 //1 use internal cleaner coments only
 //2 use internal cleaner comments and line breaks //This and higher require wellformed JS
 //3 use JSMin
-Settings::Singleton()->new_setting('js_minify', 0, false, true);
+Settings::Singleton()->new_setting('js_minify', 0, false, true, true, SETTING_GROUP_PERFORMANCE);
 
 //Use YUI compressed version of MooTools
-Settings::Singleton()->new_setting('js_use_yui', 0, true, true);
+Settings::Singleton()->new_setting('js_use_yui', 0, true, true, true, SETTING_GROUP_PERFORMANCE);
 
 //Setting js_cache
 //This setting allows the javascript once built to be cached on the file system
@@ -195,7 +196,12 @@ Settings::Singleton()->new_setting('js_cache', false, false, true, true, SETTING
 //This setting is to include the growler style notifications
 //Aditional JS will be loaded to enable this
 //Fall back is to use Mootools Fade bar which also support's colours :-)
-Settings::singleton()->new_setting('js_use_growler', true, false, false, true, SETTING_GROUP_PERFORMANCE);
+Settings::singleton()->new_setting('js_use_growler', true, false, false, true, SETTING_GROUP_RENDER_OPTIONS);
+
+//Setting js_use_lightboxes
+//This setting is to use fancy lightboxes for viewing images, video etc
+//Aditional JS will be loaded to enable this
+Settings::singleton()->new_setting('js_use_lightboxes', true, false, false, true, SETTING_GROUP_RENDER_OPTIONS);
 
 //Setting js_use_imgage_lazyload
 //This setting is to use Javascript to stop loading of images that are in the HTML but not in the current view 
@@ -248,7 +254,7 @@ Settings::Singleton()->new_setting('tidy_html_input', true, false, true, SETTING
 
 //Setting phpids
 //Use PHPIDS (Intrusion Detection System)
-Settings::singleton()->new_setting('phpids', false, false, true, true, SETTING_GROUP_SYSTEM);
+Settings::singleton()->new_setting('phpids', true, false, true, true, SETTING_GROUP_SECURITY);
 
 //Site file options
 
@@ -286,22 +292,22 @@ Settings::Singleton()->new_setting('stream', '/video/');
 //Setting session_security_enhanced
 //Requires that the headers for the user_agent is constant with when the session was created
 //true / false
-Settings::Singleton()->new_setting('session_security_enhanced', true, false, true, true, SETTING_GROUP_SYSTEM);
+Settings::Singleton()->new_setting('session_security_enhanced', true, false, true, true, SETTING_GROUP_SECURITY);
 
 //Setting session_force_timeout
 //If a session is started X minutes after the last action kill the session and return not logged in
 //int timeout in minutes
-Settings::Singleton()->new_setting('session_force_timeout', 30, false, true, true, SETTING_GROUP_SYSTEM);
+Settings::Singleton()->new_setting('session_force_timeout', 30, false, true, true, SETTING_GROUP_SECURITY);
 
 //Setting session_security_ip
 //Requires the origonating IP to be constant with when the session was created
 //true / false
-Settings::Singleton()->new_setting('session_security_ip', false, false, true, true, SETTING_GROUP_SYSTEM);
+Settings::Singleton()->new_setting('session_security_ip', false, false, true, true, SETTING_GROUP_SECURITY);
 
 //Setting cookie_encryption
 //Use cookie encryption, set to false to supress the warning if your server does not support encryption.
 //true / false
-Settings::Singleton()->new_setting('cookie_encryption', true, false, true, true, SETTING_GROUP_SYSTEM);
+Settings::Singleton()->new_setting('cookie_encryption', true, false, true, true, SETTING_GROUP_SECURITY);
 
 //Setting login_capthca
 //Requires the user to enter a security code when login in
@@ -404,7 +410,7 @@ unset($av_engines);
 //setting date_format
 //this determines the date format for the website.
 //use date()-compliant format directives
-Settings::singleton()->new_setting('date_format', 'd/m/Y', false, true, true);
+Settings::singleton()->new_setting('date_format', 'd/m/Y', false, true, array('d/m/Y', 'm/d/Y'), SETTING_GROUP_SYSTEM);
 
 //setting show_username_in_approvals
 //this determines whether to show the username in the pending approvals list in element editing
@@ -416,8 +422,8 @@ Settings::singleton()->new_setting('output_compression_level', 9, false, true, n
 
 //2 settings to control how long both saved and pending approvals
 //are saved in the elements_data_approve table
-Settings::singleton()->new_setting('approvals_saved_lifetime', 0, false, true, SETTING_GROUP_CONTENT_CONTROL);
-Settings::singleton()->new_setting('approvals_pending_lifetime', 0, false, true, SETTING_GROUP_CONTENT_CONTROL);
+Settings::singleton()->new_setting('approvals_saved_lifetime', 0, false, true, true, SETTING_GROUP_CONTENT_CONTROL);
+Settings::singleton()->new_setting('approvals_pending_lifetime', 0, false, true, true, SETTING_GROUP_CONTENT_CONTROL);
 
 //determine whether old approvals are visible (value = 1) or hidden (value = 0) by default
 Settings::singleton()->new_setting('approvals_show_old', true, false, false, true, SETTING_GROUP_CONTENT_CONTROL);

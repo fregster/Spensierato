@@ -173,6 +173,8 @@ $tables['tbl_page_elements'] = array(
 										'main' => $tiny_int." UNSIGNED DEFAULT '1'",
 										'ts' => $int.' UNSIGNED NOT NULL',
 										'visible' => $tiny_int." UNSIGNED DEFAULT '1'",
+										'valid_from' => $int.' UNSIGNED',
+										'valid_to' => $int.' UNSIGNED',
 										),
 									'primary_key' => 'id',
 									);
@@ -194,6 +196,8 @@ $tables['tbl_pages'] = array(
 								'creator' => $int.' UNSIGNED NOT NULL',
 								'edited' => $int.' UNSIGNED',
 								'editor' => $int.' UNSIGNED',
+								'valid_from' => $int.' UNSIGNED',
+								'valid_to' => $int.' UNSIGNED',
 								),
 							'primary_key' => 'id',
 							);

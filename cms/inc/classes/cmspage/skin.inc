@@ -3,7 +3,9 @@ class cmspage_skin extends cmspage
 {
 	public function initalise()
 	{
-		$this->value = CMS::Singleton()->path_vars(1);
+		$this->value = Common::get_path_vars();
+		unset($this->value[0]);
+		$this->value = implode('/', $this->value);
 		return true;
 	}
 	

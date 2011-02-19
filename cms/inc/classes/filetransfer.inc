@@ -19,31 +19,31 @@ class FileTransfer
 
 	public function get_public_file($value)
 	{
-		$file = Settings::Singleton()->get_setting('cms_root') . '/publicfiles/' . str_ireplace('..', '',  $value);
+		$file = Settings::Singleton()->get_setting('cms_root') . DS .'publicfiles' . DS . str_ireplace('..', '',  $value);
 		$this->get_file($file, true, false);
 	}
 
 	public function get_download($id, $cache = true)
 	{
-		$path = Settings::singleton()->get_setting('cms_folder_downloads').$id;
+		$path = Settings::singleton()->get_setting('cms_folder_downloads').DS.$id;
 		$this->get_file($path, $cache);
 	}
 
 	public function get_image($id)
 	{
-		$file = Settings::singleton()->get_setting('cms_folder_downloads').$id;
+		$file = Settings::singleton()->get_setting('cms_folder_downloads').DS.$id;
 		$this->get_file($file, true, false);
 	}
 
 	public function get_image_orig($id)
 	{
-		$file = Settings::singleton()->get_setting('cms_folder_orig_images').$id;
+		$file = Settings::singleton()->get_setting('cms_folder_orig_images').DS.$id;
 		$this->get_file($file, true, true, true);
 	}
 
 	public function get_preview($id)
 	{
-		$file = Settings::singleton()->get_setting('cms_folder_downloads').$id.'-preview';
+		$file = Settings::singleton()->get_setting('cms_folder_downloads').DS.$id.'-preview';
 		if(!file_exists($file) and file_exists(substr($file, 0, -8)) ) {$file = substr($file, 0, -8); }
 		$this->get_file($file, true, false, true);
 	}
@@ -85,8 +85,14 @@ class FileTransfer
 			{
 				$filename = $file_info['filename'];
 			}
+			
+			if(isset($file_info['mime'])){
+				$mime =& $file_info['mime'];
+			}
 
-			$mime = common::returnMIMEType($filename);
+			if($work_out_mime || !isset($mime)){
+				$mime = common::returnMIMEType($filename);	
+			}
 
 			if($work_out_mime and function_exists('mime_content_type') or $mime === false)
 			{
@@ -141,14 +147,14 @@ class FileTransfer
 		}
 		else
 		{
-			die('file '.$file.' not found');
+			die('file '.basename($file).' not found');
 		}
 	}
 
 	public function save_file($id, $revision)
 	{
-		$target = Settings::singleton()->get_setting('cms_folder_downloads').$id;
-		$path = Settings::singleton()->get_setting('cms_folder_uploads').$id.'-'.$revision;
+		$target = Settings::singleton()->get_setting('cms_folder_downloads').DS.$id;
+		$path = Settings::singleton()->get_setting('cms_folder_uploads').DS.$id.'-'.$revision;
 		return $this->move_file($path, $target);
 	}
 

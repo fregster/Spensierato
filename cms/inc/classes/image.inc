@@ -25,14 +25,17 @@ class image
 		$error_msg = array();
 		$ok = true;
 		
-		$unscaled_image = Settings::Singleton()->get_setting('cms_folder_orig_images').$elementid;
-		$old_path = Settings::Singleton()->get_setting('cms_folder_uploads').$elementid.'-'.$revision;
+		$unscaled_image = Settings::Singleton()->get_setting('cms_folder_orig_images').DS.$elementid;
+		$old_path = Settings::Singleton()->get_setting('cms_folder_uploads').DS.$elementid.'-'.$revision;
 		
 		if(!is_file($unscaled_image) && is_file($old_path)) 
 		{ 
 			$ok = copy($old_path, $unscaled_image);
 		}
 		
+			echo($old_path);
+			echo($unscaled_image);
+			var_dump($ok);
 			//Check that if the file did not exsist the copy worked
 			if($ok) 
 			{				
@@ -80,6 +83,7 @@ class image
 						$resize = imageJpeg($im_new,$old_path,$quality); 
 	
 						//TODO update database for the element to show that the file is now a JPEG
+						var_dump($resize);
 						return $resize;
 					}
 				} 

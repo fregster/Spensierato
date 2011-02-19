@@ -91,14 +91,21 @@ e.rel="stylesheet";
 document.getElementsByTagName("head")[0].appendChild(e);
 };
 function dynamicjsloader(){
-dhtmlLoadCSS(js_host+"/skin/subModal.css");
-dhtmlLoadScript(js_host+"/js/submodal/submodal.js");
+//dhtmlLoadCSS(js_host+"/skin/subModal.css");
+//dhtmlLoadScript(js_host+"/js/submodal/submodal.js");
 };
 var sortInput;
+var initMultiBoxAdmin;
 function adminInit(){
 dynamicjsloader();
 sortInput = new String();
 updater();
+initMultiBoxAdmin = new multiBox({
+mbClass: '.submodal',
+container: $(document.body),
+maxSize: {w:700, h:500},
+recalcTop: true
+});
 };
 
 function get_diff(name){

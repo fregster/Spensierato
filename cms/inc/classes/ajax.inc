@@ -1,6 +1,34 @@
 <?php
 abstract class ajax
 {
+//	public static function Singleton($force_type = null)
+//	{
+//	   if (!isset(self::$instance))
+//	   {
+//	   		if($force_type == null)
+//	   		{
+//	   			$force_type = CMS::Singleton()->page_details['type'];
+//	   		}
+//			$c = __CLASS__.'_'.$force_type;
+//			
+//	   		if(!class_exists($c))
+//	   		{
+//	   			$c = __CLASS__;
+//	   		}
+//
+//		   self::$instance = new $c;
+//	   }
+//
+//	   return self::$instance;
+//	}
+//
+//	protected function __construct()
+//	{
+//		$this->type = CMS::Singleton()->page_details['type'];
+//		$this->class = 'cmspage_'.$this->type; //The class name expected
+//		$this->path_vars &= CMS::Singleton()->path_vars;
+//	}
+	
 	public static function process($vars)
 	{
 		switch ($vars[1])

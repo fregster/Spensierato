@@ -32,7 +32,7 @@ if(Settings::Singleton()->get_setting('skin_alternative_css') != false)
 {
 	$css = Settings::Singleton()->get_setting('skin_alternative_css');
 }
-$include = array('common.css', 'standard_sprite.css', 'search.css', $css);
+$include = array('common.css', 'standard_sprite.css', 'search.css', 'multiBox.css', $css);
 if($inherirted_css)
 {
 	if(is_array($inherirted_css))

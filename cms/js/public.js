@@ -59,6 +59,7 @@ var SpriteTips;
 var growl;
 var lazyloader;
 var highlight;
+var initMultiBox;
 function init(){
 if(initalised!=true){
 initalised=true;
@@ -95,9 +96,21 @@ if(typeof window.LazyLoad == 'function'){
 highlight = getQueryVariable("highlight");
 if(highlight.length > 1)
 {
-//	alert(unescape(highlight));
 	highlightSearchTerms(unescape(highlight), false);
 }
+
+initMultiBox = new multiBox({
+mbClass: '.mb',
+container: $(document.body),
+addDownload: true,
+pathToDownloadScript: document_root+'/download/',
+addRollover: true,
+addOverlayIcon: true,
+recalcTop: true,
+showControls: true,
+addChain: true,
+maxSize: {w:800, h:500}
+});
 }
 };
 function delayedSearch(){

@@ -149,7 +149,7 @@ class element_Default
 				if($file_size <= $max_size)
 				{
 					$path = $_FILES['uploadedfile']['tmp_name'];
-					$target = Settings::singleton()->get_setting('cms_folder_uploads').$this->id.'-'.$this->admin_mode_data['revision'];
+					$target = Settings::singleton()->get_setting('cms_folder_uploads').DS.$this->id.'-'.$this->admin_mode_data['revision'];
 					if(filetransfer::move_file($path, $target)){
 						unset($this->admin_mode_data['error']);
 						return true;

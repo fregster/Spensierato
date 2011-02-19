@@ -62,20 +62,20 @@ class Settings
 						if ($setting['value'] == 'false') { $setting['value'] = false; }
 						if ($setting['value'] == 'true') { $setting['value'] = true; }
 	
-						$this->overwrite_setting($setting['setting'], $setting['value'], $this->get_setting('protect_db_settings'));
+						$this->overwrite_setting($setting['setting'], $setting['value'], $this->get_setting('protect_db_settings'), null, true);
 					}
 				}
 			}
 		}
 	}
 
-	public function new_setting($name, $value, $protected = false, $hidden = false, $editable = false, $edit_group = null)
+	public function new_setting($name, $value, $protected = false, $hidden = false, $editable = false, $edit_group = null, $loaded_from_db = false)
 	{
 			if(!isset($this->settings[$name]))
 			{
 				$this->settings[$name] = array();
 			}
-			$setting_details = array('protected' => $protected, 'hidden' => $hidden, 'value' => $value, 'editable' => $editable, 'edit_group' => $edit_group);
+			$setting_details = array('protected' => $protected, 'hidden' => $hidden, 'value' => $value, 'editable' => $editable, 'edit_group' => $edit_group, 'db_setting' => $loaded_from_db);
 			array_push($this->settings[$name], $setting_details);
 	}
 
@@ -133,6 +133,10 @@ class Settings
 					}		
 					
 					$settings[$setting[0]['edit_group']][$key[$i]] = array('name' => $key[$i], 'value' => $setting[0]['value'], 'options' => $setting[0]['editable']);
+					if($setting[0]['protected'] && !$setting[0]['db_setting'])
+					{
+						$settings[$setting[0]['edit_group']][$key[$i]]['protected'] = true;
+					}
 				}
 				$i++;
 			}
@@ -141,11 +145,11 @@ class Settings
 		}
 	}
 
-	public function overwrite_setting($name, $value, $protected = false, $editable = null)
+	public function overwrite_setting($name, $value, $protected = false, $editable = null, $loaded_from_db = false)
 	{
 		//Check if the setting exists. if not, create a new one.
 		if (!isset($this->settings[$name])) {
-			$this->new_setting($name, $value, $protected, $editable);
+			$this->new_setting($name, $value, $protected, $editable, null, null, $loaded_from_db);
 			return TRUE;
 		}
 		//Check the old setting is not protected
@@ -157,7 +161,7 @@ class Settings
 			unset($this->settings[$name]);
 
 			//Push the new setting
-			$this->new_setting($name, $value, $protected, $old_details['hidden'], $editable, $old_details['edit_group']);
+			$this->new_setting($name, $value, $protected, $old_details['hidden'], $editable, $old_details['edit_group'], $loaded_from_db);
 
 			return true;
 		}

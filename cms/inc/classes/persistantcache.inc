@@ -285,7 +285,7 @@ class persistantcache
 		$crc = crc32($data);
 		if($compress){
 			$cdata = persistantcache::compress($data);
-			if($cdata)
+			if($cdata && sizeOf($cdata) < sizeOf($data)) //Ensure the data compressed and is smaller than the uncompressed data. Small streams this may not be the case and the extra CPU overhead is a waste
 			{
 				$data =& $cdata;
 				$compressed = true;
@@ -462,13 +462,23 @@ class persistantcache_memcache extends persistantcache
 	public function save($name, $value, $time = 0, $namespace = null, $try_to_force_encryption = false, $compress = false)
 	{
 		if(!$this->enabled){ return false; }
+		
+		//Memcache backend supports on the fly compression so we can use that if possible
+		//As this compression will be post encryption which is typically non compressable we only do this if practical
+		$memcache_compression = null;
+		if(!$try_to_force_encryption && $compress)
+		{
+			$memcache_compression = MEMCACHE_COMPRESSED;
+			$compress = false;
+		}
+		
 		$data = $this->build_save($name, $value, $time, $namespace, $try_to_force_encryption, $compress);
 		if(strlen($data['data']['value']) < $this->max_object_size && $this->store != false)
 		{
-			$result = $this->store->replace($data['name'], $data['data'], MEMCACHE_COMPRESSED, $data['data']['time']);
+			$result = $this->store->replace($data['name'], $data['data'], $memcache_compression, $data['data']['time']);
 			if( $result == false )
 			{
-			    $result = $this->store->set($data['name'], $data['data'], MEMCACHE_COMPRESSED, $data['data']['time']);
+			    $result = $this->store->set($data['name'], $data['data'], $memcache_compression, $data['data']['time']);
 			}
 			return $result;
 		}

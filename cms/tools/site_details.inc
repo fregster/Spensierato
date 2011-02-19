@@ -42,8 +42,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 <html>
 	<head>
 		<title>Site Details</title>
+		<link href="<?php echo common::document_root().'/css/v/'.settings::singleton()->get_setting('skin').'/'.settings::singleton()->get_setting('template_version') ?>" type="text/css" rel="stylesheet">
 	</head>
-	<body>
+	<body style="background-color:white;background-image:none;">
 <?php 
 if($updated){
 	echo '<div>Your settings have been updated</div>';
@@ -64,18 +65,18 @@ foreach ($settings as $key => $setting_group)
 	{
 		?>
 		<tr>
-				<td style="text-transform:capitalize; width:225px;"><?php echo(str_replace('_', ' ', $setting['name'])); ?></td>
+				<td style="text-transform:capitalize; width:225px;"><?php echo(str_replace('_', ' ', $setting['name'])); if($setting['protected']){ echo '<img src="'.common::document_root() .'/skin/transparent-gif.gif" class="sprite sprite-lock" alt="Setting locked icon" title="This setting is locked, any changes will be ignored"/>'; }?></td>
 				<td style="text-transform:capitalize; width:210px;">
 					<?php if(is_bool($setting['value'])){ ?>
-					True: <input type="radio" value="true" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_true'); ?>" <?php if($setting['value'] === true){ echo'checked="checked"'; }?> />
-					False: <input type="radio" value="false" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_false'); ?>" <?php if($setting['value'] !== true){ echo'checked="checked"'; }?> />
+					True: <input type="radio" value="true" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_true'); ?>" <?php if($setting['value'] === true){ echo'checked="checked"'; } if($setting['protected']) {echo' disabled="disabled"'; }?> />
+					False: <input type="radio" value="false" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_false'); ?>" <?php if($setting['value'] !== true){ echo'checked="checked"'; } if($setting['protected']) {echo' disabled="disabled"'; }?> />
 					<?php }else if(is_array($setting['options'])){
-						echo '<select name="'. $setting['name'] .'" id="'. $setting['name'] .'">';
+						echo '<select name="'. $setting['name'] .'" id="'. $setting['name'] .'"'; if($setting['protected']) {echo' disabled="disabled"'; } echo '>'; 
 						foreach ($setting['options'] as $option){ ?>
 							<option name="<?php echo $option; ?>"<?php if($setting['value'] == $option){ echo' checked="checked"'; }?>><?php echo $option; ?></option>
 					<?php } echo '</select>';
 					} else {
-					?> <input type="text" value="<?php echo($setting['value']); ?>" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name']); ?>" />
+					?> <input type="text" value="<?php echo($setting['value']); ?>" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name']); ?>"<?php if($setting['protected']) {echo' disabled="disabled"'; } ?>/>
 					<?php }?>
 				</td>
 		</tr>

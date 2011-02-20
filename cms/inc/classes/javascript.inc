@@ -39,13 +39,13 @@ abstract class javascript
 			}
 			else
 			{
-				if(is_writable(Settings::singleton()->get_setting('cms_root') . DS .'writeable'))
+				if(is_writable(realpath($cachedir.DS.'..')))
 				{
 					mkdir($cachedir);
 				}
 				$cachedir = sys_get_temp_dir().DS.'cms';
 				
-				if(is_writeable(sys_get_temp_dir()))
+				if(!is_writable($cachedir) && is_writeable(sys_get_temp_dir()))
 				{
 					mkdir($cachedir);
 				}
@@ -62,9 +62,9 @@ abstract class javascript
 		}
 		else
 		{
-			$cache 	  = false;
+			$cache = false;
 		}
-
+		
 		//Create a hash of the file names for createing and checking a single unique cache file
 		$hash = sha1($files);
 		$base = realpath($jsdir);

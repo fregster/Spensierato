@@ -1,8 +1,14 @@
 <?php
+/**
+ * Define the setting groups
+ * This is just for easy editing
+ */
+
 class Settings
 {
 	private $settings = array();
 	private $db_loaded = false;
+	private $define_value_map = array();
 
 	private static $instance;
 
@@ -34,6 +40,17 @@ class Settings
 		$this->new_setting('static_host_js', $document_root);
 		
 		$this->new_setting('allow_db_settings', true);
+	}
+	
+	public function build_defines($defines){
+		if(is_array($defines))
+		{
+			foreach($defines as $key => $value)
+			{
+				define($key, $value);
+				$this->define_value_map[$value] = $key;
+			}
+		}
 	}
 
 	public function __clone()
@@ -98,7 +115,7 @@ class Settings
 		return xml::array_to_xml_simple($this->get_all_settings(), 'settings', 'setting');
 	}
 	
-	public function get_all_settings($editable = false)
+	public function get_all_settings($editable = false, $map_names = false)
 	{
 		$i = 0;
 		$settings = array();
@@ -141,6 +158,23 @@ class Settings
 				$i++;
 			}
 			ksort($settings);
+			
+			if($map_names){
+				foreach($settings as $k => $v)
+				{
+					if(isset($this->define_value_map[$k]))
+					{
+						$settings[$this->define_value_map[$k]] = $settings[$k];
+				  		unset($settings[$k]);
+					}
+					else
+					{
+						$settings['Untited_Group_'.$k] = $settings[$k];
+				  		unset($settings[$k]);
+					}
+				}
+			}
+			
 			return $settings;
 		}
 	}

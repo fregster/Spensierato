@@ -142,6 +142,26 @@ try
 		$install = false; //cancel the install directive
 	}
 	
+	Settings::Singleton()->build_defines(
+	array(
+	'SETTING_GROUP_SITE' => 1,
+	'SETTING_GROUP_LOCALE' => 10,
+	'SETTING_GROUP_METADATA' => 20,
+	'SETTING_GROUP_GOOGLE' => 30,
+	'SETTING_GROUP_SKIN' => 40,
+	'SETTING_GROUP_USER' => 50,
+	'SETTING_GROUP_RENDER_OPTIONS' => 60,
+	'SETTING_GROUP_SHOP' => 70,
+	'SETTING_GROUP_CONTENT_CONTROL' => 80,
+	'SETTING_GROUP_LOGIN' => 90,
+	'SETTING_GROUP_SEARCH' => 100,
+	'SETTING_GROUP_PERFORMANCE' => 500,
+	'SETTING_GROUP_SECURITY' => 750,
+	'SETTING_GROUP_SYSTEM' => 1000,
+	'SETTING_GROUP_UPDATE_CONTROL' => 1100,
+	)
+	);
+	
 	//Has the site extended the spensierato options?
 	if(!$install){
 		require_once(INCLUDE_PATH.'spensierato_options.inc');
@@ -158,6 +178,9 @@ try
 	
 	//Set any custom defines
 	DEFINE('CACHE_PATH', $GLOBALS['cms_folder_cache'].DS);
+//	if(!defined('CACHE_TYPE')){
+//		DEFINE('CACHE_TYPE', 'file');
+//	}
 	
 	//Start site
 	CMS::Singleton()->start(); 

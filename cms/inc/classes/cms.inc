@@ -49,7 +49,9 @@ class CMS
 		session::Singleton();
 
 		//Is a persistant_cache available ie memcached supported
-		if(persistantcache::Singleton()->enabled() == true)
+		if(!Settings::Singleton()->get_setting('cache_database_queries')){
+			Database::Singleton()->sql_cache_disable();
+		} else if(persistantcache::Singleton()->enabled() == true)
 		{
 			Database::Singleton()->use_memcached();
 		}

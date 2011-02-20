@@ -22,7 +22,7 @@
 * @license http://www.opensource.org/licenses/lgpl-3.0.html LGPL
 * @link http://www.fryer.org.uk/
 *
-* Version 2.5 Released Feb 2011
+* Version 2.6 Released Feb 2011
 */
 
 if(!defined('CACHE_PREFIX'))
@@ -66,7 +66,8 @@ class persistantcache
 	protected static $retry_time = 30; //Time in seconds before reworking out the best cache type
 	protected static $garbage_collection_max_age = 86400; //Time in seconds 24 hours = 86400
 	protected static $garbage_collection_retry_time = 86400; //Time in seconds between clean up attempts 24 hours = 86400
-
+	protected static $namespace_version_map_max_int = 10000000; //Set max value before recycling the version numbers
+	
 	protected $allow_memcache = true;
 	protected $allow_file_cache = true;
 	protected $allow_session_cache = false; //Should only be enabled for testing as this would be a per user cache in the session handler
@@ -75,10 +76,12 @@ class persistantcache
 	/**
 	 * DO NOT CHANGE THESE
 	 */
-	protected $namespace_version_map = array();
+	protected $namespace_version_map;
+	protected $namespace_version_map_updated = false;	//Not used for future posible collection and single save to reduce write load
 	protected $supports_namespaces = false;
 	protected $enabled = false; //Don't change this it is set in the constructors if connected
 	protected $easy_cache_type_name = 'none'; //Default cache name type, overridden as required
+	protected $easy_cache_type_name_human_readable = 'none';
 	protected static $time; //Local cache of the time
 	public static $cache_type_inuse; //Dirty method to get the cache type name externally.
 	private static $instance;
@@ -104,6 +107,12 @@ class persistantcache
 	{
 		//Internaly cache time
 		persistantcache::$time = time();
+		
+		$this->namespace_version_map = $this->get('namespace_version_map');
+		if(!$this->namespace_version_map)
+		{
+			$this->namespace_version_map = array();
+		}
 	}
 
 	public static function Singleton()
@@ -136,6 +145,7 @@ class persistantcache
 		$c = __CLASS__;
 //		unset($_SESSION['persistant_cache_type']);
 		if(defined('CACHE_TYPE')) { $c = 'persistantcache_'.CACHE_TYPE; array_splice(persistantcache::$cache_preference_order, 0, 0, CACHE_TYPE); }
+
 		if(isset($_SESSION['persistant_cache_type']) && class_exists($_SESSION['persistant_cache_type']['type'])) { $c = $_SESSION['persistant_cache_type']['type']; } //If a cache type is set ensure it is still available
 
     	if(!isset($_SESSION['persistant_cache_type']) || $_SESSION['persistant_cache_type']['time'] > (persistantcache::$time - persistantcache::$retry_time)) //Check if we have recently checked for a cache type this is per session checking, but still reduces load
@@ -164,7 +174,7 @@ class persistantcache
 	 */
 	public function version()
 	{
-		return '2.5';
+		return '2.6';
 	}
 
 	/**
@@ -179,8 +189,12 @@ class persistantcache
 	 * 
 	 * Returns a string with the name of the backend cache type
 	 */
-	public function type()
+	public function type($long = false)
 	{
+		if($long)
+		{
+			return $this->easy_cache_type_name_human_readable;
+		}
 		return $this->easy_cache_type_name;
 	}
 
@@ -328,12 +342,13 @@ class persistantcache
 	 */
 	protected function build_namespace($namespace)
 	{
-		if(isset($namespace) && !isset($this->namespace_version_map[$namespace])){
-			$this->namespace_version_map[$namespace] = 1;
-		}
-		
 		if(!$this->supports_namespaces){
-			return $namespace.$this->namespace_version_map[$namespace];
+			if(!isset($this->namespace_version_map[$namespace])){
+				$this->namespace_version_map[$namespace] = 1;
+				$this->save('namespace_version_map', $this->namespace_version_map);
+			}
+			
+			return $namespace.'_'.$this->namespace_version_map[$namespace];
 		}
 		
 		return $namespace;
@@ -386,11 +401,12 @@ class persistantcache
 	 */
 	public function cycle_namespace($namespace)
 	{
-		if(!isset($this->namespace_version_map[$namespace])){
+		if(!isset($this->namespace_version_map[$namespace]) || $this->namespace_version_map[$namespace] >= persistantcache::$namespace_version_map_max_int){
 			$this->namespace_version_map[$namespace] = 1;
 		}else{
 			$this->namespace_version_map[$namespace] = $this->namespace_version_map[$namespace] + 1;
 		}
+		$this->save('namespace_version_map', $this->namespace_version_map);
 	}
 	
 	/**
@@ -432,8 +448,6 @@ class persistantcache_memcache extends persistantcache
 
 	protected function __construct()
 	{
-		$this->init();
-
 		if(isset($_SESSION['disable_memcached']) && ($_SESSION['disable_memcached'] + persistantcache::$retry_time) > time() )
 		{
 			return false;
@@ -451,9 +465,12 @@ class persistantcache_memcache extends persistantcache
 			}
 
 			//Mark that we are using an advanced caching mech, purge any session cache
+			$this->init();
 			$this->enabled = true;
-			$this->easy_cache_type_name = 'AC';
+			$this->easy_cache_type_name = 'MC';
+			$this->easy_cache_type_name_human_readable = 'Memcached';
 			if(isset($_SESSION['cache'])) { unset($_SESSION['cache']); } //Clear any session cache
+			
 			return true;
 		}
 		return false;
@@ -491,7 +508,6 @@ class persistantcache_memcache extends persistantcache
 		{
 			return false;
 		}
-
 		$result = $this->store->get($this->build_key($name, $namespace));
 		return $this->process_get($result);
 	}
@@ -581,6 +597,7 @@ class persistantcache_file extends persistantcache
 			}
 			$this->enabled = true;
 			$this->easy_cache_type_name = 'FC';
+			$this->easy_cache_type_name_human_readable = 'File';
 			if(isset($_SESSION['cache'])) { unset($_SESSION['cache']); } //Clear any session cache
 			return true;
 		}
@@ -720,6 +737,7 @@ class persistantcache_session extends persistantcache
 			$_SESSION['cache_count'] = 0;
 			$this->enabled = true;
 			$this->easy_cache_type_name = 'SC';
+			$this->easy_cache_type_name_human_readable = 'Session';
 			return true;
 		}
 		return false;

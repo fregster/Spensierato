@@ -55,10 +55,11 @@ if($updated){
 		<input type="submit" value="Save"/><br/><br/>
 <?php
 
-$settings = Settings::singleton()->get_all_settings(true);
+$settings = Settings::singleton()->get_all_settings(true, true);
 
 foreach ($settings as $key => $setting_group)
 {
+	echo '<div style="text-transform:capitalize; margin-top:20px;">'.strtolower(str_replace('_', ' ', $key)).'</div>';
 	echo('<table id="setting_group_'.$key.'" style="background-color:#EEE; border:1px; margin-bottom:10px; padding:3px;">');
 	
 	foreach($setting_group as $setting)
@@ -73,7 +74,7 @@ foreach ($settings as $key => $setting_group)
 					<?php }else if(is_array($setting['options'])){
 						echo '<select name="'. $setting['name'] .'" id="'. $setting['name'] .'"'; if($setting['protected']) {echo' disabled="disabled"'; } echo '>'; 
 						foreach ($setting['options'] as $option){ ?>
-							<option name="<?php echo $option; ?>"<?php if($setting['value'] == $option){ echo' checked="checked"'; }?>><?php echo $option; ?></option>
+							<option name="<?php echo $option; ?>"<?php if($setting['value'] == $option){ echo' selected="selected"'; }?>><?php echo $option; ?></option>
 					<?php } echo '</select>';
 					} else {
 					?> <input type="text" value="<?php echo($setting['value']); ?>" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name']); ?>"<?php if($setting['protected']) {echo' disabled="disabled"'; } ?>/>

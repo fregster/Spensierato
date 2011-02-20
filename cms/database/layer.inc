@@ -1204,7 +1204,7 @@ class database
 
 	protected function sql_update_exe($sql, $values = NULL, $destroy_cache = false, $namespace = NULL)
 	{
-		if($this->external_cache)
+		if($this->external_cache && !is_null($namespace))
 		{
 			persistantcache::Singleton()->cycle_namespace($namespace);
 		}

@@ -25,8 +25,8 @@ class element_Default
 		if (options::singleton()->get_option('admin_mode')) {
 			$this->admin_mode_data['image'] = 'accept';
 			$this->admin_mode_data['image_edit'] = 'page_edit';
-			$this->admin_mode_data['edit_height'] = 400;
-			$this->admin_mode_data['edit_width'] = 725;
+			$this->admin_mode_data['edit_height'] = 525;
+			$this->admin_mode_data['edit_width'] = 775;
 
 			$this->admin_mode_data['error'] = 'There was an error comitting your save';
 		}

@@ -6,28 +6,6 @@
 //Protected stops the value been overwriten in the future by DB settings
 //Hidden stops the settings been viewed in the XML, useful for hiding directory structure
 
-/**
- * Define the setting groups
- * This is just for easy editing
- */
-
-define('SETTING_GROUP_SITE', 1);
-define('SETTING_GROUP_LOCALE', 10);
-define('SETTING_GROUP_METADATA', 20);
-define('SETTING_GROUP_GOOGLE', 30);
-define('SETTING_GROUP_SKIN', 40);
-define('SETTING_GROUP_USER', 50);
-define('SETTING_GROUP_RENDER_OPTIONS', 60);
-define('SETTING_GROUP_SHOP', 70);
-define('SETTING_GROUP_CONTENT_CONTROL', 80);
-define('SETTING_GROUP_LOGIN', 90);
-define('SETTING_GROUP_SEARCH', 100);
-define('SETTING_GROUP_PERFORMANCE', 500);
-define('SETTING_GROUP_SECURITY', 750);
-define('SETTING_GROUP_SYSTEM', 1000);
-define('SETTING_GROUP_UPDATE_CONTROL', 1100);
-
-
 //Setting $GLOBALS['protect_db_settings']
 //Alows overwriting of the db settings with settings from this file
 //Must be GLOBAL as this var is called in the construct function
@@ -395,10 +373,19 @@ Settings::Singleton()->new_setting('user_auto_email_password', true, false, true
 
 //Setting cache_xslt_transformation
 //Allow full page render caching for X seconds, this will disable the SQL and page render information
-Settings::Singleton()->new_setting('cache_xslt_transformation', true, false, true, true, SETTING_GROUP_PERFORMANCE);
+Settings::Singleton()->new_setting('cache_xslt_transformation', false, false, true, true, SETTING_GROUP_PERFORMANCE);
 
-Settings::singleton()->new_setting('memcached_sql', false, false, true, true, SETTING_GROUP_PERFORMANCE);
-Settings::singleton()->new_setting('memcached_session', false, false, true, true, SETTING_GROUP_PERFORMANCE);
+//Setting cache_type
+//This is just so that the edit interface can see what type of caching is been used
+Settings::singleton()->new_setting('cache_type', persistantcache::singleton()->type(true), true, true, true, SETTING_GROUP_PERFORMANCE);
+
+//Setting cache_database_queries
+//Cache the SQL queries to the database to improve performance
+Settings::singleton()->new_setting('cache_database_queries', true, false, true, true, SETTING_GROUP_PERFORMANCE);
+
+//Setting store_sessions_in_memcached
+//TODO: write session handler
+Settings::singleton()->new_setting('store_sessions_in_memcached', false, false, true, true, SETTING_GROUP_PERFORMANCE);
 
 $av_engines = glob(DIR_CLASSES.'virusscan'.DS.'*.inc', GLOB_NOSORT);
 if(is_array($av_engines)){ foreach($av_engines as $key => $engine){ $av_engines[$key] = basename($engine, '.inc'); } } else { $av_engines = true; }

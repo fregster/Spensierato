@@ -183,7 +183,7 @@ class Template
 			$css = persistantcache::Singleton()->get('template_css', 'templates');
 			
 			//Quick cache return to save stating the FS every hit
-			if(!isset($css['created']) || ($css['created'] + 5 < CMS::Singleton()->time()))
+			if(!isset($css['created']) || ($css['created'] + 10 < CMS::Singleton()->time()))
 			{
 				//Cycle the cache files to check for updates
 				foreach($css_files as $file)
@@ -277,15 +277,31 @@ class Template
 	private function build_template()
 	{
 		$path = $this->template_path.DS.'templates'.DS.'*.xml';
-		$files = glob($path, GLOB_NOSORT);
+		$filecache = persistantcache::singleton()->get($path, 'templates');
 		
-		foreach($files as $filepath)
-		{
-			$this->filenames[basename($filepath)] = $filepath;
-			$this->lastmodified = max($this->lastmodified, filemtime($filepath));
+		//We can cache the main template easily but due to extending templates it's more difficult but at least it's one less glob under high load
+		if(!$filecache){
+			$files = glob($path, GLOB_NOSORT);
+			
+			foreach($files as $filepath)
+			{
+				$this->filenames[basename($filepath)] = realpath($filepath);
+				$this->lastmodified = max($this->lastmodified, filemtime($filepath));
+			}
+			
+			$this->extend_template();
+			
+			persistantcache::singleton()->save($path, $this->filenames, 30, 'templates');
+			persistantcache::singleton()->save('template_last_modified_times', $this->lastmodified, 30, 'templates');
+			persistantcache::singleton()->save('inherited_template_paths', $this->inherited_template_paths, 30, 'templates');
+			
+		} else {
+			$this->filenames = $filecache;
+			$this->lastmodified = persistantcache::singleton()->get('template_last_modified_times', 'templates');
+			$this->inherited_template_paths = persistantcache::singleton()->get('inherited_template_paths', 'templates');
+
+			$this->extend_template();
 		}
-		
-		$this->extend_template();
 	}
 	
 	private function template_mtime()

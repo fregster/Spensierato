@@ -159,6 +159,9 @@ searchMouseOut();
 }
 };
 };
+function hidePopWin(reload){
+	window.location.reload();
+};
 function topPageReload(_7){
 setTimeout("window.top.location.reload(true)",100);
 };

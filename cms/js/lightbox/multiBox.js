@@ -36,7 +36,7 @@ var multiBox = new Class({
 	
 	//options
 	options:{
-		initialSize: {w:250, h:250},//initial width/height the box will open at before resizing
+		initialSize: {w:300, h:300},//initial width/height the box will open at before resizing
 		useOverlay: true,//do you want to use a semi-transparent background?
 		contentColor: '#fff',//background colour of the content holder within the pop-up
 		showNumbers: false,//show numbers such as "4 of 12"

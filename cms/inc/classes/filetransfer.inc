@@ -32,13 +32,13 @@ class FileTransfer
 	public function get_image($id)
 	{
 		$file = Settings::singleton()->get_setting('cms_folder_downloads').DS.$id;
-		$this->get_file($file, true, false);
+		$this->get_file($file, true, false, null, null, null, false);
 	}
 
 	public function get_image_orig($id)
 	{
 		$file = Settings::singleton()->get_setting('cms_folder_orig_images').DS.$id;
-		$this->get_file($file, true, true, true);
+		$this->get_file($file, true, true, true, null, null, false);
 	}
 
 	public function get_preview($id)
@@ -48,7 +48,7 @@ class FileTransfer
 		$this->get_file($file, true, false, true);
 	}
 
-	public function get_file($file, $cache = false, $use_rate_limit = true, $work_out_mime = false, $no_db_lookup = false)
+	public function get_file($file, $cache = false, $use_rate_limit = true, $work_out_mime = false, $no_db_lookup = false, $send_disposition = true)
 	{
 		if(file_exists($file))
 		{
@@ -98,14 +98,44 @@ class FileTransfer
 			{
 				$mime = mime_content_type($file);
 			}
+			
+			@ob_end_clean(); //turn off output buffering to decrease cpu usage
+			
+			// multipart-download and download resuming support
+			$size = filesize($file);
+
+		 	if(isset($_SERVER['HTTP_RANGE']))
+			 {
+				list($a, $range) = explode("=",$_SERVER['HTTP_RANGE'],2);
+				list($range) = explode(",",$range,2);
+				list($range, $range_end) = explode("-", $range);
+				$range=intval($range);
+				if(!$range_end) {
+					$range_end=$size-1;
+				} else {
+					$range_end=intval($range_end);
+				}
+			 
+				$new_length = $range_end-$range+1;
+				header("HTTP/1.1 206 Partial Content");
+				header("Content-Length: $new_length");
+				header("Content-Range: bytes $range-$range_end/$size");
+			 } else {
+				$new_length=&$size;
+				header('Content-Length: ' . $size);
+			 }
 
 			header('Content-type: ' . $mime);
-			header('Content-Length: ' . filesize($file));
 			header('Content-Transfer-Encoding: binary');
-			header('Content-Disposition: filename='.$filename);
+			header('Accept-Ranges: bytes');
+			if($send_disposition){
+				header('Content-Disposition: attachment; filename='.$filename);
+			}	
 
 			if($use_rate_limit)
 			{
+				set_time_limit(0); // Remove the time limit for command-line usage;
+			 
 				if(is_numeric(Settings::singleton()->get_setting('download_rate')))
 				{
 					/* Rate limited download */
@@ -120,18 +150,22 @@ class FileTransfer
 	
 					// flush content
 				    flush();
+					
+				    $bytes_send = 0;
 				    // open file stream
 				    $file = fopen($local_file, "r");
-				    while(!feof($file))
+				    while(!feof($file)  && !connection_aborted() && ($bytes_send<$new_length))
 				    {
 					    // send the current file part to the browser
 					    print fread($file, $rate);
 	
 					    // flush the content to the browser
 					    flush();
+					    
+					    $bytes_send += strlen($buffer);
 	
-					    // sleep one second
-					    sleep(1);
+					    // Sleep for 250 miliseconds;
+					    usleep(250000); 
 				    }
 	
 				    // close file stream

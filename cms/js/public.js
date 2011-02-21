@@ -109,7 +109,7 @@ addOverlayIcon: true,
 recalcTop: true,
 showControls: true,
 addChain: true,
-maxSize: {w:800, h:500}
+maxSize: {w:600, h:400},
 });
 }
 };

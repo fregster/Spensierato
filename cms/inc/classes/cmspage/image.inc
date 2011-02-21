@@ -17,6 +17,6 @@ class cmspage_image extends cmspage
 		 */
 
 		$this->security_element_view();
-		FileTransfer::singleton()->get_image($this->value);
+		FileTransfer::singleton()->get_image_orig($this->value);
 	}
 }

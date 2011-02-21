@@ -33,9 +33,9 @@ class image
 			$ok = copy($old_path, $unscaled_image);
 		}
 		
-			echo($old_path);
-			echo($unscaled_image);
-			var_dump($ok);
+//			echo($old_path);
+//			echo($unscaled_image);
+//			var_dump($ok);
 			//Check that if the file did not exsist the copy worked
 			if($ok) 
 			{				

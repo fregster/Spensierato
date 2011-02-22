@@ -37,6 +37,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 			</html>');
 	}
 }
+
+//Ensure the template class is loaded to ensure all the settings relating to the skin are shown
+template::singleton();
+
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>

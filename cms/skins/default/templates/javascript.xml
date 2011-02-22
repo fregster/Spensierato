@@ -26,13 +26,10 @@
 
 <xsl:template name="javascript-inline">
 <script type="text/javascript">
+<xsl:if test="/page/settings/clickjacking_protection">if(top != self) top.location.replace(location); </xsl:if>
 <xsl:choose>
-	<xsl:when test="/page/settings/js_use_growler = 1">
-		var use_growl = true;
-	</xsl:when>
-	<xsl:otherwise>
-		var use_growl = false;
-	</xsl:otherwise>
+	<xsl:when test="/page/settings/js_use_growler = 1">var use_growl = true; </xsl:when>
+	<xsl:otherwise>var use_growl = false; </xsl:otherwise>
 </xsl:choose>
 var document_root = '<xsl:value-of select="/page/settings/document_root" />'; var js_host = '<xsl:value-of select="/page/settings/static_host_js" />'; var js_local = '<xsl:value-of select="/page/settings/site_folder_js" />'; var ajax_host = '<xsl:value-of select="/page/settings/static_host_ajax" />'; var img_host = document_root+'/skin/pre-load-images/'; var current_page = '<xsl:value-of select="/page/@id" />'; 
 <xsl:if test="count(/page/settings/pre_load_images/setting) > 0"><!-- set pre-loading image list --> var i = new Array(); <xsl:for-each select="/page/settings/pre_load_images/setting">i[<xsl:value-of select="position() -1" />]=img_host+'<xsl:value-of select="."/>'; </xsl:for-each></xsl:if>

@@ -76,6 +76,7 @@ class Settings
 				{
 					foreach($settings as $setting)
 					{
+						$setting['value'] = unserialize($setting['value']);
 						if ($setting['value'] == 'false') { $setting['value'] = false; }
 						if ($setting['value'] == 'true') { $setting['value'] = true; }
 	
@@ -176,6 +177,20 @@ class Settings
 			}
 			
 			return $settings;
+		}
+	}
+	
+	public function update_database_setting($name, $value)
+	{
+		if ($value == 'false') { $value = false; }
+		if ($value == 'true') { $value = true; }
+		
+		if($this->get_setting($name) != $value)
+		{
+//			Database::Singleton()->sql_update_or_insert('tbl_settings', array('setting'), array($key), array($key, $new_value), true, 'setting');
+			Database::Singleton()->sql_delete_where('tbl_settings', 'setting', $name);	
+			Database::singleton()->sql_insert('tbl_settings', array('setting', 'value'), array($name, serialize($value)));
+			return true;
 		}
 	}
 

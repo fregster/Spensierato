@@ -225,16 +225,17 @@ abstract class javascript
 		if(!get::variable('full', 'isset'))
 		{
 			$notice = '/* add ?full=1 to download the full JS including licence information as parts of this JS file may be licence restricted */ ';
+			return($contents);
 			switch (Settings::Singleton()->get_setting('js_minify'))
 			{
 				case '1':
 					//Use internal code minification
-					$contents = $notice.Common::remove_js_comments(file_get_contents($contents));
+					$contents = $notice.Common::remove_js_comments($contents);
 				    break;
 	
 				case '2':
 					//Use external minification
-					$contents = $notice.JSMin::minify(file_get_contents($contents));
+					$contents = $notice.JSMin::minify($contents);
 				    break;
 	
 				default:

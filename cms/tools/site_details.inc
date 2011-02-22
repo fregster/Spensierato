@@ -7,10 +7,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{		
 		$new_value = post::variable($key);
 		
-		if(Settings::singleton()->get_setting($key) !== $new_value){
-//			Database::Singleton()->sql_update_or_insert('tbl_settings', array('setting'), array($key), array($key, $new_value), true, 'setting');
-			Database::Singleton()->sql_delete_where('tbl_settings', 'setting', $key);	
-			Database::singleton()->sql_insert('tbl_settings', array('setting', 'value'), array($key, $new_value));
+		if(Settings::singleton()->update_database_setting($key, $new_value)){
 			$updated = true;
 		}
 	}

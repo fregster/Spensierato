@@ -159,7 +159,7 @@ Settings::Singleton()->new_setting('max_file_size', 25000000);
 //1 use internal cleaner coments only
 //2 use internal cleaner comments and line breaks //This and higher require wellformed JS
 //3 use JSMin
-Settings::Singleton()->new_setting('js_minify', 0, false, true, true, SETTING_GROUP_PERFORMANCE);
+Settings::Singleton()->new_setting('js_minify', 0, false, true, array(1,2,3), SETTING_GROUP_PERFORMANCE);
 
 //Use YUI compressed version of MooTools
 Settings::Singleton()->new_setting('js_use_yui', 0, true, true, true, SETTING_GROUP_PERFORMANCE);

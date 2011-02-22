@@ -5,7 +5,7 @@ menu::singleton()->set_options(array('top_menu_depth' => 1, 'include_breadcrumbs
 //Settings::Singleton()->new_setting('template_header_graphic_right', 'prity-picutre.png');
 Settings::Singleton()->new_setting('template_header_graphic_background', 'bg1-900.png');
 Settings::Singleton()->overwrite_setting('template_verstion', cms::$cms_version, true);
-Settings::Singleton()->overwrite_setting('template_extends', 'default', false, true);
+Settings::Singleton()->overwrite_setting('template_extends', 'default');
 
 foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/*', GLOB_NOSORT) as $filename) 
 {
@@ -25,6 +25,6 @@ if($inherirted_css)
 		$include[] = $inherirted_css;
 	}
 }
-Settings::Singleton()->overwrite_setting('template_inherits_css', $include, false, true);
+Settings::Singleton()->overwrite_setting('template_inherits_css', $include);
 unset($include);
 unset($inherirted_css);

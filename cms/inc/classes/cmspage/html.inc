@@ -5,6 +5,7 @@ class cmspage_html extends cmspage
 	
 	public function initalise()
 	{
+			Settings::singleton()->overwrite_setting('clickjacking_protection', true);
 			if(!isset($this->value))
 			{
 				$this->value = CMS::Singleton()->path_vars(0);

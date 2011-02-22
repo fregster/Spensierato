@@ -44,6 +44,6 @@ if($inherirted_css)
 		$include[] = $inherirted_css;
 	}
 }
-Settings::Singleton()->overwrite_setting('template_inherits_css', $include, false, true);
+Settings::Singleton()->overwrite_setting('template_inherits_css', $include);
 unset($include);
 unset($inherirted_css);

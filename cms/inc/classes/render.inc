@@ -148,6 +148,11 @@ class Render
 	{
 		if($htmldecode) { $content = html_entity_decode($content); }
 
+		if(Settings::singleton()->get_setting('clickjacking_protection')){
+			header ('X-Frame-Options: deny');
+		} else {
+			header ('X-Frame-Options: sameorigin');
+		}
 
 		/* If compression is requested and the level is numeric */
 		if(is_numeric(Settings::Singleton()->get_setting('output_compression_level')) and $this->acceptsGZIP() and Settings::Singleton()->get_setting('output_compression_level') > 0)

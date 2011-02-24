@@ -628,9 +628,10 @@ class persistantcache_file extends persistantcache
 			$result = array();
 			$result['time'] = filemtime($name);
 			$result['value'] = unserialize(file_get_contents($name));
+			
+			return $this->process_get($result['value']);
 		}
-
-		return $this->process_get($result['value']);
+		return false;
 	}
 
 	public function drop($name, $namespace = null)

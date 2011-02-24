@@ -76,7 +76,7 @@ class Settings
 				{
 					foreach($settings as $setting)
 					{
-						$setting['value'] = unserialize($setting['value']);
+						$setting['value'] = @unserialize($setting['value']);
 						if ($setting['value'] === 'false') { $setting['value'] = false; }
 						if ($setting['value'] === 'true') { $setting['value'] = true; }
 	

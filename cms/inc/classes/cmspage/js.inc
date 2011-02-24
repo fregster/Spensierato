@@ -37,15 +37,15 @@ class cmspage_js extends cmspage
 
 			switch (Settings::Singleton()->get_setting('js_minify'))
 			{
-				case '1':
-					//Use internal code minification
-					echo(Common::remove_js_comments(file_get_contents($file)));
-				    break;
-
-				case '2':
-					//Use JSMini
-					echo JSMin::minify(file_get_contents($file));
-				    break;
+//				case '1':
+//					//Use internal code minification
+//					echo(Common::remove_js_comments(file_get_contents($file)));
+//				    break;
+//
+//				case '2':
+//					//Use JSMini
+//					echo JSMin::minify(file_get_contents($file));
+//				    break;
 
 				default:
 				    render::Singleton()->render_file($file);

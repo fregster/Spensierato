@@ -533,8 +533,9 @@ Owner of DHTMLgoodies.com
 				initObj = document.getElementById(this.idOfTree);
 
 			}
+			
 			var lis = initObj.getElementsByTagName('li');
-
+			
 			if(lis.length>0){
 				var li = lis[0];
 				while(li){
@@ -544,8 +545,7 @@ Owner of DHTMLgoodies.com
 						if(numericID.length==0)numericID='A';
 						var numericParentID = li.parentNode.parentNode.id.replace(/[^0-9]/gi,'');
 						if(numericID!='0'){
-							saveString = saveString + numericID;
-							saveString = saveString + '-';
+							saveString = saveString + numericID + '-';
 							
 							
 							if(li.parentNode.id!=this.idOfTree)saveString = saveString + numericParentID; else saveString = saveString + '0';

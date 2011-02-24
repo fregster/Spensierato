@@ -150,8 +150,6 @@ class Render
 
 		if(Settings::singleton()->get_setting('clickjacking_protection')){
 			header ('X-Frame-Options: deny');
-		} else {
-			header ('X-Frame-Options: sameorigin');
 		}
 
 		/* If compression is requested and the level is numeric */

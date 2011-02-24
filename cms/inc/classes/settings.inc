@@ -77,8 +77,8 @@ class Settings
 					foreach($settings as $setting)
 					{
 						$setting['value'] = unserialize($setting['value']);
-						if ($setting['value'] == 'false') { $setting['value'] = false; }
-						if ($setting['value'] == 'true') { $setting['value'] = true; }
+						if ($setting['value'] === 'false') { $setting['value'] = false; }
+						if ($setting['value'] === 'true') { $setting['value'] = true; }
 	
 						$this->overwrite_setting($setting['setting'], $setting['value'], $this->get_setting('protect_db_settings'), null, true);
 					}

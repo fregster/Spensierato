@@ -397,7 +397,7 @@ class Menu
 		return $details;
 	}
 	
-	private function get_full_menu($force = false)
+	public function get_full_menu($force = false)
 	{
 		if($this->options['get_full_menu'] || $force)
 		{

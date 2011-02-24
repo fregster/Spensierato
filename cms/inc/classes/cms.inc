@@ -136,6 +136,10 @@ class CMS
 	 */
 	public function run_cms()
 	{
+		//Clickjacking protection default code option
+		//The render class enforces deny where required
+		header ('X-Frame-Options: sameorigin');
+		
 		//Do any admin checks
 		$this->admin();
 

@@ -108,7 +108,6 @@ addRollover: true,
 addOverlayIcon: true,
 recalcTop: true,
 showControls: true,
-addChain: true,
 maxSize: {w:600, h:400},
 });
 }

@@ -156,3 +156,5 @@ a.link_item:hover{text-decoration:underline; color:#06F}
 #login_error{color:red; font-style:bold italics;}
 .highlighted{color:blue; background-color:yellow;}
 .videoBar{margin-right:5px; margin-left:5px; padding-top:4px; padding-right:4px; padding-left:4px; padding-bottom:0px;}
+#powered_by, .powered_by{font-size:x-small;font-style:bold italics; text-decoration:none; color:BBB;}
+a.powered_by:hover{text-decoration:underline; color:#06F}

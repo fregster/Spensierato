@@ -84,6 +84,10 @@ Settings::Singleton()->new_setting('menu_max_levels', 2, false, false, true, SET
 //true / false
 Settings::Singleton()->new_setting('show_copyright', true, false, false, true, SETTING_GROUP_RENDER_OPTIONS);
 
+//Setting show_spensierato_link
+//true / false
+Settings::Singleton()->new_setting('show_spensierato_link', true, false, false, true, SETTING_GROUP_RENDER_OPTIONS);
+
 //Setting allow_registration
 //true / false
 Settings::Singleton()->new_setting('allow_registration', true, false, false, true, SETTING_GROUP_USER);

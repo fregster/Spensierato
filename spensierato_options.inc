@@ -16,6 +16,10 @@ Settings::Singleton()->new_setting('protect_db_settings', true, true, true);
 //String
 Settings::Singleton()->new_setting('intoduction_text', 'Welcome To ', false, false, true, SETTING_GROUP_SITE);
 
+//Setting Title Tage Line
+//String
+Settings::Singleton()->new_setting('title_tag_line', 'Just another site', false, false, true, SETTING_GROUP_SITE);
+
 //Setting site_name_long
 //String
 Settings::Singleton()->new_setting('site_name_long', 'Another Spensierato Site', false, false, true, SETTING_GROUP_SITE);

@@ -70,8 +70,8 @@ foreach ($settings as $key => $setting_group)
 				<td style="text-transform:capitalize; width:225px;"><?php echo(str_replace('_', ' ', $setting['name'])); if(isset($setting['protected']) && $setting['protected']){ echo '<img src="'.common::document_root() .'/skin/transparent-gif.gif" class="sprite sprite-lock" alt="Setting locked icon" title="This setting is locked, any changes will be ignored"/>'; }?></td>
 				<td style="text-transform:capitalize; width:210px;">
 					<?php if(is_bool($setting['value'])){ ?>
-					True: <input type="radio" value="true" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_true'); ?>" <?php if($setting['value'] === true){ echo'checked="checked"'; } if($setting['protected']) {echo' disabled="disabled"'; }?> />
-					False: <input type="radio" value="false" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_false'); ?>" <?php if($setting['value'] !== true){ echo'checked="checked"'; } if($setting['protected']) {echo' disabled="disabled"'; }?> />
+					True: <input type="radio" value="true" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_true'); ?>" <?php if($setting['value'] === true){ echo'checked="checked"'; } if(isset($setting['protected']) && $setting['protected']) {echo' disabled="disabled"'; }?> />
+					False: <input type="radio" value="false" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_false'); ?>" <?php if($setting['value'] !== true){ echo'checked="checked"'; } if(isset($setting['protected']) && $setting['protected']) {echo' disabled="disabled"'; }?> />
 					<?php }else if(is_array($setting['options'])){
 						echo '<select name="'. $setting['name'] .'" id="'. $setting['name'] .'"'; if($setting['protected']) {echo' disabled="disabled"'; } echo '>'; 
 						foreach ($setting['options'] as $option){ ?>

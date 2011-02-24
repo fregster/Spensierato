@@ -177,7 +177,7 @@ try
 	}
 	
 	//Set any custom defines
-	if(defined('CACHE_PATH')){
+	if(!defined('CACHE_PATH')){
 		DEFINE('CACHE_PATH', $GLOBALS['cms_folder_cache'].DS);	
 	}
 //	if(!defined('CACHE_TYPE')){

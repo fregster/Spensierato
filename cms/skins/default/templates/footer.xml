@@ -2,10 +2,11 @@
 	<xsl:template name="footer">
 		<div id="footer_text">
 			***FOOTER_TEXT***
-			<xsl:if test="/page/settings/show_spensierato_link = 1">
+		</div>
+		<xsl:if test="/page/settings/show_spensierato_link = 1">
 			<div id="powered_by">Powered by <a href="http://www.spensierato.net">Spensierato</a></div>
 		</xsl:if>
-		</div>
+		
 		<xsl:if test="boolean(/page/settings/google_analytics_id)">
 			<script type="text/javascript">
 			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

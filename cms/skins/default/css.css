@@ -187,6 +187,7 @@ a.tooltip:hover span
 	bottom:0px;
 	width:100%;
 	text-align:center;
+	padding-top:20px;
 }
 
 #account_personal_details

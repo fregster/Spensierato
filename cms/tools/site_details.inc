@@ -67,7 +67,7 @@ foreach ($settings as $key => $setting_group)
 	{
 		?>
 		<tr>
-				<td style="text-transform:capitalize; width:225px;"><?php echo(str_replace('_', ' ', $setting['name'])); if($setting['protected']){ echo '<img src="'.common::document_root() .'/skin/transparent-gif.gif" class="sprite sprite-lock" alt="Setting locked icon" title="This setting is locked, any changes will be ignored"/>'; }?></td>
+				<td style="text-transform:capitalize; width:225px;"><?php echo(str_replace('_', ' ', $setting['name'])); if(isset($setting['protected']) && $setting['protected']){ echo '<img src="'.common::document_root() .'/skin/transparent-gif.gif" class="sprite sprite-lock" alt="Setting locked icon" title="This setting is locked, any changes will be ignored"/>'; }?></td>
 				<td style="text-transform:capitalize; width:210px;">
 					<?php if(is_bool($setting['value'])){ ?>
 					True: <input type="radio" value="true" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_true'); ?>" <?php if($setting['value'] === true){ echo'checked="checked"'; } if($setting['protected']) {echo' disabled="disabled"'; }?> />
@@ -78,7 +78,7 @@ foreach ($settings as $key => $setting_group)
 							<option name="<?php echo $option; ?>"<?php if($setting['value'] == $option){ echo' selected="selected"'; }?>><?php echo $option; ?></option>
 					<?php } echo '</select>';
 					} else {
-					?> <input type="text" value="<?php echo($setting['value']); ?>" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name']); ?>"<?php if($setting['protected']) {echo' disabled="disabled"'; } ?>/>
+					?> <input type="text" value="<?php echo($setting['value']); ?>" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name']); ?>"<?php if(isset($setting['protected']) && $setting['protected']) {echo' disabled="disabled"'; } ?>/>
 					<?php }?>
 				</td>
 		</tr>

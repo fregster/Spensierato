@@ -173,7 +173,8 @@ function load($url,$options=array()) {
         }
         
         if(!isset($url_parts['port'])) $url_parts['port'] = 80;
-        $fp = fsockopen($url_parts['host'], $url_parts['port'], $errno, $errstr, 30);
+		$url_parts['port'] = str_ireplace(array('http:', 'https:'), '', $url_parts['port']);
+        $fp = @fsockopen($url_parts['host'], $url_parts['port'], $errno, $errstr, 30);
         if ($fp) {
             $out = '';
             if(isset($options['method']) and $options['method'] == 'post' and isset($url_parts['query'])) {

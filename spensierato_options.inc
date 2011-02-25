@@ -52,6 +52,10 @@ Settings::Singleton()->new_setting('meta_keywords', 'cms, open, free, gpl, spens
 //Google verification string
 Settings::Singleton()->new_setting('meta_verify-v1', NULL, false, false, true, SETTING_GROUP_GOOGLE);
 
+//Settings google-site-verification
+//Google webmater tools verification
+Settings::Singleton()->new_setting('google-site-verification', NULL, false, false, true, SETTING_GROUP_GOOGLE);
+
 //Setting char_set
 //Default encodeing set
 Settings::Singleton()->new_setting('char_set', 'UTF-8');

@@ -14,10 +14,17 @@
 				</xsl:element>
 				
 				<xsl:if test="/page/settings/meta_verify-v1 != ''">
-				<xsl:element name="meta">
-					<xsl:attribute name="name">verify-v1</xsl:attribute>
-					<xsl:attribute name="content"><xsl:value-of select="/page/settings/meta_verify-v1" /></xsl:attribute>
-				</xsl:element>
+					<xsl:element name="meta">
+						<xsl:attribute name="name">verify-v1</xsl:attribute>
+						<xsl:attribute name="content"><xsl:value-of select="/page/settings/meta_verify-v1" /></xsl:attribute>
+					</xsl:element>
+				</xsl:if>
+				
+				<xsl:if test="/page/settings/google-site-verification != ''">
+					<xsl:element name="meta">
+						<xsl:attribute name="name">google-site-verification</xsl:attribute>
+						<xsl:attribute name="content"><xsl:value-of select="/page/settings/google-site-verification" /></xsl:attribute>
+					</xsl:element>
 				</xsl:if>
 	
 				<xsl:call-template name="javascript-inline"/>

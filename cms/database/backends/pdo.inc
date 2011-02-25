@@ -13,6 +13,7 @@ class database_execution_pdo extends database_execution
 				case 'mysqli':
 				case 'mysql':
 					$host = 'host='.$host;
+					$dsn['phptype'] = 'mysql';
 					break;
 					
 				case 'sqlsrv':

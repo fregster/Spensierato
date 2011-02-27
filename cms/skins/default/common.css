@@ -110,6 +110,15 @@
 	
 }
 
+.config_options{
+	border:1px;
+	border-style:solid;
+	border-color:black;
+	background:#EEE;
+	margin-bottom:3px;
+	padding:2px;
+}
+
 .warning{
 	border:1px;
 	border-style:solid;

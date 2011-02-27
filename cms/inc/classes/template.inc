@@ -269,8 +269,11 @@ class Template
 			$xslt = $xslt['xslt']; //Overwrite the array
 		}
 
-		persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified), null, 'templates');
-
+		//As content changes quickly don't bother caching if in admin mode, this may also contian personal unencrypted data
+		if(!options::singleton()->get_option('admin_mode')){
+			persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified), null, 'templates');
+		}
+		
 		return $xslt;
 	}
 	

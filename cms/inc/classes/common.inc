@@ -406,7 +406,7 @@ abstract class Common
 
 	public static  function returnMIMEType($filename)
     {
-     	return mimetypegetter::get($filename);
+     	return mimetypegetter::get($filename, 'ext');
     }
 
     public static function rewrite_enabled()

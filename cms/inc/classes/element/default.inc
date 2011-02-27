@@ -9,6 +9,7 @@ class element_Default
 	protected $name;
 	protected $position = 1;
 	protected $title = 'Please give the element a meaningful title';
+	protected $options = array();
 
 	private $tags = array();
 	private $element;
@@ -69,6 +70,10 @@ class element_Default
 	public function build($id, $data = array(), $link = NULL, $position = NULL)
 	{
 		$this->id = $id;
+		
+		if(count($this->options > 0)){
+			$this->allowed_tags(array('options' => 'options'));
+		}
 
 		if($position != NULL)
 		{
@@ -92,7 +97,10 @@ class element_Default
 
 		$this->data = $data;
 		$this->get_data();
-//		print_r($this);die();
+		$this->build_options();
+		$this->build_data_xml();
+		$this->add_late_header();
+		
 		Content::Singleton()->attach_content($this->render());
 	}
 
@@ -131,7 +139,7 @@ class element_Default
 		}
 		//Attach the element to the root dom
 		$dom->appendChild($this->element);
-
+		
 		//Return the completed XML of the document
 		return $dom->saveXML();
 	}
@@ -267,6 +275,24 @@ class element_Default
 				$this->element->setAttribute('edited', Common::timestamp_to_date($this->admin_mode_data['edited']));
 				$this->element->setAttribute('editor', $this->admin_mode_data['editor']);
 			}
+			
+			//Attach any options
+			//Create XML tag
+			$element_options = $dom->createDocumentFragment();
+	
+			//Attach the options array
+			if(count($this->options > 0))	
+			{
+				$options_array = array();
+				foreach($this->options as $key => $option){
+					$options_array[] = array('name' => $key, 'values' => $option);
+				}
+				
+				@$element_options->appendXML(xml::array_to_xml_simple($options_array, 'options', 'option'));
+				@$this->element->appendChild($element_options);
+			}
+			//Attach the element to the root dom
+			$dom->appendChild($this->element);
 
 			$build_rollback = $this->get_revision();
 
@@ -364,6 +390,11 @@ class element_Default
 	{
 
 	}
+	
+	protected function add_late_header()
+	{
+		
+	}
 
 	protected function attach_extra_data()
 	{
@@ -451,20 +482,44 @@ class element_Default
 				$this->admin_mode_data['save_data'] = $this->data;
 
 			}
-
-			$this->build_data_xml();
-
+		}
+	}
+	
+	protected function build_options(){
+		foreach($this->options as $key => $option){
+			if(!isset($this->data['options'][$key]) || !in_array($this->data['options'][$key], $option)){
+				if(is_null($option[0])){
+					unset($this->data['options'][$key]);
+				}else{
+					$this->data['options'][$key] = $option[0];
+				}
+			}
 		}
 	}
 
 	protected function build_data_xml(){
-		$this->data_array = $this->data; //make a copy of the data in to an array
-		$this->data = stripslashes(xml::array_to_xml_simple($this->data, 'data'));  //FIXME Should not need strip slashes here the database should return the data as we saved it
-
-		//FIXME: try to come up with a better way to add attributes to xml from arrays
-		foreach ($this->tags as $tag => $type){
-			$this->data = str_replace("<$tag>", "<$tag type=\"$type\">", $this->data);
+		if(is_array($this->data)){
+			$this->data_array = $this->data; //make a copy of the data in to an array
+			$this->data = stripslashes(xml::array_to_xml_simple($this->data, 'data'));  //FIXME Should not need strip slashes here the database should return the data as we saved it
+	
+			//FIXME: try to come up with a better way to add attributes to xml from arrays
+			foreach ($this->tags as $tag => $type){
+				$this->data = str_replace("<$tag>", "<$tag type=\"$type\">", $this->data);
+			}
 		}
+	}
+	
+	private function save_options(){
+		$save_option = array();
+		
+		foreach($this->options as $key => $posible_options){
+			$post_name = 'option_'.$key;
+			if(post::variable($post_name, 'isset') && in_array(post::variable($post_name), $this->options[$key])){
+				$save_option[$key] = post::variable($post_name);
+			}
+		}
+		
+		return $save_option;
 	}
 
 	public function save($draft = TRUE){
@@ -485,7 +540,7 @@ class element_Default
 		foreach($details as $key => &$value)
 		{
 			switch ($key)
-			{
+			{					
 				case 'html':
 					if( (Settings::Singleton()->get_setting('tidy_html_input')) and (function_exists('tidy_parse_string')) && !post::variable('skip_validation_html', 'isset'))
 					{
@@ -537,6 +592,10 @@ class element_Default
 						//do something about invalid emails
 						$value = NULL;
 					}
+					break;
+					
+				case 'options':
+					$value = $this->save_options();
 					break;
 			}
 		}

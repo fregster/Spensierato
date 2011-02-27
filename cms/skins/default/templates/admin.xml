@@ -34,7 +34,11 @@
 									<xsl:attribute name="class">submodal</xsl:attribute>
 									<xsl:attribute name="rel">width:400,height:400,noDesc</xsl:attribute>
 									Lists Administration
-								</xsl:element>
+								</xsl:element>								
+								<xsl:if test="/page/settings/js_use_filemanager = 1"> | 
+									<img src="{$tgif}" class="sprite sprite-comments" alt="Lists Administration" title="Lists Administration"/>
+									<span id="mediaManagerLink" class="submodal2"> Media Manager</span>
+								</xsl:if>
 								<!--  If the user is a site admin show site warnings -->
 
 								<xsl:if test="/page/warnings/warning">

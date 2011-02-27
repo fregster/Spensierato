@@ -8,7 +8,7 @@
 	<xsl:otherwise>mootools/mt-c.js,mootools/mt-m.js</xsl:otherwise>
 </xsl:choose>
 <xsl:if test="/page/settings/js_use_growler = 1">,growl.js</xsl:if>
-<xsl:if test="/page/settings/js_use_imgage_lazyload = 1">,lazyload.js</xsl:if>
+<xsl:if test="/page/settings/js_use_imgage_lazyload = 1">,lazyload.js</xsl:if>	
 <xsl:if test="/page/settings/js_use_lightboxes = 1">,lightbox/multiBox.js,lightbox/overlay.js</xsl:if>
 <xsl:choose>		
 	<xsl:when test="/page/user/id != 0">
@@ -22,10 +22,18 @@
 </xsl:choose>
 </xsl:attribute>
 </xsl:element>
+
+<xsl:if test="/page/options/admin_mode = 1 and /page/settings/js_use_filemanager = 1">
+	<xsl:element name="script">
+	<xsl:attribute name="type">text/javascript</xsl:attribute>
+	<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />fileman/FileManager.js,fileman/Language/Language.en.js,fileman/Language/Language.de.js,fileman/Uploader/Fx.ProgressBar.js,fileman/Uploader/Swiff.Uploader.js,fileman/Uploader.js,fileman/Gallery.js</xsl:attribute>
+	</xsl:element>
+</xsl:if>
 </xsl:template>
 
 <xsl:template name="javascript-inline">
 <script type="text/javascript">
+<xsl:if test="/page/user/unique_session_id">var ESESSIN = '<xsl:value-of select="/page/user/unique_session_id"/>'; </xsl:if>
 <xsl:if test="/page/settings/clickjacking_protection">if(top != self) top.location.replace(location); </xsl:if>
 <xsl:choose>
 	<xsl:when test="/page/settings/js_use_growler = 1">var use_growl = true; </xsl:when>

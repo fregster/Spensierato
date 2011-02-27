@@ -1,6 +1,6 @@
 /*
 multiBox - for MooTools 1.2 stylesheet - - - - */
-a.mb, a:link.mb, a:visited.mb, a:hover.mb, a:active.mb, a.submodal, a:link.submodal, a:visited.submodal, a:hover.submodal, a:active.submodal
+a.mb, a:link.mb, a:visited.mb, a:hover.mb, a:active.mb, a.submodal, a:link.submodal, a:visited.submodal, a:hover.submodal, a:active.submodal, submodal2
 {
 	outline:none;
 	/*float:left;*/
@@ -8,6 +8,7 @@ a.mb, a:link.mb, a:visited.mb, a:hover.mb, a:active.mb, a.submodal, a:link.submo
 	padding:0;
 	text-decoration:none;
 	color:#666;
+	cursor: pointer;
 }
 
 .mb, .submodal img{

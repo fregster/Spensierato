@@ -9,6 +9,7 @@ class user
 	private static $instance;
 	protected $userid = 0;
 	private $lists;
+	private $key_lifetime = 3600;
 
 	public static function Singleton()
 	{
@@ -187,11 +188,38 @@ class user
 	{
 		return $this->user_details['username'].' <'.$this->user_details['email'].'>';
 	}
+	
+	public function generate_unique_session_id()
+	{
+		$salt = common::generate_random_string(32,true,true);
+		$encrypt = encryption::encrypt(serialize(array('id' => $this->userid, 'time' => CMS::$time, 'session_id' => session_id(), 'random_salt' => $salt)));
+		return sha1(Settings::singleton()->get_setting('random_key').$encrypt).$encrypt.md5(CMS::$time.Settings::singleton()->get_setting('random_key').$salt);
+	}
+		
+	public static function validate_unique_session_id($hash)
+	{
+		$encrypt = substr($hash, 40, -32);
+	
+		if(substr($hash, 0, 40) == sha1(Settings::singleton()->get_setting('random_key').$encrypt)){
+			$decrypt = unserialize(encryption::decrypt($encrypt));
+			if(($decrypt['time'] + settings::singleton()->get_setting('session_public_key_lifetime')) > CMS::$time && substr($hash, -32) == md5($decrypt['time'].Settings::singleton()->get_setting('random_key').$decrypt['random_salt'])){
+				return $decrypt;
+			}
+		}
+		
+		return false;
+	}
 
 	private function set_user_details($force = false)
 	{		
 		if(isset($this->userid) && $this->userid != 0)
 		{
+			if(options::singleton()->get_option('admin_mode')){
+				$_SESSION['user_details']['unique_session_id'] = $this->generate_unique_session_id();
+			} else if (!options::singleton()->get_option('admin_mode') && isset($_SESSION['user_details']['unique_session_id'])){
+				unset($_SESSION['user_details']['unique_session_id']);
+			}
+			
 			if(!isset($_SESSION['user_details']) || $force)
 			{
 				$user_data = Database::Singleton()->sql_select_first(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
@@ -274,7 +302,7 @@ class user
 		else
 		{
 			$sql_password = Common::return_hash($password, false);
-		}		
+		}
 		
 		$id = Database::Singleton()->sql_select_first('id', 'tbl_users', array('username', 'password'), array($username, $sql_password));
 		

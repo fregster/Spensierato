@@ -188,6 +188,12 @@ Settings::Singleton()->new_setting('js_cache', false, false, true, true, SETTING
 //Fall back is to use Mootools Fade bar which also support's colours :-)
 Settings::singleton()->new_setting('js_use_growler', true, false, false, true, SETTING_GROUP_RENDER_OPTIONS);
 
+//Setting js_use_filemanager
+//This setting is to include the file manager for multimedia
+//Aditional JS will be loaded to enable this
+Settings::singleton()->new_setting('js_use_filemanager', true, false, false, true, SETTING_GROUP_RENDER_OPTIONS);
+
+
 //Setting js_use_lightboxes
 //This setting is to use fancy lightboxes for viewing images, video etc
 //Aditional JS will be loaded to enable this
@@ -298,6 +304,11 @@ Settings::Singleton()->new_setting('session_security_ip', false, false, true, tr
 //Use cookie encryption, set to false to supress the warning if your server does not support encryption.
 //true / false
 Settings::Singleton()->new_setting('cookie_encryption', true, false, true, true, SETTING_GROUP_SECURITY);
+
+//Setting session_public_key_lifetime
+//Length of time in seconds the public encrypted session key is valid for
+//int seconds
+Settings::Singleton()->new_setting('session_public_key_lifetime', 3600, false, true, true, SETTING_GROUP_SECURITY);
 
 //Setting login_capthca
 //Requires the user to enter a security code when login in

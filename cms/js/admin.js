@@ -96,6 +96,8 @@ function dynamicjsloader(){
 };
 var sortInput;
 var initMultiBoxAdmin;
+var fManager; 
+var assetBasePath = document_root+'/js/fileman/';
 function adminInit(){
 dynamicjsloader();
 sortInput = new String();
@@ -106,6 +108,23 @@ container: $(document.body),
 maxSize: {w:700, h:500},
 recalcTop: true
 });
+//if(typeof FileManager == 'object'){
+fManager = new FileManager({
+    hideOnClick: true,
+    upload: true,
+    download: true,
+    destroy: true,
+    rename: true,
+    createFolders: true,
+	url: document_root+'/tools/filemanager',
+//    url: 'http://zeta/test/fm-rc5/Demos/manager.php',
+	baseURL: document_root+'/',
+	assetBasePath: assetBasePath,
+	language: 'en',
+	uploadAuthData: {session: 'PHPSESSID'}
+	});
+	$('mediaManagerLink').addEvent('click', fManager.show.bind(fManager));
+//}
 };
 
 function get_diff(name){

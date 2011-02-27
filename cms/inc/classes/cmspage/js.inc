@@ -33,7 +33,7 @@ class cmspage_js extends cmspage
 	private function send_js_file($file)
 		{
 			// javascript header
-			header('Content-type: text/javascript');
+			header('Content-type: '.common::returnMIMEType($file));
 
 			switch (Settings::Singleton()->get_setting('js_minify'))
 			{

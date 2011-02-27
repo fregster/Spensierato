@@ -55,6 +55,11 @@ class element_Login extends element_Default
 
 		$this->data = '<data>'. Common::html($html) .'</data>';
 		$this->search = NULL;
+//		var_dump($this); die();
+	}
+	
+	protected function build_data_xml(){
+		
 	}
 
 	protected function add_header()

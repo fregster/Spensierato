@@ -66,9 +66,9 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			//return parent::save_preview();
 		}
 
-		protected function add_extra_info()
+		protected function attach_extra_data()
 		{
-			return array_merge(parent::add_extra_info(), $this->video_extended_details);
+			return array_merge(parent::attach_extra_data(), $this->video_extended_details);
 		}
 
 		private function convert_upload()

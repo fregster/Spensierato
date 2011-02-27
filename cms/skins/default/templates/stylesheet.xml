@@ -6,6 +6,11 @@
 		<xsl:attribute name="rel">stylesheet</xsl:attribute>
 	</xsl:element>
 	
+	<xsl:if test="/page/options/admin_mode = 1 and /page/settings/js_use_filemanager = 1">
+		<link type="text/css" rel="stylesheet" href="{/page/settings/document_root}/js/fileman/Css/FileManager.css" />
+		<link type="text/css" rel="stylesheet" href="{/page/settings/document_root}/js/fileman/Css/Additions.css" />
+	</xsl:if>
+	
 	<xsl:if test="/page/options/css_mobile = 1">
 	<xsl:element name="link">
 		<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css/mobile</xsl:attribute>

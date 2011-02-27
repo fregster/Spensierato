@@ -1,0 +1,30 @@
+<?php
+ini_set('display_errors', 0);
+error_reporting(E_ERROR);
+require_once DIR_EXTERNAL.'filemanager'.DS.'FileManager.php';
+
+// Please add your own authentication here
+function UploadIsAuthenticated($get){
+	return true;
+	if(!empty($get['session'])) return true;
+	
+	return true;
+}
+
+
+$filepath = '';
+
+$filepath = Settings::Singleton()->get_setting('cms_folder_downloads').DS.'mediamanager'.DS;
+if(!file_exists($filepath) && is_writable(Settings::Singleton()->get_setting('cms_folder_downloads'))){
+	mkdir ($filepath);
+	chmod ($filepath, 0774);
+}
+
+$browser = new FileManager(array(
+	'directory' => $filepath,
+	'assetBasePath' => Settings::Singleton()->get_setting('site_folder_js_direct').'/fileman/',
+	'thumbnailPath' => $filepath.DS.'Thumbnails',
+	'maxUploadSize' => Settings::Singleton()->get_setting('max_file_size'),
+));
+
+$browser->fireEvent(!empty($_GET['event']) ? $_GET['event'] : null);

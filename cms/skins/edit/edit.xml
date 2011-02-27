@@ -64,6 +64,20 @@
 	<xsl:if test="//@type = 'html'">
 		<input type="checkbox" name="skip_validation_html" id="skip_validation_html"/> Skip HTML validation and cleaning
 	</xsl:if>
+	<xsl:if test="/page/body/element/options">
+		<div id="config_options">
+			Configuration Options<br/>
+			<xsl:for-each select="/page/body/element/options/*">
+				<xsl:value-of select="./name"/>: <select name="option_{./name}" id="option_{./name}">
+					<xsl:for-each select="./values/*">
+						<option name="{.}">
+						<xsl:value-of select="."/>
+						</option>
+					</xsl:for-each>
+				</select><br/>
+			</xsl:for-each>
+		</div>
+	</xsl:if>
 </xsl:template>
 
 <xsl:template match="*[@type = 'html']">
@@ -107,6 +121,34 @@
 			<xsl:attribute name="value"><xsl:value-of select="/page/settings/max_file_size" /></xsl:attribute>
 		</xsl:element>
 		Choose a file to upload: <input name="uploadedfile" type="file" /><br />
+	</div>
+</xsl:template>
+
+<xsl:template match="*[@type = 'files']">
+	<div class="element_edit_frame">
+	List of files in this collection
+		<xsl:for-each select="file">
+			<div><xsl:value-of select="."/></div>
+		</xsl:for-each>
+	</div>
+</xsl:template>
+
+<xsl:template match="*[@type = 'options']">
+	<!-- <div class="element_edit_frame">
+	Current Configuration Options
+		<xsl:for-each select="./*">
+			<div><xsl:value-of select="."/></div>
+		</xsl:for-each>
+	</div>-->
+</xsl:template>
+
+<xsl:template match="*[@type = 'folder']">
+	<div class="element_edit_frame">
+		<xsl:value-of select="name()" />: <xsl:element name="input">
+		<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="id"><xsl:value-of select="name()" /></xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="." /></xsl:attribute>
+		</xsl:element><input type="button" value="Select Folder" />
 	</div>
 </xsl:template>
 

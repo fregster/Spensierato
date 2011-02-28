@@ -33,15 +33,22 @@ class session
 	
 	protected function __construct()
 	{
+		$skip_validation = false;
 		//Only load cookie data if a cookie has been sent to help comply with EU reg's
+		if(get::variable('session', 'isset') or post::variable('session', 'isset')){
+			session::set_cookie_from_hash();
+			$skip_validation = true;
+		}
 		if(isset($_COOKIE['PHPSESSID']) || cookie::Singleton()->is_cookie_value_set('CMS'))
 		{
 			//This causes problems for some reason need to figure out why the F the doc root gives the wrong path at login
 //			session_set_cookie_params(0, Settings::singleton()->get_setting('document_root'));
 			$this->force();
 			$this->timeout_check();
-			$this->session_user_agent_check();
-			$this->session_ip_check();
+			if(!$skip_validation){
+				$this->session_user_agent_check();
+				$this->session_ip_check();
+			}
 			cookie::Singleton()->load();
 			$this->session_loaded = true;
 		}
@@ -51,24 +58,19 @@ class session
 	{
 		if(!$this->session_loaded)
 		{
-			if(get::variable('session', 'isset') or post::variable('session', 'isset')){
-				$this->set_cookie_from_hash();
-			}
 			//Force a session to start
-			$session = @session_start();
-			user::Singleton()->set_user_details(true);
-			return $session;
+			@session_start();
 		}
 		return true;
 	}
 	
-	private function set_cooke_from_hash()
+	private static function set_cookie_from_hash()
 	{
 		$session_id = false;
-		if(get::variable('ESESSIN', 'isset')){
-			$session_id = User::validate_unique_session_id(get::variable('ESESSIN'));
-		}else if (post::variable('ESESSIN', 'isset')){
-			$session_id = User::validate_unique_session_id(post::variable('ESESSIN'));
+		if(get::variable('session', 'isset')){
+			$session_id = session::validate_unique_session_id(get::variable('session'));
+		}else if (post::variable('session', 'isset')){
+			$session_id = session::validate_unique_session_id(post::variable('session'));
 		}
 		
 		if($session_id){
@@ -178,5 +180,26 @@ class session
 
 		if($url == NULL) { $url = 'home'; }
 		Common::redirect($url);
+	}
+	
+	public function generate_unique_session_id()
+	{
+		$salt = common::generate_random_string(32,true,true);
+		$encrypt = encryption::encrypt(serialize(array('time' => CMS::$time, 'session_id' => session_id(), 'random_salt' => $salt)));
+		return sha1(Settings::singleton()->get_setting('random_key').$encrypt).$encrypt.md5(CMS::$time.Settings::singleton()->get_setting('random_key').$salt);
+	}
+		
+	public static function validate_unique_session_id($hash)
+	{
+		$encrypt = substr($hash, 40, -32);
+	
+		if(substr($hash, 0, 40) == sha1(Settings::singleton()->get_setting('random_key').$encrypt)){
+			$decrypt = unserialize(encryption::decrypt($encrypt));
+			if(($decrypt['time'] + settings::singleton()->get_setting('session_public_key_lifetime')) > CMS::$time && substr($hash, -32) == md5($decrypt['time'].Settings::singleton()->get_setting('random_key').$decrypt['random_salt'])){
+				return $decrypt['session_id'];
+			}
+		}
+		
+		return 'error';
 	}
 }

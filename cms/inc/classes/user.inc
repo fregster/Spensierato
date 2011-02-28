@@ -29,11 +29,6 @@ class user
 
 	protected function __construct()
 	{
-		if(isset($_SESSION['userid']))
-		{
-			$this->userid = $_SESSION['userid'];
-		}
-
 		$this->set_user_details();
 
 		//Check that default required values are set
@@ -188,34 +183,18 @@ class user
 	{
 		return $this->user_details['username'].' <'.$this->user_details['email'].'>';
 	}
-	
-	public function generate_unique_session_id()
-	{
-		$salt = common::generate_random_string(32,true,true);
-		$encrypt = encryption::encrypt(serialize(array('id' => $this->userid, 'time' => CMS::$time, 'session_id' => session_id(), 'random_salt' => $salt)));
-		return sha1(Settings::singleton()->get_setting('random_key').$encrypt).$encrypt.md5(CMS::$time.Settings::singleton()->get_setting('random_key').$salt);
-	}
-		
-	public static function validate_unique_session_id($hash)
-	{
-		$encrypt = substr($hash, 40, -32);
-	
-		if(substr($hash, 0, 40) == sha1(Settings::singleton()->get_setting('random_key').$encrypt)){
-			$decrypt = unserialize(encryption::decrypt($encrypt));
-			if(($decrypt['time'] + settings::singleton()->get_setting('session_public_key_lifetime')) > CMS::$time && substr($hash, -32) == md5($decrypt['time'].Settings::singleton()->get_setting('random_key').$decrypt['random_salt'])){
-				return $decrypt;
-			}
-		}
-		
-		return false;
-	}
 
 	public function set_user_details($force = false)
-	{		
+	{
+		if(isset($_SESSION['userid']))
+		{
+			$this->userid = $_SESSION['userid'];
+		}
+		
 		if(isset($this->userid) && $this->userid != 0)
 		{
 			if(options::singleton()->get_option('admin_mode')){
-				$_SESSION['user_details']['unique_session_id'] = $this->generate_unique_session_id();
+				$_SESSION['user_details']['unique_session_id'] = session::Singleton()->generate_unique_session_id();
 			} else if (!options::singleton()->get_option('admin_mode') && isset($_SESSION['user_details']['unique_session_id'])){
 				unset($_SESSION['user_details']['unique_session_id']);
 			}

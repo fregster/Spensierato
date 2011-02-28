@@ -6,6 +6,12 @@ require_once DIR_EXTERNAL.'filemanager'.DS.'FileManager.php';
 // Please add your own authentication here
 function UploadIsAuthenticated($get){
 	session::Singleton()->force();
+	user::singleton()->set_user_details(true);
+// 	echo json_encode(array(
+//        'status' => 0,
+//        'error' => 'Admin? '.serialize($_SESSION) // This is for Styx :)
+//      ));
+//      die();
 	return user::singleton()->is_admin();
 }
 

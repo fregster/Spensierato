@@ -55,7 +55,9 @@ class session
 				$this->set_cookie_from_hash();
 			}
 			//Force a session to start
-			return @session_start();
+			$session = @session_start();
+			user::Singleton()->set_user_details(true);
+			return $session;
 		}
 		return true;
 	}
@@ -72,8 +74,6 @@ class session
 		if($session_id){
 			$_COOKIE['PHPSESSID'] = $session_id;
 		}
-		
-		user::Singleton()->set_user_details(true);
 	}
 	
 	private function timeout_check()

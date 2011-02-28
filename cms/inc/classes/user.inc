@@ -210,7 +210,7 @@ class user
 		return false;
 	}
 
-	private function set_user_details($force = false)
+	public function set_user_details($force = false)
 	{		
 		if(isset($this->userid) && $this->userid != 0)
 		{

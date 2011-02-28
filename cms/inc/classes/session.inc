@@ -51,7 +51,7 @@ class session
 	{
 		if(!$this->session_loaded)
 		{
-			if(get::variable('ESESSIN', 'isset') or post::variable('ESESSIN', 'isset')){
+			if(get::variable('session', 'isset') or post::variable('session', 'isset')){
 				$this->set_cookie_from_hash();
 			}
 			//Force a session to start
@@ -64,14 +64,16 @@ class session
 	{
 		$session_id = false;
 		if(get::variable('ESESSIN', 'isset')){
-			$session_id = User::Singleton()->validate_unique_session_id(get::variable('ESESSIN'));
+			$session_id = User::validate_unique_session_id(get::variable('ESESSIN'));
 		}else if (post::variable('ESESSIN', 'isset')){
-			$session_id = User::Singleton()->validate_unique_session_id(post::variable('ESESSIN'));
+			$session_id = User::validate_unique_session_id(post::variable('ESESSIN'));
 		}
 		
 		if($session_id){
 			$_COOKIE['PHPSESSID'] = $session_id;
 		}
+		
+		user::Singleton()->set_user_details(true);
 	}
 	
 	private function timeout_check()

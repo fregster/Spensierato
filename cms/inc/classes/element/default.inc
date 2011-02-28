@@ -424,7 +424,7 @@ class element_Default
 			}
 
 			//if no data was set yet, just get the default element data
-			if ($data == NULL) {
+			if ($data == NULL || !$data) {
 				$data = database::Singleton()->sql_select_first(array('title', 'data'), 'tbl_elements_data', array('id'), array($this->id));
 			}
 

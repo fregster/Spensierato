@@ -5,10 +5,8 @@ require_once DIR_EXTERNAL.'filemanager'.DS.'FileManager.php';
 
 // Please add your own authentication here
 function UploadIsAuthenticated($get){
-	return true;
-	if(!empty($get['session'])) return true;
-	
-	return true;
+	session::Singleton()->force();
+	return user::singleton()->is_admin();
 }
 
 

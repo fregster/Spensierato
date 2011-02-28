@@ -117,11 +117,10 @@ fManager = new FileManager({
     rename: true,
     createFolders: true,
 	url: document_root+'/tools/filemanager',
-//    url: 'http://zeta/test/fm-rc5/Demos/manager.php',
 	baseURL: document_root+'/',
 	assetBasePath: assetBasePath,
 	language: 'en',
-	uploadAuthData: {session: 'PHPSESSID'}
+	uploadAuthData: {session: ESESSIN}
 	});
 	$('mediaManagerLink').addEvent('click', fManager.show.bind(fManager));
 //}

@@ -6,6 +6,21 @@ abstract class Common
 		//Expand URL to get vars
 		return (Common::array_compress(Common::getPathVariables($_SERVER['PHP_SELF'], __FILE__)));
 	}
+	
+	public static function create_folders_from_path($path, $chmod = 0775)
+	{
+		$directories = explode(DIRECTORY_SEPERATOR, realpath($path));
+//		$directories_reverse = array_reverse($directories);
+		$current_path = '';
+		foreach($directories as $key => $dir){
+			$current_path .= $dir.DIRECTORY_SEPERATOR;
+			if(!is_dir($current_path)){
+				$suscessful = mkdir($current_path, $chmod);
+			}
+			echo(' '.$current_path. ' ');
+		}
+		return $suscessful;
+	}
 
 	public static function return_hash($input, $use_random = true)
 	{

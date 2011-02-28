@@ -18,10 +18,16 @@ function UploadIsAuthenticated($get){
 
 $filepath = '';
 
-$filepath = Settings::Singleton()->get_setting('cms_folder_downloads').DS.'mediamanager'.DS;
+$filepath = realpath(Settings::Singleton()->get_setting('cms_folder_downloads').DS.'mediamanager').DS;
 if(!file_exists($filepath) && is_writable(Settings::Singleton()->get_setting('cms_folder_downloads'))){
-	mkdir ($filepath);
-	chmod ($filepath, 0774);
+	common::create_folders_from_path($filepath);
+}if(!is_writable($filepath)){
+	die(
+	json_encode(array(
+	'status' => 0,
+	'error' => 'Root directory not writable',
+	))
+	);
 }
 
 $browser = new FileManager(array(

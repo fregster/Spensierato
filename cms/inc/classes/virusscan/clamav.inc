@@ -54,6 +54,7 @@ class virusscan_clamav extends virusscan
 			break;
 			
 			case 2:
+				return false; //Fail to allow as if clamav dies uploads should generally be allowed
 				return 'Virus Scan Failed';
 			break;
 

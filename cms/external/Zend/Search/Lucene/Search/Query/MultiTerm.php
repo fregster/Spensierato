@@ -106,7 +106,7 @@ class Zend_Search_Lucene_Search_Query_MultiTerm extends Zend_Search_Lucene_Searc
     public function __construct($terms = null, $signs = null)
     {
         if (is_array($terms)) {
-            require_once 'Zend/Search/Lucene.php';
+            //require_once 'Zend/Search/Lucene.php';
             if (count($terms) > Zend_Search_Lucene::getTermsPerQueryLimit()) {
                 throw new Zend_Search_Lucene_Exception('Terms per query limit is reached.');
             }

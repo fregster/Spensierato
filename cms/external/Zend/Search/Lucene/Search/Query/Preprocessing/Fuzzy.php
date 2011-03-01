@@ -101,7 +101,7 @@ class Zend_Search_Lucene_Search_Query_Preprocessing_Fuzzy extends Zend_Search_Lu
 
             $hasInsignificantSubqueries = false;
 
-            require_once 'Zend/Search/Lucene.php';
+//            //require_once 'Zend/Search/Lucene.php';
             if (Zend_Search_Lucene::getDefaultSearchField() === null) {
                 $searchFields = $index->getFieldNames(true);
             } else {

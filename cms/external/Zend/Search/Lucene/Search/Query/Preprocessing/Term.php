@@ -89,7 +89,7 @@ class Zend_Search_Lucene_Search_Query_Preprocessing_Term extends Zend_Search_Luc
 
             $hasInsignificantSubqueries = false;
 
-            require_once 'Zend/Search/Lucene.php';
+//            require_once 'Zend/Search/Lucene.php';
             if (Zend_Search_Lucene::getDefaultSearchField() === null) {
                 $searchFields = $index->getFieldNames(true);
             } else {

@@ -143,7 +143,6 @@ class Zend_Search_Lucene_Search_Query_Boolean extends Zend_Search_Lucene_Search_
             $query->addSubquery($subquery->rewrite($index),
                                 ($this->_signs === null)?  true : $this->_signs[$subqueryId]);
         }
-
         return $query;
     }
 

@@ -208,7 +208,7 @@ class element_Default
 				}
 			}
 
-			$this->admin_mode_data['error'] .= '( '.$_FILES['uploadedfile']['error'].')';
+			$this->admin_mode_data['error'] .= '(Unknown error code: '.$_FILES['uploadedfile']['error'].')';
 			//Upload failed return false
 			return false;
 		}
@@ -529,8 +529,8 @@ class element_Default
 		{
 			//FIXME: update to use debug / error class
 			$error = 'Error uploading';
-			if(strlen($this->admin_mode_data['error']) > 1){
-				$error .= ' ('.($_FILES['uploadedfile']['error']).')';
+			if(isset($this->admin_mode_data['error']) && strlen($this->admin_mode_data['error']) > 1){
+				$error .= ' ('.$this->admin_mode_data['error'].')';
 			}
 			die($error);
 		}

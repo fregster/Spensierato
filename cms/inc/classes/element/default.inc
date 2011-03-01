@@ -1,4 +1,5 @@
 <?php
+DEFINE('DEFAULT_TEXT', 'Enter your text here');
 class element_Default
 {
 	//useful when not in admin mode
@@ -528,7 +529,7 @@ class element_Default
 		{
 			//FIXME: update to use debug / error class
 			$error = 'Error uploading';
-			if(strlen($this->admin_mode_data['error']) < 1){
+			if(strlen($this->admin_mode_data['error']) > 1){
 				$error .= ' ('.($_FILES['uploadedfile']['error']).')';
 			}
 			die($error);
@@ -539,6 +540,7 @@ class element_Default
 		//process the data being saved
 		foreach($details as $key => &$value)
 		{
+			if($value == DEFAULT_TEXT) { $value = null; }
 			switch ($key)
 			{					
 				case 'html':

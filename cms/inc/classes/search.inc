@@ -566,7 +566,7 @@ class Search
 	private function build_file_index($element_id)
 	{
 		$fields = array('id', 'title', 'indexed', 'file', 'search');
-		$element = Element::type($id);
+		$element = Element::type($element_id);
 		
 		$values = array($element_id, $element->title(), 0, 1, $this->get_search_string_for_elements(array($element_id)));
 		$this->index($fields, $values);

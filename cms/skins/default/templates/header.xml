@@ -1,7 +1,16 @@
 
 	<xsl:template name="header">
 			<head>
-				<xsl:element name="title"><xsl:value-of select="/page/@title" /> | <xsl:value-of select="/page/settings/site_name_short" /> - <xsl:value-of select="/page/settings/title_tag_line" /></xsl:element>
+				<xsl:element name="title">
+					<xsl:choose>
+						<xsl:when test="string-length(/page/@title) > 1">
+							<xsl:value-of select="/page/@title" />
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="/page/@type" />
+						</xsl:otherwise>
+					</xsl:choose>				
+				 | <xsl:value-of select="/page/settings/site_name_short" /> - <xsl:value-of select="/page/settings/title_tag_line" /></xsl:element>
 				
 				<xsl:element name="meta">
 					<xsl:attribute name="name">keywords</xsl:attribute>

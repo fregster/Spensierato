@@ -158,6 +158,7 @@ class Search
 		$this->boolean = $boolean;
 		$this->string = strtolower($string);
 		$this->corrected = spellcheck::spellcheck_autocorrect($this->string, false);
+
 		$this->tokens = explode(' ', $this->string);
 		if(strlen($this->string) > 0)
 		{
@@ -188,9 +189,9 @@ class Search
 <search starting="'.($this->drop +1).'" finishing="'.($this->drop + $this->results_in_set).'" page="'.($this->page+1).'" rpp="'.$this->results_per_page.'">
 	<string>'.$this->string.'</string>';
 		
-		if($this->corrected != null && $this->corrected[2] != $this->string)
+		if($this->corrected != null && $this->corrected != $this->string)
 		{
-			$xml .= '<corrected>'.$this->corrected[2].'</corrected>';
+			$xml .= '<corrected>'.$this->corrected.'</corrected>';
 		}
 		
 //		$xml .= '<number_of_results>'.$this->results_in_set.'</number_of_results>';

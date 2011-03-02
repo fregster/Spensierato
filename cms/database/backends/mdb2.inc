@@ -2,6 +2,7 @@
 class database_execution_mdb2 extends database_execution
 {
 	protected $supports_prepared_statments = true;
+	protected $supports_database_backup = true;
 	
 	public function connect($dsn, $options = NULL, $mods = NULL)
 	{		
@@ -197,5 +198,27 @@ class database_execution_mdb2 extends database_execution
 	{
 		$this->db_backend->loadModule('Manager');
 		return $this->db_backend->dropDatabase($database);
+	}
+	
+	public function backupDatabase()
+	{	
+		if(!@include_once 'MDB2/Schema.php'){
+			return false;
+		}
+	    $schema = MDB2_Schema::factory($this->dsn, array(
+			    'use_transactions' => true,
+			    'log_line_break' => '<br/>',
+			    'idxname_format' => '%s',
+			    'debug' => true,
+			    'quote_identifier' => true,
+			    'force_defaults' => true,
+			    'portability' => true
+		    )
+	    );
+	
+	    $schema_dump = $schema->dumpDatabase($schema->getDefinitionFromDatabase(), array(
+	    'output_mode' => 'file',
+	    'output' => $dumpfile
+	    ), MDB2_SCHEMA_DUMP_ALL);
 	}
 }

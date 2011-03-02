@@ -15,7 +15,7 @@
 							<xsl:if test="/page/user/administrator =1"> | 
 							<img src="{$tgif}" class="sprite sprite-page_white_text" alt="Edit Site details" title="Edit Site details"/>
 							<xsl:element name="a">
-									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/site_details</xsl:attribute>
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/admin/site_details</xsl:attribute>
 									<!-- <xsl:attribute name="class">submodal-500-600</xsl:attribute> -->
 									<xsl:attribute name="class">submodal</xsl:attribute>
 									<xsl:attribute name="rel">width:500,height:600,noDesc</xsl:attribute>
@@ -23,14 +23,14 @@
 								</xsl:element> | 
 								<img src="{$tgif}" class="sprite sprite-sitemap" alt="Edit Site Structure" title="Edit Site Structure"/>
 								<xsl:element name="a">
-									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/site_structure</xsl:attribute>
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/admin/site_structure</xsl:attribute>
 									<xsl:attribute name="class">submodal</xsl:attribute>
 									<xsl:attribute name="rel">width:500,height:600,noDesc</xsl:attribute>
 									Edit Site Structure
 								</xsl:element> |
 								<img src="{$tgif}" class="sprite sprite-comments" alt="Lists Administration" title="Lists Administration"/>
 								<xsl:element name="a">
-									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/lists</xsl:attribute>
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/admin/lists</xsl:attribute>
 									<xsl:attribute name="class">submodal</xsl:attribute>
 									<xsl:attribute name="rel">width:400,height:400,noDesc</xsl:attribute>
 									Lists Administration
@@ -130,7 +130,7 @@
 									</xsl:element>
 								</xsl:element> |
 								<xsl:element name="a">
-									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/page_security/<xsl:value-of select="/page/@id" /></xsl:attribute>
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/admin/page_security/<xsl:value-of select="/page/@id" /></xsl:attribute>
 									<xsl:attribute name="class">submodal-450-500</xsl:attribute>
 									<xsl:element name="img">
 										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>

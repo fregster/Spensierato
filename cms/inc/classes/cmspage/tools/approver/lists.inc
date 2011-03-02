@@ -44,8 +44,8 @@ $users = database::Singleton()->sql_select(array('id', 'username'), 'tbl_users',
 
 $finalHTML = <<<HTMLBLOCK
 <p>
-	<a href="{DOCUMENT_ROOT}/tools/lists/new"><button>Create New List</button></a>
-	<a href="{DOCUMENT_ROOT}/tools/lists/edit"><button>Edit Existing List</button></a>
+	<a href="{DOCUMENT_ROOT}/tools/approver/lists/new"><button>Create New List</button></a>
+	<a href="{DOCUMENT_ROOT}/tools/approver/lists/edit"><button>Edit Existing List</button></a>
 </p>
 HTMLBLOCK;
 

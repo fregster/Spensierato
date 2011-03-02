@@ -21,13 +21,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 			<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 			<title>Saved</title>
 			<link rel="stylesheet" type="text/css" href="style.css" />
-			<script language=javascript>window.open("'.common::document_root().'/tools/site_details", "_self", "")</script>
+			<script language=javascript>window.open("'.common::document_root().'/tools/admin/site_details", "_self", "")</script>
 			</head>
 			<body>
 			<p>
 			Your updates have been saved.<br />
 			You should be redirected back the page the settings page in a few seconds<br/>
-			If not click <a href="'.common::document_root().'/tools/site_details" target="_self">here</a>
+			If not click <a href="'.common::document_root().'/tools/admin/site_details" target="_self">here</a>
 			</p>
 
 			</body>

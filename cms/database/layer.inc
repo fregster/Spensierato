@@ -1147,6 +1147,11 @@ class database
 			return $sql_temp_where;
 		}
 	}
+	
+	public function backupDatabase()
+	{
+		return $this->db->backupDatabase();
+	}
 
 	protected function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
 	{

@@ -7,11 +7,6 @@ require_once DIR_EXTERNAL.'filemanager'.DS.'FileManager.php';
 function UploadIsAuthenticated($get){
 	session::Singleton()->force();
 	user::singleton()->set_user_details(true);
-// 	echo json_encode(array(
-//        'status' => 0,
-//        'error' => 'Admin? '.serialize($_SESSION) // This is for Styx :)
-//      ));
-//      die();
 	return user::singleton()->is_admin();
 }
 
@@ -19,7 +14,7 @@ function UploadIsAuthenticated($get){
 $filepath = '';
 
 $filepath = realpath(Settings::Singleton()->get_setting('cms_folder_downloads').DS.'mediamanager').DS;
-if(!file_exists($filepath) && is_writable(Settings::Singleton()->get_setting('cms_folder_downloads'))){
+if(!file_exists($filepath)){
 	common::create_folders_from_path($filepath);
 }if(!is_writable($filepath)){
 	die(

@@ -11,7 +11,7 @@ define('PASS_SUCCESS', 6);
 
 //function to reload the page with the error code
 function send_msg($error){
-	common::redirect('tools/changepassword/'.$error);
+	common::redirect('tools/loggedin/changepassword/'.$error);
 }
 
 //set the html for the password form

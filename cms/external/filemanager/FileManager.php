@@ -77,12 +77,7 @@ class FileManager {
 
     $this->get = $_GET;
     $this->post = $_POST;
-    
-    if(isset($this->post['directory'])){
-	    if(realpath($this->options['directory']) !== substr(realpath($this->getDir($this->post['directory'])), 0, strlen(realpath($this->options['directory'])))){
-			die('Error Directory Traversal not allowed');
-		} 	
-    }
+
   }
   
   public function fireEvent($event){
@@ -226,10 +221,12 @@ class FileManager {
   protected function onCreate(){
     if (empty($this->post['file'])) return;
     
+//    die($this->post['file']. ' - '. $this->post['directory']);
     $file = $this->getName($this->post['file'], $this->getDir($this->post['directory']));
     if (!$file) return;
     
-    mkdir($file,$this->options['chmod']);
+    var_dump(mkdir($file,$this->options['chmod']));
+    die($file. ' - '.$this->post['directory']);
     
     $this->onView();
   }

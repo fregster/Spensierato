@@ -22,6 +22,7 @@ class database_execution
 	
 	private $dsn_default;
 	private $dsn;
+	protected $supports_database_backup = false;
 	protected $supports_prepared_statments = false;
 	protected $sql_prepared_statment_placeholder_prefix = ':';
 	
@@ -207,6 +208,11 @@ class database_execution
 	}
 	
 	public function dropDatabase($database)
+	{
+		
+	}
+	
+	public function backupDatabase()
 	{
 		
 	}

@@ -128,6 +128,7 @@ class FileTransfer
 			header('Content-type: ' . $mime);
 			header('Content-Transfer-Encoding: binary');
 			header('Accept-Ranges: bytes');
+			header('Content-Hash-MD5: '. md5_file($file));
 			if($send_disposition){
 				header('Content-Disposition: attachment; filename='.$filename);
 			}	

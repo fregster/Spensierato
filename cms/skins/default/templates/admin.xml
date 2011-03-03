@@ -30,7 +30,7 @@
 								</xsl:element> |
 								<img src="{$tgif}" class="sprite sprite-comments" alt="Lists Administration" title="Lists Administration"/>
 								<xsl:element name="a">
-									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/approver/admin/lists</xsl:attribute>
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/approver/lists</xsl:attribute>
 									<xsl:attribute name="class">submodal</xsl:attribute>
 									<xsl:attribute name="rel">width:400,height:400,noDesc</xsl:attribute>
 									Lists Administration

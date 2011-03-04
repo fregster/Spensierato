@@ -300,6 +300,11 @@ Settings::Singleton()->new_setting('session_force_timeout', 30, false, true, tru
 //true / false
 Settings::Singleton()->new_setting('session_security_ip', false, false, true, true, SETTING_GROUP_SECURITY);
 
+//Setting session_security_nonce
+//Requires the a cookie nonce to be constant with when the session was created to help prevent session hijacking
+//true / false
+Settings::Singleton()->new_setting('session_security_nonce', true, false, true, true, SETTING_GROUP_SECURITY);
+
 //Setting cookie_encryption
 //Use cookie encryption, set to false to supress the warning if your server does not support encryption.
 //true / false

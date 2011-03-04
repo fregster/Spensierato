@@ -50,6 +50,8 @@ class cookie
 		{
 			$this->salt = $this->cookie_information['salt'];
 		}
+		$this->encryption = false;
+		$this->load();
 	}
 
 	public function __destruct()
@@ -60,13 +62,16 @@ class cookie
 	public function debug()
 	{
 		echo(' final data ');
-		print_r($this->cookie_array);
+		print_r($this->cookie_array);echo('<br/>');
+		print_r($this->cookie_information);echo('<br/>');
+		print_r($this->decrypt($this->cookie_information['data']));echo('<br/>');
+		print_r(unserialize($this->decrypt($this->cookie_information['data'])));echo('<br/>');
 	}
 
 	public function load()
 	{
 		if (isset($this->cookie_information['data'])) {
-			$this->cookie_array = @unserialize($this->decrypt($this->cookie_information['data']));
+			$this->cookie_array = unserialize(@$this->decrypt($this->cookie_information['data']));
 			if($this->cookie_array === false)
 			{
 				//The cookie was corupt so delete it
@@ -75,6 +80,8 @@ class cookie
 			}
 		}
 		else $this->cookie_array = array();
+//		var_dump($this->cookie_information);
+//		var_dump($this->cookie_array);
 	}
 
 	public function set_cookie($name, $value)
@@ -136,8 +143,7 @@ class cookie
 		if($this->cookie_update)
 		{
 			// Build the array
-			$data = $this->encrypt(serialize($this->cookie_array));
-			$cookie_information_new = serialize(array('salt' => $this->salt(), 'data' => $data));
+			$cookie_information_new = serialize(array('salt' => $this->salt(), 'data' => $this->encrypt(serialize($this->cookie_array))));
 
 			// save the cookie array
 			setcookie($this->cookie_name, $cookie_information_new, CMS::$time+$this->cookie_life , Settings::Singleton()->get_setting('document_root'), FALSE, FALSE, TRUE);

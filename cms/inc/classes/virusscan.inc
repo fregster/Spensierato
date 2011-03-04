@@ -66,7 +66,12 @@ class virusscan
 	 * @param string $file
 	 */
 	public function is_not_virus($file)
-	{		
+	{
+		if(!$this->enabled)
+		{
+			return true;
+		}
+		
 		if(!$this->scan_file($file))
 		{
 			return true;

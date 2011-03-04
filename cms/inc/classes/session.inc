@@ -48,6 +48,7 @@ class session
 			if(!$skip_validation){
 				$this->session_user_agent_check();
 				$this->session_ip_check();
+				$this->session_nonce_check();
 			}
 			cookie::Singleton()->load();
 			$this->session_loaded = true;
@@ -85,6 +86,38 @@ class session
 			warnings::Singleton()->register('Session Timed Out', 'Your session was inactive for tolong and you have been logged out', 0);
 		}
 		$_SESSION['last_activity'] = CMS::$time;
+	}
+	
+	private function session_nonce_check()
+	{
+		if(Settings::Singleton()->get_setting('session_security_nonce'))
+		{
+			if(!isset($_SESSION['nonce']))
+			{
+				$_SESSION['nonce'] = Common::generate_random_string();
+				$_SESSION['nonce_time'] = CMS::$time;
+				cookie::Singleton()->remove_cookie('nonce');
+				cookie::Singleton()->remove_cookie('nonce_time');
+				cookie::Singleton()->set_cookie('nonce', $_SESSION['nonce']);
+//				cookie::Singleton()->set_cookie('nonce_time', $_SESSION['nonce_time']);
+				return true;
+			}
+			
+			if(isset($_SESSION['nonce'])  && $_SESSION['nonce'] != cookie::Singleton()->get_cookie_value('nonce'))
+			{
+				//There is a 30 second grace period for nonce checking due to delayed parallel requests.
+				if($_SESSION['nonce_time'] + 30 > CMS::$time)
+				{
+					cookie::Singleton()->set_cookie('nonce', $_SESSION['nonce']);
+//					cookie::Singleton()->set_cookie('nonce_time', $_SESSION['nonce_time']);
+				}
+			
+				//TODO:This need's work before been implemented as you can get an overlap with the cookie not been set but the session var been set
+//				die('<p>Nonce error</p>');
+//				$this->destroy_session();
+//				$this->force();
+			}
+		}
 	}
 	
 	private function session_user_agent_check()

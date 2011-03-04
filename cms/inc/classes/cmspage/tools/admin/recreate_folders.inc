@@ -6,12 +6,12 @@ $folders = array($GLOBALS['cms_folder_uploads'],
 				$GLOBALS['cms_folder_cache'],
 				$GLOBALS['cms_folder_search'],
 			);
-
+$chmod = 0750;
 foreach ($folders as $folder)
 {
 	if(!file_exists($folder))
 	{
-		if(@mkdir($folder, 0750))
+		if(@mkdir($folder, $chmod))
 		{
 			echo('Folder '. $folder .' created<br />');
 		}

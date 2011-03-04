@@ -159,7 +159,7 @@ class element_Default
 				{
 					$path = $_FILES['uploadedfile']['tmp_name'];
 					$target = Settings::singleton()->get_setting('cms_folder_uploads').DS.$this->id.'-'.$this->admin_mode_data['revision'];
-					if(filetransfer::move_file($path, $target)){
+					if(filetransfer::singleton()->move_file($path, $target)){
 						unset($this->admin_mode_data['error']);
 						return true;
 					}

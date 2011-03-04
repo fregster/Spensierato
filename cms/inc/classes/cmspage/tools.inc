@@ -14,7 +14,7 @@ class cmspage_tools extends cmspage
 				break;
 				
 			case 'loggedin':
-				return User::singleton()->loggedin();
+				return User::singleton()->is_logged_in();
 				break;
 				
 			case 'approver':

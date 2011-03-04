@@ -112,7 +112,7 @@ if(file_exists('IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 	    exit;
 	}
 }
-set_include_path($default_include_path);
+set_include_path($default_include_path.PATH_SEPARATOR.INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR);
 unset($default_include_path);
 
 //Do static requires

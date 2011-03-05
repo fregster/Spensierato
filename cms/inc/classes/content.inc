@@ -301,31 +301,37 @@ class Content
 
 				$positions = array_flip($ids);
 				//display deleted elements in admin mode
-				if (options::Singleton()->get_option('admin_mode')) {
+				if (options::Singleton()->get_option('admin_mode') && security::Singleton()->can_edit(cmspage::Singleton()->id())) {
 					array_pop($fields);
 					array_pop($values);
 				}
 
 				$data = Database::Singleton()->sql_select(array('*'), 'tbl_elements', $fields, $values, array('id'), NULL, options::Singleton()->get_option('admin_mode'));
-				$element_data = Database::Singleton()->sql_select(array('*'), 'tbl_elements_data', array('id'), array($ids), array('id'), NULL, options::Singleton()->get_option('admin_mode'));
+				
+				//Process the ID's that we should be displaying
+				$element_data_ids = array();
+				foreach($data as $page_element){
+					$element_data_ids[] = $page_element['id'];
+				}
+				
+				$element_data = Database::Singleton()->sql_select(array('*'), 'tbl_elements_data', array('id'), array($element_data_ids), array('id'));
 
 				if(isset($data[0]))
 				{
 					foreach($data as $key => $data)
 					{
-						if(isset($element_data[$key]) && $element_data[$key] != NULL)
-						{
-							$position = 1;
-							if(isset($positions[$element_data[$key]['id']])){
-								$position = $positions[$element_data[$key]['id']]+1;
-							}
-
-							$element = Element::type($data['type']);							
-							$element->build($element_data[$key]['id'], $element_data[$key], null, $position);
-	
-							$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created']);
-							$this->e_string .=$element_data[$key]['id'];
+						$position = 1;
+						$element = Element::type($data['type']);
+						if(isset($positions[$element_data[$key]['id']])){
+							$position = $positions[$element_data[$key]['id']]+1;
 						}
+						if(!isset($element_data[$key]))
+						{
+							$element_data[$key] = null;
+						}
+						$element->build($element_data[$key]['id'], $element_data[$key], null, $position);
+						$this->lastmodified = max($this->lastmodified, $data['edited'], $data['created']);
+						$this->e_string .=$element_data[$key]['id'];
 					}
 				}
 			}

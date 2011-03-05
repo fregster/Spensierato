@@ -635,12 +635,15 @@ class database
 	public function sql_max_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		$sql = $this->sql_max_field_build($table, $field, $where_fields, $where_values);
-		$result = $this->sql_select_exe($sql, NULL, TRUE, $table);
-		if ($result == NULL || !isset($result[0]['max( sort )'])) {
+		$result = $this->sql_select_exe($sql, $this->sql_values, TRUE, $table);
+		if ($result == NULL || !isset($result[0])) {
 			return 0;
 		}
 		else {
-			return $result[0]['max( sort )'];
+			//FIXME: Dirty hack to get the first result as the key may change depending on the DB quote types.
+			foreach($result[0] as $result){
+				return $result;
+			}
 		}
 	}
 
@@ -668,7 +671,7 @@ class database
 	public function sql_min_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
 		$sql = $this->sql_min_field_build($table, $field, $where_fields, $where_values);
-		$result = $this->sql_select_exe($sql, NULL, TRUE, $table);
+		$result = $this->sql_select_exe($sql, $this->sql_values, TRUE, $table);
 		return $result[0]['min( sort )'];
 	}
 

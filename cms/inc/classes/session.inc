@@ -33,23 +33,29 @@ class session
 	}
 	
 	protected function __construct()
-	{
+	{		
+		//Flash will not send the cookie so use an encrypted get var as a session holder
 		$skip_validation = false;
-		//Only load cookie data if a cookie has been sent to help comply with EU reg's
 		if(get::variable('session', 'isset') or post::variable('session', 'isset')){
 			session::set_cookie_from_hash();
 			$skip_validation = true;
 		}
+		
+		//Only load cookie data if a cookie has been sent to help comply with EU reg's
 		if(isset($_COOKIE['PHPSESSID']) || cookie::Singleton()->is_cookie_value_set('CMS'))
 		{
 			$this->force();
 			$this->timeout_check();
+			
+			//Do session / client validation checks
 			if(!$skip_validation){
 				$this->session_user_agent_check();
 				$this->session_ip_check();
+				//Try to force the cookie calls to load
+				cookie::Singleton()->load();
 				$this->session_nonce_check();
 			}
-			cookie::Singleton()->load();
+			
 			$this->session_loaded = true;
 		}
 	}
@@ -59,7 +65,7 @@ class session
 		if(!$this->session_loaded)
 		{
 			//Force a session to start
-			$path = DOCUMENT_ROOT;
+			$path = DOCUMENT_ROOT_FOLDER_ONLY;
 			if(substr($path, -1) != '/'){
 				$path .= '/';
 			}
@@ -215,7 +221,7 @@ class session
 	{
 		$this->delete_session();
 
-		if($url == NULL) { $url = 'home'; }
+		if($url == NULL) { $url = DOCUMENT_ROOT.DS.'home'; }
 		Common::redirect($url);
 	}
 	

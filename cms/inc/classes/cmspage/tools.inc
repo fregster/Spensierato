@@ -18,7 +18,7 @@ class cmspage_tools extends cmspage
 				break;
 				
 			case 'approver':
-				if(!Security::singleton()->can_approve() || !User::singleton()->loggedin()){ return false; }
+				if(!Security::singleton()->can_approve() || !User::singleton()->is_logged_in()){ return false; }
 				break;
 				
 			default:

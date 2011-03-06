@@ -62,6 +62,7 @@ abstract class Cache
 	{
 		if($public == true)
 		{
+			header('Vary: Accept-Encoding');
 			$cache_control = 'public, must-revalidate';
 		}
 		else

@@ -45,13 +45,12 @@ class cookie
 		}
 		else $this->cookie_information = FALSE;
 
-
-		if(isset($this->cookie_information['salt']))
-		{
-			$this->salt = $this->cookie_information['salt'];
-		}
-		$this->encryption = false;
+//		$this->encryption = false;
 		$this->load();
+		if(isset($this->cookie_array['data']['salt']))
+		{
+			$this->salt = $this->cookie_array['data']['salt'];
+		}
 	}
 
 	public function __destruct()
@@ -61,27 +60,28 @@ class cookie
 
 	public function debug()
 	{
-		echo(' final data ');
-		print_r($this->cookie_array);echo('<br/>');
-		print_r($this->cookie_information);echo('<br/>');
-		print_r($this->decrypt($this->cookie_information['data']));echo('<br/>');
-		print_r(unserialize($this->decrypt($this->cookie_information['data'])));echo('<br/>');
+		echo('<h2>'. $this->cookie_name .'</h2> final data <br/>');
+		echo('Array '); print_r($this->cookie_array);echo('<br/>');
+		echo('Information '); print_r($this->cookie_information);echo('<br/>');
+		print_r('Data ' . $this->decrypt($this->cookie_information['data']));echo('<br/>');
+		echo('Data '); var_dump(unserialize($this->decrypt($this->cookie_information['data'])));echo('<br/>');
 	}
 
 	public function load()
 	{
 		if (isset($this->cookie_information['data'])) {
-			$this->cookie_array = unserialize(@$this->decrypt($this->cookie_information['data']));
-			if($this->cookie_array === false)
+			$this->cookie_array = unserialize($this->decrypt($this->cookie_information['data']));
+			
+			if($this->cookie_array == false)
 			{
 				//The cookie was corupt so delete it
-				$this->cookie_update = true;
-				$this->save();
+//				$this->cookie_update = true;
+//				$this->save();
 			}
 		}
-		else $this->cookie_array = array();
-//		var_dump($this->cookie_information);
-//		var_dump($this->cookie_array);
+		else {
+			$this->cookie_array = array();
+		}
 	}
 
 	public function set_cookie($name, $value)
@@ -94,13 +94,15 @@ class cookie
 	public function remove_cookie($name)
 	{
 		//remove a value from the array
-		$this->cookie_update = true;
-		unset($this->cookie_array[$name]);
+		if(isset($this->cookie_array[$name])){
+			$this->cookie_update = true;
+			unset($this->cookie_array[$name]);
+		}
 	}
 	
 	public function destroy()
 	{
-		setcookie($this->cookie_name, '', CMS::$time-42000, Settings::singleton()->get_setting('document_root'));
+		return $this->save(true);
 	}
 	
 	public function is_cookie_value_set($name)
@@ -132,23 +134,28 @@ class cookie
 	{
 		if(!isset($this->salt))
 		{
-			$this->salt = md5($_SESSION['userid'].microtime().Settings::Singleton()->get_setting('random_key'));
+			$this->salt = sha1(CMS::$time.$_SESSION['userid'].microtime().Settings::Singleton()->get_setting('random_key'));
 		}
 		return $this->salt;
 	}
 
-	private function save()
+	private function save($force = false)
 	{
 		//Only save the cookie if updated or not set
-		if($this->cookie_update)
+		if($this->cookie_update || $force)
 		{
-			// Build the array
-			$cookie_information_new = serialize(array('salt' => $this->salt(), 'data' => $this->encrypt(serialize($this->cookie_array))));
-
 			// save the cookie array
-			setcookie($this->cookie_name, $cookie_information_new, CMS::$time+$this->cookie_life , Settings::Singleton()->get_setting('document_root'), FALSE, FALSE, TRUE);
 			$this->cookie_update = false;
+			$path = DOCUMENT_ROOT;
+			if(substr($path, -1) != '/'){
+				$path .= '/';
+			}
+			$this->cookie_array['time'] = CMS::$time;
+			$this->cookie_array['salt'] = $this->salt();
+			$this->cookie_array['path'] = $path;
+			return setcookie($this->cookie_name, serialize(array('data' => $this->encrypt(serialize($this->cookie_array)))), CMS::$time+$this->cookie_life , $path, FALSE, FALSE, TRUE);
 		}
+		return false;
 	}
 
 	private function encrypt($decrypted_text, $key = NULL)

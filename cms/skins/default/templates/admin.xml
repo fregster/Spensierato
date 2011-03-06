@@ -7,12 +7,7 @@
 						<!-- can edit this page -->
 						<xsl:choose>
 						<xsl:when test="/page/options/admin_mode = 1">
-							<!--  Show toggle admin and edit options -->
-							<xsl:element name="a">
-								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/toggle/admin_mode</xsl:attribute>
-								Switch off Admin Mode
-							</xsl:element>
-							<xsl:if test="/page/user/administrator =1"> | 
+							<xsl:if test="/page/user/administrator =1">
 							<img src="{$tgif}" class="sprite sprite-page_white_text" alt="Edit Site details" title="Edit Site details"/>
 							<xsl:element name="a">
 									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/admin/site_details</xsl:attribute>
@@ -53,6 +48,11 @@
 							</xsl:if>
 
 							</xsl:if>
+							<!--  Show toggle admin and edit options -->
+							| <xsl:element name="a">
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/toggle/admin_mode</xsl:attribute>
+								Switch off Admin Mode
+							</xsl:element>
 						</xsl:when>
 						<xsl:otherwise>
 							<!--  Show toggle admin -->

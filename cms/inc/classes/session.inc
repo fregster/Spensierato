@@ -19,6 +19,7 @@ class session
 {
 	private static $instance;
 	private $session_loaded = false;
+	private $nonce_grace_time = 120;
 
 	public static function Singleton()
 	{
@@ -42,7 +43,11 @@ class session
 		if(isset($_COOKIE['PHPSESSID']) || cookie::Singleton()->is_cookie_value_set('CMS'))
 		{
 			//This causes problems for some reason need to figure out why the F the doc root gives the wrong path at login
-//			session_set_cookie_params(0, Settings::singleton()->get_setting('document_root'));
+			$path = DOCUMENT_ROOT;
+			if(substr($path, -1) != '/'){
+				$path .= '/';
+			}
+			session_set_cookie_params(0, $path);
 			$this->force();
 			$this->timeout_check();
 			if(!$skip_validation){
@@ -83,41 +88,41 @@ class session
 	{
 		if(isset($_SESSION['last_activity']) && ($_SESSION['last_activity'] + (Settings::singleton()->get_setting('session_force_timeout') * 60) < CMS::$time)){
 			$this->delete_session();
-			warnings::Singleton()->register('Session Timed Out', 'Your session was inactive for tolong and you have been logged out', 0);
+			warnings::Singleton()->register('Session Timed Out', 'Your session was inactive for to long and you have been logged out', 0);
 		}
 		$_SESSION['last_activity'] = CMS::$time;
 	}
 	
 	private function session_nonce_check()
 	{
-		if(Settings::Singleton()->get_setting('session_security_nonce'))
+		if(Settings::Singleton()->get_setting('session_security_nonce') && $_SESSION['userid'] != 0)
 		{
 			if(!isset($_SESSION['nonce']))
 			{
-				$_SESSION['nonce'] = Common::generate_random_string();
+				$_SESSION['nonce'] = Common::generate_random_string(32, true);
 				$_SESSION['nonce_time'] = CMS::$time;
-				cookie::Singleton()->remove_cookie('nonce');
-				cookie::Singleton()->remove_cookie('nonce_time');
 				cookie::Singleton()->set_cookie('nonce', $_SESSION['nonce']);
-//				cookie::Singleton()->set_cookie('nonce_time', $_SESSION['nonce_time']);
 				return true;
 			}
 			
 			if(isset($_SESSION['nonce'])  && $_SESSION['nonce'] != cookie::Singleton()->get_cookie_value('nonce'))
 			{
-				//There is a 30 second grace period for nonce checking due to delayed parallel requests.
-				if($_SESSION['nonce_time'] + 30 > CMS::$time)
+				//There is a grace period for nonce checking due to delayed parallel requests.
+				if($_SESSION['nonce_time'] + $this->nonce_grace_time > CMS::$time)
 				{
 					cookie::Singleton()->set_cookie('nonce', $_SESSION['nonce']);
-//					cookie::Singleton()->set_cookie('nonce_time', $_SESSION['nonce_time']);
+					cookie::Singleton()->destroy();
+					return true;
 				}
-			
+//				echo('<p>Nonce Error</p>'. $_SESSION['nonce'] .' != '.cookie::Singleton()->get_cookie_value('nonce').'<br/>');
+
 				//TODO:This need's work before been implemented as you can get an overlap with the cookie not been set but the session var been set
-//				die('<p>Nonce error</p>');
-//				$this->destroy_session();
-//				$this->force();
+				$this->destroy_session();
+				$this->force();
+				return false;
 			}
 		}
+		return true;
 	}
 	
 	private function session_user_agent_check()
@@ -217,7 +222,7 @@ class session
 	
 	public function generate_unique_session_id()
 	{
-		$salt = common::generate_random_string(32,true,true);
+		$salt = common::generate_random_string(32,true);
 		$encrypt = encryption::encrypt(serialize(array('time' => CMS::$time, 'session_id' => session_id(), 'random_salt' => $salt)));
 		return sha1(Settings::singleton()->get_setting('random_key').$encrypt).$encrypt.md5(CMS::$time.Settings::singleton()->get_setting('random_key').$salt);
 	}

@@ -68,6 +68,7 @@ $class_block_list = array(
 
 define('INCLUDE_PATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
 $default_include_path = get_include_path();
+
 /**
  * Check this is not an attack using IDS
  */
@@ -134,6 +135,7 @@ try
 	//document root is the URL root ie spensierato.net
 	define('DOCUMENT_ROOT_FOLDER_ONLY', get_site_document_root_folder_only());
 	define('DOCUMENT_ROOT', get_site_document_root());
+	define('DOCUMENT_PATH', get_site_path());
 
 	//Include the Site setup code
 	if(is_file(DIR_INDEX.'spensierato_setup.inc'))

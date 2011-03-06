@@ -65,7 +65,7 @@ class session
 		if(!$this->session_loaded)
 		{
 			//Force a session to start
-			$path = DOCUMENT_ROOT_FOLDER_ONLY;
+			$path = DOCUMENT_PATH;
 			if(substr($path, -1) != '/'){
 				$path .= '/';
 			}

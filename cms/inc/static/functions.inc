@@ -14,10 +14,16 @@ function get_site_document_root()
 	return DOCUMENT_ROOT_FOLDER_ONLY;
 }
 
+function get_site_path()
+{
+	$a = substr($_SERVER['PHP_SELF'], 0 , strripos($_SERVER['PHP_SELF'], '.php'));
+    $document_root = substr($a, 0, strripos($a, '/'));
+    return $document_root;
+}
+
 function get_site_document_root_folder_only() //This does NOT work if we have a front end proxy, needs thought on a possible solution.
 {
-    $a = substr($_SERVER['PHP_SELF'], 0 , strripos($_SERVER['PHP_SELF'], '.php'));
-    $document_root = substr($a, 0, strripos($a, '/'));
+    $document_root = get_site_path();
     if($document_root == '')
     {
     $proto = 'http://';

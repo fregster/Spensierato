@@ -146,7 +146,7 @@ class cookie
 		{
 			// save the cookie array
 			$this->cookie_update = false;
-			$path = DOCUMENT_ROOT_FOLDER_ONLY;
+			$path = DOCUMENT_PATH;
 			if(substr($path, -1) != '/'){
 				$path .= '/';
 			}

@@ -94,7 +94,7 @@ class session
 	
 	private function session_nonce_check()
 	{
-		if(Settings::Singleton()->get_setting('session_security_nonce') && $_SESSION['userid'] != 0)
+		if(Settings::Singleton()->get_setting('session_security_nonce') && isset($_SESSION['userid']) && $_SESSION['userid'] != 0)
 		{
 			if(!isset($_SESSION['nonce']))
 			{

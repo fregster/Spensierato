@@ -42,12 +42,6 @@ class session
 		}
 		if(isset($_COOKIE['PHPSESSID']) || cookie::Singleton()->is_cookie_value_set('CMS'))
 		{
-			//This causes problems for some reason need to figure out why the F the doc root gives the wrong path at login
-			$path = DOCUMENT_ROOT;
-			if(substr($path, -1) != '/'){
-				$path .= '/';
-			}
-			session_set_cookie_params(0, $path);
 			$this->force();
 			$this->timeout_check();
 			if(!$skip_validation){
@@ -65,6 +59,11 @@ class session
 		if(!$this->session_loaded)
 		{
 			//Force a session to start
+			$path = DOCUMENT_ROOT;
+			if(substr($path, -1) != '/'){
+				$path .= '/';
+			}
+			session_set_cookie_params(0, $path);
 			@session_start();
 		}
 		return true;

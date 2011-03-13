@@ -56,6 +56,10 @@ Settings::Singleton()->new_setting('meta_verify-v1', NULL, false, false, true, S
 //Google webmater tools verification
 Settings::Singleton()->new_setting('google-site-verification', NULL, false, false, true, SETTING_GROUP_GOOGLE);
 
+//Settings google_analytics_id
+//Google Analytics tools tracking code
+Settings::Singleton()->new_setting('google_analytics_id', NULL, false, false, true, SETTING_GROUP_GOOGLE);
+
 //Setting char_set
 //Default encodeing set
 Settings::Singleton()->new_setting('char_set', 'UTF-8');

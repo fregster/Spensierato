@@ -127,7 +127,7 @@ require_once(DIR_STATIC.'autoloader.inc');
 require_once(DIR_STATIC.'functions.inc');
 
 //Force any PHP settings
-ini_set('error_log', DIR_LOG.'php_error.log');
+ini_set('error_log', DIR_LOG.DS.'php_error.log');
 //ini_set('display_errors', 'Off');
 
 set_exception_handler('exception_handler');

@@ -1,4 +1,4 @@
-<xml:template name="analytics">
+<xsl:template name="analytics">
 	<xsl:if test="boolean(/page/settings/google_analytics_id)">
 			<script type="text/javascript">
 			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -13,4 +13,4 @@
 			</xsl:if>
 			</script>
 		</xsl:if>
-</xml:template>		
+</xsl:template>		

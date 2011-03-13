@@ -7,6 +7,6 @@
 			<div id="powered_by">Powered by <a href="http://www.spensierato.net">Spensierato</a></div>
 		</xsl:if>
 		
-		<xsl:call-template namw="analytics"/>
+		<xsl:call-template name="analytics"/>
 		<!-- tested by blogsecurify -->
 	</xsl:template>

@@ -108,7 +108,7 @@ addRollover: true,
 addOverlayIcon: true,
 recalcTop: true,
 showControls: true,
-maxSize: {w:600, h:400},
+maxSize: {w:600, h:400}
 });
 }
 };
@@ -125,6 +125,7 @@ function searchMouseOut(){
 	aSt=setTimeout("autoSearch.fade(0.8, 0)",5000);
 }
 function searchFunction(){
+if(document.forms.searchform.elements.searchtext.value.length > 1){
 ajaxGet(ajax_host+"/search?searchtext=",document.forms.searchform.elements.searchtext.value);
 http.onreadystatechange=function(){
 if(http.readyState==4){
@@ -156,6 +157,7 @@ document.getElementById("ajaxSearchResults").innerHTML=txt;
 autoSearch.fade(-0,0.7);
 searchMouseOut();
 }
+};
 };
 };
 function hidePopWin(reload){

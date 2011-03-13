@@ -3,8 +3,8 @@ class virusscan
 {
 	protected static $instance;
 	protected $command;
-	protected $possible_av_locations = array();
 	protected $enabled = false;
+	protected $possible_av_locations = array();
 
 	public static function singleton()
 	{
@@ -59,6 +59,13 @@ class virusscan
 		}
 		return false;
 	}
+	
+	private function is_malware($file)
+	{
+		if(Settings::singleton()->get_setting('')){
+			return malware::singleton()->is_malware($file);
+		}
+	}
 
 	/**
 	 * This is just a proxy method to scan_file to return true or false to make if statments easy
@@ -67,6 +74,11 @@ class virusscan
 	 */
 	public function is_not_virus($file)
 	{
+		if(malware::singleton()->is_malware($file))
+		{
+			return false;
+		}
+		
 		if(!$this->enabled)
 		{
 			return true;

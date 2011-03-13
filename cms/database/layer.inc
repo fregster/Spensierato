@@ -18,9 +18,11 @@ class database
 
 	private $sql_cache_enabled = true;
 	private $sql_cache = array();
-	private $sql_cache_max_results = 50;
-	private $sql_cache_max_time = 300;
+	private $sql_cache_max_results = 50; //For loca SQL caching not used if external caching is enabled
+	private $sql_cache_max_freshness = 300; //Max time before DB is re-quired, if the connection is dead and a cached result is available (max_time) the stale result is still used 
+	private $sql_cache_max_time = 1200; //Max cache time in seconds
 	private $sql_cache_hit = false;
+	private $sql_cache_fresh = false;
 	private $sql_cache_hits = 0;
 
 	private $external_cache = true;

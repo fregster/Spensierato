@@ -93,7 +93,7 @@ class Search
 	public static function lucence()
 	{
 		//Can we use lucene search?
-		if(Settings::singleton()->get_setting('use_lucence_search'))
+		if(Settings::singleton()->get_setting('use_lucence_search') && function_exists('iconv_strlen'))
 		{
 			if(is_readable(Settings::singleton()->get_setting('cms_folder_search').DS.'search_index'.DS.'segments.gen'))
 			{

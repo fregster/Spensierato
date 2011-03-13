@@ -70,7 +70,7 @@ class cookie
 	public function load()
 	{
 		if (isset($this->cookie_information['data'])) {
-			$this->cookie_array = unserialize($this->decrypt($this->cookie_information['data']));
+			$this->cookie_array = @unserialize($this->decrypt($this->cookie_information['data']));
 			
 			if($this->cookie_array == false)
 			{
@@ -134,7 +134,9 @@ class cookie
 	{
 		if(!isset($this->salt))
 		{
-			$this->salt = sha1(CMS::$time.$_SESSION['userid'].microtime().Settings::Singleton()->get_setting('random_key'));
+			$uid = 0;
+			if(isset($_SESSION['userid'])){ $uid = $_SESSION['userid']; }
+			$this->salt = sha1(CMS::$time.$uid.microtime().Settings::Singleton()->get_setting('random_key'));
 		}
 		return $this->salt;
 	}

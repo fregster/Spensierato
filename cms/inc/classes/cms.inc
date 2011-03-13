@@ -149,6 +149,15 @@ class CMS
 		//Decide what to do with the current page
 		cmspage::singleton()->run();
 	}
+	
+	public function use_xslt_cache()
+	{
+		if(Settings::singleton()->get_setting('cache_xslt_transformation') && Settings::singleton()->get_setting('debug') == 0 && !user::Singleton()->is_logged_in()){
+			return true;
+		}
+		
+		return false;
+	}
 
 	/**
 	 * end_cms()
@@ -157,7 +166,7 @@ class CMS
 	 */
 	public function end_cms()
 	{
-		if(Settings::singleton()->get_setting('cache_xslt_transformation'))
+		if(CMS::Singleton()->use_xslt_cache())
 		{
 			return ('<div id="page_section_footer">XSLT Cache Enabled, Render information not available</div>');
 		}

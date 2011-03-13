@@ -261,33 +261,40 @@
 	<br/><br/>
 	</div>
 	
-		<xsl:for-each select="search/results/result">
-			<xsl:element name="div">
-				<xsl:attribute name="id">eid_<xsl:value-of select="id" /></xsl:attribute>
-				<xsl:attribute name="class">search_result</xsl:attribute>
-				
-				<div class="search_title">
-					<xsl:value-of select="position" /> : <xsl:if test="id != page">[Direct Download] </xsl:if>
-					<xsl:element name="a">
-						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:if test="id != page">download/</xsl:if><xsl:value-of select="id" />?highlight=<xsl:value-of select="/page/body//search/string"/></xsl:attribute>
-						<xsl:value-of select="title" />
-						<!-- <xsl:if test="length(title) = 0">No current title</xsl:if> -->
+		<xsl:choose>
+			<xsl:when test="search/results/result">
+				<xsl:for-each select="search/results/result">
+					<xsl:element name="div">
+						<xsl:attribute name="id">eid_<xsl:value-of select="id" /></xsl:attribute>
+						<xsl:attribute name="class">search_result</xsl:attribute>
+						
+						<div class="search_title">
+							<xsl:value-of select="position" /> : <xsl:if test="id != page">[Direct Download] </xsl:if>
+							<xsl:element name="a">
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:if test="id != page">download/</xsl:if><xsl:value-of select="id" />?highlight=<xsl:value-of select="/page/body//search/string"/></xsl:attribute>
+								<xsl:value-of select="title" />
+								<!-- <xsl:if test="length(title) = 0">No current title</xsl:if> -->
+							</xsl:element>
+						</div>
+						<div>
+							<xsl:value-of select="html" />
+							<br />
+							<span class="search_score">Score: <xsl:value-of select="score" /> features on 
+							<xsl:element name="a">
+								<xsl:attribute name="class">search_link</xsl:attribute>
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="page" />?highlight=<xsl:value-of select="/page/body//search/string"/></xsl:attribute>
+								<xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="page" />
+							</xsl:element>
+							</span>
+							<br />
+						</div>
 					</xsl:element>
-				</div>
-				<div>
-					<xsl:value-of select="html" />
-					<br />
-					<span class="search_score">Score: <xsl:value-of select="score" /> features on 
-					<xsl:element name="a">
-						<xsl:attribute name="class">search_link</xsl:attribute>
-						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="page" />?highlight=<xsl:value-of select="/page/body//search/string"/></xsl:attribute>
-						<xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="page" />
-					</xsl:element>
-					</span>
-					<br />
-				</div>
-			</xsl:element>
-		</xsl:for-each>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<h3>Sorry your Search returned no results</h3>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	
 	<xsl:template match="element[@type = 'element_TagTree']">

@@ -782,7 +782,7 @@ var FileManager = new Class({
       onDrag: function(el, e){
         self.imageadd.setStyles({
           'left': e.page.x + 25,
-          'top': e.page.y + 25,
+          'top': e.page.y + 25
         });
         self.imageadd.fade('in');
       },

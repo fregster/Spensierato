@@ -10,6 +10,7 @@
 **************************************************************/
 
 //start overlay class
+
 var Overlay = new Class({
 	
 	//implements

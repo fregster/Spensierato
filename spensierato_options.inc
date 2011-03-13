@@ -144,7 +144,7 @@ Settings::Singleton()->new_setting('shop_email_orders', null, false, false, true
 //Set this to the path of the skin you wish to use
 //Folder name from cms/skins/
 $skins = glob(DIR_SKINS.'*', GLOB_ONLYDIR);
-foreach($skins as $key => $skin){ if(basename($skin) == 'edit') { unset($skins[$key]); } else { $skins[$key] = basename($skin); }}
+foreach($skins as $key => $skin){ if(basename($skin) == 'edit' or basename($skin) == 'iframe') { unset($skins[$key]); } else { $skins[$key] = basename($skin); }}
 Settings::Singleton()->new_setting('skin', 'default', false, false, $skins, SETTING_GROUP_SKIN);
 unset($skins);
 
@@ -421,6 +421,8 @@ Settings::singleton()->new_setting('virus_scanner', 'clamav', false, true, $av_e
 unset($av_engines);
 
 //Settings::singleton()->new_setting('virus_scanner_path', '/path/to/custom/scanner/install/', false, true);
+
+Settings::singleton()->new_setting('malware_scanner', 'cymru');
 
 //setting date_format
 //this determines the date format for the website.

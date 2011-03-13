@@ -95,7 +95,9 @@ class session
 			$this->delete_session();
 			warnings::Singleton()->register('Session Timed Out', 'Your session was inactive for to long and you have been logged out', 0);
 		}
-		$_SESSION['last_activity'] = CMS::$time;
+		if(!get::variable('alive', 'isset')){
+			$_SESSION['last_activity'] = CMS::$time;
+		}
 	}
 	
 	private function session_nonce_check()
@@ -228,7 +230,7 @@ class session
 	public function generate_unique_session_id()
 	{
 		$salt = common::generate_random_string(32,true);
-		$encrypt = encryption::encrypt(serialize(array('time' => CMS::$time, 'session_id' => session_id(), 'random_salt' => $salt)));
+		$encrypt = base64_encode(encryption::encrypt(serialize(array('time' => CMS::$time, 'session_id' => session_id(), 'random_salt' => $salt))));
 		return sha1(Settings::singleton()->get_setting('random_key').$encrypt).$encrypt.md5(CMS::$time.Settings::singleton()->get_setting('random_key').$salt);
 	}
 		
@@ -237,7 +239,7 @@ class session
 		$encrypt = substr($hash, 40, -32);
 	
 		if(substr($hash, 0, 40) == sha1(Settings::singleton()->get_setting('random_key').$encrypt)){
-			$decrypt = unserialize(encryption::decrypt($encrypt));
+			$decrypt = unserialize(encryption::decrypt(base64_decode($encrypt)));
 			if(($decrypt['time'] + settings::singleton()->get_setting('session_public_key_lifetime')) > CMS::$time && substr($hash, -32) == md5($decrypt['time'].Settings::singleton()->get_setting('random_key').$decrypt['random_salt'])){
 				return $decrypt['session_id'];
 			}

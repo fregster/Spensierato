@@ -69,6 +69,10 @@ abstract class ajax
 				self::reorder();
 				break;
 				
+			case 'alive':
+				if(User::Singleton()->is_logged_in()){ die('1'); }else{ die('0'); }
+				break;
+				
 			default:
 				die();
 				break;

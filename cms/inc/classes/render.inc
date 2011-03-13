@@ -115,7 +115,9 @@ class Render
 	{
 		if(strlen($xml) > 0 && strlen($template) > 0)
 		{
-			if(Settings::singleton()->get_setting('cache_xslt_transformation') && Settings::singleton()->get_setting('debug') == 0){
+			$cachable = false;
+			if(CMS::Singleton()->use_xslt_cache()){
+				$cachable = true;
 				$key = sha1($xml).sha1($template);
 				$cached = persistantcache::Singleton()->get($key, 'render');
 				if ($cached){
@@ -135,7 +137,7 @@ class Render
 			@$dom->loadXML($xml);
 			$output = $xslt->transformToXML($dom);
 			
-			if(Settings::singleton()->get_setting('cache_xslt_transformation') && Settings::singleton()->get_setting('debug') == 0){
+			if($cachable){
 				persistantcache::Singleton()->save($key, $output, 3600, 'render', false, true);
 			}	
 			

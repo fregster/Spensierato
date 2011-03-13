@@ -116,7 +116,7 @@ fManager = new FileManager({
     destroy: true,
     rename: true,
     createFolders: true,
-	url: document_root+'/tools/filemanager',
+	url: document_root+'/interfaces/filemanager',
 	baseURL: document_root+'/',
 	assetBasePath: assetBasePath,
 	language: 'en',

@@ -192,14 +192,8 @@ class user
 		}
 		
 		if(isset($this->userid) && $this->userid != 0)
-		{
-			if(options::singleton()->get_option('admin_mode')){
-				$_SESSION['user_details']['unique_session_id'] = session::Singleton()->generate_unique_session_id();
-			} else if (!options::singleton()->get_option('admin_mode') && isset($_SESSION['user_details']['unique_session_id'])){
-				unset($_SESSION['user_details']['unique_session_id']);
-			}
-			
-			if(!isset($_SESSION['user_details']) || $force)
+		{			
+			if(!isset($_SESSION['user_details']) || $force || true)
 			{
 				$user_data = Database::Singleton()->sql_select_first(array('data'), 'tbl_users_data', array('user_id'), array($this->userid));
 				if(!isset($user_data) or $user_data != NULL)
@@ -215,6 +209,12 @@ class user
 				$_SESSION['user_details']['username'] = $user_details2['username'];
 				$_SESSION['user_details']['administrator'] = $user_details2['admin'];
 			}
+			
+//			if(options::singleton()->get_option('admin_mode')){
+				$_SESSION['user_details']['unique_session_id'] = session::Singleton()->generate_unique_session_id();
+//			} else if (!options::singleton()->get_option('admin_mode') && isset($_SESSION['user_details']['unique_session_id'])){
+//				unset($_SESSION['user_details']['unique_session_id']);
+//			}
 
 			$this->user_details =& $_SESSION['user_details'];
 			
@@ -224,7 +224,6 @@ class user
 			}
 
 			$this->lists =& $_SESSION['lists'];
-			
 		}
 		
 		if(!isset($this->user_details['id']))

@@ -163,7 +163,8 @@ class element_Default
 						unset($this->admin_mode_data['error']);
 						return true;
 					}
-					$this->admin_mode_data['error'] = 'File was unable to be moved, upload failed. Check file system permissions';
+
+					$this->admin_mode_data['error'] = 'File was unable to be moved, upload failed. Either a Virus or Malware was found or the file system permissions are incorrect';
 					return false;
 				}
 			}

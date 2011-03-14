@@ -8,7 +8,8 @@ class cmspage_robots extends cmspage_html
 Allow: '.DOCUMENT_PATH.'/
 Disallow: '.DOCUMENT_PATH.'/cart'.PHP_EOL.
 'Disallow: '.DOCUMENT_PATH.'/toggle'.PHP_EOL.
-'Disallow: '.DOCUMENT_PATH.'/options'.PHP_EOL
+'Disallow: '.DOCUMENT_PATH.'/options'.PHP_EOL.
+'Disallow: '.DOCUMENT_PATH.'/skin/pre-load-images'.PHP_EOL
 		);
 	}
 }

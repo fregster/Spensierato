@@ -308,6 +308,25 @@
 		<xsl:call-template name="element_admin_footer"/>
 	</xsl:template>
 	
+	<xsl:template match="element[@type = 'element_GoogleMap']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+			<xsl:choose>
+				<xsl:when test="./data/options/render = 'static'">
+					<img src="http://maps.google.com/maps/api/staticmap?markers={./data/latitude},{./data/longitude}&amp;zoom={./data/options/zoom}&amp;maptype=roadmap&amp;size=300x300&amp;sensor=false" alt="Google Map image"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<div id="map_canvas_{./@id}" style="width:100%; height:100%"></div>
+					<script type="text/javascript">initialize_gm_<xsl:value-of select="./@id"/>();</script>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:element>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+	
 	<xsl:template match="element[@type = 'element_QuickProduct']">
 		<xsl:call-template name="element_admin_header"/>
 			<xsl:if test="./data/Price > 0 or /page/options/admin_mode = 1">

@@ -1,0 +1,399 @@
+
+		<xsl:template name="admin_bar">
+		<xsl:variable name="tgif" select="concat(/page/settings/document_root, '/skin/transparent-gif.gif') " />
+			<xsl:if test="/page/user/id != 0">
+				<div id="page_section_admin_bar">
+					<xsl:if test="/page/security/can_edit = 1">
+						<!-- can edit this page -->
+						<xsl:choose>
+						<xsl:when test="/page/options/admin_mode = 1">
+							<xsl:if test="/page/user/administrator =1">
+							<img src="{$tgif}" class="sprite sprite-page_white_text" alt="Edit Site details" title="Edit Site details"/>
+							<xsl:element name="a">
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/admin/site_details</xsl:attribute>
+									<!-- <xsl:attribute name="class">submodal-500-600</xsl:attribute> -->
+									<xsl:attribute name="class">submodal</xsl:attribute>
+									<xsl:attribute name="rel">width:500,height:600,noDesc</xsl:attribute>
+									Edit Site details
+								</xsl:element> | 
+								<img src="{$tgif}" class="sprite sprite-sitemap" alt="Edit Site Structure" title="Edit Site Structure"/>
+								<xsl:element name="a">
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/admin/site_structure</xsl:attribute>
+									<xsl:attribute name="class">submodal</xsl:attribute>
+									<xsl:attribute name="rel">width:500,height:600,noDesc</xsl:attribute>
+									Edit Site Structure
+								</xsl:element> |
+								<img src="{$tgif}" class="sprite sprite-comments" alt="Lists Administration" title="Lists Administration"/>
+								<xsl:element name="a">
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/approver/lists</xsl:attribute>
+									<xsl:attribute name="class">submodal</xsl:attribute>
+									<xsl:attribute name="rel">width:400,height:400,noDesc</xsl:attribute>
+									Lists Administration
+								</xsl:element>								
+								<xsl:if test="/page/settings/js_use_filemanager = 1 and /page/settings/uploads_enabled = 1"> | 
+									<img src="{$tgif}" class="sprite sprite-comments" alt="Media Manager Administration" title="Media Manager Administration"/>
+									<span id="mediaManagerLink" class="submodal2"> Media Manager</span>
+								</xsl:if>
+								<!--  If the user is a site admin show site warnings -->
+
+								<xsl:if test="/page/warnings/warning">
+								| <img src="{$tgif}" class="sprite sprite-delete" alt="Icon"/>
+									<xsl:element name="a">
+										<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/warnings</xsl:attribute>
+										<xsl:attribute name="class">submodal</xsl:attribute>
+									<xsl:attribute name="rel">width:700,height:450,noDesc</xsl:attribute>
+										View warnings
+									</xsl:element>
+
+							</xsl:if>
+
+							</xsl:if>
+							<!--  Show toggle admin and edit options -->
+							| <xsl:element name="a">
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/toggle/admin_mode</xsl:attribute>
+								Switch off Admin Mode
+							</xsl:element>
+						</xsl:when>
+						<xsl:otherwise>
+							<!--  Show toggle admin -->
+							<xsl:element name="a">
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/toggle/admin_mode</xsl:attribute>
+								Switch on Admin Mode
+							</xsl:element>
+						</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
+
+					<xsl:if test="/page/security/can_edit != 1">
+						<!-- can't edit -->
+						<xsl:if test="/page/security/admin_mode = 1">
+							 <!-- Show toggle admin out and text you can not edit -->
+							 <a href="toggle/admin_mode">Switch off Admin Mode</a>
+						</xsl:if>
+						You can not edit this page
+					</xsl:if>
+</div>
+			</xsl:if>
+		</xsl:template>
+
+		<xsl:template name="admin_edit_bar">
+		<xsl:if test="/page/options/admin_mode = 1 and /page/security/can_edit =1">
+			<xsl:choose>
+				<xsl:when test="/page/@id != ''">
+				<xsl:if test="/page/@type = 'html'">
+					<xsl:if test="/page/security/can_approve =1">
+					<xsl:element name="div">
+								<xsl:attribute name="class">element_header rounded</xsl:attribute>
+						<xsl:element name="form">
+							<xsl:attribute name="style">display:inline;</xsl:attribute>
+							<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/update/<xsl:value-of select="/page/@id" /></xsl:attribute>
+							<xsl:attribute name="method">post</xsl:attribute>
+							<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
+							<div style="display: inline;padding-left:3px">
+								Page Title
+								<xsl:element name="input">
+									<xsl:attribute name="type">text</xsl:attribute>
+									<xsl:attribute name="value"><xsl:value-of select="/page/@title" /></xsl:attribute>
+									<xsl:attribute name="name">title</xsl:attribute>
+									<xsl:attribute name="id">title</xsl:attribute>
+								</xsl:element><input type="submit" value="Update" /> |
+								<xsl:element name="a">
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/toggle/page/<xsl:value-of select="/page/@id" />/visibility</xsl:attribute>
+									<xsl:element name="img">
+										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+										<xsl:attribute name="title">Change Page Visibility</xsl:attribute>
+										<xsl:choose>
+											<xsl:when test="/page/@visible = 1">
+												<xsl:attribute name="class">sprite sprite-lightbulb</xsl:attribute>
+												<xsl:attribute name="alt">Visibile</xsl:attribute>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:attribute name="class">sprite sprite-lightbulb_off</xsl:attribute>
+												<xsl:attribute name="alt">Hidden</xsl:attribute>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:element>
+								</xsl:element> |
+								<xsl:element name="a">
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/toggle/page/<xsl:value-of select="/page/@id" />/delete</xsl:attribute>
+									<xsl:element name="img">
+										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+										<xsl:if test="/page/@deleted = 0">
+											<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
+											<xsl:attribute name="alt">Delete</xsl:attribute>
+										</xsl:if>
+										<xsl:if test="/page/@deleted != 0">
+											<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
+											<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
+										</xsl:if>
+										<xsl:attribute name="title">Delete Page</xsl:attribute>
+									</xsl:element>
+								</xsl:element> |
+								<xsl:element name="a">
+									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/admin/page_security/<xsl:value-of select="/page/@id" /></xsl:attribute>
+									<xsl:attribute name="class">submodal-450-500</xsl:attribute>
+									<xsl:element name="img">
+										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+										<xsl:attribute name="class">sprite sprite-lock</xsl:attribute>
+										<xsl:attribute name="alt">Page Security</xsl:attribute>
+										<xsl:attribute name="title">Page Security</xsl:attribute>
+									</xsl:element>
+							</xsl:element></div>
+							</xsl:element>
+							<xsl:if test="/page/security/can_approve = 1">
+							<div style="display:inline;">
+							<xsl:element name="form">
+								<xsl:attribute name="style">display:inline;</xsl:attribute>
+								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
+								<xsl:attribute name="method">post</xsl:attribute>
+								<xsl:attribute name="id">new_page_<xsl:value-of select="/page/@id" /></xsl:attribute>
+									<div style="display:inline;"><xsl:element name="input">
+										<xsl:attribute name="type">hidden</xsl:attribute>
+										<xsl:attribute name="value">newPage</xsl:attribute>
+										<xsl:attribute name="name">new_type</xsl:attribute>
+									</xsl:element> | 
+									<xsl:element name="input">
+										<xsl:attribute name="type">image</xsl:attribute>
+										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+										<xsl:attribute name="class">sprite sprite-page_white_add</xsl:attribute>
+										<xsl:attribute name="style">display:inline;</xsl:attribute>
+										<xsl:attribute name="alt">Add Child Page</xsl:attribute>
+										<xsl:attribute name="title">Add Child Page</xsl:attribute>
+									</xsl:element></div>
+							</xsl:element>
+							</div>
+						</xsl:if>
+						<xsl:if test="/page/security/can_approve = 1">
+						<div style="display:inline;">
+							<xsl:element name="form">
+								<xsl:attribute name="style">display:inline;</xsl:attribute>
+								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
+								<xsl:attribute name="method">post</xsl:attribute>
+								<xsl:attribute name="id">new_product_<xsl:value-of select="/page/@id" /></xsl:attribute>
+									<div style="display:inline;"><xsl:element name="input">
+										<xsl:attribute name="type">hidden</xsl:attribute>
+										<xsl:attribute name="value">newProduct</xsl:attribute>
+										<xsl:attribute name="name">new_type</xsl:attribute>
+									</xsl:element> | 
+									<xsl:element name="input">
+										<xsl:attribute name="type">image</xsl:attribute>
+										<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+										<xsl:attribute name="class">sprite sprite-basket_add</xsl:attribute>
+										<xsl:attribute name="style">display:inline;</xsl:attribute>
+										<xsl:attribute name="alt">Add New Product</xsl:attribute>
+										<xsl:attribute name="title">Add New Product</xsl:attribute>
+									</xsl:element></div>
+							</xsl:element>
+							</div>
+							</xsl:if>
+						</xsl:element>					
+						
+						</xsl:if>
+						<xsl:element name="div">
+							<xsl:attribute name="id">create_new_toolbar</xsl:attribute>
+							<xsl:attribute name="class">rounded</xsl:attribute>
+							<xsl:element name="form">
+								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
+								<xsl:attribute name="method">post</xsl:attribute>
+								<xsl:attribute name="id">new_<xsl:value-of select="/page/@id" /></xsl:attribute>
+								<div style="display:inline">
+									Create New: <xsl:call-template name="new_element" /><div style="display:inline"><button disabled="disabled" type="button" id="saveSortOrder" onclick="saveSortOrder(); return false;">Save new order</button></div>
+								</div>
+							</xsl:element>
+					</xsl:element>
+						<br />
+					</xsl:if>
+			</xsl:when>
+
+			<xsl:otherwise>
+				<!--  This should now be done by the installer, might need something if every page is hidden / deleted --><!--  <xsl:element name="form">
+					<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/-1</xsl:attribute>
+					<xsl:attribute name="method">post</xsl:attribute>
+					<div><input type="hidden" name="new_type" value="newPage" /><input type="submit" value="Create Homepage" /></div>
+
+				</xsl:element>-->
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
+		</xsl:template>
+
+<!-- 
+		<xsl:template name="new_element">
+			<select name="new_type">
+				<xsl:for-each select="/page/settings/elementTypes/setting">
+					<xsl:element name="option">
+						<xsl:attribute name="value"><xsl:value-of select="./class" /></xsl:attribute>
+						<xsl:if test="./class = 'elementText'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="./name" />
+					</xsl:element>
+				</xsl:for-each>
+			</select>
+		</xsl:template>
+ -->
+ 		<xsl:template name="new_element">
+ 			<span style="background:#EEE">
+			<xsl:for-each select="/page/settings/elementTypes/setting">
+				<xsl:if test="position() != 1"> | </xsl:if>
+				<input type="image" name="new_type" value="{./class}" src="{/page/settings/document_root}/skin/transparent-gif.gif" class="sprite sprite-{./icon}" style="display:inline;" title="Add a new {./name} element" alt="{./name}" />
+			</xsl:for-each>
+			</span>
+		</xsl:template>
+ 		
+		<xsl:template name="element_admin_header">
+		<!-- If in admin show admin header -->
+		<xsl:variable name="etype" select="./@etype" /> 
+		<xsl:if test="/page/security/can_edit = 1">
+		<xsl:if test="/page/options/admin_mode = 1">
+			<xsl:variable name="id" select="./@id"/>
+			<xsl:variable name="position">
+				<xsl:value-of select="./@sort"/>
+			</xsl:variable>
+			
+			<xsl:element name="div">
+				<xsl:attribute name="id">eid_admin_<xsl:value-of select="$id" /></xsl:attribute>
+				<xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute>
+				<xsl:attribute name="class">element_header rounded-4-4-0-0</xsl:attribute>
+
+				<xsl:element name="img">
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+					<xsl:attribute name="class">sprite sprite-<xsl:value-of select="/page/settings/elementTypes/setting[name = $etype]/icon" /></xsl:attribute>
+					<xsl:attribute name="style">margin-left:3px;margin-right:3px;</xsl:attribute>
+					<xsl:attribute name="alt">Icon</xsl:attribute>
+				</xsl:element>
+				<xsl:value-of select="./@etype" /> | <xsl:value-of select="./@title" />
+
+				<xsl:element name="a">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="$id" /></xsl:attribute>
+					<!--<xsl:attribute name="onclick">editContent('eid_<xsl:value-of select="./@id" />'); return false;</xsl:attribute> 
+					<xsl:attribute name="class">submodal-<xsl:value-of select="./@ew" />-<xsl:value-of select="./@eh" /></xsl:attribute> -->
+					<xsl:attribute name="class">submodal</xsl:attribute>
+					<xsl:attribute name="rel">width:<xsl:value-of select="./@ew" />,height:<xsl:value-of select="./@eh" />,noDesc</xsl:attribute>
+					<xsl:element name="img">
+						<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+						<xsl:attribute name="alt">Edit Content</xsl:attribute>
+						<xsl:attribute name="class">sprite sprite-<xsl:value-of select="/page/settings/elementTypes/setting[name = $etype]/edit_icon" /></xsl:attribute>
+						<xsl:attribute name="title">Edit Content</xsl:attribute>
+						<xsl:attribute name="style">margin-left:3px;</xsl:attribute>
+					</xsl:element>
+
+				</xsl:element> |
+
+				<xsl:if test="$position > 1">
+					<span class="move">
+						<xsl:element name="a">
+							<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/move/<xsl:value-of select="$id" />/<xsl:value-of select="/page/@id"/>/u</xsl:attribute>
+							<xsl:element name="img">
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+								<xsl:attribute name="alt">Move Content Up</xsl:attribute>
+								<xsl:attribute name="class">sprite sprite-arrow_up</xsl:attribute>
+								<xsl:attribute name="title">Move Up</xsl:attribute>
+							</xsl:element>
+		
+						</xsl:element> |
+					</span>
+				</xsl:if>
+				<xsl:if test="not($position > (count(/page/body/element)-1))">
+					<span class="move">
+						<xsl:element name="a">
+							<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/move/<xsl:value-of select="./@id" />/<xsl:value-of select="/page/@id"/>/d</xsl:attribute>
+							<xsl:element name="img">
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+								<xsl:attribute name="alt">Move Content Down</xsl:attribute>
+								<xsl:attribute name="class">sprite sprite-arrow_down</xsl:attribute>
+								<xsl:attribute name="title">Move Content Down</xsl:attribute>
+							</xsl:element>
+		
+						</xsl:element> |
+					</span>
+				</xsl:if>
+				
+				 <xsl:choose>
+					 <xsl:when test="/page/security/can_approve = 1">
+						<xsl:element name="a">
+						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/toggle/element/<xsl:value-of select="./@id" />/visibility</xsl:attribute>
+							<xsl:element name="img">
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+								<xsl:if test="./@visible = 1">
+									<xsl:attribute name="class">sprite sprite-lightbulb</xsl:attribute>
+									<xsl:attribute name="alt">Visibile</xsl:attribute>
+								</xsl:if>
+								<xsl:if test="./@visible != 1">
+									<xsl:attribute name="class">sprite sprite-lightbulb_off</xsl:attribute>
+									<xsl:attribute name="alt">Hidden</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="title">Change Element Visibility</xsl:attribute>
+							</xsl:element>
+						</xsl:element> |
+						<xsl:element name="a">
+						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/toggle/element/<xsl:value-of select="./@id" />/delete</xsl:attribute>
+							<xsl:element name="img">
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+								<xsl:if test="./@deleted = 0">
+									<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
+									<xsl:attribute name="alt">Delete</xsl:attribute>
+								</xsl:if>
+								<xsl:if test="./@deleted != 0">
+									<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
+									<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="title">Delete Element</xsl:attribute>
+							</xsl:element>
+						</xsl:element>
+						<xsl:if test="./@new_v_available > 0"> New version awaiting approval
+						<xsl:element name="a">
+						<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/toggle/element/<xsl:value-of select="./@id" />/quickapprove</xsl:attribute>
+							<xsl:element name="img">
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+								<xsl:attribute name="class">sprite sprite-accept</xsl:attribute>
+								<xsl:attribute name="alt">Quick Approve</xsl:attribute>
+								<xsl:attribute name="title">Quick Approve</xsl:attribute>
+							</xsl:element>
+						</xsl:element>
+						</xsl:if>
+					</xsl:when>
+
+					<xsl:otherwise>
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:if test="./@visible = 1">
+								<xsl:attribute name="class">sprite sprite-lightbulb</xsl:attribute>
+								<xsl:attribute name="alt">Visibile</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="./@visible != 1">
+								<xsl:attribute name="class">sprite sprite-lightbulb_off</xsl:attribute>
+								<xsl:attribute name="alt">Hidden</xsl:attribute>
+							</xsl:if>
+							<xsl:attribute name="title">Change Element Visibility</xsl:attribute>
+						</xsl:element> |
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+							<xsl:if test="./@deleted = 0">
+								<xsl:attribute name="class">sprite sprite-cross</xsl:attribute>
+								<xsl:attribute name="alt">Delete</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="./@deleted != 0">
+								<xsl:attribute name="class">sprite sprite-delete</xsl:attribute>
+								<xsl:attribute name="alt">Marked for deletion</xsl:attribute>
+							</xsl:if>
+							<xsl:attribute name="title">Delete Element</xsl:attribute>
+						</xsl:element>
+						<xsl:if test="./@new_v_available > 0"> New version awaiting approval </xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:if test="./@draft_available > 0"> You have a draft update saved </xsl:if>
+			</xsl:element>
+		</xsl:if>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="element_admin_footer">
+		<!-- If in admin show admin header -->
+		<xsl:if test="/page/options/admin_mode = 1">
+			<xsl:element name="div">
+				<xsl:attribute name="class">element_footer rounded-0-0-4-4</xsl:attribute>
+			</xsl:element>
+			<br /><br />
+		</xsl:if>
+	</xsl:template>

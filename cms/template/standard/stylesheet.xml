@@ -1,0 +1,22 @@
+<xsl:template name="stylesheet">
+	<xsl:element name="link">
+		<!-- The detail after css is ignored, it's only used to force file changes for caching -->
+		<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css/v/<xsl:value-of select="/page/settings/skin"/>/<xsl:value-of select="/page/settings/template_version"/></xsl:attribute>
+		<xsl:attribute name="type">text/css</xsl:attribute>
+		<xsl:attribute name="rel">stylesheet</xsl:attribute>
+	</xsl:element>
+	
+	<xsl:if test="/page/options/admin_mode = 1 and /page/settings/js_use_filemanager = 1">
+		<link type="text/css" rel="stylesheet" href="{/page/settings/document_root}/js/fileman/Css/FileManager.css" />
+		<link type="text/css" rel="stylesheet" href="{/page/settings/document_root}/js/fileman/Css/Additions.css" />
+	</xsl:if>
+	
+	<xsl:if test="/page/options/css_mobile = 1">
+	<xsl:element name="link">
+		<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css/mobile</xsl:attribute>
+		<xsl:attribute name="type">text/css</xsl:attribute>
+		<xsl:attribute name="media">handheld</xsl:attribute>
+		<xsl:attribute name="rel">stylesheet</xsl:attribute>
+	</xsl:element>
+	</xsl:if>
+</xsl:template>

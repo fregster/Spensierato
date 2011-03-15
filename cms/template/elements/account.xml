@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:template match="element[@type = 'element_Account']">
+	<div id="account_personal_details">
+	<xsl:if test="/user/administrator =1">You are set as a site Admin you have global edit permissions and have the ability to change site options</xsl:if>
+		<div id="account_personal_details_title">Personal Details for <xsl:value-of select="/page/user/username" /></div>
+		<xsl:element name="form">
+			<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/account</xsl:attribute>
+			<xsl:attribute name="method">post</xsl:attribute>
+			<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
+		<div>
+			<div class="account_title">Nickname: </div>
+			<div class="account_detail">
+				<xsl:element name="input">
+					<xsl:attribute name="type">text</xsl:attribute>
+					<xsl:attribute name="name">nickname</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="/page/user/nickname" /></xsl:attribute>
+				</xsl:element>
+			</div>
+		</div>
+		<div>
+			<div class="account_title">Forename: </div>
+			<div class="account_detail">
+				<xsl:element name="input">
+					<xsl:attribute name="type">text</xsl:attribute>
+					<xsl:attribute name="name">forename</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="/page/user/forename" /></xsl:attribute>
+				</xsl:element>
+
+		</div>
+		</div>
+			<div class="account_title">Surname: </div>
+			<div class="account_detail">
+				<xsl:element name="input">
+					<xsl:attribute name="type">text</xsl:attribute>
+					<xsl:attribute name="name">surname</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="/page/user/surname" /></xsl:attribute>
+				</xsl:element>
+
+		</div>
+		<div>
+			<div class="account_title">E-Mail: </div>
+			<div class="account_detail">
+				<xsl:element name="input">
+					<xsl:attribute name="type">text</xsl:attribute>
+					<xsl:attribute name="name">email</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="/page/user/email" /></xsl:attribute>
+				</xsl:element>
+			</div>
+		<input type="submit" value="Update" />
+		</div>
+		</xsl:element>
+		<div id="account_change_password_link">
+		<xsl:element name="a">
+			<xsl:attribute name="class">submodal-400-200</xsl:attribute>
+			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/loggedin/changepassword</xsl:attribute>
+			<span>Change Password</span>
+		</xsl:element>
+		</div>
+	</div>
+</xsl:template>

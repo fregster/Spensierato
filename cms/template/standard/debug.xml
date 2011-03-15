@@ -1,0 +1,23 @@
+
+	<xsl:template name="debug">
+		<xsl:if test="/page/debug/xml/item">
+			<div id="debug_text">
+				<h2>Debug</h2>
+				<xsl:for-each select="/page/debug/xml/item">
+					<xsl:call-template name="debug_item"/>
+				</xsl:for-each>
+			</div>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template name="debug_item">
+		<div style="border:black 1px solid; padding:3px; background-color:white;">
+			<div><xsl:value-of select="./name"/> - <xsl:value-of select="./time"/></div>
+			<div>
+				<xsl:value-of select="./data/query"/>
+			</div>
+			<div>
+				<xsl:value-of select="./data/called"/>
+			</div>
+		</div>
+	</xsl:template>

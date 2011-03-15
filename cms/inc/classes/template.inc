@@ -12,6 +12,7 @@ class Template
 	private $xslt;
 	private $list_of_files = array();
 	private $filenames = array();
+	private $files_loaded_from_cache = false;
 
 	public static function Singleton()
 	{
@@ -30,15 +31,15 @@ class Template
 
 	protected function __construct()
 	{
-		$this->default_path = Settings::Singleton()->get_setting('cms_root').'skins'.DS.'default';
+		$this->default_path = DIR_SKINS.'default';
 		
 		if(Settings::Singleton()->get_setting('use_external_skins') === true && Settings::Singleton()->get_setting('skin'))
 		{
-			$this->template_path = DIR_INDEX.'skins'.DS.Settings::Singleton()->get_setting('skin');
+			$this->template_path = DIR_SKINS.Settings::Singleton()->get_setting('skin');
 		}
 		else if (Settings::Singleton()->get_setting('skin'))
 		{
-			$this->template_path = Settings::Singleton()->get_setting('cms_root').'skins'.DS.Settings::Singleton()->get_setting('skin');
+			$this->template_path = DIR_SKINS.Settings::Singleton()->get_setting('skin');
 		}
 		else
 		{
@@ -56,6 +57,7 @@ class Template
 		}
 		$this->working_template_path = $this->template_path;
 		$this->inherited_template_paths[] = $this->template_path;
+		
 		$this->build_template();		
 	}
 	
@@ -128,7 +130,7 @@ class Template
 
 	public function edit()
 	{
-		$path = $this->template_path = Settings::Singleton()->get_setting('cms_root').'skins'.DS.'edit'.DS.'edit.xml';
+		$path = $this->template_path = DIR_TEMPLATE.'edit'.DS.'edit.xml';
 		return $this->build_xslt_template(file_get_contents($path));
 	}
 
@@ -255,43 +257,48 @@ class Template
 	private function load_xslt_template()
 	{		
 		$xslt = persistantcache::Singleton()->get('template_xslt', 'templates');
-
-		if(!isset($xslt['mtime']) || $xslt['mtime'] != $this->lastmodified)
+		if(!isset($xslt['xslt']) || !isset($xslt['mtime']) || $xslt['mtime'] != $this->lastmodified || true)
 		{
 			$xslt = ''; //drop the array
 			foreach($this->filenames as $filepath)
 			{
-				$xslt .= file_get_contents($filepath);
+				$xslt .= str_ireplace('<?xml version="1.0" encoding="UTF-8"?>', '', file_get_contents($filepath));
 			}
-		}
-		else
-		{
-			$xslt = $xslt['xslt']; //Overwrite the array
+			persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified), null, 'templates');
+			return $xslt;
 		}
 
-		//As content changes quickly don't bother caching if in admin mode, this may also contian personal unencrypted data
-		if(!options::singleton()->get_option('admin_mode')){
-			persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified), null, 'templates');
+		return $xslt['xslt'];
+	}
+	
+	private function include_xml_templates_from_path($path)
+	{
+		$this->inherited_template_paths[] = dirname($path);
+		$files = glob($path, GLOB_NOSORT);
+	
+		foreach($files as $filepath)
+		{
+			$this->filenames[basename($filepath)] = realpath($filepath);
+			$this->lastmodified = max($this->lastmodified, filemtime($filepath));
 		}
-		
-		return $xslt;
 	}
 	
 	private function build_template()
 	{
 		$path = $this->template_path.DS.'templates'.DS.'*.xml';
 		$filecache = persistantcache::singleton()->get($path, 'templates');
-		
+
 		//We can cache the main template easily but due to extending templates it's more difficult but at least it's one less glob under high load
-		if(!$filecache){
+		if(!$filecache || true){
+			$this->include_xml_templates_from_path(DIR_TEMPLATE.'standard'.DS.'*.xml');
+			$this->include_xml_templates_from_path(DIR_TEMPLATE.'elements'.DS.'*.xml');
 			$files = glob($path, GLOB_NOSORT);
 			
 			foreach($files as $filepath)
 			{
 				$this->filenames[basename($filepath)] = realpath($filepath);
 				$this->lastmodified = max($this->lastmodified, filemtime($filepath));
-			}
-			
+			}		
 			$this->extend_template();
 			
 			persistantcache::singleton()->save($path, $this->filenames, 30, 'templates');
@@ -299,10 +306,13 @@ class Template
 			persistantcache::singleton()->save('inherited_template_paths', $this->inherited_template_paths, 30, 'templates');
 			
 		} else {
+			
 			$this->filenames = $filecache;
 			$this->lastmodified = persistantcache::singleton()->get('template_last_modified_times', 'templates');
 			$this->inherited_template_paths = persistantcache::singleton()->get('inherited_template_paths', 'templates');
-
+			$this->files_loaded_from_cache = true;
+			
+			//Required here to force loading of the template.inc files as required
 			$this->extend_template();
 		}
 	}
@@ -327,7 +337,7 @@ class Template
 				}
 				else
 				{
-					$this->working_template_path = Settings::Singleton()->get_setting('cms_root').'skins'.DS.Settings::Singleton()->get_setting('template_extends');
+					$this->working_template_path = DIR_SKINS.Settings::Singleton()->get_setting('template_extends');
 				}
 				Settings::Singleton()->overwrite_setting('template_extends', false, false, true);
 				
@@ -338,14 +348,17 @@ class Template
 						require_once($this->working_template_path.DS.'template.inc');
 					}
 					
-					$files = glob($this->working_template_path.DS.'templates'.DS.'*.xml', GLOB_NOSORT);
-					foreach ($files as $filepath)
+					if(!$this->files_loaded_from_cache)
 					{
-						$filename = basename($filepath);
-						if(!isset($this->filenames[$filename]))
+						$files = glob($this->working_template_path.DS.'templates'.DS.'*.xml', GLOB_NOSORT);
+						foreach ($files as $filepath)
 						{
-							$this->filenames[$filename] = $filepath;
-							$this->lastmodified = max($this->lastmodified, filemtime($filepath));
+							$filename = basename($filepath);
+							if(!isset($this->filenames[$filename]))
+							{
+								$this->filenames[$filename] = $filepath;
+								$this->lastmodified = max($this->lastmodified, filemtime($filepath));
+							}
 						}
 					}
 					$this->inherited_template_paths[] = $this->working_template_path;

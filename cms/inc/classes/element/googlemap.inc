@@ -7,7 +7,7 @@ class element_GoogleMap extends element_Default
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Google Maps';
-		$this->allowed_tags(array('latitude' => 'numeric', 'longitude' => 'numeric', ));
+		$this->allowed_tags(array('latitude' => 'numeric', 'longitude' => 'numeric', 'height' => 'numeric', 'width' => 'numeric'));
 		$this->options = array(
 				'zoom' => array('4', '8', '10', '15', '17', '20'),
 				'type' => array('Road', 'Satellite','Hybrid','Terrain'),
@@ -38,5 +38,18 @@ class element_GoogleMap extends element_Default
 			content::singleton()->add_custom_head('script', array('type' => 'text/javascript', 'src'=> 'http://maps.google.com/maps/api/js?sensor=true'));
 			content::singleton()->add_custom_head('script', array('type' => 'text/javascript'), $js);
 		}
+	}
+	
+	protected function get_data()
+	{
+		parent::get_data();
+		if(!isset($this->data_array['width'])){
+			$this->data_array['width'] = 450;
+		}
+		
+		if(!isset($this->data_array['height'])){
+			$this->data_array['height'] = 450;
+		}
+		
 	}
 }

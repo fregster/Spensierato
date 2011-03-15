@@ -133,7 +133,7 @@ Settings::Singleton()->new_setting('shop_tax_rate', 0.2, false, false, true, SET
 Settings::Singleton()->new_setting('currency', 'GBP', false, false, array('GBP', 'EUR', 'USD', 'CAD', 'PLN'), SETTING_GROUP_SHOP);
 
 //Setting currency_symbol
-Settings::Singleton()->new_setting('currency_symbol', 'Â£', false, false, true, SETTING_GROUP_SHOP);
+Settings::Singleton()->new_setting('currency_symbol', '£', false, false, true, SETTING_GROUP_SHOP);
 
 //Setting business_id
 //The unique id used with your payment provider
@@ -148,7 +148,6 @@ Settings::Singleton()->new_setting('shop_email_orders', null, false, false, true
 //Set this to the path of the skin you wish to use
 //Folder name from cms/skins/
 $skins = glob(DIR_SKINS.'*', GLOB_ONLYDIR);
-foreach($skins as $key => $skin){ if(basename($skin) == 'edit' or basename($skin) == 'iframe') { unset($skins[$key]); } else { $skins[$key] = basename($skin); }}
 Settings::Singleton()->new_setting('skin', 'default', false, false, $skins, SETTING_GROUP_SKIN);
 unset($skins);
 

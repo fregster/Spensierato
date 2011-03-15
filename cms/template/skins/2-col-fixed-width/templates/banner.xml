@@ -1,0 +1,34 @@
+	<xsl:template name="banner">
+		<xsl:element name="div">
+			<xsl:attribute name="id">page_section_banner</xsl:attribute>
+				<xsl:call-template name="admin_bar"/>
+				<xsl:if test="/page/settings/template_header_graphic_left">
+					<span style="width:150px;">
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/<xsl:value-of select="/page/settings/template_header_graphic_left" /></xsl:attribute>
+							<xsl:attribute name="alt">Logo</xsl:attribute>
+						</xsl:element>
+					</span>
+				</xsl:if>
+				<xsl:if test="/page/settings/template_header_graphic_background">
+					<span style="width:500px;">
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/<xsl:value-of select="/page/settings/template_header_graphic_background" /></xsl:attribute>
+							<xsl:attribute name="alt">Title Background</xsl:attribute>
+						</xsl:element>
+					</span>
+				</xsl:if>
+				<xsl:if test="/page/settings/template_header_graphic_right">							
+					<span style="width:150px;">	
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/<xsl:value-of select="/page/settings/template_header_graphic_right" /></xsl:attribute>
+							<xsl:attribute name="alt">Logo</xsl:attribute>
+						</xsl:element>
+					</span>
+				</xsl:if>
+				<div id="page_section_banner_title">
+					<xsl:value-of select="/page/settings/site_name_long" />
+				</div>
+			<div id="banner_submenu"><xsl:call-template name="banner_submenu"/></div>
+		</xsl:element>
+	</xsl:template>

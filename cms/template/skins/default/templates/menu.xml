@@ -1,0 +1,98 @@
+
+		<xsl:template name="menu_link">
+		<xsl:element name="a">
+			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/<xsl:value-of select="./id" /></xsl:attribute>
+			<xsl:attribute name="class">link link_item</xsl:attribute>
+			<xsl:choose>
+			<xsl:when test="/page/options/admin_mode = 1">
+				<xsl:if test="visible != '1'">
+				<em>
+					<xsl:if test="./deleted = '1'">
+						<!-- Hidden and deleted -->
+						<s><xsl:value-of select="title" /> [Hidden]</s>
+					</xsl:if>
+					<xsl:if test="./deleted != '1'">
+						<!-- Hidden and NOT Deleted -->
+						<xsl:value-of select="title" /> [Hidden]
+					</xsl:if>
+				</em>
+				</xsl:if>
+
+				<xsl:if test="visible = '1'">
+					<xsl:if test="./deleted = '1'">
+						<!-- NOT hidden but IS deleted -->
+						<s><xsl:value-of select="title" /></s>
+					</xsl:if>
+
+					<xsl:if test="./deleted != '1'">
+						<!-- NOT hidden and NOT deleted -->
+						<xsl:value-of select="title" />
+					</xsl:if>
+				</xsl:if>
+			</xsl:when>
+
+			<xsl:otherwise>
+				<xsl:value-of select="title" />
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template name="menu">
+		<div id="page_section_left_menu" class="rounded">
+			<ul  class="link_menu">
+				<xsl:for-each select="/page/menu/menu/top/menu_item">
+					<xsl:choose>
+						<xsl:when test="selected">
+							<li id="menu_top_selected" class="rounded"><xsl:call-template name="menu_link"/></li>
+							<xsl:call-template name="menu_parents"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<li class="menu_top"><xsl:call-template name="menu_link"/></li>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</ul>
+		</div>
+	</xsl:template>
+
+	<xsl:template name="menu_parents">
+		<!-- if count parents = 0 dont call current just call children
+
+		else
+		render parents then current (children) parallel
+		end
+		-->
+		<xsl:choose>
+			<xsl:when test="count(/page/menu/menu/parents) = 0">
+				<xsl:call-template name="menu_children"/>
+			</xsl:when>
+
+			<xsl:when test="count(/page/menu/menu/parents) != 0">
+				<xsl:for-each select="/page/menu/menu/parents/menu_item">
+					<div class="menu_parents"><xsl:call-template name="menu_link"/></div>
+				</xsl:for-each>
+				<xsl:call-template name="menu_current"/>
+				<xsl:call-template name="menu_children"/>
+				<xsl:call-template name="menu_parallel"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="menu_current">
+		<xsl:for-each select="/page/menu/menu/current">
+			<div id="menu_current" class="rounded"> - <xsl:call-template name="menu_link"/></div>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template name="menu_parallel">
+		<xsl:for-each select="/page/menu/menu/parallel/menu_item">
+			<div class="menu_parallel"> - <xsl:call-template name="menu_link"/></div>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template name="menu_children">
+		<xsl:for-each select="/page/menu/menu/children/menu_item">
+				<div class="menu_children"> -- <xsl:call-template name="menu_link"/></div>
+		</xsl:for-each>
+	</xsl:template>

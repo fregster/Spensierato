@@ -1,0 +1,63 @@
+@CHARSET "UTF-8";
+.gallery { width: 960px; }
+.gallery .holder {
+width: 100%;
+position: relative;
+overflow: hidden;
+}
+.gallery .holder ul {
+margin: 0;
+padding: 0;
+list-style: none;
+width: 99999px;
+}
+.gallery .holder ul li { float: left; }
+.next,
+.prev {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	margin-top: -30px;
+	width: 40px;
+	height: 40px;
+	background: url(../skin/mb_Components/right.png) no-repeat;
+	z-index: 20;
+	overflow: hidden;
+	text-indent: -9999px;
+	outline: none;
+	cursor: pointer;
+}
+.next-disable { background: url(../skin/mb_Components/rightDisabled.png) no-repeat; }
+.prev {
+	background: url(../skin/mb_Components/left.png) no-repeat;
+	right: auto;
+	left: 10px;
+}
+.prev-disable { background: url(../skin/mb_Components/leftDisabled.png) no-repeat; }
+.stop,
+.start {
+	background: url(../images/btn-pause.png) no-repeat;
+	overflow: hidden;
+	text-indent: -9999px;
+	width: 30px;
+	height: 30px;
+	float: left;
+	margin: 0 0 0 10px;
+	outline: none;
+	cursor: pointer;
+}
+.stopped .start { background: url(../images/btn-play.png) no-repeat; }
+.start,
+.no-active .start {
+	margin: 0;
+	background: url(../images/btn-play-disable.png) no-repeat;
+}
+.stopped .stop { background: url(../images/btn-pause-disable.png) no-repeat; }
+.control {
+	position:relative;
+	font-size: 18px;
+	line-height: 21px;
+	padding: 5px 0 0;
+	width:100px;
+	top:10px;
+}

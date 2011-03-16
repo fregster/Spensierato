@@ -413,9 +413,9 @@ class persistantcache
 	 * 
 	 * Some backends will require backends if they use permanant storage
 	 */
-	public function garbage_collection()
+	public function garbage_collection($force = false)
 	{
-		if(!persistantcache::Singleton()->get('gc_time') || (persistantcache::Singleton()->get('gc_time') + persistantcache::$garbage_collection_retry_time) < persistantcache::$time){
+		if(!persistantcache::Singleton()->get('gc_time') || (persistantcache::Singleton()->get('gc_time') + persistantcache::$garbage_collection_retry_time) < persistantcache::$time || $force){
 			persistantcache::Singleton()->save('gc_time', persistantcache::$time, (persistantcache::$garbage_collection_retry_time * 10));
 			return true;
 		}
@@ -671,10 +671,10 @@ class persistantcache_file extends persistantcache
 	 * As file based caching is typically long term, cycle through the store and drop old cache files
 	 * Default is 24 hours old
 	 */
-	public function garbage_collection()
+	public function garbage_collection($force = false)
 	{
 		//Check the parent function to see if we should be doing this now
-		if(!parent::garbage_collection()){
+		if(!parent::garbage_collection($force)){
 			return false;
 		}
 		

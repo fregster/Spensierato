@@ -681,11 +681,15 @@ class persistantcache_file extends persistantcache
 		$files = $this->scandir_through($this->file_cache_path);
 
 		foreach ($files as $file){
-			if(is_dir($file)){
+			if(is_dir($file) || is_file($file)){
 				$filelastmodified = filemtime($file);
 		
-		        if(($filelastmodified-persistantcache::$time) > persistantcache::$garbage_collection_max_age){
-					unlink($file);
+		        if((persistantcache::$time - $filelastmodified) > persistantcache::$garbage_collection_max_age){
+					if(is_dir($file)){
+						@rmdir($file);
+					}else{
+						@unlink($file);	
+					}
 				}
 			}
 		}

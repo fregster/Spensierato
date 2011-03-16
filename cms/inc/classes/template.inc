@@ -35,7 +35,7 @@ class Template
 		
 		if(Settings::Singleton()->get_setting('use_external_skins') === true && Settings::Singleton()->get_setting('skin'))
 		{
-			$this->template_path = DIR_SKINS.Settings::Singleton()->get_setting('skin');
+			$this->template_path = DIR_INDEX.'skins'.DS.Settings::Singleton()->get_setting('skin');
 		}
 		else if (Settings::Singleton()->get_setting('skin'))
 		{

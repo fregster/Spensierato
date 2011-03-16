@@ -22,7 +22,7 @@
 * @license http://www.opensource.org/licenses/lgpl-3.0.html LGPL
 * @link http://www.fryer.org.uk/
 *
-* Version 2.6 Released Feb 2011
+* Version 2.6.1 Released Mar 2011
 */
 
 if(!defined('CACHE_PREFIX'))
@@ -64,7 +64,7 @@ class persistantcache
 	protected $max_cache_time = 300;
 	protected $max_object_size = 20480; //The string length of the serialized array
 	protected static $retry_time = 30; //Time in seconds before reworking out the best cache type
-	protected static $garbage_collection_max_age = 86400; //Time in seconds 24 hours = 86400
+	protected static $garbage_collection_max_age = 2678400; //Time in seconds 24 hours = 86400, default is 31 days
 	protected static $garbage_collection_retry_time = 86400; //Time in seconds between clean up attempts 24 hours = 86400
 	protected static $namespace_version_map_max_int = 10000000; //Set max value before recycling the version numbers
 	
@@ -143,7 +143,6 @@ class persistantcache
 	private static function get_type()
 	{
 		$c = __CLASS__;
-//		unset($_SESSION['persistant_cache_type']);
 		if(defined('CACHE_TYPE')) { $c = 'persistantcache_'.CACHE_TYPE; array_splice(persistantcache::$cache_preference_order, 0, 0, CACHE_TYPE); }
 
 		if(isset($_SESSION['persistant_cache_type']) && class_exists($_SESSION['persistant_cache_type']['type'])) { $c = $_SESSION['persistant_cache_type']['type']; } //If a cache type is set ensure it is still available
@@ -174,7 +173,7 @@ class persistantcache
 	 */
 	public function version()
 	{
-		return '2.6';
+		return '2.6.1';
 	}
 
 	/**
@@ -661,10 +660,10 @@ class persistantcache_file extends persistantcache
 		{
 			foreach($files as $file)
 			{
-				unlink($file);
+				@unlink($file);
 			}
 		}
-		return rmdir($path);
+		return @rmdir($path);
 	}
 	
 	/**

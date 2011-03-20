@@ -928,7 +928,7 @@ class database
 	public function sql_select_into($fields, $from, $to, $where_fields, $where_values, $extra_insert = NULL)
 	{
 		$sql = $this->sql_select_into_build($fields, $from, $to, $where_fields, $where_values, $extra_insert);
-		$result = $this->sql_exe($sql, NULL, true);
+		$result = $this->sql_exe($sql, NULL, true, $from);
 		return $result;
 	}
 

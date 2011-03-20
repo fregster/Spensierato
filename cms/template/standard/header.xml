@@ -12,28 +12,15 @@
 					</xsl:choose>				
 				 | <xsl:value-of select="/page/settings/site_name_short" /> - <xsl:value-of select="/page/settings/title_tag_line" /></xsl:element>
 				
-				<xsl:element name="meta">
-					<xsl:attribute name="name">keywords</xsl:attribute>
-					<xsl:attribute name="content"><xsl:value-of select="/page/settings/meta_keywords" /></xsl:attribute>
-				</xsl:element>
-				
-				<xsl:element name="meta">
-					<xsl:attribute name="name">description</xsl:attribute>
-					<xsl:attribute name="content"><xsl:value-of select="/page/settings/meta_description" /></xsl:attribute>
-				</xsl:element>
+				<meta name="keywords" content="{/page/settings/meta_keywords}"/>
+				<meta name="description" content="/page/settings/meta_description"/>
 				
 				<xsl:if test="/page/settings/meta_verify-v1 != ''">
-					<xsl:element name="meta">
-						<xsl:attribute name="name">verify-v1</xsl:attribute>
-						<xsl:attribute name="content"><xsl:value-of select="/page/settings/meta_verify-v1" /></xsl:attribute>
-					</xsl:element>
+					<meta name="verify-v1" content="/page/settings/meta_verify-v1"/>
 				</xsl:if>
 				
 				<xsl:if test="/page/settings/google-site-verification != ''">
-					<xsl:element name="meta">
-						<xsl:attribute name="name">google-site-verification</xsl:attribute>
-						<xsl:attribute name="content"><xsl:value-of select="/page/settings/google-site-verification" /></xsl:attribute>
-					</xsl:element>
+					<meta name="google-site-verification" content="/page/settings/google-site-verification"/>
 				</xsl:if>
 	
 				<xsl:call-template name="javascript-inline"/>

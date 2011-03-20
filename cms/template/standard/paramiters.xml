@@ -1,2 +1,3 @@
 <xsl:param name="lowercase">abcdefghijklmnopqrstuvwxyz</xsl:param>
 <xsl:param name="uppercase">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:param>
+<xsl:param name="doc_root"><xsl:value-of select="/page/settings/document_root"/></xsl:param>

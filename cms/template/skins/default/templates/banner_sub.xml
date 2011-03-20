@@ -25,6 +25,10 @@
 		</xsl:otherwise>
 	
 	</xsl:choose>
+	<xsl:choose>
+		<xsl:when test="/page/settings/template_br_after_name = 1"><br/></xsl:when>
+		<xsl:otherwise></xsl:otherwise>
+	</xsl:choose>
 	 [<xsl:element name="a">
 					<xsl:attribute name="class">link</xsl:attribute>
 					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/logout/<xsl:value-of select="page/@id" /></xsl:attribute>Logout</xsl:element>] [<xsl:element name="a"><xsl:attribute name="class">link</xsl:attribute><xsl:attribute name="href"><xsl:value-of select="page/settings/document_root" />/account/<xsl:value-of select="page/@id" /></xsl:attribute>My Account</xsl:element>] | </xsl:if>

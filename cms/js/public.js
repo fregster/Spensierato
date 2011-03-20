@@ -72,6 +72,7 @@ autoSearch=$("ajaxSearchResults");
 rounded();
 jsShow();
 jsHide();
+use_growl = false;
 if(typeof Growler == 'object' && use_growl){
 	(!typeof(Browser.ie) == 'undefined') ? growl=new Growler.Classic() : growl=new Growler.Modern();
 } else { use_growl = false;}
@@ -84,8 +85,8 @@ imageFlowLoad();
 if(typeof window.adminInit == 'function'){
 	adminInit();
 }
-ToolTips=new Tips($$(".ToolTip"),{className:"ToolTip-tip"});
-SpriteTips=new Tips($$(".sprite"),{className:"ToolTip-tip",fixed: true});
+ToolTips=new Tips($$(".ToolTip"),{className:"ToolTip-tip", offsets: {x: 25, y: 25}});
+SpriteTips=new Tips($$(".sprite"),{className:"ToolTip-tip",fixed: true, showDelay: 300, hideDelay: 150, offsets: {x: 25, y: 25}});
 if(typeof window.LazyLoad == 'function'){
 	lazyloader = new LazyLoad({
 		range: 200,
@@ -125,8 +126,9 @@ function searchMouseOut(){
 	aSt=setTimeout("autoSearch.fade(0.8, 0)",5000);
 }
 function searchFunction(){
-if(document.forms.searchform.elements.searchtext.value.length > 1){
-ajaxGet(ajax_host+"/search?searchtext=",document.forms.searchform.elements.searchtext.value);
+var st = document.forms.searchform.elements.searchtext.value;
+if(st.length > 1){
+ajaxGet(ajax_host+"/search?searchtext=",st);
 http.onreadystatechange=function(){
 if(http.readyState==4){
 x=http.responseXML.documentElement.getElementsByTagName("result");
@@ -140,7 +142,7 @@ xx=x[i].getElementsByTagName("title");
 try
 {
 al=x[i].getElementsByTagName("page");
-txt=txt + '<li class="search_title"><a href="'+al[0].firstChild.nodeValue +'"><span class="tl"> </span><span class="tr"> </span><span>' + xx[0].firstChild.nodeValue + "</span></a></li>";
+txt=txt + '<li class="search_title"><a href="'+al[0].firstChild.nodeValue +'?highlight="'+st+'><span class="tl"> </span><span class="tr"> </span><span>' + xx[0].firstChild.nodeValue + "</span></a></li>";
 }
 catch (er)
 {

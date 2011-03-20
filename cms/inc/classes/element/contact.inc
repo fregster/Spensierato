@@ -7,6 +7,7 @@ class element_Contact extends element_Default
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Page Contact';
+		$this->site_wide_supported = true;
 		$this->allowed_tags(array('name' => 'text', 'email' => 'email', 'userid' => 'numeric'));
 	}
 

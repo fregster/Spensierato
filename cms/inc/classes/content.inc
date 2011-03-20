@@ -274,7 +274,8 @@ class Content
 		if(!isset($this->elements[0]) || $force_reload) //Quick check to see if we have elements, this will always rebuild if we have 0 elements on a page but will do for the moment
 		{
 			$this->elements = array();
-			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible'), array(cmspage::Singleton()->id(), $this->visible), array('sort'), array('ASC'), options::Singleton()->get_option('admin_mode'));
+			//Note: Page_id 0 is used for global content
+			$elements = Database::Singleton()->sql_select(array('*'), 'tbl_page_elements', array('page_id', 'visible'), array(array(cmspage::Singleton()->id(), 0), $this->visible), array('sort'), array('ASC'), options::Singleton()->get_option('admin_mode'));
 
 			if(isset($elements[0]))
 			{
@@ -302,6 +303,8 @@ class Content
 				$positions = array_flip($ids);
 				//display deleted elements in admin mode
 				if (options::Singleton()->get_option('admin_mode') && security::Singleton()->can_edit(cmspage::Singleton()->id())) {
+					array_pop($fields);
+					array_pop($values);
 					array_pop($fields);
 					array_pop($values);
 				}

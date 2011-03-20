@@ -8,58 +8,26 @@
 						<xsl:choose>
 						<xsl:when test="/page/options/admin_mode = 1">
 							<xsl:if test="/page/user/administrator =1">
-							<img src="{$tgif}" class="sprite sprite-page_white_text" alt="Edit Site details" title="Edit Site details"/>
-							<xsl:element name="a">
-									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/admin/site_details</xsl:attribute>
-									<!-- <xsl:attribute name="class">submodal-500-600</xsl:attribute> -->
-									<xsl:attribute name="class">submodal</xsl:attribute>
-									<xsl:attribute name="rel">width:500,height:600,noDesc</xsl:attribute>
-									Edit Site details
-								</xsl:element> | 
-								<img src="{$tgif}" class="sprite sprite-sitemap" alt="Edit Site Structure" title="Edit Site Structure"/>
-								<xsl:element name="a">
-									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/admin/site_structure</xsl:attribute>
-									<xsl:attribute name="class">submodal</xsl:attribute>
-									<xsl:attribute name="rel">width:500,height:600,noDesc</xsl:attribute>
-									Edit Site Structure
-								</xsl:element> |
-								<img src="{$tgif}" class="sprite sprite-comments" alt="Lists Administration" title="Lists Administration"/>
-								<xsl:element name="a">
-									<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/approver/lists</xsl:attribute>
-									<xsl:attribute name="class">submodal</xsl:attribute>
-									<xsl:attribute name="rel">width:400,height:400,noDesc</xsl:attribute>
-									Lists Administration
-								</xsl:element>								
-								<xsl:if test="/page/settings/js_use_filemanager = 1 and /page/settings/uploads_enabled = 1"> | 
-									<img src="{$tgif}" class="sprite sprite-comments" alt="Media Manager Administration" title="Media Manager Administration"/>
-									<span id="mediaManagerLink" class="submodal2"> Media Manager</span>
+								<a href="{/page/settings/document_root}/dashboard" class="submodal admin-icon" rel="width:770,height:550,noDesc"><img src="{$tgif}" class="sprite sprite-attach" alt="Site Admin Dashboard" title="Site Admin Dashboard"/></a>
+								<a href="{/page/settings/document_root}/tools/admin/site_details" class="submodal admin-icon" rel="width:550,height:550,noDesc"><img src="{$tgif}" class="sprite sprite-information" alt="Edit Site details" title="Edit Site details"/></a>
+								<a href="{/page/settings/document_root}/tools/admin/site_structure" class="submodal admin-icon" rel="width:550,height:550,noDesc"><img src="{$tgif}" class="sprite sprite-sitemap" alt="Edit Site Structure" title="Edit Site Structure"/></a>
+								<a href="{/page/settings/document_root}/tools/approver/lists" class="submodal admin-icon" rel="width:400,height:550,noDesc"><img src="{$tgif}" class="sprite sprite-group" alt="Lists Administration" title="Lists Administration"/></a>
+								<xsl:if test="/page/settings/js_use_filemanager = 1 and /page/settings/uploads_enabled = 1">
+									<span id="mediaManagerLink" class="submodal2 admin-icon"><img src="{$tgif}" class="sprite sprite-cd" alt="Media Manager Administration" title="Media Manager Administration"/></span>
 								</xsl:if>
 								<!--  If the user is a site admin show site warnings -->
-
+	
 								<xsl:if test="/page/warnings/warning">
-								| <img src="{$tgif}" class="sprite sprite-delete" alt="Icon"/>
-									<xsl:element name="a">
-										<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/warnings</xsl:attribute>
-										<xsl:attribute name="class">submodal</xsl:attribute>
-									<xsl:attribute name="rel">width:700,height:450,noDesc</xsl:attribute>
-										View warnings
-									</xsl:element>
-
-							</xsl:if>
+								| <a href="{/page/settings/document_root}/warnings" class="submodal admin-icon" rel="width:700,height:450,noDesc"><img src="{$tgif}" class="sprite sprite-delete" alt="Icon"/></a>
+								</xsl:if>
 
 							</xsl:if>
 							<!--  Show toggle admin and edit options -->
-							| <xsl:element name="a">
-								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/toggle/admin_mode</xsl:attribute>
-								Switch off Admin Mode
-							</xsl:element>
+							| <a href="{/page/settings/document_root}/toggle/admin_mode" class="admin_toggle" style="color:black;">Switch off Admin Mode</a>
 						</xsl:when>
 						<xsl:otherwise>
 							<!--  Show toggle admin -->
-							<xsl:element name="a">
-								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/toggle/admin_mode</xsl:attribute>
-								Switch on Admin Mode
-							</xsl:element>
+							<a href="{/page/settings/document_root}/toggle/admin_mode" class="admin_toggle" style="color:black;">Switch on Admin Mode</a>
 						</xsl:otherwise>
 						</xsl:choose>
 					</xsl:if>
@@ -91,12 +59,8 @@
 							<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
 							<div style="display: inline;padding-left:3px">
 								Page Title
-								<xsl:element name="input">
-									<xsl:attribute name="type">text</xsl:attribute>
-									<xsl:attribute name="value"><xsl:value-of select="/page/@title" /></xsl:attribute>
-									<xsl:attribute name="name">title</xsl:attribute>
-									<xsl:attribute name="id">title</xsl:attribute>
-								</xsl:element><input type="submit" value="Update" /> |
+								<input name="title" id="title" type="text" value="{/page/@title}" />
+								<input type="submit" value="Update" /> |
 								<xsl:element name="a">
 								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/toggle/page/<xsl:value-of select="/page/@id" />/visibility</xsl:attribute>
 									<xsl:element name="img">
@@ -282,16 +246,9 @@
 
 				<xsl:if test="$position > 1">
 					<span class="move">
-						<xsl:element name="a">
-							<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/move/<xsl:value-of select="$id" />/<xsl:value-of select="/page/@id"/>/u</xsl:attribute>
-							<xsl:element name="img">
-								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
-								<xsl:attribute name="alt">Move Content Up</xsl:attribute>
-								<xsl:attribute name="class">sprite sprite-arrow_up</xsl:attribute>
-								<xsl:attribute name="title">Move Up</xsl:attribute>
-							</xsl:element>
-		
-						</xsl:element> |
+						<a href="{/page/settings/document_root}/move/{$id}/{/page/@id}/u">
+							<img src="{/page/settings/document_root}/skin/transparent-gif.gif" alt="Move Content Up" class="sprite sprite-arrow_up" title="Move Up"/>
+						</a> |
 					</span>
 				</xsl:if>
 				<xsl:if test="not($position > (count(/page/body/element)-1))">
@@ -305,6 +262,29 @@
 								<xsl:attribute name="title">Move Content Down</xsl:attribute>
 							</xsl:element>
 		
+						</xsl:element> |
+					</span>
+				</xsl:if>
+				
+				<xsl:if test="./@sw = 1 or ./@sw = 0">
+					<span class="sitewide">
+						<xsl:element name="a">
+							<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/toggle/element/<xsl:value-of select="./@id" />/sitewide</xsl:attribute>
+							<xsl:element name="img">
+								<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
+									<xsl:choose>
+										 <xsl:when test="/page/security/can_approve = 1">
+										 	<xsl:attribute name="title">Make this content site wide</xsl:attribute>
+										 	<xsl:attribute name="alt">Make this content site wide</xsl:attribute>
+										 	<xsl:attribute name="class">sprite sprite-application_add</xsl:attribute>
+										 </xsl:when>
+										 <xsl:otherwise>
+										 	<xsl:attribute name="title">Remove this content from been site wide</xsl:attribute>
+										 	<xsl:attribute name="alt">Remove this content from been site wide</xsl:attribute>
+											<xsl:attribute name="class">sprite sprite-application_delete</xsl:attribute>
+										 </xsl:otherwise>
+									</xsl:choose>
+							</xsl:element>
 						</xsl:element> |
 					</span>
 				</xsl:if>

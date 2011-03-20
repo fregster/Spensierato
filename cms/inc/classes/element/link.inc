@@ -8,6 +8,7 @@ class element_Link extends element_Default
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Link';
+		$this->site_wide_supported = true;
 		$this->allowed_tags(array('text' => 'text', 'href' => 'href'));
 		if (options::singleton()->get_option('admin_mode')) {
 			$this->admin_mode_data['image'] = 'link';

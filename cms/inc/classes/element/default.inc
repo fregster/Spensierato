@@ -8,6 +8,9 @@ class element_Default
 	protected $data_array;
 	protected $type;
 	protected $name;
+	protected $link = null;
+	protected $global = false;
+	protected $site_wide_supported = false;
 	protected $position = 1;
 	protected $title = 'Please give the element a meaningful title';
 	protected $options = array();
@@ -68,7 +71,7 @@ class element_Default
 		return true;
 	}
 
-	public function build($id, $data = array(), $link = NULL, $position = NULL)
+	public function build($id, $data = array(), $link = NULL, $position = NULL, $global = NULL)
 	{
 		$this->id = $id;
 		
@@ -83,14 +86,24 @@ class element_Default
 		
 		$this->init_admin_data();
 
-		if($link == NULL)
-		{
-			$this->link = Database::Singleton()->sql_select_first(array('*'), 'tbl_page_elements', array('element_id', 'main'), array($id, 1));
-		}
-		else
+		if($link != NULL)
 		{
 			$this->link = $link;
 		}
+		else
+		{
+			$this->link = Database::Singleton()->sql_select_first(array('*'), 'tbl_page_elements', array('element_id', 'main'), array($id, 1));
+		}
+		
+		if($global != NULL)
+		{
+			$this->global = $global;
+		}
+		else
+		{
+			$this->global = Database::Singleton()->sql_select_first(array('page_id'), 'tbl_page_elements', array('element_id', 'page_id'), array($id, 0));
+		}
+		
 
 		if (empty($data) && !empty($_POST)) {
 			$data = $_POST;
@@ -239,10 +252,41 @@ class element_Default
 
 			case 'quickapprove':
 				return revisions::approve_revision($this->admin_mode_data['approve']);
+				
+			case 'sitewide':
+				return $this->toggle_sitewide();
 
 			default:
 				return false;
 		}
+	}
+	
+	protected function reindex_sort()
+	{
+		
+	}
+	
+	protected function toggle_sitewide()
+	{
+		if(security::singleton()->can_approve_element($this->id))
+		{
+			$result = Database::singleton()->sql_select('id', 'tbl_page_elements', array('element_id', 'page_id'), array($this->id, 0));
+			
+//			var_dump($result);die();
+			
+			if(!isset($result[0])){
+				$sort = database::Singleton()->sql_max_field('tbl_page_elements', 'sort', array('page_id'), array(0));
+				Database::singleton()->sql_insert('tbl_page_elements', array('element_id', 'page_id', 'main', 'ts', 'sort'), array($this->id, 0, 0, CMS::$time, ($sort+1)));
+//				var_dump($result);die('Make');
+				return true;
+			}
+			
+			Database::singleton()->sql_delete_where('tbl_page_elements', array('element_id', 'page_id'), array($this->id, 0));
+//			var_dump($result);die('Delete');
+			return true;
+		}
+		
+		return false;
 	}
 
 	protected function toggle_visibility()
@@ -271,6 +315,7 @@ class element_Default
 		{
 			$this->element->setAttribute('created', Common::timestamp_to_date($this->admin_mode_data['created']));
 			$this->element->setAttribute('creator', $this->admin_mode_data['creator']);
+			$this->element->setAttribute('sw', $this->site_wide_supported);
 
 			if($this->admin_mode_data['edited'] != NULL)
 			{

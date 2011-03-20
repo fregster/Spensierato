@@ -88,7 +88,7 @@ $tables['tbl_elements_revisions']['charset'] = $default_charset;
 $tables['tbl_elements_revisions']['keys'] = array('KEY' => array('id_element_approved' => array('id', 'element_id', 'approved')));
 
 $tables['tbl_elements']['charset'] = $default_charset;
-$tables['tbl_elements']['keys'] = array();
+$tables['tbl_elements']['keys'] = array('KEY' => array('id_element_approved' => array('id', 'visible', 'deleted')));
 
 $tables['tbl_elements_data']['charset'] = $default_charset;
 $tables['tbl_elements_data']['cols_define']['data'] = $long_text;

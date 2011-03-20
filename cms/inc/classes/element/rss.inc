@@ -12,6 +12,7 @@ class element_RSS extends element_Default
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'RSS Feed';
+		$this->site_wide_supported = true;
 		$this->rss_data = false;
 		$this->allowed_tags(array('href' => 'href', 'Use_Internal_template' => 'checkbox', 'Remote_xslt' => 'href'));
 		if(Settings::Singleton()->get_setting('uploads_enabled'))

@@ -158,6 +158,7 @@ class Search
 		$this->boolean = $boolean;
 		$this->string = strtolower($string);
 		$this->corrected = spellcheck::spellcheck_autocorrect($this->string, false);
+		if(isset($this->corrected[2])){ $this->corrected = $this->corrected[2]; }
 
 		$this->tokens = explode(' ', $this->string);
 		if(strlen($this->string) > 0)

@@ -894,7 +894,7 @@ class database
 	public function sql_delete_by_colum_equals($table, $col, $equals, $destroy_cache = false)
 	{
 		$sql = $this->sql_delete_by_colum_equals_build($table, $col, $equals);
-		return $this->sql_exe($sql, NULL, true);
+		return $this->sql_exe($sql, NULL, true, $table);
 	}
 
 	protected function sql_delete_by_colum_equals_build($table, $col, $equals)
@@ -906,7 +906,7 @@ class database
 	public function sql_delete_where($table, $where_fields, $where_values)
 	{
 		$sql = $this->sql_delete_where_build($table, $where_fields, $where_values);
-		return $this->sql_update_exe($sql, NULL, true);
+		return $this->sql_update_exe($sql, NULL, true, $table);
 	}
 
 	protected function sql_delete_where_build($table, $where_fields, $where_values)

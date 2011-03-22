@@ -322,6 +322,11 @@ Settings::Singleton()->new_setting('session_public_key_lifetime', 3600, false, t
 //Setting login_capthca
 //Requires the user to enter a security code when login in
 //true / false
+Settings::Singleton()->new_setting('authentication_mechanism', 'default', false, false, array('default', 'facebook'), SETTING_GROUP_LOGIN);
+
+//Setting login_capthca
+//Requires the user to enter a security code when login in
+//true / false
 Settings::Singleton()->new_setting('login_capthca', true, false, false, true, SETTING_GROUP_LOGIN);
 
 //Setting login_javascript_secure

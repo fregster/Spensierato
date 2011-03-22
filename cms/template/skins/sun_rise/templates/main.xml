@@ -1,0 +1,104 @@
+<xsl:template match="/">
+        <html>
+			<xsl:call-template name="header"/>
+			<body>
+			<div id="notifications" style="visibility: hidden; background-color: red;">Notifications</div>
+			<div id="top">
+				<div id="insidetop">
+			        <h4><xsl:value-of select="/page/settings/site_name_short"/> Main Menu</h4>
+			        <p><xsl:value-of select="/page/settings/intoduction_text"/> <xsl:value-of select="/page/settings/site_name_long"/></p>
+			        <xsl:call-template name="banner_submenu"/>
+			    </div><!--insidetop-->
+			</div><!-- top -->
+
+			<div id="topline">
+				 <a href="#page_section_body">Jump To Contents</a>
+				<span class="content">
+			     	<a id="v_toggle"><span id="vertical_status">open </span> the <strong> MENU</strong> </a>
+			    </span>
+			    <xsl:call-template name="admin_bar"/>
+			</div><!-- topline -->
+
+
+	<div id="wrapper">
+	
+	    	<div class="content">
+	    	
+	             <div id="header">
+	             
+	                    <h1><a href="{/page/settings/document_root}"><span><xsl:value-of select="/page/settings/intoduction_text" /></span><xsl:value-of select="/page/settings/site_name_short" /></a></h1>
+	                    
+	                     <div id="menu">
+	                
+	                        <ul>	
+	                            <li><a href="{/page/settings/document_root}">home</a></li>
+	                            <li class="selected"><a href="#">portfolio</a></li>
+	                            <li><a href="#">blog</a></li>
+	                            <li><a href="{/page/settings/document_root}/about">about</a></li>
+	                            <li><a href="{/page/settings/document_root}/contact">contact us</a></li>
+	                        </ul>
+	                    
+	                	</div><!-- menu -->
+	                
+	             </div><!--header-->
+	             
+	               <div class="sidebar">
+	                <div class="sidebar_std"><xsl:call-template name="search"/></div>
+	                <div class="sidebar_std"><xsl:call-template name="menu"/></div>
+	                
+	                
+	                
+	                <div style="margin-top:10px;width:290px"><span class="sidebar_mini">This is some very vey long content. This should go one for ages but the width should break the lin :-(</span><span class="sidebar_mini noright">This is some content</span></div>
+	                <div style="margin-top:20px;width:290px"><span class="sidebar_mini">This is some content</span><span class="sidebar_mini noright">This is some content</span></div>
+	                
+	
+	             </div><!--sidebar-->
+	             
+	             <div id="container">
+	             	<xsl:call-template name="body"/>
+	             </div>                        
+	                        	
+	        </div><!--content-->
+	        
+	    </div><!--wrapper-->
+    
+	<div id="footer">
+	    	<div class="content">
+	        		
+	                 <div class="sidebar">
+	                   
+	                   		<a href="#"><img src="{/page/settings/document_root}/skin/footerbox.png" alt="" border="0" /></a>
+	                        <a href="#"><img src="{/page/settings/document_root}/skin/footerbox.png" alt="" border="0" class="noright" /></a>
+	                   
+	                   </div><!--sidebar-->
+	               <div id="left">
+	            	<h3>SPONSORSHIP FRIENDS</h3>
+	                    <p><a href="#">Website Templates</a></p>
+	                    <p><a href="#">Website Builder</a></p>
+	                    <p><a href="#">Web design</a></p>
+	                    <p><a href="#">Powerpoint Templates</a></p>
+	                    <p><a href="#">Hosting Reseller</a></p>
+	                    <p><a href="#">Dedicated Server Hosting</a></p>
+	                 </div><!--left-->   
+	                 
+	                 <div id="right">   
+	                 <h3>OUR RESOURCE SITES</h3>
+	                    <p><a href="#">Branding and Identity </a></p>
+	                    <p><a href="#">Nature Based CSS Gallery </a></p>
+	                    <p><a href="#">Free Vector Illustrations</a></p>
+	                    <p><a href="#">Organic Web Design</a></p>
+	                    <p><a href="#">Web Design</a></p>
+	                    <p><a href="#">West Coast Clothing Co</a></p>
+	                   </div><!--right-->
+	                   
+	                   <a href="{/page/settings/document_root}"><span class="leftp">Copyright 2010 <xsl:value-of select="/page/settings/site_name_long"/></span></a>
+	                  
+	                   <a href="http://www.spensierato.net"><span class="rightp"> Powered by Spensierato </span></a>
+	                   
+	                   
+	                 </div><!--content-->
+	                        
+	</div><!--footer-->
+</body>
+</html>
+</xsl:template>

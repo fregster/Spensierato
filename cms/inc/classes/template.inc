@@ -216,6 +216,7 @@ class Template
 			header ('Content-type: text/css; charset: '.Settings::Singleton()->get_setting('char_set'));
 			Cache::headers_allow_cache_dynamic('css', $css_m_time, $estring, true, 31536000, 31536000);
 
+			return($css['css']);
 			if(Settings::singleton()->get_setting('css_minify'))
 			{
 		    	return(Common::remove_extra_lines(Common::remove_css_comments($css['css'])));

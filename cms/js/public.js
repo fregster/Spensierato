@@ -577,5 +577,20 @@ function dhtmlLoadScript(_a){
 	e.type="text/javascript";
 	document.getElementsByTagName("head")[0].appendChild(e);
 	};
-
+	
+function jsCalculateDownloadTime(filesize, id){
+	var start = new Date().getTime();
+	ajaxGet(document_root+"/tools/sample?t=",start);
+    http.onreadystatechange=function(){
+    	if(http.readyState==4){
+    		var time = Math.round((new Date().getTime()-start)/10)/100;
+    		var bytesLoaded = http.responseText.length;
+    		var connSpeed = Math.round(bytesLoaded/time/1000);
+    	    var connSpeedText = connSpeed+" kBps";
+    	    if(connSpeedText == 'Infinity kBps') { connSpeedText = '> 10 Mbps'; }
+     
+    	    id.innerHTML=' ~ '+Math.round(filesize/connSpeed)+' seconds at '+connSpeedText;
+    	}
+    };	
+};
 window.addEvent('domready',function() { init(); });

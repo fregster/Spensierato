@@ -72,6 +72,12 @@ class Render
 		Cache::headers_no_cache();
 		$this->render(Template::Singleton()->edit(), $xml);
 	}
+	
+	public function render_dashboard($xml)
+	{
+		Cache::headers_no_cache();
+		$this->render(Template::Singleton()->dashboard(), $xml);
+	}
 
 	public function render_file($filepath)
 	{

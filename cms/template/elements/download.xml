@@ -6,15 +6,8 @@
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
 			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
 			<xsl:attribute name="class"><xsl:value-of select="./@type" /> rounded</xsl:attribute>
-			<xsl:element name="a">
-				<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="./@id" /></xsl:attribute>
-					<xsl:element name="img">
-						<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/transparent-gif.gif</xsl:attribute>
-						<xsl:attribute name="class">sprite sprite-attach</xsl:attribute>
-						<xsl:attribute name="alt">Icon</xsl:attribute>
-					</xsl:element> Download:
-				<xsl:value-of select="./data/linktext" /> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)
-			</xsl:element>
+			<a href="{/page/settings/document_root}/download/{./@id}"><img src="{/page/settings/document_root}/skin/transparent-gif.gif" class="sprite sprite-attach" alt="Icon"/>Download:
+				<xsl:value-of select="./data/linktext" /> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)</a> <span class="jsShow" onclick="jsCalculateDownloadTime({round(./data/filesize div 1024)}, timeHolder{./@id})" id="timeHolder{./@id}"> [Download Time] </span>
 		</xsl:element>
 	</xsl:if>
 	<xsl:call-template name="element_admin_footer"/>

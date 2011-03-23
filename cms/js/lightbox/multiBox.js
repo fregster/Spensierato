@@ -631,7 +631,7 @@ var multiBox = new Class({
 			var filePath = this.currentGallery[this.index].href;
 			//var fileName = this.currentGallery[this.index].href.substring(this.currentGallery[this.index].href.lastIndexOf('/')+1);
 			var fileNameArray = this.currentGallery[this.index].href.split('/'); 
-			this.download.set('html','<a href="'+this.options.pathToDownloadScript+fileNameArray[(fileNameArray.length-2)]+'" title="Download File '+fileNameArray[(fileNameArray.length-1)]+'">Download File</a>');
+			this.download.set('html','<a href="'+this.options.pathToDownloadScript+fileNameArray[(fileNameArray.length-2)]+'" title="Download File '+fileNameArray[(fileNameArray.length-1)]+'">Download File</a><span class="jsShow" onclick="jsCalculateDownloadTime(1024, timeHolder1000)" id="timeHolder1000"> [Download Time] </span>');
 			//empty download if its not an image
 			if(this.type != 'image'){
 				//this.download.empty();

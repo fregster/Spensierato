@@ -128,10 +128,20 @@ class Template
 		return $dtd['xhtml'];
 	}
 
+	public function load_specified_template($name)
+	{
+		$path = $this->template_path = DIR_TEMPLATE.$name.DS.'main.xml';
+		return $this->build_xslt_template(str_ireplace('<?xml version="1.0" encoding="UTF-8"?>', '', file_get_contents($path)));
+	}
+	
 	public function edit()
 	{
-		$path = $this->template_path = DIR_TEMPLATE.'edit'.DS.'edit.xml';
-		return $this->build_xslt_template(file_get_contents($path));
+		return $this->load_specified_template('edit');
+	}
+	
+	public function dashboard()
+	{
+		return $this->load_specified_template('dashboard');
 	}
 
 	public function css_path()

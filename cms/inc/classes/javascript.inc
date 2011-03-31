@@ -31,45 +31,18 @@ abstract class javascript
 		$cachedir = Settings::singleton()->get_setting('cms_folder_cache');
 		$jsdir    = Settings::singleton()->get_setting('cms_root') . DS . 'js';
 
-		if(Settings::singleton()->get_setting('js_cache'))
-		{
-			if(is_writable($cachedir))
-			{
-				$cache 	  = true;
-			}
-			else
-			{
-				if(is_writable(realpath($cachedir.DS.'..')))
-				{
-					mkdir($cachedir);
-				}
-				$cachedir = sys_get_temp_dir().DS.'cms';
-				
-				if(!is_writable($cachedir) && is_writeable(sys_get_temp_dir()))
-				{
-					mkdir($cachedir);
-				}
-				
-				if(is_writable($cachedir))
-				{
-					$cache 	  = true;
-				}
-				else
-				{
-					$cache 	  = false;
-				}
-			}
-		}
-		else
-		{
-			$cache = false;
-		}
-		
 		//Create a hash of the file names for createing and checking a single unique cache file
 		$hash = sha1($files);
 		$base = realpath($jsdir);
 		$type = 'javascript';
 		$elements = explode(',', $files);
+		
+		
+		$cache = false;
+		if(Settings::singleton()->get_setting('js_cache'))
+		{
+			$cache = persistantcache::singleton()->get($hash, 'javascript');
+		}		
 
 		// Determine last modification date of the files
 		$lastmodified = 0;
@@ -89,7 +62,7 @@ abstract class javascript
 
 			$lastmodified = max($lastmodified, filemtime($path));
 		}
-//		$mtime = filemtime($path);
+
 		$gmdate_mod = gmdate('D, d M Y H:i:s', $lastmodified) . ' GMT';
 
 		// Determine supported compression method
@@ -111,39 +84,18 @@ abstract class javascript
 				$encoding = 'none';
 		}
 
-		$cachefile = 'cms-cache-' . $hash . '.' . $type;
-		$file = $cachedir . '/' . $cachefile;
-
-		if($cache)
+		if(isset($cache['mtime']) && isset($cache['md5']) && isset($cache['contents']) && isset($cache['moddate']))
 		{
-			if (file_exists($file))
+			if($lastmodified == $cache['mtime'])
 			{
-				if($lastmodified < filemtime($file))
-				{
-					/*---------- JS files not moded since cached --------------*/
-					//Try looking for packed or cleaned content
-					if(file_exists($file.'cleaned')) { $file = $file.'cleaned'; }
-					if(file_exists($file.'packed')) { $file = $file.'packed'; }
-					Cache::headers_check_304($file);
-
-					if ($fp = fopen($file, 'rb'))
-					{
-						fclose($fp);
-						header('X-Cache-JS: Quick');
-						Cache::headers_allow_cache($file);
-						$contents = javascript::getcontentscompressed(file_get_contents($file), $encoding);
-//						echo($file);die($contents);
-						javascript::sendcontent($type, $encoding, $contents);
-					}
-				}
-				else
-				{
-					//The cached file is outdated so delete it
-					unlink($file);
-				}
+				/*---------- JS files not moded since cached --------------*/
+				header('X-Cache-JS: Quick');
+				$contents = javascript::getcontentscompressed($cache['contents'], $encoding);
+				Cache::headers_allow_cache_dynamic('js', $cache['mtime'], $cache['md5'], 36000);
+				javascript::sendcontent($type, $encoding, $contents);
+				exit;
 			}
 		}
-
 
 		/*---------- First time visit or files were modified --------------*/
 
@@ -154,66 +106,19 @@ abstract class javascript
 			$path = realpath($base . '/' . $element);
 			$contents .= "\n\n" . file_get_contents($path);
 		}
-		//Clean contents
-//		die($contents);
-		$contents = javascript::clean($contents);
-
+		
+		$md5 = md5($contents);
 		// Store cache
-		$cached = false;
-		if ($cache)
+		if(Settings::singleton()->get_setting('js_cache'))
 		{
-			if ($fp = fopen($file, 'wb'))
-			{
-				$cached = fwrite($fp, $contents);
-				fclose($fp);
-			}
+			persistantcache::singleton()->save($hash, array('contents' => $contents, 'mtime' => $lastmodified, 'encoding' => $encoding, 'md5' => $md5, 'moddate' => $gmdate_mod), 0, 'javascript');
 		}
-
-		if($cached)
-		{
-			//If the file was sucsesfully cached then send the file through the cache class
-			header('X-Cache-JS: True');
-			Cache::headers_allow_cache($file);
-		}
-		else
-		{
-			//Send headers to allow temporay caching
-			header('X-Cache-JS: False');
-			$expires = gmdate('D, d M Y H:i:s', (time() + 31536000)) . ' GMT';
-			header('Expires:' . $expires);
-			header('Cache-control: public');
-			header('Pragma:');
-
-			//Fake a re createable ETag and 304 if we can
-			$ETag = md5($contents);
-			$gmdate_mod = gmdate('D, d M Y H:i:s', $lastmodified) . ' GMT';
-
-			header('Last-Modified: ' . $gmdate_mod);
-			header('ETag: "'.$ETag.'"');
-
-			//Headers recieved from browser
-			$headers = apache_request_headers();
-
-			if(isset($headers['If-None-Match']))
-			{
-				 if (strpos($headers['If-None-Match'], $ETag) != false)
-				 {
-					Cache::send_304($ETag);
-				}
-			}
-
-			if(isset($headers['If-None-Match']))
-			{
-				if ($gmdate_mod == $headers['If-Modified-Since'])
-				{
-					Cache::send_304();
-				}
-			}
-
-		}
-
-		$contents = javascript::getcontentscompressed($contents, $encoding);
-		javascript::sendcontent($type, $encoding, $contents);
+	
+		//If the file was sucsesfully cached then send the file through the cache class
+		header('X-Cache-JS: True');
+		Cache::headers_allow_cache_dynamic('js', $lastmodified, $md5);
+		header('X-Cache-JS: False');
+		javascript::sendcontent($type, $encoding, javascript::getcontentscompressed(javascript::clean($contents), $encoding));
 	}
 
 	private static function clean ($contents)

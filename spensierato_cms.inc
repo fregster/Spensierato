@@ -142,6 +142,12 @@ try
 	define('DOCUMENT_ROOT', get_site_document_root());
 	define('DOCUMENT_PATH', get_site_path());
 
+	//Has an early custom defines file been specified
+	if(!$install){
+		require_once(INCLUDE_PATH.'spensierato_custom.inc');
+		if(is_file(DIR_INDEX.'spensierato_custom.inc')) { require_once(DIR_INDEX.'spensierato_custom.inc'); }
+	}
+	
 	//Include the Site setup code
 	if(is_file(DIR_INDEX.'spensierato_setup.inc'))
 	{

@@ -6,6 +6,7 @@ class element_Access extends element_Default
 		parent::__construct();
 		$this->type = __CLASS__;
 		$this->name = 'Accessability Element';
+		$this->main = 1;
 		if (options::singleton()->get_option('admin_mode')) {
 			$this->admin_mode_data['image'] = 'access.png';
 			$this->admin_mode_data['image_edit'] = '';

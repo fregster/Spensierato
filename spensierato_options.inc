@@ -181,10 +181,9 @@ Settings::Singleton()->new_setting('js_minify', 0, false, true, array(1,2,3), SE
 Settings::Singleton()->new_setting('js_use_yui', true, true, true, true, SETTING_GROUP_PERFORMANCE);
 
 //Setting js_cache
-//This setting allows the javascript once built to be cached on the file system
+//This setting allows the javascript once built to be cached in the persistant cache class
 //The reduces the number of external scripts called, improves compression and reduces load on your server
-//The folder with in the CMS 'writable' or '/tmp/cms' needs to be writeable by the web server
-Settings::Singleton()->new_setting('js_cache', false, false, true, true, SETTING_GROUP_PERFORMANCE);
+Settings::Singleton()->new_setting('js_cache', true, false, true, true, SETTING_GROUP_PERFORMANCE);
 
 //Setting js_use_growler
 //This setting is to include the growler style notifications

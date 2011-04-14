@@ -280,9 +280,6 @@ class database
 			}
 			++$this->sql_prepared_count;
 			return $this->sql_prepared_statment_placeholder_prefix;
-
-//			$this->sql_values[] = $var;
-//			return '?';
 		}
 		return $this->sql_clean_input($var);
 	}
@@ -335,7 +332,6 @@ class database
 				{
 					$details = array('count' => $sql_count, 'query' => $sql_query, 'time' => $sql_exc_time, 'cached' => $sql_cache_hit);
 					if(isset($this->sql_values[0])) { $details['values'] = $this->sql_values; }
-//					if($sql_result != NULL) { $details['result'] = $sql_result; }
 					array_push($this->sql_log_array, $details);
 					$this->sql_time = $this->sql_time + $sql_exc_time;
 
@@ -741,7 +737,6 @@ class database
 		return $new_value;
 	}
 
-	//SQL update fileds by id
 	/**
 	 * 
 	 * SQL update row fields by ID coloum
@@ -768,7 +763,6 @@ class database
 	public function sql_update_by_col($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false)
 	{
 		$sql = $this->sql_update_by_col_build($table, $where_fields, $where_values, $fields, $values);
-		//Run the SQL
 		return $this->sql_update_exe($sql, NULL, $destroy_cache, $table);
 	}
 

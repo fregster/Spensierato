@@ -24,3 +24,11 @@
 
 	<xsl:call-template name="element_admin_footer"/>
 </xsl:template>
+
+<xsl:template name="sitewide_elements_Contacts">
+ 	<xsl:for-each select="/page/body/element[@sw = 1]">
+		 <xsl:for-each select="/page/body/element[@type = 'element_Link']">
+			<div>Site Wide Contacts</div>
+		</xsl:for-each>
+	</xsl:for-each>
+</xsl:template>

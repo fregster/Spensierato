@@ -4,7 +4,9 @@
 		<div id="page_section_body">
 			<xsl:for-each select="/page/body/element">
 			<xsl:sort select="@sort" order="ascending" data-type="number"/>
-				<div class="object" id="op-{position()}"><xsl:apply-templates select="."/></div>
+				<xsl:if test="./@sw != 1 or ./@main = 1">
+					<div class="object" id="op-{position()}"><xsl:apply-templates select="."/></div>
+				</xsl:if>
 			</xsl:for-each>
 		</div>
 	</xsl:template>

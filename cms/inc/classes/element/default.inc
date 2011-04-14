@@ -8,6 +8,7 @@ class element_Default
 	protected $data_array;
 	protected $type;
 	protected $name;
+	protected $main = 0;
 	protected $link = null;
 	protected $global = false;
 	protected $site_wide_supported = false;
@@ -92,7 +93,8 @@ class element_Default
 		}
 		else
 		{
-			$this->link = Database::Singleton()->sql_select_first(array('*'), 'tbl_page_elements', array('element_id', 'main'), array($id, 1));
+			$this->link = Database::Singleton()->sql_select_first(array('*'), 'tbl_page_elements', array('element_id', 'main'), array($this->id, 1));
+			if($this->link['page_id'] == currentPage::Singleton()->id()) { $this->main = 1; }
 		}
 		
 		if($global != NULL)
@@ -101,9 +103,8 @@ class element_Default
 		}
 		else
 		{
-			$this->global = Database::Singleton()->sql_select_first(array('page_id'), 'tbl_page_elements', array('element_id', 'page_id'), array($id, 0));
+			$this->global = Database::Singleton()->sql_select_first(array('page_id'), 'tbl_page_elements', array('element_id', 'page_id'), array($this->id, 0));
 		}
-		
 
 		if (empty($data) && !empty($_POST)) {
 			$data = $_POST;
@@ -114,6 +115,11 @@ class element_Default
 		$this->build_options();
 		$this->build_data_xml();
 		$this->add_late_header();
+		
+//		if($this->id == '5'){
+//			var_dump($this);
+//			exit;
+//		}
 		
 		Content::Singleton()->attach_content($this->render());
 	}
@@ -136,6 +142,7 @@ class element_Default
 		$this->element->setAttribute('etype', $this->name);
 		$this->element->setAttribute('title', $this->title);
 		$this->element->setAttribute('sort', $this->position);
+		$this->element->setAttribute('main', $this->main);
 
 		$this->admin($dom);
 

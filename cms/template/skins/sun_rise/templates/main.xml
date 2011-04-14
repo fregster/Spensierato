@@ -71,24 +71,14 @@
 	                        <a href="#"><img src="{/page/settings/document_root}/skin/footerbox.png" alt="" border="0" class="noright" /></a>
 	                   
 	                   </div><!--sidebar-->
-	               <div id="left">
-	            	<h3>SPONSORSHIP FRIENDS</h3>
-	                    <p><a href="#">Website Templates</a></p>
-	                    <p><a href="#">Website Builder</a></p>
-	                    <p><a href="#">Web design</a></p>
-	                    <p><a href="#">Powerpoint Templates</a></p>
-	                    <p><a href="#">Hosting Reseller</a></p>
-	                    <p><a href="#">Dedicated Server Hosting</a></p>
+	                <div id="left">
+	            	<h3>SITE CONTACTS</h3>
+	                    <xsl:call-template name="sitewide_elements_Contacts"/>
 	                 </div><!--left-->   
 	                 
 	                 <div id="right">   
-	                 <h3>OUR RESOURCE SITES</h3>
-	                    <p><a href="#">Branding and Identity </a></p>
-	                    <p><a href="#">Nature Based CSS Gallery </a></p>
-	                    <p><a href="#">Free Vector Illustrations</a></p>
-	                    <p><a href="#">Organic Web Design</a></p>
-	                    <p><a href="#">Web Design</a></p>
-	                    <p><a href="#">West Coast Clothing Co</a></p>
+	                 <h3>SITE LINKS</h3>
+	                     <xsl:call-template name="sitewide_elements_Links"/>
 	                   </div><!--right-->
 	                   
 	                   <a href="{/page/settings/document_root}"><span class="leftp">Copyright 2010 <xsl:value-of select="/page/settings/site_name_long"/></span></a>

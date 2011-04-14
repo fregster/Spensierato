@@ -115,11 +115,11 @@ class persistantcache
 		}
 	}
 
-	public static function Singleton()
+	public static function Singleton($options = array())
 	{
 		if (!isset(self::$instance)) //No instance found so call rebuild to build a new one
 		{
-			persistantcache::rebuild_singleton();
+			persistantcache::rebuild_singleton($options);
 		}
 
 	   return self::$instance;
@@ -130,9 +130,9 @@ class persistantcache
 	 * This actually replaces the current instance with the best available cache type
 	 * @return nothing
 	 */
-	protected static function rebuild_singleton()
+	protected static function rebuild_singleton($options)
 	{
-		$c = persistantcache::get_type();
+		$c = persistantcache::get_type($options);
 		self::$instance = new $c;
 	}
 
@@ -140,7 +140,7 @@ class persistantcache
 	 * Work out the best avaiable cache type
 	 * @return class name
 	 */
-	private static function get_type()
+	private static function get_type($options = array())
 	{
 		$c = __CLASS__;
 		if(defined('CACHE_TYPE')) { $c = 'persistantcache_'.CACHE_TYPE; array_splice(persistantcache::$cache_preference_order, 0, 0, CACHE_TYPE); }

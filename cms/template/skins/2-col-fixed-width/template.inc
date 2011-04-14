@@ -6,8 +6,12 @@ menu::singleton()->set_options(array('top_menu_depth' => 1, 'include_breadcrumbs
 Settings::Singleton()->new_setting('template_header_graphic_background', 'bg1-900.png');
 Settings::Singleton()->overwrite_setting('template_verstion', cms::$cms_version, true);
 Settings::Singleton()->overwrite_setting('template_extends', 'default');
+/*
+ * Example to include a custom font type from google
+ * content::singleton()->add_custom_head('link', array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => 'http://fonts.googleapis.com/css?family=Ubuntu:light,lightitalic,regular,italic,500,500italic,bold,bolditalic'));
+*/
 
-foreach (glob(Settings::Singleton()->get_setting('cms_root').'/skins/default/pre-load-images/*', GLOB_NOSORT) as $filename) 
+foreach (glob(Settings::Singleton()->get_setting('cms_root').'/template/skins/default/pre-load-images/*', GLOB_NOSORT) as $filename) 
 {
 	array_push($this->preload, basename($filename));
 }

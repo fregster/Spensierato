@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 	<xsl:template match="element[@type = 'element_Cart']">
 		<xsl:element name="div">
 			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>

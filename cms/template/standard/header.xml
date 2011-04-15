@@ -20,7 +20,7 @@
 				</xsl:if>
 				
 				<xsl:if test="/page/settings/google-site-verification != ''">
-					<meta name="google-site-verification" content="/page/settings/google-site-verification"/>
+					<meta name="google-site-verification" content="{/page/settings/google-site-verification}"/>
 				</xsl:if>
 	
 				<xsl:call-template name="javascript-inline"/>

@@ -73,7 +73,7 @@ class masterpassword {
         			unset($filename);
         		}
         		
-        		if(file_exists($filename))
+        		if(isset($filename) && file_exists($filename))
         		{
         			return false;
         		}
@@ -104,7 +104,7 @@ class masterpassword {
         			unset($filename);
         		}
         		
-        		if(file_exists($filename))
+        		if(isset($filename) && file_exists($filename))
         		{
         			return false;
         		}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:template name="menu">
+	<div id="dashboard_menu" style="position:absolute; top:0px; left:0px; padding:3px;">
+		<div>List of dashboards</div>
+		<xsl:for-each select="/page/settings/dashboards/*">
+			<div><a href="{/page/settings/document_root}/dashboard/{./link}"><xsl:value-of select="./name"/></a></div>
+		</xsl:for-each>
+	
+	</div>
+</xsl:template>

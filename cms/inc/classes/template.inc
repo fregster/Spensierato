@@ -130,8 +130,29 @@ class Template
 
 	public function load_specified_template($name)
 	{
-		$path = $this->template_path = DIR_TEMPLATE.$name.DS.'main.xml';
-		return $this->build_xslt_template(str_ireplace('<?xml version="1.0" encoding="UTF-8"?>', '', file_get_contents($path)));
+		$files = glob($this->template_path = DIR_TEMPLATE.$name.DS.'*.xml', GLOB_NOSORT);
+		$filenames = array();
+		$lastmodified = 0;
+		
+		foreach($files as $filepath)
+		{
+			$filenames[basename($filepath)] = realpath($filepath);
+			$lastmodified = max($lastmodified, filemtime($filepath));
+		}
+		
+		$xslt = persistantcache::Singleton()->get('template_xslt_'.$name, 'templates');
+		if(!isset($xslt['xslt']) || !isset($xslt['mtime']) || $xslt['mtime'] != $lastmodified || true)
+		{
+			$xslt = ''; //drop the array
+			foreach($filenames as $filepath)
+			{
+				$xslt .= str_ireplace('<?xml version="1.0" encoding="UTF-8"?>', '', file_get_contents($filepath));
+			}
+			persistantcache::Singleton()->save('template_xslt_'.$name, array('xslt' => $xslt, 'mtime' => $lastmodified), null, 'templates');
+			return $this->build_xslt_template($xslt);
+		}
+
+		return $this->build_xslt_template($xslt['xslt']);
 	}
 	
 	public function edit()

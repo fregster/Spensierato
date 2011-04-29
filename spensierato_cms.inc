@@ -133,9 +133,11 @@ ini_set('error_log', DIR_LOG.DS.'php_error.log');
 set_exception_handler('exception_handler');
 try
 {
+	//Make any custom changes here that are required pre the CMS code has loaded
+	if(is_file(DIR_INDEX.'early_custom.inc')) { include(DIR_INDEX.'early_custom.inc'); }
+	
 	//Include all the options for the CMS
 	//Functions requires by globals
-	
 
 	//document root is the URL root ie spensierato.net
 	define('DOCUMENT_ROOT_FOLDER_ONLY', get_site_document_root_folder_only());
@@ -153,6 +155,13 @@ try
 	{
 		require_once(DIR_INDEX.'spensierato_setup.inc');
 		$install = false; //cancel the install directive
+	}
+	
+	require_once(DIR_STATIC.'late_defines.inc');
+	
+	//Set any late or custom defines
+	if(file_exists(DIR_INDEX.'spensierato_custom_defines.inc')){
+		include_once(DIR_INDEX.'spensierato_custom_defines.inc');
 	}
 	
 	Settings::Singleton()->build_defines(
@@ -190,17 +199,10 @@ try
 		exit;
 	}
 	
-	//Set any late or custom defines
-	if(file_exists(DIR_INDEX.'spensierato_custom_defines.inc')){
-		include_once(DIR_INDEX.'spensierato_custom_defines.inc');
-	}
-	require_once(DIR_STATIC.'late_defines.inc');
-	
 	//Start site
 	CMS::Singleton()->start(); 
 
 	//Make any custom changes here after the CMS code has loaded but before the site is ran
-	
 	if(is_file(DIR_INDEX.'custom.inc')) { include(DIR_INDEX.'custom.inc'); }
 
 	//Run the CMS

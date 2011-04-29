@@ -198,7 +198,8 @@
  		<xsl:template name="new_element">
  			<span style="background:#EEE">
 			<xsl:for-each select="/page/settings/elementTypes/setting">
-				<button type="submit" name="new_type" value="{./class}" ><img src="{/page/settings/document_root}/skin/transparent-gif.gif" class="sprite sprite-{./icon}" style="display:inline;top:0px;" title="Add a new {./name} element" alt="{./name}" /></button>
+				<xsl:sort select="./name" order="ascending" data-type="text"/>
+				<button type="submit" name="new_type" value="{./class}" class="ToolTip" title="Add a new {./name} element"><img src="{/page/settings/document_root}/skin/transparent-gif.gif" class="sprite sprite-{./icon}" style="display:inline;top:0px;" title="Add a new {./name} element" alt="{./name}" /></button>
 			</xsl:for-each>
 			</span>
 		</xsl:template>

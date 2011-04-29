@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:template match="element[@type = 'element_Contact']">
-	<xsl:call-template name="element_admin_header"/>
-
-	<xsl:element name="div">
-		<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
-		<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
-		<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
-		<xsl:value-of select="./@title" /> - <xsl:element name="a">
-		<!--<xsl:attribute name="class">submodal</xsl:attribute>
-			<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/contact/<xsl:value-of select="./@id" /></xsl:attribute>
-			<xsl:choose>
-				<xsl:when test="string-length(./data/userid) != 0">
-					<xsl:attribute name="href">mailto:<xsl:value-of select="./data/userid" /></xsl:attribute>
-				</xsl:when>
-
-				<xsl:otherwise>-->
-					<xsl:attribute name="href">mailto:<xsl:value-of select="./data/email" /></xsl:attribute>
-				<!--</xsl:otherwise>
-			</xsl:choose>-->
-			<xsl:value-of select="./data/name" />
-		</xsl:element>
-	</xsl:element>
-
-	<xsl:call-template name="element_admin_footer"/>
-</xsl:template>
-
-<xsl:template name="sitewide_elements_Contacts">
- 	<xsl:for-each select="/page/body/element[@sw = 1]">
-		 <xsl:for-each select="/page/body/element[@type = 'element_Link']">
-			<div>Site Wide Contacts</div>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="element[@type = 'element_Contact']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:call-template name="elements_contacts"/>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+	
+	<xsl:template name="sitewide_elements_Contacts">
+	 	<xsl:for-each select="/page/body/element[@sw = 1]">
+			 <xsl:if test="@type = 'element_Contact'">
+				<xsl:call-template name="elements_contacts"/>
+			</xsl:if>
 		</xsl:for-each>
-	</xsl:for-each>
-</xsl:template>
+	</xsl:template>
+	
+	<xsl:template name="elements_contacts">
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+			<xsl:value-of select="./@title" /> - <xsl:element name="a">
+			<!--<xsl:attribute name="class">submodal</xsl:attribute>
+				<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/tools/contact/<xsl:value-of select="./@id" /></xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="string-length(./data/userid) != 0">
+						<xsl:attribute name="href">mailto:<xsl:value-of select="./data/userid" /></xsl:attribute>
+					</xsl:when>
+	
+					<xsl:otherwise>-->
+						<xsl:attribute name="href">mailto:<xsl:value-of select="./data/email" /></xsl:attribute>
+					<!--</xsl:otherwise>
+				</xsl:choose>-->
+				<xsl:value-of select="./data/name" />
+			</xsl:element>
+		</xsl:element>
+	</xsl:template>
+</xsl:stylesheet>

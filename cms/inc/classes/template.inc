@@ -13,6 +13,7 @@ class Template
 	private $list_of_files = array();
 	private $filenames = array();
 	private $files_loaded_from_cache = false;
+	private $strip_xslt = array('<?xml version="1.0" encoding="UTF-8"?>', '<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">', '</xsl:stylesheet>');
 
 	public static function Singleton()
 	{
@@ -130,29 +131,8 @@ class Template
 
 	public function load_specified_template($name)
 	{
-		$files = glob($this->template_path = DIR_TEMPLATE.$name.DS.'*.xml', GLOB_NOSORT);
-		$filenames = array();
-		$lastmodified = 0;
-		
-		foreach($files as $filepath)
-		{
-			$filenames[basename($filepath)] = realpath($filepath);
-			$lastmodified = max($lastmodified, filemtime($filepath));
-		}
-		
-		$xslt = persistantcache::Singleton()->get('template_xslt_'.$name, 'templates');
-		if(!isset($xslt['xslt']) || !isset($xslt['mtime']) || $xslt['mtime'] != $lastmodified || true)
-		{
-			$xslt = ''; //drop the array
-			foreach($filenames as $filepath)
-			{
-				$xslt .= str_ireplace('<?xml version="1.0" encoding="UTF-8"?>', '', file_get_contents($filepath));
-			}
-			persistantcache::Singleton()->save('template_xslt_'.$name, array('xslt' => $xslt, 'mtime' => $lastmodified), null, 'templates');
-			return $this->build_xslt_template($xslt);
-		}
-
-		return $this->build_xslt_template($xslt['xslt']);
+		$path = $this->template_path = DIR_TEMPLATE.$name.DS.'main.xml';
+		return $this->build_xslt_template(str_ireplace($this->strip_xslt, '', file_get_contents($path)));
 	}
 	
 	public function edit()
@@ -263,7 +243,7 @@ class Template
 	private function build_xslt_template($xslt)
 	{
 		$xslt = '<?xml version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="html" version="1.0" encoding="'.Settings::Singleton()->get_setting('char_set').'" indent="yes"/>
 	'.$xslt.'
 </xsl:stylesheet>';
@@ -294,7 +274,7 @@ class Template
 			$xslt = ''; //drop the array
 			foreach($this->filenames as $filepath)
 			{
-				$xslt .= str_ireplace('<?xml version="1.0" encoding="UTF-8"?>', '', file_get_contents($filepath));
+				$xslt .= str_ireplace($this->strip_xslt, '', file_get_contents($filepath));
 			}
 			persistantcache::Singleton()->save('template_xslt', array('xslt' => $xslt, 'mtime' => $this->lastmodified), null, 'templates');
 			return $xslt;

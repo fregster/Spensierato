@@ -1,4 +1,5 @@
-
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		<xsl:template name="admin_bar">
 		<xsl:variable name="tgif" select="concat(/page/settings/document_root, '/skin/transparent-gif.gif') " />
 			<xsl:if test="/page/user/id != 0">
@@ -156,14 +157,12 @@
 						<xsl:element name="div">
 							<xsl:attribute name="id">create_new_toolbar</xsl:attribute>
 							<xsl:attribute name="class">rounded</xsl:attribute>
-							<xsl:element name="form">
-								<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/<xsl:value-of select="/page/@id" /></xsl:attribute>
-								<xsl:attribute name="method">post</xsl:attribute>
-								<xsl:attribute name="id">new_<xsl:value-of select="/page/@id" /></xsl:attribute>
+							<form action="{/page/settings/document_root}/edit/{/page/@id}" method="post" id="new_{/page/@id}">
+							<input type="hidden" name="crft" value="test"/>
 								<div style="display:inline">
 									Create New: <xsl:call-template name="new_element" /><div style="display:inline"><button disabled="disabled" type="button" id="saveSortOrder" onclick="saveSortOrder(); return false;">Save new order</button></div>
 								</div>
-							</xsl:element>
+							</form>
 					</xsl:element>
 						<br />
 					</xsl:if>
@@ -199,8 +198,7 @@
  		<xsl:template name="new_element">
  			<span style="background:#EEE">
 			<xsl:for-each select="/page/settings/elementTypes/setting">
-				<xsl:if test="position() != 1"> | </xsl:if>
-				<input type="image" name="new_type" value="{./class}" src="{/page/settings/document_root}/skin/transparent-gif.gif" class="sprite sprite-{./icon}" style="display:inline;" title="Add a new {./name} element" alt="{./name}" />
+				<button type="submit" name="new_type" value="{./class}" ><img src="{/page/settings/document_root}/skin/transparent-gif.gif" class="sprite sprite-{./icon}" style="display:inline;top:0px;" title="Add a new {./name} element" alt="{./name}" /></button>
 			</xsl:for-each>
 			</span>
 		</xsl:template>
@@ -377,3 +375,4 @@
 			<br /><br />
 		</xsl:if>
 	</xsl:template>
+</xsl:stylesheet>

@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:template match="element[@type = 'element_Link']">
-	<xsl:call-template name="element_admin_header"/>
-	<xsl:element name="div">
-		<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
-		<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
-		<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
-		<xsl:if test="string-length(./data/href) != 0">
-			<xsl:element name="a">
-				<xsl:attribute name="href"><xsl:value-of select="./data/href" /></xsl:attribute>
-				<xsl:choose>
-					<xsl:when test="string-length(./data/text) != 0">
-						<xsl:value-of select="./data/text" />
-					</xsl:when>
-
-					<xsl:otherwise>
-						<xsl:value-of select="./data/href" />
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:element>
-		</xsl:if>
-	</xsl:element>
-	<xsl:call-template name="element_admin_footer"/>
-</xsl:template>
-
-<xsl:template name="sitewide_elements_Links">
-	 <xsl:for-each select="/page/body/element[@sw = 1]">
-		 <xsl:for-each select="/page/body/element[@type = 'element_Link']">
-			<div>Site Wide Link</div>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="element[@type = 'element_Link']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:call-template name="element_link"/>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+	
+	<xsl:template name="sitewide_elements_Links">
+		 <xsl:for-each select="/page/body/element[@sw = 1]">
+			 <xsl:if test="@type = 'element_Link'">
+				<xsl:call-template name="element_link"/>
+			</xsl:if>
 		</xsl:for-each>
-	</xsl:for-each>
-</xsl:template>
+	</xsl:template>
+	
+	<xsl:template name="element_link">
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+			<xsl:if test="string-length(./data/href) != 0">
+				<xsl:element name="a">
+					<xsl:attribute name="href"><xsl:value-of select="./data/href" /></xsl:attribute>
+					<xsl:choose>
+						<xsl:when test="string-length(./data/text) != 0">
+							<xsl:value-of select="./data/text" />
+						</xsl:when>
+	
+						<xsl:otherwise>
+							<xsl:value-of select="./data/href" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:element>
+			</xsl:if>
+		</xsl:element>
+	</xsl:template>
+</xsl:stylesheet>

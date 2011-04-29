@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:template match="/">
 	        <html>
 	        	<xsl:call-template name="header"/>
 	        	<body>
-	        		<div id="dashboard_frame" style="position:absoloute;">
-		        		<xsl:call-template name="menu" />
-		        		<div id="dashboard_content" style="margin-left:150px;position:absolute; top:0px; left:0px; width:500px; padding:3px;">
-		        			<xsl:for-each select="/page/settings/dashboards/*">
-		        				<div class="dashboard_gadget">
-									<div><a href="{/page/settings/document_root}/dashboard/{./link}"><xsl:value-of select="./name"/></a></div>
-									<div><xsl:copy-of select="./html"/></div>
-								</div>
-							</xsl:for-each>
-		        		</div>
-	        		</div>
+	        		Body
 	        	</body>
 	        </html>
 	</xsl:template>
@@ -22,8 +13,16 @@
 			<head>
 				<xsl:element name="title"><xsl:value-of select="/page/settings/site_name_short" /> | Dashboard</xsl:element>
 	
-				<meta name="keywords" content="Stylesheets"/>
-				<link href="{/page/settings/document_root}/css" type="text/css" rel="stylesheet" />
+				<xsl:element name="meta">
+					<xsl:attribute name="name">keywords</xsl:attribute>
+					<xsl:attribute name="content">Stylesheets</xsl:attribute>
+				</xsl:element>
+	
+				<xsl:element name="link">
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css</xsl:attribute>
+					<xsl:attribute name="type">text/css</xsl:attribute>
+					<xsl:attribute name="rel">stylesheet</xsl:attribute>
+				</xsl:element>
 	
 				<script type="text/javascript">
 					var document_root = '<xsl:value-of select="/page/settings/document_root" />';
@@ -135,3 +134,4 @@
 				</script>
 			</head>
 	</xsl:template>
+</xsl:stylesheet>

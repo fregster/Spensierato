@@ -1,50 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:template name="imagegallery">
-<!-- This is the default media template for imageflow -->
-<xsl:if test="count(./data/files/*) > 0">
-<div class="js-hide">
-	<p>Javascript is required to view the gallery with animations</p>
-</div>
-<!-- <div id="imageflow"> 
-	<div id="imageflow-loading">
-		<xsl:element name="img">
-			<xsl:attribute name="class">js-show</xsl:attribute>
-			<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/z-loading.gif</xsl:attribute>
-			<xsl:attribute name="alt">Loading</xsl:attribute>
-		</xsl:element>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template name="imagegallery">
+	<!-- This is the default media template for imageflow -->
+	<xsl:if test="count(./data/files/*) > 0">
+	<div class="js-hide">
+		<p>Javascript is required to view the gallery with animations</p>
 	</div>
-	<div id="imageflow-images">
-		
-		<xsl:for-each select="./data/elementid">
+	<!-- <div id="imageflow"> 
+		<div id="imageflow-loading">
 			<xsl:element name="img">
-				<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/preview/<xsl:value-of select="." /></xsl:attribute>
-				<xsl:attribute name="longdesc"><xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="." /></xsl:attribute>
-				<xsl:attribute name="alt">Image id <xsl:value-of select="./@id" /></xsl:attribute>
+				<xsl:attribute name="class">js-show</xsl:attribute>
+				<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/skin/z-loading.gif</xsl:attribute>
+				<xsl:attribute name="alt">Loading</xsl:attribute>
 			</xsl:element>
-		</xsl:for-each>
-	</div>
-	<div id="imageflow-captions"></div>
-	<div id="imageflow-scrollbar">
-		<div id="imageflow-slider"></div>
-	</div>
-</div>-->
-	<div class="gallery gallery{./@id}" id="gallery{./@id}">
-		<div class="holder">
-			<ul>
-				<xsl:for-each select="./data/files/file">
-				<!-- {/page/settings/document_root}  {.}-->
-					<li><img src="{/page/settings/document_root}/interfaces/filemanager?event=download&amp;amp;file=/{.}" alt="image" width="240" height="180" /></li>
-				</xsl:for-each>
-			</ul>
 		</div>
-		<div class="control">
-			<a href="#" class="prev">prev</a>
-			<a href="#" class="next">next</a>
-			<span class="info"></span>
+		<div id="imageflow-images">
+			
+			<xsl:for-each select="./data/elementid">
+				<xsl:element name="img">
+					<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/preview/<xsl:value-of select="." /></xsl:attribute>
+					<xsl:attribute name="longdesc"><xsl:value-of select="/page/settings/document_root" />/download/<xsl:value-of select="." /></xsl:attribute>
+					<xsl:attribute name="alt">Image id <xsl:value-of select="./@id" /></xsl:attribute>
+				</xsl:element>
+			</xsl:for-each>
 		</div>
-		<div class="paging"></div>
+		<div id="imageflow-captions"></div>
+		<div id="imageflow-scrollbar">
+			<div id="imageflow-slider"></div>
+		</div>
+	</div>-->
+		<div class="gallery gallery{./@id}" id="gallery{./@id}">
+			<div class="holder">
+				<ul>
+					<xsl:for-each select="./data/files/file">
+					<!-- {/page/settings/document_root}  {.}-->
+						<li><img src="{/page/settings/document_root}/interfaces/filemanager?event=download&amp;amp;file=/{.}" alt="image" width="240" height="180" /></li>
+					</xsl:for-each>
+				</ul>
+			</div>
+			<div class="control">
+				<a href="#" class="prev">prev</a>
+				<a href="#" class="next">next</a>
+				<span class="info"></span>
+			</div>
+			<div class="paging"></div>
+		
+		</div>
 	
-	</div>
-
-</xsl:if>
-</xsl:template>
+	</xsl:if>
+	</xsl:template>
+</xsl:stylesheet>

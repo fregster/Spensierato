@@ -1,15 +1,18 @@
-<xsl:template name="breadcrumbs">
-	<xsl:if test="count(//breadcrumbs/menu_item) > 1">
-		<xsl:for-each select="//breadcrumbs/menu_item">
-			<xsl:sort select="@sort"/>
-				<xsl:if test="position() > 1">
-					<span class="breadcrumb">
-					<xsl:element name="a">
-						<xsl:attribute name="href"><xsl:value-of select="@id"/></xsl:attribute>
-						<xsl:value-of select="."/>
-					</xsl:element>
-					</span> > 
-				</xsl:if>
-		</xsl:for-each>
-	</xsl:if>
-</xsl:template>
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template name="breadcrumbs">
+		<xsl:if test="count(//breadcrumbs/menu_item) > 1">
+			<xsl:for-each select="//breadcrumbs/menu_item">
+				<xsl:sort select="@sort"/>
+					<xsl:if test="position() > 1">
+						<span class="breadcrumb">
+						<xsl:element name="a">
+							<xsl:attribute name="href"><xsl:value-of select="@id"/></xsl:attribute>
+							<xsl:value-of select="."/>
+						</xsl:element>
+						</span> > 
+					</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+</xsl:stylesheet>

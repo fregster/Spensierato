@@ -1,4 +1,5 @@
-
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:template name="search">
 		<xsl:if test="/page/settings/search = '1'">
 			<form action="{/page/settings/document_root}/search" method="GET" id="searchform">
@@ -65,3 +66,4 @@
 			</div>
 		</xsl:if>
 	</xsl:template>
+</xsl:stylesheet>

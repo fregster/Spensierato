@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:template match="element[@type = 'element_Download']">
-	<xsl:call-template name="element_admin_header"/>
-	<xsl:if test="./data/filesize > 0">
-		<xsl:element name="div">
-			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
-			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
-			<xsl:attribute name="class"><xsl:value-of select="./@type" /> rounded</xsl:attribute>
-			<a href="{/page/settings/document_root}/download/{./@id}"><img src="{/page/settings/document_root}/skin/transparent-gif.gif" class="sprite sprite-attach" alt="Icon"/>Download:
-				<xsl:value-of select="./data/linktext" /> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)</a> <span class="jsShow" onclick="jsCalculateDownloadTime({round(./data/filesize div 1024)}, timeHolder{./@id})" id="timeHolder{./@id}"> [Download Time] </span>
-		</xsl:element>
-	</xsl:if>
-	<xsl:call-template name="element_admin_footer"/>
-</xsl:template>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="element[@type = 'element_Download']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:if test="./data/filesize > 0">
+			<xsl:element name="div">
+				<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+				<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+				<xsl:attribute name="class"><xsl:value-of select="./@type" /> rounded</xsl:attribute>
+				<a href="{/page/settings/document_root}/download/{./@id}"><img src="{/page/settings/document_root}/skin/transparent-gif.gif" class="sprite sprite-attach" alt="Icon"/>Download:
+					<xsl:value-of select="./data/linktext" /> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)</a> <span class="jsShow" onclick="jsCalculateDownloadTime({round(./data/filesize div 1024)}, timeHolder{./@id})" id="timeHolder{./@id}"> [Download Time] </span>
+			</xsl:element>
+		</xsl:if>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+</xsl:stylesheet>

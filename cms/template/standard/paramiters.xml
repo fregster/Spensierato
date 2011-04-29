@@ -1,3 +1,6 @@
-<xsl:param name="lowercase">abcdefghijklmnopqrstuvwxyz</xsl:param>
-<xsl:param name="uppercase">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:param>
-<xsl:param name="doc_root"><xsl:value-of select="/page/settings/document_root"/></xsl:param>
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:param name="lowercase">abcdefghijklmnopqrstuvwxyz</xsl:param>
+	<xsl:param name="uppercase">ABCDEFGHIJKLMNOPQRSTUVWXYZ</xsl:param>
+	<xsl:param name="doc_root"><xsl:value-of select="/page/settings/document_root"/></xsl:param>
+</xsl:stylesheet>

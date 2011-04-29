@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:template match="element[@type = 'element_Image']">
-	<xsl:call-template name="element_admin_header"/>
-	<xsl:if test="./data/filesize > 0">
-	<xsl:element name="div">
-		<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
-		<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
-		<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
-			<xsl:element name="a">
-				<xsl:attribute name="id">mb<xsl:value-of select="./@id" /></xsl:attribute>
-				<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/image/<xsl:value-of select="./@id" />/<xsl:value-of select="./data/filename" /></xsl:attribute>
-				<xsl:attribute name="class">mb</xsl:attribute>
-				<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
-					<xsl:element name="img">
-						<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/preview/<xsl:value-of select="./@id" /></xsl:attribute>
-						<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
-						<xsl:attribute name="class">image</xsl:attribute>
-						<xsl:attribute name="alt"><xsl:value-of select="./data/linktext" /> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)</xsl:attribute>
-					</xsl:element>
-			</xsl:element>
-			<xsl:if test="/page/settings/js_use_lightboxes = 1">
-				<div class="multiBoxDesc mb{./@id} mbHidden"><xsl:value-of select="./data/description"/> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)</div>
-			</xsl:if>
-	</xsl:element>
-	</xsl:if>
-	<xsl:call-template name="element_admin_footer"/>
-</xsl:template>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="element[@type = 'element_Image']">
+		<xsl:call-template name="element_admin_header"/>
+		<xsl:if test="./data/filesize > 0">
+		<xsl:element name="div">
+			<xsl:attribute name="id">eid_<xsl:value-of select="./@id" /></xsl:attribute>
+			<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+			<xsl:attribute name="class"><xsl:value-of select="./@type" /><xsl:if test="/page/options/admin_mode = 1"> elementadmin</xsl:if></xsl:attribute>
+				<xsl:element name="a">
+					<xsl:attribute name="id">mb<xsl:value-of select="./@id" /></xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/image/<xsl:value-of select="./@id" />/<xsl:value-of select="./data/filename" /></xsl:attribute>
+					<xsl:attribute name="class">mb</xsl:attribute>
+					<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+						<xsl:element name="img">
+							<xsl:attribute name="src"><xsl:value-of select="/page/settings/document_root" />/preview/<xsl:value-of select="./@id" /></xsl:attribute>
+							<xsl:if test="string-length(./@title) != 0"><xsl:attribute name="title"><xsl:value-of select="./@title" /></xsl:attribute></xsl:if>
+							<xsl:attribute name="class">image</xsl:attribute>
+							<xsl:attribute name="alt"><xsl:value-of select="./data/linktext" /> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)</xsl:attribute>
+						</xsl:element>
+				</xsl:element>
+				<xsl:if test="/page/settings/js_use_lightboxes = 1">
+					<div class="multiBoxDesc mb{./@id} mbHidden"><xsl:value-of select="./data/description"/> (<xsl:value-of select="round(./data/filesize div 1024)" /> Kb)</div>
+				</xsl:if>
+		</xsl:element>
+		</xsl:if>
+		<xsl:call-template name="element_admin_footer"/>
+	</xsl:template>
+</xsl:stylesheet>

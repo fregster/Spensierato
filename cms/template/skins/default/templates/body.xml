@@ -1,4 +1,5 @@
-
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:template name="body">
 		<xsl:call-template name="admin_edit_bar" />
 		<div id="page_section_body">
@@ -10,3 +11,4 @@
 			</xsl:for-each>
 		</div>
 	</xsl:template>
+</xsl:stylesheet>

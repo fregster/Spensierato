@@ -111,7 +111,7 @@ abstract class javascript
 		// Store cache
 		if(Settings::singleton()->get_setting('js_cache'))
 		{
-			persistantcache::singleton()->save($hash, array('contents' => $contents, 'mtime' => $lastmodified, 'encoding' => $encoding, 'md5' => $md5, 'moddate' => $gmdate_mod), 0, 'javascript');
+			persistantcache::singleton()->save($hash, array('contents' => $contents, 'mtime' => $lastmodified, 'encoding' => $encoding, 'md5' => $md5, 'moddate' => $gmdate_mod), 0, 'javascript', null, true);
 		}
 	
 		//If the file was sucsesfully cached then send the file through the cache class

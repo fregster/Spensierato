@@ -1,5 +1,5 @@
 <?php
-if(!defined('CACHE_PATH')){
+if(!defined('CACHE_PREFIX')){
 	DEFINE('CACHE_PREFIX', $GLOBALS['random_key']);
 }
 if(!defined('CACHE_PATH')){

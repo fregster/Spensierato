@@ -60,6 +60,33 @@ class session
 		}
 	}
 	
+	private function handler()
+	{
+		switch (Settings::singleton()->get_setting('session_handler'))
+		{
+			case 'memcached':
+				$servers = Settings::singleton()->get_setting('memcached_servers');
+				$servers_count = count(explode(',', $servers));
+				
+				if($servers && $servers_count > 0){
+					ini_set('session.save_handler', 'memcache');
+					ini_set('memcache.hash_strategy', 'consistent');
+					ini_set('memcache.allow_failover', '1');
+					ini_set('memcache.max_failover_attempts', '20');
+					ini_set('memcache.session_redundancy', $servers_count);
+					ini_set('session.save_path', $servers);
+				}
+				break;
+				
+			case 'database':
+				
+				break;
+				
+			default:
+				return;
+		}
+	}
+	
 	public function force()
 	{
 		if(!$this->session_loaded)
@@ -70,6 +97,7 @@ class session
 				$path .= '/';
 			}
 			session_set_cookie_params(0, $path);
+			$this->handler();
 			@session_start();
 		}
 		return true;

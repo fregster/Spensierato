@@ -421,7 +421,13 @@ Settings::singleton()->new_setting('cache_database_queries', true, false, true, 
 
 //Setting store_sessions_in_memcached
 //TODO: write session handler
-Settings::singleton()->new_setting('store_sessions_in_memcached', false, false, true, true, SETTING_GROUP_PERFORMANCE);
+Settings::singleton()->new_setting('session_handler', 'file', false, false, array('file', 'memcached', 'database'), SETTING_GROUP_PERFORMANCE);
+
+//Setting memcached_servers
+//comma seperated connection string for Memcache servers
+//'tcp://192.168.0.1:11211, tcp://192.168.0.2:11211'
+Settings::singleton()->new_setting('memcached_servers', '', false, true, true, SETTING_GROUP_PERFORMANCE);
+
 
 $av_engines = glob(DIR_CLASSES.'virusscan'.DS.'*.inc', GLOB_NOSORT);
 if(is_array($av_engines)){ foreach($av_engines as $key => $engine){ $av_engines[$key] = basename($engine, '.inc'); } } else { $av_engines = true; }

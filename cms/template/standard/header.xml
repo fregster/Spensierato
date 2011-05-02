@@ -14,10 +14,10 @@
 				 | <xsl:value-of select="/page/settings/site_name_short" /> - <xsl:value-of select="/page/settings/title_tag_line" /></xsl:element>
 				
 				<meta name="keywords" content="{/page/settings/meta_keywords}"/>
-				<meta name="description" content="/page/settings/meta_description"/>
+				<meta name="description" content="{/page/settings/meta_description}"/>
 				
 				<xsl:if test="/page/settings/meta_verify-v1 != ''">
-					<meta name="verify-v1" content="/page/settings/meta_verify-v1"/>
+					<meta name="verify-v1" content="{/page/settings/meta_verify-v1}"/>
 				</xsl:if>
 				
 				<xsl:if test="/page/settings/google-site-verification != ''">

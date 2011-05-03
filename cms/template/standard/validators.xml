@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template name="meta-validators">
+		<xsl:if test="/page/settings/meta_verify-v1 != ''">
+			<meta name="verify-v1" content="{/page/settings/meta_verify-v1}"/>
+		</xsl:if>
+		
+		<xsl:if test="/page/settings/google-site-verification != ''">
+			<meta name="google-site-verification" content="{/page/settings/google-site-verification}"/>
+		</xsl:if>
+		
+		<xsl:if test="/page/settings/msvalidate.01 != ''">
+			<meta name="msvalidate.01" content="{/page/settings/msvalidate.01}"/>
+		</xsl:if>
+	</xsl:template>
+</xsl:stylesheet>

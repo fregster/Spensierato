@@ -15,15 +15,8 @@
 				
 				<meta name="keywords" content="{/page/settings/meta_keywords}"/>
 				<meta name="description" content="{/page/settings/meta_description}"/>
+				<xsl:call-template name="meta-validators"/>
 				
-				<xsl:if test="/page/settings/meta_verify-v1 != ''">
-					<meta name="verify-v1" content="{/page/settings/meta_verify-v1}"/>
-				</xsl:if>
-				
-				<xsl:if test="/page/settings/google-site-verification != ''">
-					<meta name="google-site-verification" content="{/page/settings/google-site-verification}"/>
-				</xsl:if>
-	
 				<xsl:call-template name="javascript-inline"/>
 				<xsl:call-template name="stylesheet"/>
 				<xsl:call-template name="javascript-external"/>

@@ -48,6 +48,10 @@ Settings::singleton()->new_setting('meta_description', 'A free and easy to use, 
 //String of Comma seperated values
 Settings::Singleton()->new_setting('meta_keywords', 'cms, open, free, gpl, spensierato, content, managment, system', false, false, true, SETTING_GROUP_METADATA);
 
+//Setting msvalidate.01
+//Bing verification string
+Settings::Singleton()->new_setting('msvalidate.01', NULL, false, false, true, SETTING_GROUP_GOOGLE);
+
 //Setting meta_verify-v1
 //Google verification string
 Settings::Singleton()->new_setting('meta_verify-v1', NULL, false, false, true, SETTING_GROUP_GOOGLE);

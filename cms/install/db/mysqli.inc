@@ -138,6 +138,8 @@ $tables['tbl_security']['cols_define']['data'] = $long_text;
 $tables['tbl_security']['charset'] = $default_charset;
 $tables['tbl_security']['keys'] = array();
 
+$tables['tbl_sessions']['keys'] = array('KEY' => array('expire' => array('expiration_ts')));
+
 $tables['tbl_settings']['charset'] = $default_charset;
 $tables['tbl_settings']['keys'] = array();
 

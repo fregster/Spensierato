@@ -31,6 +31,9 @@
 ini_set('display_errors', 1);
 ob_start();
 $install = true;
+if(!defined('CACHE_TYPE')){
+	DEFINE('CACHE_TYPE', 'off');
+}
 //$settings_file = Settings::singleton()->get_setting('cms_root').'/../spensierato_setup.inc';
 $path_vars = Common::get_path_vars();
 if($_SERVER['REQUEST_METHOD'] == 'GET')
@@ -59,7 +62,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-	$doc_root_prefix = SITE_ROOT.DIRECTORY_SEPARATOR;
+	$doc_root_prefix = DIR_INDEX . DIRECTORY_SEPARATOR;
 	//detect the server OS and set the doc root accordingly.
 	if (stripos(PHP_OS, 'darwin') !== FALSE) {
 		$os = 'mac';
@@ -273,6 +276,7 @@ $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\'; //A random table prefix to help
 $GLOBALS[\'allow_rewrite\'] = '. $rewrite.'; //Apache + mod rewrite gives clean URL\'s anything else is untested
 $GLOBALS[\'random_key\'] = \''.post::variable('random_key').'\'; //A random key used for generating more secure hash\'s
 $GLOBALS[\'server_os\'] = \''.$os.'\'; //Should be unix, windows or osx
+$GLOBALS[\'session_handler\'] = \'files\';
 
 //Default options
 $GLOBALS[\'max_sha_hash\'] = \''.max_sha_hash().'\'; //Max SHA hash type supported at install time

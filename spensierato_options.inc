@@ -425,7 +425,7 @@ Settings::singleton()->new_setting('cache_database_queries', true, false, true, 
 
 //Setting store_sessions_in_memcached
 //TODO: write session handler
-Settings::singleton()->new_setting('session_handler', 'file', false, false, array('file', 'memcached', 'database'), SETTING_GROUP_PERFORMANCE);
+//Settings::singleton()->new_setting('session_handler', 'file', false, false, array('file', 'memcached', 'database'), SETTING_GROUP_PERFORMANCE);
 
 //Setting memcached_servers
 //comma seperated connection string for Memcache servers

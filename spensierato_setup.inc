@@ -12,11 +12,13 @@ $GLOBALS['database_name'] = 'spensierato'; //DB name
 $GLOBALS['database_user_read'] = 'spensierato_read'; //A standard db user with SELECT only!
 $GLOBALS['database_user_readwrite'] = 'spensierato_writ'; //A db user with SELECT, UPDATE, REPLACE and DELETE permissions, this user is only used when required to help prevent 0 day exploits
 $GLOBALS['database_password'] = 'fsaaxwgnzyarjkhf'; //A nice random string for the DB password
+$GLOBALS['database_password_write'] = 'fsaaxwgnzyarjkhf'; //A nice random string for the DB password
 $GLOBALS['table_prefix'] = 'cms_'; //A random table prefix to help prevent 0 day exploits
 $GLOBALS['allow_rewrite'] = true; //Apache + mod rewrite gives clean URL's anything else is untested
 $GLOBALS['random_key'] = '2fe8b327381ba67d770d22fddff246dca71f0b4e'; //A random key used for generating more secure hash's
 $GLOBALS['server_os'] = 'unix'; //Should be unix, windows or osx
 $GLOBALS['max_sha_hash'] = 'SHA256';
+$GLOBALS['session_handler'] = 'memcached';
 
 
 //Settings for email

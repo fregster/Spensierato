@@ -67,6 +67,7 @@ class persistantcache
 	protected static $garbage_collection_max_age = 2678400; //Time in seconds 24 hours = 86400, default is 31 days
 	protected static $garbage_collection_retry_time = 86400; //Time in seconds between clean up attempts 24 hours = 86400
 	protected static $namespace_version_map_max_int = 10000000; //Set max value before recycling the version numbers
+	protected static $max_size_force_compression = 100; //Max object size in KB before attempting to forcing compression
 	
 	protected $allow_memcache = true;
 	protected $allow_file_cache = true;
@@ -158,7 +159,7 @@ class persistantcache
 					if($try->enabled())
 					{
 						$c = $class;
-						$_SESSION['persistant_cache_type'] = array('type'=>$class, 'time'=>persistantcache::$time);
+						if(isset($_SESSION)){ $_SESSION['persistant_cache_type'] = array('type'=>$class, 'time'=>persistantcache::$time); }
 						break; //The best cache has been selected escape
 					}
 				}

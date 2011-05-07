@@ -88,10 +88,15 @@ class database_execution
 				$this->read = $this->connect($this->dsn_default);
 				//If logged in create db write user this should help prevent against SQL injection
 				//As only logged in can use the db writeable user
+				Session::Singleton();
 				if(isset($_SESSION['userid']) && $_SESSION['userid'] != 0)
 				{
 					if(database::singleton()->user_support())
 					{
+						if(!isset($GLOBALS['database_password_write'])){
+							$GLOBALS['database_password_write'] &= $GLOBALS['database_password'];
+						}
+						
 						//Create write user
 						$dsn = array(
 						    'phptype'  => $GLOBALS['database_driver'],

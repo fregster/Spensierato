@@ -33,7 +33,9 @@ class session
 	}
 	
 	protected function __construct()
-	{		
+	{	
+		session::handler();
+			
 		//Flash will not send the cookie so use an encrypted get var as a session holder
 		$skip_validation = false;
 		if(get::variable('session', 'isset') or post::variable('session', 'isset')){
@@ -60,30 +62,37 @@ class session
 		}
 	}
 	
-	private function handler()
+	private static function handler()
 	{
-		switch (Settings::singleton()->get_setting('session_handler'))
+		if(isset($GLOBALS['session_handler']))
 		{
-			case 'memcached':
-				$servers = Settings::singleton()->get_setting('memcached_servers');
-				$servers_count = count(explode(',', $servers));
-				
-				if($servers && $servers_count > 0){
-					ini_set('session.save_handler', 'memcache');
-					ini_set('memcache.hash_strategy', 'consistent');
-					ini_set('memcache.allow_failover', '1');
-					ini_set('memcache.max_failover_attempts', '20');
-					ini_set('memcache.session_redundancy', $servers_count);
-					ini_set('session.save_path', $servers);
-				}
-				break;
-				
-			case 'database':
-				
-				break;
-				
-			default:
-				return;
+			switch ($GLOBALS['session_handler'])
+			{
+				case 'memcached':
+					$servers = Settings::singleton()->get_setting('memcached_servers');
+					$servers_count = count(explode(',', $servers));
+					
+					if($servers && $servers_count > 0){
+						ini_set('session.save_handler', 'memcache');
+						ini_set('memcache.hash_strategy', 'consistent');
+						ini_set('memcache.allow_failover', '1');
+						ini_set('memcache.max_failover_attempts', '20');
+						ini_set('session.save_path', $servers);
+						
+						if($servers_count > ini_get('memcache.max_failover_attempts')){
+							$servers_count = ini_get('memcache.max_failover_attempts');
+						}
+						ini_set('memcache.session_redundancy', $servers_count);
+					}
+					break;
+					
+				case 'database':
+					
+					break;
+					
+				default:
+					return;
+			}
 		}
 	}
 	
@@ -97,8 +106,8 @@ class session
 				$path .= '/';
 			}
 			session_set_cookie_params(0, $path);
-			$this->handler();
 			@session_start();
+			$this->session_loaded = true;
 		}
 		return true;
 	}

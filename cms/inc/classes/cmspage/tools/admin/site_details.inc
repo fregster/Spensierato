@@ -1,6 +1,7 @@
 <?php
 if (!user::Singleton()->is_logged_in() || !user::Singleton()->is_admin()) common::bounce_to_referer();
 $updated = false;
+var_dump($_SESSION);
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	foreach($_POST as $key => $value)

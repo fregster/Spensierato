@@ -211,6 +211,16 @@ $tables['tbl_security'] = array(
 								'primary_key' => 'page_id',
 								);
 
+$tables['tbl_sessions'] = array(
+								'cols_define' =>
+								array(
+									'id' => varchar(32).' NOT NULL',
+									'expiration_ts' => $int.' UNSIGNED NOT NULL',
+									'data' => 'TEXT NOT NULL'
+									),
+								'primary_key' => 'id',
+								);						
+								
 $tables['tbl_settings'] = array(
 								'cols_define' =>
 								array(

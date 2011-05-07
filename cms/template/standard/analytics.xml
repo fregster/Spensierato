@@ -2,17 +2,19 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:template name="analytics">
 		<xsl:if test="boolean(/page/settings/google_analytics_id)">
-				<script type="text/javascript">
-				var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-				document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-				</script>
-				<script type="text/javascript">
-				var pageTracker = _gat._getTracker("<xsl:value-of select="/page/settings/google_analytics_id" />");
-				pageTracker._initData();
-				pageTracker._trackPageview();
+			<script type="text/javascript">
+				 var _gaq = _gaq || [];
+				 _gaq.push(['_setAccount', '<xsl:value-of select="/page/settings/google_analytics_id" />']);
+				 _gaq.push(['_trackPageview']);
+				 _gaq.push(['_trackPageLoadTime']);
 				<xsl:if test="/page/user/administrator = 1">
-					javascript:pageTracker._setVar('site_admin');
+					_gaq.push(['site_admin'], true);
 				</xsl:if>
+				 (function() {
+				   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+				 })();
 				</script>
 			</xsl:if>
 	</xsl:template>	

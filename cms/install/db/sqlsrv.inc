@@ -108,7 +108,7 @@ foreach ($tables as $table => $data){
 unset($table, $data);
 
 $user_create_sql = array();
-$user_create_sql[] = 'CREATE LOGIN '.$user_rw.' WITH PASSWORD = \''.$user_db_password.'\'; USE '.$database.' CREATE USER '.$user_rw.' FOR LOGIN '.$user_rw.';';
+$user_create_sql[] = 'CREATE LOGIN '.$user_rw.' WITH PASSWORD = \''.$user_db_password_write.'\'; USE '.$database.' CREATE USER '.$user_rw.' FOR LOGIN '.$user_rw.';';
 $user_create_sql[] = 'CREATE LOGIN '.$user_r.' WITH PASSWORD = \''.$user_db_password.'\'; USE '.$database.' CREATE USER '.$user_r.' FOR LOGIN '.$user_r.';';
 $user_create_sql[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$grant_db.'	TO '.$grant_user_rw;
 $user_create_sql[] = 'GRANT SELECT ON '.$grant_db.'	TO '.$grant_user_r;

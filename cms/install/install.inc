@@ -132,6 +132,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$user_r = post::variable('r_user');
 	$user_rw = post::variable('rw_user');
 	$user_db_password = post::variable('db_password');
+	$user_db_password_write = post::variable('db_password_write');
 
 	//Options
 	if(post::variable('rewrite')) { $rewrite = 'true'; }
@@ -144,6 +145,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$GLOBALS['database_user_readwrite'] = $user_rw;
 	$GLOBALS['database_user_read'] = $user_r;
 	$GLOBALS['database_password'] = $user_db_password;
+	$GLOBALS['database_password_write'] = $user_db_password_write;
 	$GLOBALS['database_host'] = $host;
 	$GLOBALS['database_name'] = $database;
 	$GLOBALS['table_prefix'] = $prefix.'_';
@@ -272,6 +274,7 @@ $GLOBALS[\'database_name\'] = \''. $database .'\'; //DB name
 $GLOBALS[\'database_user_read\'] = \''. $user_r .'\'; //A standard db user with SELECT only!
 $GLOBALS[\'database_user_readwrite\'] = \''. $user_rw .'\'; //A db user with SELECT, UPDATE, REPLACE and DELETE permissions, this user is only used when required to help prevent 0 day exploits
 $GLOBALS[\'database_password\'] = \''. $user_db_password .'\'; //A nice random string for the DB password
+$GLOBALS[\'database_password_write\'] = \''. $user_db_password_write .'\'; //A nice random string for the DB password
 $GLOBALS[\'table_prefix\'] = \''. $prefix .'_\'; //A random table prefix to help prevent 0 day exploits
 $GLOBALS[\'allow_rewrite\'] = '. $rewrite.'; //Apache + mod rewrite gives clean URL\'s anything else is untested
 $GLOBALS[\'random_key\'] = \''.post::variable('random_key').'\'; //A random key used for generating more secure hash\'s

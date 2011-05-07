@@ -89,9 +89,9 @@ class database_execution
 				//If logged in create db write user this should help prevent against SQL injection
 				//As only logged in can use the db writeable user
 				Session::Singleton();
-				if(isset($_SESSION['userid']) && $_SESSION['userid'] != 0)
+				if((isset($_SESSION['userid']) && $_SESSION['userid'] != 0) || defined('DATABASE_INSTALL_MODE'))
 				{
-					if(database::singleton()->user_support())
+					if($this->user_support)
 					{
 						if(!isset($GLOBALS['database_password_write'])){
 							$GLOBALS['database_password_write'] &= $GLOBALS['database_password'];
@@ -101,10 +101,11 @@ class database_execution
 						$dsn = array(
 						    'phptype'  => $GLOBALS['database_driver'],
 						    'username' => $GLOBALS['database_user_readwrite'],
-						    'password' => $GLOBALS['database_password'],
+						    'password' => $GLOBALS['database_password_write'],
 						    'hostspec' => $GLOBALS['database_host'],
 						    'database' => $GLOBALS['database_name'],
 						);
+						
 						if(isset($GLOBALS['database_mode']))
 						{
 							$this->dsn_default['mode'] = $GLOBALS['database_mode'];
@@ -149,7 +150,7 @@ class database_execution
 			$this->dsn = array(
 			    'phptype'  => $GLOBALS['database_driver'],
 			    'username' => $GLOBALS['database_user_readwrite'],
-			    'password' => $GLOBALS['database_password'],
+			    'password' => $GLOBALS['database_password_write'],
 			    'hostspec' => $GLOBALS['database_host'],
 			    'database' => $GLOBALS['database_name'],
 			);

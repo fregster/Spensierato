@@ -3,7 +3,7 @@ class database_execution_pdo extends database_execution
 {
 	protected $supports_prepared_statments = true;
 	
-	public function connect($dsn, $options = NULL, $mods = NULL)
+	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false)
 	{
 		try {
 			$db_dsn_string = 'dbname=';
@@ -25,7 +25,7 @@ class database_execution_pdo extends database_execution
 					unset($dsn['database']);
 						if(@!defined('DATABASE_INSTALL_MODE') || DATABASE_INSTALL_MODE != true)
 						{
-							if(!file_exists($host) || !is_writable($host)){ $this->sql_error('Database offline '.$host); }
+							if(!file_exists($host) || !is_writable($host)){ $this->sql_error('Database offline '.$host, NULL, NULL, $soft_connect); }
 						}
 					break;
 			}
@@ -43,14 +43,14 @@ class database_execution_pdo extends database_execution
 			if(!$this->db_backend)
 			{
 				$error = 'Unable to connect to the database '.$php_errormsg;
-				$this->sql_error($error);
+				$this->sql_error($error, NULL, NULL, $soft_connect);
 			}
 
 			ini_set('track_errors', $old_track);
 		}	    
 		catch(PDOException $e)
 	    {
-			$this->sql_error($e->getMessage() . ': Are all the required PHP extentions loaded for your Database Type', __LINE__, __FILE__);
+			$this->sql_error($e->getMessage() . ': Are all the required PHP extentions loaded for your Database Type', __LINE__, __FILE__, $soft_connect);
 	    }
 		
 		return $this->db_backend;
@@ -82,14 +82,14 @@ class database_execution_pdo extends database_execution
 							{
 								$error .= 'From : '. $sql .'<br />With: ' .$values;
 							}
-							$this->sql_error($error);
+							$this->sql_error($error, NULL, NULL, $soft_connect);
 						}
 					}
 				}
 				else
 				{
 					$error = 'Failed update database, write user disabled<br />';
-					$this->sql_error($error);
+					$this->sql_error($error, NULL, NULL, $soft_connect);
 				}
 			}
 			else
@@ -120,7 +120,7 @@ class database_execution_pdo extends database_execution
 						{
 							$error .= 'From : '. $sql .'<br />With: ' .$values;
 						}
-						$this->sql_error($error);
+						$this->sql_error($error, NULL, NULL, $soft_connect);
 					}
 				}
 			}
@@ -142,7 +142,7 @@ class database_execution_pdo extends database_execution
 		}
 		catch(PDOException $e)
 	    {
-	   		$this->sql_error($e->getMessage());
+	   		$this->sql_error($e->getMessage(), NULL, NULL, $soft_connect);
 	   		exit;
 	    }
 	    

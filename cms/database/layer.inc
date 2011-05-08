@@ -18,9 +18,9 @@ class database
 
 	private $sql_cache_enabled = true;
 	private $sql_cache = array();
-	private $sql_cache_max_results = 50; //For loca SQL caching not used if external caching is enabled
-	private $sql_cache_max_freshness = 300; //Max time before DB is re-quired, if the connection is dead and a cached result is available (max_time) the stale result is still used 
-	private $sql_cache_max_time = 1200; //Max cache time in seconds
+	private $sql_cache_max_results = 50; //For local SQL caching not used if external caching is enabled
+	private $sql_cache_max_freshness = 3000; //Max time before DB is re-quired, if the connection is dead and a cached result is available (max_time) the stale result is still used 
+	private $sql_cache_max_time = 1500; //Max cache time in seconds
 	private $sql_cache_hit = false;
 	private $sql_cache_fresh = false;
 	private $sql_cache_hits = 0;
@@ -1296,18 +1296,7 @@ class database
 
 			if($result != false)
 			{
-//				if($values != NULL)
-//				{
-//					//This was a prepared statment return the correct cached result
-//					if(	(isset($result[$values])) and ($result[$values]['time'] >= ($this->time - 30)))
-//					{
-//						return $result[$values];
-//					}
-//					//SQL Query has been done before but with diffrent values
-//					return false;
-//				}
-
-				if($result['time'] >= ($this->time - $this->sql_cache_max_time) )
+				if(($result['time'] >= ($this->time - $this->sql_cache_max_time) ) || (($result['time'] >= ($this->time - $this->sql_cache_max_freshness - $this->sql_cache_max_time)) && !($this->db->sql_connect(true))))
 				{
 					//Result cached and current
 					$this->sql_cache_hit = true;
@@ -1319,7 +1308,7 @@ class database
 					return $result['result'];
 				}
 				else
-				{
+				{	
 					//SQL Query is old so delete it and re-check the DB
 					if($this->external_cache)
 					{

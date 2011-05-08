@@ -67,7 +67,7 @@ class database_execution
 	 * The public call to build the DSN and connect to the backend lib
 	 * @return true
 	 */
-	public function sql_connect()
+	public function sql_connect($soft_connect = false)
 	{
 		$this->user_support = database::singleton()->user_support();
 		if(!$this->connected)
@@ -85,7 +85,7 @@ class database_execution
 					$this->dsn_default['mode'] = $GLOBALS['database_mode'];
 				}
 
-				$this->read = $this->connect($this->dsn_default);
+				$this->read = $this->connect($this->dsn_default, NULL, NULL, $soft_connect);
 				//If logged in create db write user this should help prevent against SQL injection
 				//As only logged in can use the db writeable user
 				Session::Singleton();
@@ -110,13 +110,17 @@ class database_execution
 						{
 							$this->dsn_default['mode'] = $GLOBALS['database_mode'];
 						}
-						$this->write = $this->connect($dsn);
+						$this->write = $this->connect($dsn, NULL, NULL, $soft_connect);
 					}
 					else
 					{
 						$this->write =& $this->read;
 					}
 				}
+				
+			if(!$this->read){
+				return false;
+			}
 
 			$this->dsn = isset($dsn)?$dsn:NULL;
 			$this->connected = true;
@@ -188,7 +192,7 @@ class database_execution
    		 return $this;
 	}
 	
-	public function connect($dsn, $options = NULL, $mods = NULL)
+	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false)
 	{
 		
 	}
@@ -230,8 +234,11 @@ class database_execution
 	 * @param $file
 	 * @return unknown_type
 	 */
-	protected function sql_error($message, $line = NULL, $file = NULL)
+	protected function sql_error($message, $line = NULL, $file = NULL, $soft_connect = false)
 	{
+		if($soft_connect){
+			return false;
+		}
 		database::singleton()->sql_error($message, $line, $file);
 	}
 	

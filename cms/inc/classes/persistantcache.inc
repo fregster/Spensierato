@@ -63,6 +63,7 @@ class persistantcache
 	private $encrypt_data = false;
 	protected $max_cache_time = 300;
 	protected $max_object_size = 20480; //The string length of the serialized array
+	protected $cache_time_veriance = 10; //Percrentage random added to cache expires to prevent bulk expires
 	protected static $retry_time = 30; //Time in seconds before reworking out the best cache type
 	protected static $garbage_collection_max_age = 2678400; //Time in seconds 24 hours = 86400, default is 31 days
 	protected static $garbage_collection_retry_time = 86400; //Time in seconds between clean up attempts 24 hours = 86400
@@ -131,7 +132,7 @@ class persistantcache
 	 * This actually replaces the current instance with the best available cache type
 	 * @return nothing
 	 */
-	protected static function rebuild_singleton($options)
+	protected static function rebuild_singleton($options = array())
 	{
 		$c = persistantcache::get_type($options);
 		self::$instance = new $c;
@@ -284,7 +285,7 @@ class persistantcache
 			$encrypted = true;
 		}
 		
-		$expire_time = persistantcache::$time + $this->max_cache_time;
+		$expire_time = persistantcache::$time + $this->max_cache_time + (rand(0, $this->cache_time_veriance)/100*$this->max_cache_time);
 		if($time != 0)
 		{
 			$expire_time = $expire_time + $time;

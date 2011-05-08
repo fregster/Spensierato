@@ -1,7 +1,7 @@
 <?php
 class database_execution_php extends database_execution
 {
-	public function connect($dsn, $options = NULL, $mods = NULL)
+	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false)
 	{
 		$this->db_backend = @mysql_connect($dsn['hostspec'], $dsn['username'], $dsn['password']);
 		if(!$this->db_backend)
@@ -15,7 +15,7 @@ class database_execution_php extends database_execution
 			if (! @mysql_select_db($dsn['database']) )
 			{
 				$error = 'Unable to locate the database';
-				$this->sql_error($error);
+				$this->sql_error($error, null, null, $soft_connect);
 			}
 		}
 	

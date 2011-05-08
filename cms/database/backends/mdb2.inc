@@ -4,14 +4,13 @@ class database_execution_mdb2 extends database_execution
 	protected $supports_prepared_statments = true;
 	protected $supports_database_backup = true;
 	
-	public function connect($dsn, $options = NULL, $mods = NULL)
-	{		
+	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false)
+	{
 		//Load the MDB2 code
 		//Doing this here only loads the code if a DB query is actually going to be done
 		if(!@include_once 'MDB2.php')
 		{
-			$this->sql_error('Unable to load MDB2, ensure the class is available. Hint try installing the pear class');
-			exit;
+			return $this->sql_error('Unable to load MDB2, ensure the class is available. Hint try installing the pear class', __LINE__, __FILE__, $soft_connect);
 		}
 		
 		$host = $dsn['hostspec'];
@@ -24,7 +23,7 @@ class database_execution_mdb2 extends database_execution
 			unset($dsn['database']);
 			if(@!defined('DATABASE_INSTALL_MODE') || DATABASE_INSTALL_MODE != true)
 			{
-				if(!file_exists($host) || !is_writable($host)){ $this->sql_error('Database offline '.$host); }
+				if(!file_exists($host) || !is_writable($host)){ return $this->sql_error('Database offline '.$host, NULL, NULL, $soft_connect); }
 			}
 		}
 		if(isset($dsn['database'])){
@@ -39,14 +38,14 @@ class database_execution_mdb2 extends database_execution
 		if(!$this->db_backend)
 		{
 			$error = 'Unable to connect to the database ('.$php_errormsg.')';
-			$this->sql_error($error);
+			return $this->sql_error($error, __LINE__, __FILE__, $soft_connect);
 		}
 		
 		ini_set('track_errors', $old_track);
 
 		if (PEAR::isError($this->db_backend) or (MDB2::isError($this->db_backend)))
 		{
-			$this->sql_error($this->db_backend->getMessage());
+			return $this->sql_error($this->db_backend->getMessage(), __LINE__, __FILE__, $soft_connect);
 		}
 
 		if(isset($mods[0]))

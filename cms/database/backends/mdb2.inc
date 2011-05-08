@@ -73,7 +73,7 @@ class database_execution_mdb2 extends database_execution
 			{
 				if($this->write != NULL) //Test the write user is set
 				{
-					if($values == NULL)
+					if($values == NULL || count($values) == 0)
 					{
 						//Values have not been passed so do simple SQL exec
 						$resultset = @$this->write->query($sql);
@@ -91,7 +91,7 @@ class database_execution_mdb2 extends database_execution
 			}
 			else
 			{
-				if($values == NULL)
+				if($values == NULL || count($values) == 0)
 				{
 					//Values have not been passed so do simple SQL exec
 					$resultset = @$this->read->query($sql);
@@ -127,6 +127,8 @@ class database_execution_mdb2 extends database_execution
 			unset($sql);
 			
 			if($error != false){
+				var_dump($resultset);
+				var_dump($stmt);
 				$this->sql_error($error);
 			}
 			

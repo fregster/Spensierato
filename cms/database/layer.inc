@@ -57,6 +57,7 @@ class database
 	private $sql_values = null;
 	private $sql_types = null;
 	private $sql_prepared_count = 1;
+	private $sql_values_id = 0;
 
 	/**
 	 * Privately cached vars
@@ -137,6 +138,13 @@ class database
 		{
 			$this->error_file = DATABASE_LAYER_PATH . DS . 'dberror.html';
 		}
+	}
+	
+	protected function sql_id()
+	{
+		++$this->sql_values_id;
+		$this->values[$this->sql_values_id] = array();
+		return $this->sql_values_id;
 	}
 
 	/**
@@ -259,19 +267,19 @@ class database
 	 * Return a cleaned value or the aprorate prepared statment place holder
 	 * @param mixed $var
 	 */
-	protected function sql_clean_input_value($var)
+	protected function sql_clean_input_value($var, $id)
 	{
 		if($this->sql_use_prepared_statments)
 		{
 			if($this->sql_prepared_statment_use_short_holder)
 			{
-				$this->sql_values[] = $var;
+				$this->sql_values[$id][] = $var;
 				++$this->sql_prepared_count;
 				return '?';
 				
 			}
 			$key = $this->sql_prepared_statment_placeholder_name.$this->sql_prepared_count;
-			$this->sql_values[$key] = $var;
+			$this->sql_values[$id][$key] = $var;
 			if(is_int($var)){
 				$this->sql_types[] = 'integer';
 			}
@@ -387,9 +395,9 @@ class database
 	 */
 	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
-		die('Table: '.$table);
-		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions);
-		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table);
+		$id = $this->sql_id();
+		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions, $id);
+		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table, $id);
 	}
 	
 	/**
@@ -406,11 +414,12 @@ class database
 	 */
 	public function sql_select_recursive($fields = NULL, $table, $join_col, $join_value, $where_id_field = null, $where_id_value = null, $max_recursion = 5, $FORCE_NO_CACHE = FALSE)
 	{
-		$sql = $this->sql_select_recursive_build($fields, $table, $join_col, $join_value, $where_id_field, $where_id_value, $max_recursion);
-		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table);
+		$id = $this->sql_id();
+		$sql = $this->sql_select_recursive_build($fields, $table, $join_col, $join_value, $where_id_field, $where_id_value, $max_recursion, $id);
+		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table, $id);
 	}
 	
-	private function sql_select_recursive_build($fields = NULL, $table, $join_col, $join_value, $where_id_field, $where_id_value, $max_recursion)
+	private function sql_select_recursive_build($fields = NULL, $table, $join_col, $join_value, $where_id_field, $where_id_value, $max_recursion, $id)
 	{
 		if($where_id_field == null){
 			$where_id_field = $join_col;
@@ -475,7 +484,7 @@ class database
 			$recursion++;
 		}
 
-		return "SELECT $sql_temp_select FROM ".$this->sql_clean_input($this->prefix.$table, $this->table_quote).' AS t0 '.$sql_temp_join.' WHERE t0.'.$where_id_field.' = '.$this->sql_clean_input_value($where_id_value);
+		return "SELECT $sql_temp_select FROM ".$this->sql_clean_input($this->prefix.$table, $this->table_quote).' AS t0 '.$sql_temp_join.' WHERE t0.'.$where_id_field.' = '.$this->sql_clean_input_value($where_id_value, $id);
 
 	}
 	
@@ -492,6 +501,7 @@ class database
 	 */
 	public function sql_select_count_group_by_col($fields = NULL, $table, $group_col, $where_fields= NULL, $where_values= NULL, $ORDER_BY_COUNT = TRUE, $HAVING_COUNT = FALSE)
 	{
+		$id = $this->sql_id();
 		$sql_temp_select = '';
 
 		if($fields == NULL)
@@ -500,7 +510,7 @@ class database
 		}
 		else if (!is_array($fields) )
 		{
-			$sql_temp_select = $this->sql_clean_input_value($fields);
+			$sql_temp_select = $this->sql_clean_input_value($fields, $id);
 		}
 		else
 		{
@@ -508,7 +518,7 @@ class database
 			$count_fields = count($fields);
 			while($i <= ($count_fields - 1))
 			{
-				$sql_temp_select = $sql_temp_select . $this->sql_clean_input_value($fields[$i]);
+				$sql_temp_select = $sql_temp_select . $this->sql_clean_input_value($fields[$i], $id);
 
 				if($i < ($count_fields - 1))
 				{
@@ -520,16 +530,16 @@ class database
 		}
 
 
-		$sql = "SELECT $sql_temp_select, COUNT(*) as count FROM ".$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values).' GROUP BY '.$this->sql_clean_input($group_col, $this->col_quote);
+		$sql = "SELECT $sql_temp_select, COUNT(*) as count FROM ".$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values, $id).' GROUP BY '.$this->sql_clean_input($group_col, $this->col_quote);
 		if($ORDER_BY_COUNT)
 		{
 			$sql .= ' ORDER BY COUNT DESC';
 		}
 		else if(is_numeric($HAVING_COUNT)) //You can not use order by and having so they are exclusive
 		{
-			$sql .= ' HAVING COUNT(*) = '.$this->sql_clean_input_value($HAVING_COUNT);
+			$sql .= ' HAVING COUNT(*) = '.$this->sql_clean_input_value($HAVING_COUNT, $id);
 		}
-		return $this->sql_select_exe($sql, NULL, $table);
+		return $this->sql_select_exe($sql, NULL, $table, $id);
 	}
 
 	/**
@@ -542,7 +552,7 @@ class database
 	 * @param array $order_fields
 	 * @param string (ASC|DESC) $order_directions
 	 */
-	protected function sql_select_build($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL)
+	protected function sql_select_build($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $id)
 	{
 		$sql_temp_select = '';
 
@@ -586,7 +596,7 @@ class database
 		}
 
 
-		$sql = "SELECT $sql_temp_select FROM ".$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values);
+		$sql = "SELECT $sql_temp_select FROM ".$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values, $id);
 
 
 		//Include Order By if required
@@ -632,8 +642,9 @@ class database
 	 */
 	public function sql_max_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
-		$sql = $this->sql_max_field_build($table, $field, $where_fields, $where_values);
-		$result = $this->sql_select_exe($sql, $this->sql_values, TRUE, $table);
+		$id = $this->sql_id();
+		$sql = $this->sql_max_field_build($table, $field, $where_fields, $where_values, $id);
+		$result = $this->sql_select_exe($sql, $this->sql_values, TRUE, $table, $id);
 		if ($result == NULL || !isset($result[0])) {
 			return 0;
 		}
@@ -653,9 +664,9 @@ class database
 	 * @param array $where_fields
 	 * @param array $where_values
 	 */
-	protected function sql_max_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
+	protected function sql_max_field_build($table, $field, $where_fields = NULL, $where_values = NULL, $id)
 	{
-		return 'SELECT max( '.$this->sql_clean_input($field, $this->col_quote).' ) FROM '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values);;
+		return 'SELECT max( '.$this->sql_clean_input($field, $this->col_quote).' ) FROM '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).$this->sql_build_where_string($where_fields, $where_values, $id);
 	}
 
 	/**
@@ -668,8 +679,9 @@ class database
 	 */
 	public function sql_min_field($table, $field, $where_fields = NULL, $where_values = NULL)
 	{
-		$sql = $this->sql_min_field_build($table, $field, $where_fields, $where_values);
-		$result = $this->sql_select_exe($sql, $this->sql_values, TRUE, $table);
+		$id = $this->sql_id();
+		$sql = $this->sql_min_field_build($table, $field, $where_fields, $where_values, $id);
+		$result = $this->sql_select_exe($sql, $this->sql_values, TRUE, $table, $id);
 		return $result[0]['min( sort )'];
 	}
 
@@ -681,9 +693,9 @@ class database
 	 * @param array $where_fields
 	 * @param array $where_values
 	 */
-	protected function sql_min_field_build($table, $field, $where_fields = NULL, $where_values = NULL)
+	protected function sql_min_field_build($table, $field, $where_fields = NULL, $where_values = NULL, $id)
 	{
-		return 'SELECT min( '.$this->sql_clean_input_value($field).' ) FROM '.$this->table_quote.$this->prefix. $this->sql_clean_input($table).$this->table_quote.$this->sql_build_where_string($where_fields, $where_values);
+		return 'SELECT min( '.$this->sql_clean_input_value($field, $id).' ) FROM '.$this->table_quote.$this->prefix. $this->sql_clean_input($table).$this->table_quote.$this->sql_build_where_string($where_fields, $where_values, $id);
 	}
 
 	/**
@@ -762,11 +774,12 @@ class database
 	 */
 	public function sql_update_by_col($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $destroy_cache = false)
 	{
-		$sql = $this->sql_update_by_col_build($table, $where_fields, $where_values, $fields, $values);
-		return $this->sql_update_exe($sql, NULL, $destroy_cache, $table);
+		$id = $this->sql_id();
+		$sql = $this->sql_update_by_col_build($table, $where_fields, $where_values, $fields, $values, $id);
+		return $this->sql_update_exe($sql, NULL, $destroy_cache, $table, $id);
 	}
 
-	protected function sql_update_by_col_build($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array())
+	protected function sql_update_by_col_build($table, $where_fields = array(), $where_values = array(), $fields = array(), $values = array(), $id)
 	{
 		if(	(count($fields)) != (count($values))	)
 		{
@@ -782,7 +795,7 @@ class database
 		$count_fields = count($fields);
 		while($i <= ($count_fields - 1))
 		{
-			$sql_temp_fields .= $this->sql_clean_input($fields[$i], $this->col_quote).' = '. $this->sql_clean_input_value($values[$i]) . ' ';
+			$sql_temp_fields .= $this->sql_clean_input($fields[$i], $this->col_quote).' = '. $this->sql_clean_input_value($values[$i], $id) . ' ';
 			if($i < ($count_fields -1))
 			{
 				//not the last one so add a ,
@@ -791,7 +804,7 @@ class database
 			++$i;
 		}
 
-		return $sql	. $sql_temp_fields . $this->sql_build_where_string($where_fields, $where_values);
+		return $sql	. $sql_temp_fields . $this->sql_build_where_string($where_fields, $where_values, $id);
 	}
 
 	/**
@@ -851,11 +864,12 @@ class database
 	 */
 	public function sql_insert($table, $fields, $values)
 	{
-		$this->sql_update_exe($this->sql_insert_build($table, $fields, $values), $this->sql_values, true, $table);
+		$id = $this->sql_id();
+		$this->sql_update_exe($this->sql_insert_build($table, $fields, $values, $id), $this->sql_values[$id], true, $table, $id);
 		return $this->db->lastInsertID($table,'id');
 	}
 
-	protected function sql_insert_build($table, $fields, $values)
+	protected function sql_insert_build($table, $fields, $values, $id)
 	{
 		if(	(count($fields)) != (count($values))	)
 		{
@@ -877,7 +891,7 @@ class database
 		$sql_temp_values = '';
 		while($i <= ($count_values - 1))
 		{
-			$sql_temp_values = $sql_temp_values . $this->sql_clean_input_value($values[$i]) . ' ';
+			$sql_temp_values = $sql_temp_values . $this->sql_clean_input_value($values[$i], $id) . ' ';
 			if($i < ($count_values - 1)) { $sql_temp_values .=', '; }
 			$i++;
 		}
@@ -893,20 +907,22 @@ class database
 
 	protected function sql_delete_by_colum_equals_build($table, $col, $equals)
 	{
+		$id = $this->sql_id();
 		$table = $this->sql_clean_input($this->prefix.$table, $this->table_quote);
-		return 'DELETE FROM '.$table.' WHERE '.$this->sql_clean_input($col, $this->col_quote).' = ' . $this->sql_clean_input_value($equals);
+		return 'DELETE FROM '.$table.' WHERE '.$this->sql_clean_input($col, $this->col_quote).' = ' . $this->sql_clean_input_value($equals, $id);
 	}
 
 	public function sql_delete_where($table, $where_fields, $where_values)
 	{
-		$sql = $this->sql_delete_where_build($table, $where_fields, $where_values);
-		return $this->sql_update_exe($sql, NULL, true, $table);
+		$id = $this->sql_id();
+		$sql = $this->sql_delete_where_build($table, $where_fields, $where_values, $id);
+		return $this->sql_update_exe($sql, NULL, true, $table, $id);
 	}
 
-	protected function sql_delete_where_build($table, $where_fields, $where_values)
+	protected function sql_delete_where_build($table, $where_fields, $where_values, $id)
 	{
 		$table = $this->sql_clean_input($this->prefix.$table, $this->table_quote);
-		return 'DELETE FROM '.$table.' '.$this->sql_build_where_string($where_fields, $where_values);
+		return 'DELETE FROM '.$table.' '.$this->sql_build_where_string($where_fields, $where_values, $id);
 	}
 
 	/**
@@ -921,15 +937,16 @@ class database
 	 */
 	public function sql_select_into($fields, $from, $to, $where_fields, $where_values, $extra_insert = NULL)
 	{
-		$sql = $this->sql_select_into_build($fields, $from, $to, $where_fields, $where_values, $extra_insert);
-		$result = $this->sql_exe($sql, NULL, true, $from);
+		$id = $this->sql_id();
+		$sql = $this->sql_select_into_build($fields, $from, $to, $where_fields, $where_values, $extra_insert, $id);
+		$result = $this->sql_exe($sql, NULL, true, $from, $id);
 		return $result;
 	}
 
-	protected function sql_select_into_build($fields, $from, $to, $where_fields, $where_values, $extra_insert = NULL)
+	protected function sql_select_into_build($fields, $from, $to, $where_fields, $where_values, $extra_insert = NULL, $id)
 	{
-		$from = $this->prefix.$this->sql_clean_input_value($from);
-		$to = $this->prefix.$this->sql_clean_input_value($to);
+		$from = $this->prefix.$this->sql_clean_input_value($from, $id);
+		$to = $this->prefix.$this->sql_clean_input_value($to, $id);
 
 		if($fields == NULL)
 		{
@@ -937,7 +954,7 @@ class database
 		}
 		else if (!is_array($fields) )
 		{
-			$select_fields = $this->sql_clean_input_value($fields);
+			$select_fields = $this->sql_clean_input_value($fields, $id);
 		}
 		else
 		{
@@ -945,7 +962,7 @@ class database
 			$count_fields = count($fields);
 			while($i <= ($count_fields - 1))
 			{
-				$sql_temp_select = $sql_temp_select . $this->sql_clean_input_value($fields[$i]);
+				$sql_temp_select = $sql_temp_select . $this->sql_clean_input_value($fields[$i], $id);
 
 				if($i < ($count_fields - 1))
 				{
@@ -956,7 +973,7 @@ class database
 			}
 		}
 
-		return "SELECT $sql_temp_select INTO ".$this->table_quote. $to .$this->table_quote.' FROM '.$this->table_quote.$from.$this->table_quote.' WHERE '.$this->sql_build_where_string($where_fields, $where_values);
+		return "SELECT $sql_temp_select INTO ".$this->table_quote. $to .$this->table_quote.' FROM '.$this->table_quote.$from.$this->table_quote.' WHERE '.$this->sql_build_where_string($where_fields, $where_values, $id);
 	}
 
 	/**
@@ -1006,13 +1023,14 @@ class database
 	 */
 	public function sql_count_where($table, $where_fields, $where_values, $FORCE_NO_CACHE = FALSE)
 	{
-		$sql = $this->sql_count_where_build($table, $where_fields, $where_values);
+		$id = $this->sql_id();
+		$sql = $this->sql_count_where_build($table, $where_fields, $where_values, $id);
 
-		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table);
+		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table, $id);
 		return $result[0]['count(*)'];
 	}
 
-	protected function sql_count_where_build($table, $where_fields, $where_values)
+	protected function sql_count_where_build($table, $where_fields, $where_values, $id)
 	{
 		if (!is_array($where_fields)) {
 			$where_fields = array($where_fields);
@@ -1022,9 +1040,9 @@ class database
 			$where_values = array($where_values);
 		}
 
-		return 'SELECT count(*) FROM '. $this->sql_clean_input($this->prefix.$table,$this->table_quote).$this->sql_build_where_string($where_fields, $where_values);
+		return 'SELECT count(*) FROM '. $this->sql_clean_input($this->prefix.$table,$this->table_quote).$this->sql_build_where_string($where_fields, $where_values, $id);
 
-		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table);
+		$result = $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table, $id);
 		return $result[0]['count(*)'];
 	}
 
@@ -1058,10 +1076,10 @@ class database
 		return $sql_temp_select;
 	}
 
-	protected function sql_build_where_string($where_fields, $where_values)
+	protected function sql_build_where_string($where_fields, $where_values, $id)
 	{
 		if(isset($where_fields) || is_array($where_fields) && !is_null($where_fields)){
-			$part = $this->sql_build_where_string_part($where_fields, $where_values);
+			$part = $this->sql_build_where_string_part($where_fields, $where_values, $id);
 			if(strlen($part) > 0)
 			{
 				return ' WHERE ('.$part.')';
@@ -1069,7 +1087,7 @@ class database
 		}
 	}
 
-	protected function sql_build_where_string_part($where_fields, $where_values)
+	protected function sql_build_where_string_part($where_fields, $where_values, $id)
 	{		
 		//Include Where clause into sql if set
 		if(!is_array($where_fields))
@@ -1104,7 +1122,7 @@ class database
 						{
 							$sql_temp_where_or .= $this->sql_clean_input($where_fields[$i], $this->col_quote).' = ';
 							//Quote non numeric values
-							$sql_temp_where_or .= $this->sql_clean_input_value($where_values[$i][$j]);
+							$sql_temp_where_or .= $this->sql_clean_input_value($where_values[$i][$j], $id);
 	
 							$j++;
 							if(isset($where_values[$i][$j]))
@@ -1128,11 +1146,11 @@ class database
 					//Quote non numeric values
 					if(is_numeric($where_values[$i]))
 					{
-						$sql_temp_where .= $this->sql_clean_input_value($where_values[$i]).')';
+						$sql_temp_where .= $this->sql_clean_input_value($where_values[$i], $id).')';
 					}
 					else
 					{
-						$sql_temp_where .= $this->sql_clean_input_value($where_values[$i]) .')';
+						$sql_temp_where .= $this->sql_clean_input_value($where_values[$i], $id) .')';
 					}
 				}
 
@@ -1152,7 +1170,7 @@ class database
 		return $this->db->backupDatabase();
 	}
 
-	protected function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false)
+	protected function sql_exe($sql, $values, $writeuser = false, $destroy_cache = false, $id = null)
 	{
 		$this->db->sql_connect();
 
@@ -1172,7 +1190,9 @@ class database
 		else
 		{
 			$results = $this->db->sql_run($sql, $values, $writeuser);
-			$this->sql_values = array();
+			if(!is_null($id)){
+				unset($this->sql_values[$id]);
+			}
 			$this->sql_prepared_count = 1;
 		}
 
@@ -1206,36 +1226,35 @@ class database
 	    die(str_replace('***ERROR***', $message, str_replace($strip_from_message, '', $theData)));
 	}
 
-	protected function sql_update_exe($sql, $values = NULL, $destroy_cache = false, $namespace = NULL)
+	protected function sql_update_exe($sql, $values = NULL, $destroy_cache = false, $namespace = NULL, $id)
 	{
 		if($this->external_cache && !is_null($namespace))
 		{
 			persistantcache::Singleton()->cycle_namespace($namespace);
 		}
-		
-		return $this->sql_exe($sql, $this->sql_values, true, $destroy_cache);
+		return $this->sql_exe($sql, $this->sql_values[$id], true, $destroy_cache, $id);
 	}
 
-	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE, $namespace = NULL)
+	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE, $namespace = NULL, $id = NULL)
 	{		
 		$results = false;
 		//Check cache if not explecitly set not to
-		if(!$no_cache)
+		if(!$no_cache && !is_null($id))
 		{
-			$results = $this->sql_check_cache($sql, $this->sql_values, $namespace);
+			$results = $this->sql_check_cache($sql, $this->sql_values[$id], $namespace);
 		}
 
 		//If cache fails or not checked do SQL query
 		if($results === false)
 		{
-			$values = $this->sql_values;
-			$results = $this->db->sql_select_exe_run($this->sql_exe($sql, $this->sql_values));
+			$values = $this->sql_values[$id];
+			$results = $this->db->sql_select_exe_run($this->sql_exe($sql, $values, null, null, $id));
 
 			//Cache the result
 			$this->sql_cache($sql, $values, $results, $namespace);
 		}
 
-		$this->sql_values = array();
+		unset($values);
 		$this->sql_prepared_count = 1;
 		return $results;
 	}

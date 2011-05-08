@@ -65,7 +65,7 @@ class Settings
 		{
 			$this->db_loaded = true;
 			if(isset($this->settings['allow_db_settings'][0]) && $this->settings['allow_db_settings'][0]){
-				$settings = Database::Singleton()->sql_select(array('setting', 'value'), 'tbl_settings', null, null, null, null, true);
+				$settings = Database::Singleton()->sql_select(array('setting', 'value'), 'tbl_settings');
 	
 				if(	($this->get_setting('protect_db_settings') != true) and ($this->get_setting('protect_db_settings') != false) )
 				{

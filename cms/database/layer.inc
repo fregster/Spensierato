@@ -124,7 +124,7 @@ class database
 			$this->sql_prepared_statment_placeholder_prefix = $this->db->prepared_statment_placeholder();
 		}
 		
-		if(defined('DATABASE_DISABLE_SQL_CACHE'))
+		if(defined('DATABASE_DISABLE_SQL_CACHE') || ($this->options['allow_external_calls'] && !Settings::Singleton()->get_setting('cache_database_queries')))
 		{
 			$this->sql_cache_enabled = false;
 		}

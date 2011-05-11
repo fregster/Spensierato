@@ -1238,16 +1238,21 @@ class database
 	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE, $namespace = NULL, $id = NULL)
 	{		
 		$results = false;
+		$values = null;
+		if(isset($this->sql_values[$id]))
+		{
+			$values =& $this->sql_values[$id];
+		}
+			
 		//Check cache if not explecitly set not to
 		if(!$no_cache && !is_null($id))
 		{
-			$results = $this->sql_check_cache($sql, $this->sql_values[$id], $namespace);
+			$results = $this->sql_check_cache($sql, $values, $namespace);
 		}
 
 		//If cache fails or not checked do SQL query
 		if($results === false)
 		{
-			$values = $this->sql_values[$id];
 			$results = $this->db->sql_select_exe_run($this->sql_exe($sql, $values, null, null, $id));
 
 			//Cache the result

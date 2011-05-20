@@ -205,7 +205,7 @@ class database
 		//Disable cacheing
 		$this->sql_cache_enabled = false;
 		//Clear the cache
-		session_unregister('sql_cache');
+		unset($_SESSION['sql_cache']);
 	}
 
 	/**
@@ -1176,7 +1176,7 @@ class database
 
 		if($destroy_cache)
 		{
-			session_unregister('sql_cache');
+			unset($_SESSION['sql_cache']);
 		}
 
 		$sql_start_time = microtime();

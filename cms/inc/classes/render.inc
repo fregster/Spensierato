@@ -38,7 +38,7 @@ class Render
 	{
 		if(isset($_SESSION['render_admin']))
 		{
-			session_unregister("render_admin");
+			unset($_SESSION['render_admin']);
 		}
 		else
 		{

@@ -70,7 +70,7 @@ class masterpassword {
         		$filename = $this->options['path'].$this->options['key1'];
       			if($overwrite && file_exists($filename))
         		{
-        			unset($filename);
+        			unlink($filename);
         		}
         		
         		if(isset($filename) && file_exists($filename))
@@ -101,7 +101,7 @@ class masterpassword {
         		$filename = $this->options['path'].$this->options['key2'];
         		if($overwrite && file_exists($filename))
         		{
-        			unset($filename);
+        			unlink($filename);
         		}
         		
         		if(isset($filename) && file_exists($filename))

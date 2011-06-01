@@ -81,7 +81,6 @@ class database
 		   	{
 		   		die('Unable to create correct database layer type ('.$c.')');
 		   	}
-		
 			self::$instance = new $c;
 		}		
 		return self::$instance;
@@ -124,11 +123,12 @@ class database
 			$this->sql_prepared_statment_placeholder_prefix = $this->db->prepared_statment_placeholder();
 		}
 		
-		if(defined('DATABASE_DISABLE_SQL_CACHE') || ($this->options['allow_external_calls'] && !Settings::Singleton()->get_setting('cache_database_queries')))
+		if(defined('DATABASE_DISABLE_SQL_CACHE') || defined('DATABASE_INSTALL_MODE') || ($this->options['allow_external_calls'] && !Settings::Singleton()->get_setting('cache_database_queries')))
 		{
+
 			$this->sql_cache_enabled = false;
 		}
-		
+
 		if(!function_exists($this->escape_method))
 		{
 			$this->escape_method = 'addslashes';
@@ -153,7 +153,9 @@ class database
 	 */
 	public function __destruct()
 	{
-		$this->db->destroy();
+		if($this->db){
+			$this->db->destroy();
+		}
 	}
 
 	/**
@@ -1174,7 +1176,7 @@ class database
 	{
 		$this->db->sql_connect();
 
-		if($destroy_cache)
+		if($destroy_cache && isset($_SESSION) && isset($_SESSION['sql_cache']))
 		{
 			unset($_SESSION['sql_cache']);
 		}

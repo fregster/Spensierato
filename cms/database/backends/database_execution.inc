@@ -93,8 +93,8 @@ class database_execution
 				{
 					if($this->user_support)
 					{
-						if(!isset($GLOBALS['database_password_write'])){
-							$GLOBALS['database_password_write'] &= $GLOBALS['database_password'];
+						if(!isset($GLOBALS['database_password_write']) && isset($GLOBALS['database_password'])){
+							$GLOBALS['database_password_write'] = $GLOBALS['database_password'];
 						}
 						
 						//Create write user
@@ -151,8 +151,8 @@ class database_execution
 		//Create write user
 		if(database::singleton()->user_support())
 		{
-			if(!isset($GLOBALS['database_password_write'])){
-				$GLOBALS['database_password_write'] &= $GLOBALS['database_password'];
+			if(!isset($GLOBALS['database_password_write']) && isset($GLOBALS['database_password'])){
+				$GLOBALS['database_password_write'] = $GLOBALS['database_password'];
 			}
 						
 			$this->dsn = array(

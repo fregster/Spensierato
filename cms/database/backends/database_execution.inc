@@ -151,6 +151,10 @@ class database_execution
 		//Create write user
 		if(database::singleton()->user_support())
 		{
+			if(!isset($GLOBALS['database_password_write'])){
+				$GLOBALS['database_password_write'] &= $GLOBALS['database_password'];
+			}
+						
 			$this->dsn = array(
 			    'phptype'  => $GLOBALS['database_driver'],
 			    'username' => $GLOBALS['database_user_readwrite'],

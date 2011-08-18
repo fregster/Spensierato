@@ -41,7 +41,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 	if(isset($path_vars[0]) && $path_vars[0] == 'skin' && isset($path_vars[1]))
 	{
 		//ini_set('display_errors', 'off');
-		$file = INCLUDE_PATH.DS.'cms'.DS.'skins'.DS.'default'.DS.'graphics'.DS.$path_vars[1];
+		$file = DIR_SKINS.'default'.DS.'graphics'.DS.$path_vars[1];
 		FileTransfer::singleton()->get_file($file, false, false, true, true);
 		exit;
 	}

@@ -177,7 +177,7 @@ function jsCheckHostTypeDetail(){
 	}
 	*/
 	echo ('</div>');
-	echo ('<p>When your ready <a href="?install=1">Click to Continue</a></p>');
+	echo ('<div class="notices"><p>When your ready <a href="?install=1">Click to Continue</a></p></div>');
 }
 
 if(isset($_GET['install'])){

@@ -1,0 +1,11 @@
+PHP Database Abstraction
+
+Requirements:
+PHP 5.2+ (Only tested in PHP 5.3 currently)
+
+Optional:
+PDO
+MDB2
+
+Notes:
+Only currently tested under Linux and OSX

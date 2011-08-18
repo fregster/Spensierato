@@ -4,7 +4,7 @@ abstract class Common
 	public static function get_path_vars()
 	{
 		//Expand URL to get vars
-		return (Common::array_compress(Common::getPathVariables($_SERVER['PHP_SELF'], __FILE__)));
+		return (Common::array_compress(Common::getPathVariables(str_replace(array(DIR_INDEX, $_SERVER['SCRIPT_NAME']), '', $_SERVER['PHP_SELF']))));
 	}
 	
 	public static function create_folders_from_path($path, $chmod = 0775)
@@ -145,8 +145,12 @@ abstract class Common
 	    return $aReturn;
 	}
 
-	private static function getPathVariables()
+	private static function getPathVariables($input = false)
     {
+    	if($input) {
+    		return explode("/", $input);
+    	}
+    	
 		if (isset($_SERVER['PATH_INFO'])) {
 			return explode("/", $_SERVER['PATH_INFO']);
 		}

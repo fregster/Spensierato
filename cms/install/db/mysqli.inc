@@ -263,12 +263,14 @@ foreach ($tables as $table => $data){
 	//execute sql
 //echo('<br/>'.$sql);
 //die();
-	$result = @$db->query($sql);
+	$result = database::Singleton()->direct_query($sql);
 
 	if(!$result)
 	{
+		var_dump($result);
 		die('<br/>Failed to create table '.$table.'. The sql that triggered the error:<br />'. $sql);
 	}
+	echo('<br/>Created table '.$table);
 }
 unset($table, $data);
 

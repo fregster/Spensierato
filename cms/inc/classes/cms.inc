@@ -229,7 +229,8 @@ class CMS
 			require_once(dirname(__FILE__).DS.'..'.DS.'..'.DS.'cms_admin_includes.inc');
 
 			//When in admin mode do extra code such as version checking
-			update::check();
+			$update = new update();
+			$update->check();
 			
 			if(!isset($_SESSION['check_inc_restrictions']))
 			{

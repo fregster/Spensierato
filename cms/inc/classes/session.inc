@@ -20,6 +20,8 @@ class session
 	private static $instance;
 	private $session_loaded = false;
 	private $nonce_grace_time = 120;
+	private $id;
+	private $old_id;
 
 	public static function Singleton()
 	{
@@ -57,7 +59,7 @@ class session
 				cookie::Singleton()->load();
 				$this->session_nonce_check();
 			}
-			
+			$this->id = session_id();
 			$this->session_loaded = true;
 		}
 	}
@@ -241,8 +243,10 @@ class session
 	public function regenerate_session()
 	{
 		/* Regenerate the session file and delete the old one */
+		$this->old_id = $this->id;
 		session_regenerate_id(true);
-		User::Singleton()->update_user_session_id();
+		$this->id = session_id();
+		User::Singleton()->update_user_session_id($this->old_id);
 	}
 
 	public function delete_session()
@@ -253,7 +257,9 @@ class session
 		    cookie::Singleton()->destroy();
 		}
 
-		session_destroy();
+		if(session_id()){
+			session_destroy();
+		}
 	}
 
 	public function destroy_session($url = NULL)

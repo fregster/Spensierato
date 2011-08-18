@@ -134,7 +134,7 @@ set_exception_handler('exception_handler');
 try
 {
 	//Make any custom changes here that are required pre the CMS code has loaded
-	if(is_file(DIR_INDEX.'early_custom.inc')) { include(DIR_INDEX.'early_custom.inc'); }
+	if(is_file(DIR_CONFIG.'early_custom.inc')) { include(DIR_CONFIG.'early_custom.inc'); }
 	
 	//Include all the options for the CMS
 	//Functions requires by globals
@@ -147,21 +147,21 @@ try
 	//Has an early custom defines file been specified
 	if(!$install){
 		require_once(INCLUDE_PATH.'spensierato_custom.inc');
-		if(is_file(DIR_INDEX.'spensierato_custom.inc')) { require_once(DIR_INDEX.'spensierato_custom.inc'); }
+		if(is_file(DIR_CONFIG.'spensierato_custom.inc')) { require_once(DIR_CONFIG.'spensierato_custom.inc'); }
 	}
 	
 	//Include the Site setup code
-	if(is_file(DIR_INDEX.'spensierato_setup.inc'))
+	if(is_file(DIR_CONFIG.'spensierato_setup.inc'))
 	{
-		require_once(DIR_INDEX.'spensierato_setup.inc');
+		require_once(DIR_CONFIG.'spensierato_setup.inc');
 		$install = false; //cancel the install directive
 	}
 	
 	require_once(DIR_STATIC.'late_defines.inc');
 	
 	//Set any late or custom defines
-	if(file_exists(DIR_INDEX.'spensierato_custom_defines.inc')){
-		include_once(DIR_INDEX.'spensierato_custom_defines.inc');
+	if(file_exists(DIR_CONFIG.'spensierato_custom_defines.inc')){
+		include_once(DIR_CONFIG.'spensierato_custom_defines.inc');
 	}
 	
 	Settings::Singleton()->build_defines(
@@ -188,7 +188,7 @@ try
 	//Has the site extended the spensierato options?
 	if(!$install){
 		require_once(INCLUDE_PATH.'spensierato_options.inc');
-		if(is_file(DIR_INDEX.'spensierato_options.inc')) { require_once(DIR_INDEX.'spensierato_options.inc'); }
+		if(is_file(DIR_CONFIG.'spensierato_options.inc')) { require_once(DIR_CONFIG.'spensierato_options.inc'); }
 	}
 	
 	//run the installation
@@ -203,7 +203,7 @@ try
 	CMS::Singleton()->start(); 
 
 	//Make any custom changes here after the CMS code has loaded but before the site is ran
-	if(is_file(DIR_INDEX.'custom.inc')) { include(DIR_INDEX.'custom.inc'); }
+	if(is_file(DIR_CONFIG.'custom.inc')) { include(DIR_CONFIG.'custom.inc'); }
 
 	//Run the CMS
 	CMS::Singleton()->run_cms();

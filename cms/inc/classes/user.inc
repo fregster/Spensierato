@@ -3,6 +3,7 @@
 // Proxy class to the user and membership backends
 // Well should be!
 */
+
 class user
 {
 
@@ -67,7 +68,7 @@ class user
 		return true;
 	}
 
-	public function create($username, $email, $password = NULL, $admin = false)
+	public function create($username, $email, $password = NULL, $admin = false, $redirect = true)
 	{
 		database::Singleton()->force_write_user();
 		$cols = array('username');
@@ -90,9 +91,11 @@ class user
 			$this->reset_password();
 		}
 		database::Singleton()->destroy_write_user();
-
+		
 		$this->do_login();
-		Common::redirect(1);
+		if($redirect){
+			Common::redirect(1);
+		}
 	}
 
 	public function login()
@@ -115,9 +118,17 @@ class user
 		Common::bounce_to_referer();
 	}
 
-	public function update_user_session_id()
+	public function update_user_session_id($old_id = null)
 	{
-		Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', array('session_id'), $values = array(session_id()));
+		$fields = array('session_id', 'session_refresh_ts');
+		$values = array(session_id(), CMS::$time);
+		if(!is_null($old_id)){
+			$fields[] = 'session_id_old';
+			$values[] = $old_id;
+		}
+		
+		database::Singleton()->force_write_user();
+		Database::Singleton()->sql_update_by_id($this->userid, 'tbl_users', $fields, $values);
 	}
 
 	public function update_from_post()

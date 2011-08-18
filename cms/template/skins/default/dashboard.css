@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+.dashboard_menu #dashboard_menu{
+	padding:0;
+	width:125px;
+	height:22px;
+	border:1px solid #ddd;
+	border-width:thin;
+	margin-left:3px;
+	margin-right:3px;
+	background: white;
+}

@@ -62,7 +62,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-	$doc_root_prefix = DIR_INDEX . DIRECTORY_SEPARATOR;
+	$doc_root_prefix = DIR_CONFIG;
 	//detect the server OS and set the doc root accordingly.
 	if (stripos(PHP_OS, 'darwin') !== FALSE) {
 		$os = 'mac';
@@ -81,7 +81,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
 			if(!isset($_GET['skip_folders']))
 			{
-				Debug('Unable to create folders, installation cancled. Ensure that '.$doc_root_prefix.'writeable is writable');
+				Debug('Unable to create folders, installation cancled. Ensure that '.$doc_root_prefix.'writeable has been created and is writable');
 				die();
 			}
 			debug('Unable to create folders, please create them manually after the install');
@@ -139,7 +139,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	else { $rewrite = 'false'; }
 
 	//define $GLOBALS required by the database layer
-	if($driver == 'sqlite') { @mkdir( $doc_root_prefix.'writeable'.DS.'database'); $host = $doc_root_prefix.'writeable'.DS.'database'.DS.'cms.db'; $database = $host; }
+	if($driver == 'sqlite') { @mkdir( $doc_root_prefix.'writeable'.DS.'database'); $host = $doc_root_prefix.'writeable'.DS.'database'.DS.'cms_db.sqlite'; $database = $host; }
 	$GLOBALS['database_driver'] = $driver;
 	$GLOBALS['database_backend'] = $layer;
 	$GLOBALS['database_user_readwrite'] = $user_rw;
@@ -156,13 +156,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$install_folder = dirname(__FILE__);
 
 	//set the path for the settings file
-	$settings_file = DIR_INDEX.'spensierato_setup.inc';
+	$settings_file = DIR_CONFIG.'spensierato_setup.inc';
 	
 	/*
 	 * Create the db object
 	 */
 
-	$db = database::custom_db_object(array('phptype'  => $driver,
+	$db = database::custom_db_object(array(	'phptype'  => $driver,
+											'backend'	=> $layer,
 		    								'username' => $username,
 											'password' => $password,
 											'hostspec' => $host),
@@ -246,16 +247,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		echo (' - Database users not required for this install');
 	}
-
-	debug('Createing Homepage');
 	
-	database::Singleton()->force_write_user();
-	
-	$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible', 'title'), array(0, time(), 0, 1, 'Homepage'));
-	
-	debug('Adding starting element');
-	$element = Element::type('elementText');
-	$element->create($id, false);
+	debug('Rebuilding Database Singleton');
+	database::Singleton(null, true);
 
 	/**
 	* Build the settings file string
@@ -314,6 +308,7 @@ $GLOBALS[\'cms_folder_search\'] = \''.realpath($dir_search).'\';
 	else
 	{
 		debug('Settings file created');
+		
 		if(!masterpassword::Singleton()->set_password(true) || !masterpassword::Singleton()->set_password_secondary(true))
 		{
 			debug('<strong>Random Encryption key file output failed. Fix folder permissions and re run the installer</strong>');
@@ -323,8 +318,31 @@ $GLOBALS[\'cms_folder_search\'] = \''.realpath($dir_search).'\';
 		debug('Random Encryption key files created');
 		
 		debug('Adding site administrator');
-		$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true);
-			
+		database::Singleton()->force_write_user();
+		$password = user::Singleton()->create(post::variable('user_username'), post::variable('user_email'), post::variable('user_password'), true, false);
+		
+		debug('Createing Homepage');		
+		$id = database::Singleton()->sql_insert('tbl_pages', array('parent_id', 'created', 'creator', 'visible', 'title'), array(0, time(), 0, 1, 'Homepage'));
+		
+		debug('Adding starting element');
+		$element = Element::type('elementText');
+		$element->create($id, false);
+		
+		debug('Copying HTAcess file if required');
+		if(!file_exists(DIR_INDEX.'.htaccess')){
+			if(!@copy(INCLUDE_PATH.'example.htaccess', DIR_INDEX.'.htaccess')){
+				debug('Failed to write HTAcess out');
+			}
+		}
+		
+		debug('<br/>Write permission should <strong>be removed</strong> from the following files and only readable by the required users</br/>');
+
+		debug('Testing database now has content');
+		
+		if(!database::Singleton()->sql_select_first(null, 'tbl_pages')){
+			die('Did not get any data from the database, its creation must have failed');
+		}
+
 		debug('The site is now setup<br/><strong>Note: If you manual set the install directive you will need to remove it now!</strong><br />You can log in with the user '.$username.' and the password '.$password.'<br/>Click <a href="'.DOCUMENT_ROOT.'">here</a> to login');
 		exit;
 	}
@@ -335,3 +353,5 @@ function debug($text)
 	$debug = true;
 	if($debug){ echo('<br />'.$text.' '); }
 }
+
+exit;

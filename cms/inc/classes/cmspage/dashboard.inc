@@ -38,7 +38,7 @@ class cmspage_dashboard extends cmspage
 		error::do403();
 	}
 	
-	public static function register($long_name, $short_name, $class, $admin = false, $icon = null, $edit_icon = null, $html = null)
+	public static function register($long_name, $short_name, $class, $admin = false, $icon = null, $edit_icon = null, $html = null, $selected = false)
 	{
 		$types = Settings::singleton()->get_setting('dashboards');
 		if(!is_array($types))
@@ -50,7 +50,7 @@ class cmspage_dashboard extends cmspage
 		{
 			if(is_null($icon)) { $icon = 'page_white'; }
 			if(is_null($edit_icon)) { $edit_icon = $icon; }
-			array_push($types, array('name' => $long_name, 'link' => $short_name, 'class' => $class, 'icon' => $icon, 'edit_icon' => $edit_icon, 'html' => $html));
+			array_push($types, array('name' => $long_name, 'link' => $short_name, 'class' => $class, 'icon' => $icon, 'edit_icon' => $edit_icon, 'html' => $html, 'selected' => $selected));
 		}
 		Settings::singleton()->overwrite_setting('dashboards', $types, false);
 	}

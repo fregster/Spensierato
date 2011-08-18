@@ -258,6 +258,8 @@ $tables['tbl_users'] = array(
 								'hash_type' => varchar(8),
 								'last_login' => $int.' UNSIGNED',
 								'session_id' => varchar(64),
+								'session_id_old' => varchar(64),
+								'session_refresh_ts' => $int.' UNSIGNED',
 								'admin' => $tiny_int." UNSIGNED DEFAULT '0'",
 								'login_attempts' => $tiny_int." UNSIGNED DEFAULT '0'"
 								),

@@ -27,4 +27,4 @@
 error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 ini_set('display_errors', 1);
 $include_path = dirname(__FILE__);
-require_once($include_path.'/spensierato_cms.inc');
+require_once($include_path.'/../spensierato_cms.inc');

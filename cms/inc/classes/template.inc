@@ -131,8 +131,13 @@ class Template
 
 	public function load_specified_template($name)
 	{
-		$path = $this->template_path = DIR_TEMPLATE.$name.DS.'main.xml';
-		return $this->build_xslt_template(str_ireplace($this->strip_xslt, '', file_get_contents($path)));
+		$xslt = '';
+		$templates = glob(DIR_TEMPLATE.$name.DS.'*.xml', GLOB_NOSORT);
+		foreach ($templates as $template)
+		{
+			$xslt .= file_get_contents($template);
+		}
+		return $this->build_xslt_template(str_ireplace($this->strip_xslt, '', $xslt));
 	}
 	
 	public function edit()

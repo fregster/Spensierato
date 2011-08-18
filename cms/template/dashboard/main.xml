@@ -4,7 +4,12 @@
 	        <html>
 	        	<xsl:call-template name="header"/>
 	        	<body>
-	        		Body
+		        	<div id="dashboard_menu">
+		        		<xsl:call-template name="dashboard_menu"/>
+		        	</div>
+		        	<div id="dashboard_body">
+		        		<xsl:call-template name="dashboard_body"/>
+		        	</div>
 	        	</body>
 	        </html>
 	</xsl:template>
@@ -12,18 +17,18 @@
 	<xsl:template name="header">
 			<head>
 				<xsl:element name="title"><xsl:value-of select="/page/settings/site_name_short" /> | Dashboard</xsl:element>
-	
+	<!-- 
 				<xsl:element name="meta">
 					<xsl:attribute name="name">keywords</xsl:attribute>
 					<xsl:attribute name="content">Stylesheets</xsl:attribute>
 				</xsl:element>
 	
 				<xsl:element name="link">
-					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css</xsl:attribute>
+					<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/css/dashboard</xsl:attribute>
 					<xsl:attribute name="type">text/css</xsl:attribute>
 					<xsl:attribute name="rel">stylesheet</xsl:attribute>
 				</xsl:element>
-	
+	 -->
 				<script type="text/javascript">
 					var document_root = '<xsl:value-of select="/page/settings/document_root" />';
 					var js_host = '<xsl:value-of select="/page/settings/static_host_js" />';

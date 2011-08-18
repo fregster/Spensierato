@@ -13,7 +13,14 @@ $background_image = Common::document_root_folder_only().'/skin/CrunchyBranch_102
 $rewrite_enabled = check_rewrite();
 if(!$rewrite_enabled)
 {
-	$background_image = 'http://'.$_SERVER['SERVER_NAME'].Common::document_root().'/cms/skins/default/graphics/CrunchyBranch_1024x768.png';
+	if(!file_exists(DIR_INDEX.'.htaccess')){
+		if(!@copy(INCLUDE_PATH.'example.htaccess', DIR_INDEX.'.htaccess')){
+			$rewrite_enabled = check_rewrite();
+			if(!$rewrite_enabled){
+				$background_image = 'http://'.$_SERVER['SERVER_NAME'].Common::document_root().'/cms/skins/default/graphics/CrunchyBranch_1024x768.png';
+			}
+		}
+	}
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -87,87 +94,95 @@ function jsCheckHostTypeDetail(){
 <div id="frame" style="width:600px; margin-left:auto; margin-right:auto;">
 <div><img src="<?php echo($background_image); ?>" style="height:100%; width:100%; z-index: -100; position: absolute; top: 0; left: 0; position: fixed;" alt="Background Image" /></div>
 <h1 class="title">Spensierato Install Page</h1>
-<div id="notices"><?php
-
-//die(Common::document_root());
-if(isset($req_missing[0]) or isset($opt_missing[0]))
-{
-	echo'Please note the following problems<br/>';
-
-	if(count($req_missing) > 0)
+<?php if(!isset($_GET['install'])) {?>
+	<div id="notices"><?php
+	
+	//die(Common::document_root());
+	if(isset($req_missing[0]) or isset($opt_missing[0]))
 	{
-		echo'<div id="notices_critical"><h3>The following packages are not install and are REQUIRED</h3><ul>';
-		foreach($req_missing as $req)
+		echo'Please note the following problems<br/>';
+	
+		if(count($req_missing) > 0)
 		{
-			echo "<li>$req</li>";
-		}
-		echo'</ul></div>';
-	}	
-
-	if(count($rec_missing) > 0)
-	{
-		echo'<div id="notices_warning"><h3>The following packages are not install and are strongly recomended</h3><ul>';
-		foreach($rec_missing as $rec)
-		{
-			echo "<li>$rec</li>";
-		}
-		echo'</ul></div>';
-	}
-
-	if(count($opt_missing) > 0)
-	{
-		echo'<div id="notices_information"><h4>The following packages are not install and are optional but recomended if posible</h4><ul>';
-		foreach($opt_missing as $opt)
-		{
-			echo "<li>$opt</li>";
-		}
-		echo'</ul></div>';
-	}
-
-	if(isset($req_missing[0]))
-	{
-		echo'<p>You may attempt to continue to install but it might not work and even if the install does the is little chance the site will</p><br/>';
-	}
-}
-else
-{
-	echo'<p>All required and optional PHP extensions are installed</p><br/>';
-}
-
-if(!Common::rewrite_enabled())
-{
-	echo'<div class="notices_warning"><p>URL re-writing is not enabled on your webserver, clean URL\'s are unavailable</p></div>';
-	$rewrite_enabled = false;
-}
-else
-{
-	if(!$rewrite_enabled)
-	{
-		echo('<div class="notices_warning"><h4>URL re-writing is enabled on the server but NOT setup for this site.</h4>');
-		
-		if(apache_get_version())
-		{
-			if(!file_exists(dirname($_SERVER['SCRIPT_FILENAME']).'/.htaccess'))
+			echo'<div id="notices_critical"><h3>The following packages are not install and are REQUIRED</h3><ul>';
+			foreach($req_missing as $req)
 			{
-				echo('<p>Apache and no htaccess file</p><p>You can use the <a href="http://wiki.apache.org/httpd/Htaccess">htaccess</a> file to configure this for you easily at a very slight performance loss</p><p>To do this copy the example.htaccess to '.Common::document_root_folder_only().DS.'.htaccess or setup your vhost with the rewrite rules as defined in the example.htaccess</p>');
-				echo('<p>Spensierato may be able to configure Apache automatically. <a href="'.Common::document_root_folder_only().'?tools=enable_htaccess">Autoconfigure Apache</a><p>');
+				echo "<li>$req</li>";
 			}
-			else
+			echo'</ul></div>';
+		}	
+	
+		if(count($rec_missing) > 0)
+		{
+			echo'<div id="notices_warning"><h3>The following packages are not install and are strongly recomended</h3><ul>';
+			foreach($rec_missing as $rec)
 			{
-				echo('<p>Apache is NOT setup to use the .htaccess file even though it is in place. Update the Apache config to <a href="http://httpd.apache.org/docs/2.2/mod/core.html#allowoverride">AllowOverides</a> or enable rewrite rules in the vhost</p>');
+				echo "<li>$rec</li>";
 			}
+			echo'</ul></div>';
 		}
-		echo('</div>');
+	
+		if(count($opt_missing) > 0)
+		{
+			echo'<div id="notices_information"><h4>The following packages are not install and are optional but recomended if posible</h4><ul>';
+			foreach($opt_missing as $opt)
+			{
+				echo "<li>$opt</li>";
+			}
+			echo'</ul></div>';
+		}
+	
+		if(isset($req_missing[0]))
+		{
+			echo'<p>You may attempt to continue to install but it might not work and even if the install does the is little chance the site will</p><br/>';
+		}
 	}
+	else
+	{
+		echo'<p>All required and optional PHP extensions are installed</p><br/>';
+	}
+	
+	if(!Common::rewrite_enabled())
+	{
+		echo'<div class="notices_warning"><p>URL re-writing is not enabled on your webserver, clean URL\'s are unavailable</p></div>';
+		$rewrite_enabled = false;
+	}
+	else
+	{
+		if(!$rewrite_enabled)
+		{
+			echo('<div class="notices_warning"><h4>URL re-writing is enabled on the server but NOT setup for this site.</h4>');
+			
+			if(apache_get_version())
+			{
+				if(!file_exists(dirname($_SERVER['SCRIPT_FILENAME']).'/.htaccess'))
+				{
+					echo('<p>Apache and no htaccess file</p><p>You can use the <a href="http://wiki.apache.org/httpd/Htaccess">htaccess</a> file to configure this for you easily at a very slight performance loss</p><p>To do this copy the example.htaccess to '.Common::document_root_folder_only().DS.'.htaccess or setup your vhost with the rewrite rules as defined in the example.htaccess</p>');
+					echo('<p>Spensierato may be able to configure Apache automatically. <a href="'.Common::document_root_folder_only().'?tools=enable_htaccess">Autoconfigure Apache</a><p>');
+				}
+				else
+				{
+					echo('<p>Apache is NOT setup to use the .htaccess file even though it is in place. Update the Apache config to <a href="http://httpd.apache.org/docs/2.2/mod/core.html#allowoverride">AllowOverides</a> or enable rewrite rules in the vhost</p>');
+				}
+			}
+			echo('</div>');
+		}
+	}
+	
+	/*
+	//Temp removed as with the public_html folder there is no information that should be browsable via apache unless apache has been mis configured, this needs to be re-implemented
+	if(!$rewrite_enabled && !check_inc_restrictions())
+	{
+		echo('<div class="notices_critical"><h3 style="text-align:center;">**** ! Security Alert ! ****</h3><p>Your webserver is serving .inc files, enable url rewriting and / or block *.inc files from been served</p><h3 style="text-align:center;">**** ! Security Alert ! ****</h3></div>');
+	}
+	*/
+	echo ('</div>');
+	echo ('<p>When your ready <a href="?install=1">Click to Continue</a></p>');
 }
 
-if(!$rewrite_enabled && !check_inc_restrictions())
-{
-	echo('<div class="notices_critical"><h3 style="text-align:center;">**** ! Security Alert ! ****</h3><p>Your webserver is serving .inc files, enable url rewriting and / or block *.inc files from been served</p><h3 style="text-align:center;">**** ! Security Alert ! ****</h3></div>');
-}
+if(isset($_GET['install'])){
+?>
 
-
-?></div>
 <div id="form" style="margin-left:auto; margin-right:auto;">
 <form method="post" action="">
 	<div id="users" class="pad-div">
@@ -264,6 +279,7 @@ if(!$rewrite_enabled && !check_inc_restrictions())
 	<div id="create"><input type="submit" value="Create Site" /></div>
 </form>
 </div>
+<?php } ?>
 </div>
 </body>
 </html>

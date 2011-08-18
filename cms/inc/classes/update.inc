@@ -14,11 +14,11 @@
 class update
 {
 	private $latest = true;
-	private $major;
-	private $minor;
-	private $incremental;
+	private static $major;
+	private static $minor;
+	private static $incremental;
 	
-	private function __construct()
+	public function __construct()
 	{
 		$versions = explode('.', cms::$cms_version);
 		update::$major = $versions[0];

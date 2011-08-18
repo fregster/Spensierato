@@ -1,0 +1,29 @@
+Alias /example /var/www/my_site/public_html
+<Location /example>
+
+        RewriteEngine on
+        RewriteCond %{REQUEST_URI}  !^/index.php/.*$
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.+)$ index.php/$1
+        DirectoryIndex index.php
+
+		Order Deny,Allow
+		Allow From All
+
+</Location>
+
+<Directory /var/www/my_site>
+
+	#We never server .inc files as there not intended to be entry points but class files and static includes so block access to them
+    <FilesMatch "\.inc$">
+		Order allow,deny
+        Deny from all
+    </FilesMatch>
+
+    #Prevent access to any password files
+    <FilesMatch "\.pwd$">
+    	Order allow,deny
+        Deny from all
+	</FilesMatch>
+
+</Directory>

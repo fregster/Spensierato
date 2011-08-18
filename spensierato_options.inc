@@ -383,7 +383,7 @@ Settings::Singleton()->new_setting('css_mobile', true, false, false, true, SETTI
 
 //Setting update_version_check
 //To enable auto version checking set this value to the update server
-//If the log dir is not writeable auto update checking will be disabled
+//If the log dir is not writable auto update checking will be disabled
 Settings::Singleton()->new_setting('update_version_check', 'version.spensierato.net', false, true, false, false, SETTING_GROUP_UPDATE_CONTROL);
 
 //Setting update_version_https_only
@@ -393,7 +393,7 @@ Settings::Singleton()->new_setting('update_version_https_only', false, false, tr
 
 //Setting update_version_check_schedule
 //Set the timeperiod between version update checking in days
-//If the log dir is not writeable auto update checking will be disabled
+//If the log dir is not writable auto update checking will be disabled
 //default: 7
 Settings::Singleton()->new_setting('update_version_check_schedule', 7, false, true, false, false, SETTING_GROUP_UPDATE_CONTROL);
 

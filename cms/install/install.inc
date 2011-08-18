@@ -77,23 +77,23 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	if(!post::variable('cms_folder_use_custom'))
 	{
 		debug('Creating folders');
-		if(!is_writeable($doc_root_prefix.'writeable'))
+		if(!is_writable($doc_root_prefix.'writable'))
 		{
 			if(!isset($_GET['skip_folders']))
 			{
-				Debug('Unable to create folders, installation cancled. Ensure that '.$doc_root_prefix.'writeable has been created and is writable');
+				Debug('Unable to create folders, installation cancled. Ensure that '.$doc_root_prefix.'writable has been created and is writable');
 				die();
 			}
 			debug('Unable to create folders, please create them manually after the install');
-			debug($doc_root_prefix.'writeable was not a writeable folder' );
+			debug($doc_root_prefix.'writable was not a writable folder' );
 		}
 
-		$dir_logs = $doc_root_prefix.'writeable'.DS.'logs';
-		$dir_uploads = $doc_root_prefix.'writeable'.DS.'uploads';
-		$dir_uploads_tmp = $doc_root_prefix.'writeable'.DS.'uploads'.DS.'tmp';
-		$dir_uploads_orig_images = $doc_root_prefix.'writeable'.DS.'uploads'.DS.'original_images';
-		$dir_cache = $doc_root_prefix.'writeable'.DS.'cache';
-		$dir_search = $doc_root_prefix.'writeable'.DS.'search';
+		$dir_logs = $doc_root_prefix.'writable'.DS.'logs';
+		$dir_uploads = $doc_root_prefix.'writable'.DS.'uploads';
+		$dir_uploads_tmp = $doc_root_prefix.'writable'.DS.'uploads'.DS.'tmp';
+		$dir_uploads_orig_images = $doc_root_prefix.'writable'.DS.'uploads'.DS.'original_images';
+		$dir_cache = $doc_root_prefix.'writable'.DS.'cache';
+		$dir_search = $doc_root_prefix.'writable'.DS.'search';
 		
 		@mkdir($dir_logs);
 		@mkdir($dir_uploads);
@@ -139,7 +139,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	else { $rewrite = 'false'; }
 
 	//define $GLOBALS required by the database layer
-	if($driver == 'sqlite') { @mkdir( $doc_root_prefix.'writeable'.DS.'database'); $host = $doc_root_prefix.'writeable'.DS.'database'.DS.'cms_db.sqlite'; $database = $host; }
+	if($driver == 'sqlite') { @mkdir( $doc_root_prefix.'writable'.DS.'database'); $host = $doc_root_prefix.'writable'.DS.'database'.DS.'cms_db.sqlite'; $database = $host; }
 	$GLOBALS['database_driver'] = $driver;
 	$GLOBALS['database_backend'] = $layer;
 	$GLOBALS['database_user_readwrite'] = $user_rw;
@@ -301,7 +301,7 @@ $GLOBALS[\'cms_folder_search\'] = \''.realpath($dir_search).'\';
 	if(!$write_result)
 	{
 		echo('<p>Unable to create settings file ('.$settings_file.'), instalation aborted.<br/>
-				Make sure the root dir is writeable or the file spensierato_setup.inc is created and writeable</p>');
+				Make sure the root dir is writable or the file spensierato_setup.inc is created and writable</p>');
 		debug($settings_file_string);
 		exit;
 	}

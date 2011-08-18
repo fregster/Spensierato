@@ -28,9 +28,9 @@ $GLOBALS['smtp_username'] = null;
 $GLOBALS['smtp_password'] = null;
 
 //Paths to folders in the filesystem
-$GLOBALS['cms_folder_uploads'] = '/mnt/writeable/uploads/tmp/';
-$GLOBALS['cms_folder_downloads'] = '/mnt/writeable/uploads/';
-$GLOBALS['cms_folder_orig_images'] = '/mnt/writeable/uploads/original_images/';
-$GLOBALS['cms_folder_logs'] = '/mnt/writeable/logs/';
-$GLOBALS['cms_folder_cache'] = '/mnt/writeable/cache/';
-$GLOBALS['cms_folder_search'] = '/mnt/writeable/search/';
+$GLOBALS['cms_folder_uploads'] = '/mnt/writable/uploads/tmp/';
+$GLOBALS['cms_folder_downloads'] = '/mnt/writable/uploads/';
+$GLOBALS['cms_folder_orig_images'] = '/mnt/writable/uploads/original_images/';
+$GLOBALS['cms_folder_logs'] = '/mnt/writable/logs/';
+$GLOBALS['cms_folder_cache'] = '/mnt/writable/cache/';
+$GLOBALS['cms_folder_search'] = '/mnt/writable/search/';

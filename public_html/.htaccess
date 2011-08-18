@@ -1,0 +1,21 @@
+<Files test>
+ForceType application/x-httpd-php
+</Files>
+
+<Files ~ "^\.htaccess">
+Order allow,deny
+Deny from all
+</Files>
+
+<Files ~ "\.inc$">
+Order allow,deny
+Deny from all
+</Files>
+
+RewriteEngine on
+RewriteCond %{REQUEST_URI}  !^/index.php/.*$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)$ index.php/$1
+
+
+DirectoryIndex index.php

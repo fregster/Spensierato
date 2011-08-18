@@ -237,19 +237,19 @@ if(isset($_GET['install'])){
 	
 	<div id="filesystem" class="pad-div">
 		Please choose where to allow filesystem access. <br/>The site will work with out write access but detailed logging and uploads will be disabled
-		<div>Site specific writable folder: <input type="text" name="cms_folder_writeable" value="writeable" /></div>
+		<div>Site specific writable folder: <input type="text" name="cms_folder_writable" value="writable" /></div>
 		<div id="filesystem-options-button" class="js-show button">
 			<div class="button_open"><a href="#" onclick="jsShowID('filesystem-options'); jsHideID('filesystem-options-button'); return false;">Show advanced filesystem options &gt;&gt;&gt;</a></div>
 		</div>
 		<div id="filesystem-options" class="js-hide">
 			<div class="button_close"><a href="#" onclick="jsShowID('filesystem-options-button'); jsHideID('filesystem-options'); return false;">Hide advanced filesystem options &lt;&lt;&lt;</a></div>
 			<div>Use custom folders: <input name="cms_folder_use_custom" type="checkbox" /></div>
-			<div>Uploads tempory folder: <input type="text" name="cms_folder_uploads" value="writeable/uploads/tmp/" /></div>
-			<div>Main Download folder: <input type="text" name="cms_folder_downloads" value="writeable/uploads/" /></div>
-			<div>Origonal Images: <input type="text" name="cms_folder_orig_images" value="writeable/uploads/original_images/" /></div>
-			<div>Logging Folder: <input type="text" name="cms_folder_logs" value="writeable/logs/" /></div>
-			<div>Cache Folder: <input type="text" name="cms_folder_cache" value="writeable/cache/" /></div>
-			<div>Search Index Folder: <input type="text" name="cms_folder_search" value="writeable/search/" /></div>
+			<div>Uploads tempory folder: <input type="text" name="cms_folder_uploads" value="writable/uploads/tmp/" /></div>
+			<div>Main Download folder: <input type="text" name="cms_folder_downloads" value="writable/uploads/" /></div>
+			<div>Origonal Images: <input type="text" name="cms_folder_orig_images" value="writable/uploads/original_images/" /></div>
+			<div>Logging Folder: <input type="text" name="cms_folder_logs" value="writable/logs/" /></div>
+			<div>Cache Folder: <input type="text" name="cms_folder_cache" value="writable/cache/" /></div>
+			<div>Search Index Folder: <input type="text" name="cms_folder_search" value="writable/search/" /></div>
 		</div>
 	</div>
 

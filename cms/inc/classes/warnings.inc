@@ -91,7 +91,7 @@ class warnings
 			}
 			else
 			{
-				$update_log = Settings::singleton()->get_setting('cms_root') . '/writeable/logs/update.log';
+				$update_log = Settings::singleton()->get_setting('cms_root') . '/writable/logs/update.log';
 
 				if(is_file($update_log))
 				{

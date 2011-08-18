@@ -1,7 +1,7 @@
 <?php
 DEFINE('DS', DIRECTORY_SEPARATOR);
-DEFINE('DIR_WRITEABLE', INCLUDE_PATH.'cms'.DS.'writeable'.DS);
-DEFINE('DIR_LOG', DIR_WRITEABLE.'logs');
+DEFINE('DIR_writable', INCLUDE_PATH.'cms'.DS.'writable'.DS);
+DEFINE('DIR_LOG', DIR_writable.'logs');
 DEFINE('DIR_STATIC', INCLUDE_PATH.'cms'.DS.'inc'.DS.'static'.DS);
 DEFINE('DIR_CLASSES', INCLUDE_PATH.'cms'.DS.'inc'.DS.'classes'.DS);
 DEFINE('DIR_EXTERNAL', INCLUDE_PATH.'cms'.DS.'external'.DS);

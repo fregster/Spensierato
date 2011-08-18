@@ -7,7 +7,7 @@
 	}
 
 	$javapath = Settings::Singleton()->get_setting('cms_root').'java/';
-	$path = Settings::singleton()->get_setting('writeable');
+	$path = Settings::singleton()->get_setting('writable');
 	$command = 'java -version';
 	
 	//Execute the command

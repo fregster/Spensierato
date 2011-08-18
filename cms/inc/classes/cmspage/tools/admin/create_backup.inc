@@ -9,7 +9,7 @@
  * custom dir tar
  * skin dir tar
  * 
- * optional: all writeable files / downloads
+ * optional: all writable files / downloads
  * 
  * require: passwords to encrypt the contents of the files with in the zip
  */

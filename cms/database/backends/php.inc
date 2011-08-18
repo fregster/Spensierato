@@ -26,7 +26,7 @@ class database_execution_php extends database_execution
 		return $this->db_backend;
 	}
 
-	public function sql_run($sql, $values, $writeuser)
+	public function sql_run($sql, $values, $writeuser, $soft_connect = false)
 	{
 		$error = false;
 		if($writeuser==true)

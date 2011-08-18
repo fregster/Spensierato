@@ -1,11 +1,27 @@
 <?php
 /**
- * 
  * Main database class
  * Included from database.inc to ensure the required defines and values are configured
- * @author Paul Fryer
+ * 
+ * 
+ * Requirements: PHP5
+ * Copyright (c) 2011 Paul Fryer (www.fryer.org.uk)
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the The GNU Lesser General Public License as published by
+ * the Free Software Foundation; version 3 or any latter version of the license.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * The GNU Lesser General Public License (LGPLv3) for more details.
+ * 
+ * 
+ * @package PDA (PHP Database Abstraction)
+ * @author Paul Fryer <paul@fryer.org.uk>
+ * @license http://www.opensource.org/licenses/lgpl-3.0.html LGPL
  *
  */
+
 class database
 {
 	private $options = array('allow_external_calls' => true);
@@ -35,10 +51,10 @@ class database
 	private $use_external_log = true;
 	private $show_error_sql = false;
 	private $strip_slashes = true;
+	protected $user_support = true;
 	protected $escape_method = 'addslashes';
 	protected $allow_extenal_escaping = false; //False uses the internal method's only which prevent's opening a DB connection unless required.
 	
-	protected $user_support = true;
 	protected $col_quote = '`';
 	protected $table_quote = '`';
 	protected $value_quote = "'";
@@ -71,31 +87,65 @@ class database
 	 */
 	protected $db = false;
 
-	public static function Singleton()
-	{
-		if (!isset(self::$instance))
+	/**
+	 * 
+	 * Database Singleton for accessing the default database
+	 * @param array $dsn
+	 */
+	public static function Singleton($dsn = null, $rebuild = false)
+	{	
+		if($rebuild && isset(self::$instance)){
+			self::$instance == null;
+		}
+		
+		if (!isset(self::$instance) || isset($dsn['phptype']))
 		{
-			$c = 'database_'.DATABASE_DRIVER;
-			include(DATABASE_LAYER_PATH . DS . 'server_types' . DS . DATABASE_DRIVER.'.inc');
-		   	if(!class_exists($c))
-		   	{
-		   		die('Unable to create correct database layer type ('.$c.')');
-		   	}
-			self::$instance = new $c;
-		}		
+			self::$instance = database::factory($dsn);
+		}
+		//die($rebuild);
 		return self::$instance;
+	}
+	
+	/**
+	 * 
+	 * For creating the correct SQL layer to interact with the database
+	 * Returns an object of the correct type
+	 * 
+	 * @param array $dsn
+	 */
+	public static function factory($dsn = null)
+	{
+		if(isset($dsn['phptype'])){
+			$c = 'database_'.$dsn['phptype'];
+			$driver =& $dsn['phptype'];
+		}else{
+			$c = 'database_'.DATABASE_DRIVER;
+			$driver = DATABASE_DRIVER;
+		}
+
+		include(DATABASE_LAYER_PATH . DS . 'server_types' . DS . $driver.'.inc');
+	   	if(!class_exists($c))
+	   	{
+	   		die('Unable to create correct database layer type ('.$c.')');
+	   	}
+	   	
+	   	if(isset($dsn['phptype'])){
+	   		return new $c($dsn);
+	   	}
+	   	
+	   	return new $c;
 	}
 
 	/**
 	 * Database construct
 	 * If the database class has been called directly throught the singleton then connect to the default database
 	 *
-	 * It is intended a new connection to a seperate DB can be started with $new_db = Database::Singleton($dsn);
-	 * The call $result = $new_bd()->sql_select_first(......);
+	 * It is intended a new connection to a seperate DB can be started with $new_db = Database::custom_dsn($dsn);
+	 * The call $result = $new_db()->sql_select_first(......);
 	 *
 	 * @param Databse_execution object $db
 	 */
-	protected function __construct()
+	public function __construct($dsn = null, $options = NULL, $mods = NULL)
 	{
 		$this->time = time();
 		$this->microtime = microtime();
@@ -111,7 +161,7 @@ class database
 		}
 		if(!$this->db) 
 		{
-			$this->db = database_execution::singleton();
+			$this->db = database_execution::singleton($dsn);
 		}
 		
 		if($this->db->supports_prepared_statments() && $this->sql_use_prepared_statments_if_available && !defined('DATABASE_DISABLE_PREPARED_SQL_STATMENTS'))
@@ -123,12 +173,11 @@ class database
 			$this->sql_prepared_statment_placeholder_prefix = $this->db->prepared_statment_placeholder();
 		}
 		
-		if(defined('DATABASE_DISABLE_SQL_CACHE') || defined('DATABASE_INSTALL_MODE') || ($this->options['allow_external_calls'] && !Settings::Singleton()->get_setting('cache_database_queries')))
+		if(defined('DATABASE_INSTALL_MODE') || defined('DATABASE_DISABLE_SQL_CACHE') || ($this->options['allow_external_calls'] && !Settings::Singleton()->get_setting('cache_database_queries')))
 		{
-
 			$this->sql_cache_enabled = false;
 		}
-
+		
 		if(!function_exists($this->escape_method))
 		{
 			$this->escape_method = 'addslashes';
@@ -153,9 +202,7 @@ class database
 	 */
 	public function __destruct()
 	{
-		if($this->db){
-			$this->db->destroy();
-		}
+		$this->db->destroy();
 	}
 
 	/**
@@ -167,8 +214,29 @@ class database
 	 */
 	public static function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{
-		//A DSN has been set so create the connection with the specified options		
-		return database_execution::factory()->custom_db_object($dsn, $options, $mods);
+		//A DSN has been set so create the connection with the specified options
+		if(!isset($dsn['driver'])){
+			$dsn['driver'] = null;
+		}		
+		return database_execution::factory($dsn['driver'])->custom_db_object($dsn, $options, $mods);
+	}
+	
+	/**
+	 * 
+	 * Return an array of supported databases
+	 */
+	public function supported_types()
+	{
+		return array('sqlite', 'mysqli', 'sqlsrv');
+	}
+	
+	/**
+	 * 
+	 * Return an array of supported database drivers
+	 */
+	public function supported_drivers()
+	{
+		return array('pdo', 'mdb2', 'php');
 	}
 
 	/**
@@ -177,7 +245,7 @@ class database
 	 */
 	public function force_write_user()
 	{
-		$this->db->force_write_user();
+		return $this->db->force_write_user();
 	}
 
 	/**
@@ -186,7 +254,9 @@ class database
 	 */
 	public function destroy_write_user()
 	{
-		$this->db->destroy_write_user();
+		if($this->user_support){
+			$this->db->destroy_write_user();
+		}
 	}
 
 	/**
@@ -206,8 +276,11 @@ class database
 	{
 		//Disable cacheing
 		$this->sql_cache_enabled = false;
+		
 		//Clear the cache
-		unset($_SESSION['sql_cache']);
+		if(isset($_SESSION['sql_cache'])){
+			unset($_SESSION['sql_cache']);
+		}
 	}
 
 	/**
@@ -1176,7 +1249,7 @@ class database
 	{
 		$this->db->sql_connect();
 
-		if($destroy_cache && isset($_SESSION) && isset($_SESSION['sql_cache']))
+		if($destroy_cache && isset($_SESSION['sql_cache']))
 		{
 			unset($_SESSION['sql_cache']);
 		}
@@ -1351,6 +1424,11 @@ class database
 	/*
 	 * Special SQL cases
 	 */
+	
+	public function maintenance()
+	{
+		return database_maintenance::Singleton();
+	}
 
 	private function show_tables()
 	{
@@ -1406,7 +1484,18 @@ class database
 	 */
 	public function direct_sql($sql)
 	{
-		$this->sql_exe($this->sql_clean_input($sql), NULL);
+		return $this->sql_exe($this->sql_clean_input($sql), NULL);
+	}
+	
+	/**
+	 * 
+	 * Run a query directly against the DB object
+	 * @param string $sql
+	 */
+	public function direct_query($sql)
+	{
+		$this->db->sql_connect();
+		return $this->db->query($sql);
 	}
 	
 	/**
@@ -1422,8 +1511,16 @@ class database
 		return $this->user_support;
 	}
 	
+	public static function does_x_support_users($type){
+		return false;
+	}
+	
 	public function using_prepared_statments()
 	{
 		return $this->sql_use_prepared_statments;
+	}
+	
+	public function prefix(){
+		return $this->prefix;
 	}
 }

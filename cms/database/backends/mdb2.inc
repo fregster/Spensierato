@@ -61,7 +61,7 @@ class database_execution_mdb2 extends database_execution
 		return $this->db_backend;
 	}
 
-	public function sql_run($sql, $values, $writeuser, $mode = null)
+	public function sql_run($sql, $values, $writeuser, $mode = null, $soft_connect = false)
 	{
 		
 		$error = false;

@@ -56,7 +56,7 @@ class database_execution_pdo extends database_execution
 		return $this->db_backend;
 	}
 
-	public function sql_run($sql, $values, $writeuser, $mode = PDO::FETCH_ASSOC)
+	public function sql_run($sql, $values, $writeuser, $mode = PDO::FETCH_ASSOC, $soft_connect = false)
 	{
 		$error = false;
 		try
@@ -89,6 +89,9 @@ class database_execution_pdo extends database_execution
 				else
 				{
 					$error = 'Failed update database, write user disabled<br />';
+					var_dump($this->read);
+					var_dump($this->write);
+					var_dump(debug_backtrace());
 					$this->sql_error($error, NULL, NULL, $soft_connect);
 				}
 			}

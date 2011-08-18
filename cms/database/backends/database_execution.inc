@@ -11,6 +11,7 @@ class database_execution
 	private static $backends = array('mdb2', 'pdo', 'php'); //Preference order of backends
 	protected static $instance;
 
+	protected $custom = false;
 	protected $user_support = true;
 	protected $read;
 	protected $write = NULL; //FIXME Temp hack from avi to allow the insert methods to get the last id, needs new method I think.
@@ -27,8 +28,9 @@ class database_execution
 	protected $sql_prepared_statment_placeholder_prefix = ':';
 	
 
-	public static function factory()
+	public static function factory($force_type = null)
 	{
+		if(!is_null($force_type)){ $GLOBALS['database_backend'] = $force_type; }
    		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = database_execution::$backends[0]; }
    		if(file_exists(DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$GLOBALS['database_backend'].'.inc'))
    		{
@@ -43,14 +45,24 @@ class database_execution
    		return new $c;
 	}
 	
-	public static function singleton()
-	{
+	public static function singleton($dsn = null)
+	{		
 		if(!isset(self::$instance) || self::$instance == false || !is_null(self::$instance))
 		{
-	   		self::$instance = database_execution::factory();
+			if(isset($dsn['driver'])){
+				self::$instance = database_execution::factory($dsn['driver']);
+			}else{
+				self::$instance = database_execution::factory();	
+			}
 		}
 		
+		self::$instance->set_dsn($dsn);
+		
 		return self::$instance;
+	}
+	
+	public function set_dsn($dsn = array()){
+		$this->dsn_default = $dsn;
 	}
 	
 	public function __destruct()
@@ -69,32 +81,40 @@ class database_execution
 	 */
 	public function sql_connect($soft_connect = false)
 	{
-		$this->user_support = database::singleton()->user_support();
+		if(!$this->custom){
+			$this->user_support = database::singleton()->user_support();
+		}
+
 		if(!$this->connected)
 		{
-			$this->dsn_default = array(
-			    'phptype'  => $GLOBALS['database_driver'],
-			    'username' => $GLOBALS['database_user_read'],
-			    'password' => $GLOBALS['database_password'],
-			    'hostspec' => $GLOBALS['database_host'],
-			    'database' => $GLOBALS['database_name'],
+			if(!isset($this->dsn_default['phptype'])){				
+				$this->dsn_default = array(
+				    'phptype'  => $GLOBALS['database_driver'],
+				    'username' => $GLOBALS['database_user_read'],
+				    'password' => $GLOBALS['database_password'],
+				    'hostspec' => $GLOBALS['database_host'],
+				    'database' => $GLOBALS['database_name'],
 				);
 				
 				if(isset($GLOBALS['database_mode']))
 				{
 					$this->dsn_default['mode'] = $GLOBALS['database_mode'];
 				}
+			}
 
 				$this->read = $this->connect($this->dsn_default, NULL, NULL, $soft_connect);
 				//If logged in create db write user this should help prevent against SQL injection
-				//As only logged in can use the db writeable user
-				Session::Singleton();
+				//As only logged in can use the db writable user
+				if(class_exists('Session')){
+					Session::Singleton();
+				}
+				
 				if((isset($_SESSION['userid']) && $_SESSION['userid'] != 0) || defined('DATABASE_INSTALL_MODE'))
 				{
 					if($this->user_support)
 					{
-						if(!isset($GLOBALS['database_password_write']) && isset($GLOBALS['database_password'])){
-							$GLOBALS['database_password_write'] = $GLOBALS['database_password'];
+						if(!isset($GLOBALS['database_password_write'])){
+							$GLOBALS['database_password_write'] &= $GLOBALS['database_password'];
 						}
 						
 						//Create write user
@@ -149,19 +169,17 @@ class database_execution
 	public function force_write_user()
 	{
 		//Create write user
-		if(database::singleton()->user_support())
+		if(database::does_x_support_users($this->dsn_default['phptype']))
 		{
-			if(!isset($GLOBALS['database_password_write']) && isset($GLOBALS['database_password'])){
-				$GLOBALS['database_password_write'] = $GLOBALS['database_password'];
+			if(!isset($this->dsn_default['phptype'])){				
+				$this->dsn_default = array(
+				    'phptype'  => $GLOBALS['database_driver'],
+				    'username' => $GLOBALS['database_user_read'],
+				    'password' => $GLOBALS['database_password'],
+				    'hostspec' => $GLOBALS['database_host'],
+				    'database' => $GLOBALS['database_name'],
+				);
 			}
-						
-			$this->dsn = array(
-			    'phptype'  => $GLOBALS['database_driver'],
-			    'username' => $GLOBALS['database_user_readwrite'],
-			    'password' => $GLOBALS['database_password_write'],
-			    'hostspec' => $GLOBALS['database_host'],
-			    'database' => $GLOBALS['database_name'],
-			);
 			
 			if(isset($GLOBALS['database_mode']))
 			{
@@ -173,6 +191,8 @@ class database_execution
 		{
 			$this->write =& $this->read;
 		}
+		
+		return true;
 	}
 
 	public function destroy_write_user()
@@ -193,6 +213,7 @@ class database_execution
 	public function custom_db_object($dsn, $options = NULL, $mods = NULL)
 	{   		
    		 $this->connect($dsn,$options,$mods);
+   		 $this->custom = true;
    		 return $this;
 	}
 	
@@ -201,7 +222,7 @@ class database_execution
 		
 	}
 
-	public function sql_run($sql, $values, $writeuser)
+	public function sql_run($sql, $values, $writeuser, $soft_connect = false)
 	{
 		
 	}

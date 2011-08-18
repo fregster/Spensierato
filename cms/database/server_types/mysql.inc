@@ -1,4 +1,5 @@
 <?php
+
 class Database_mysql extends Database
 {
 	protected $escape_method = 'mysql_real_escape_string';

@@ -1,0 +1,43 @@
+debian install from scratch
+
+Install debian netinstall as per normal
+unselect all options from tasksel (You may wish to select SSH)
+
+ssh in to the server and su to root
+
+as root issue:
+
+apt-get update
+apt-get install mysql-server apache2 php5 ffmpeg php-xml-serializer php-xml-parser php5-xsl php5-mysql php5-ffmpeg php-apc php5-sqlite php-mdb2
+a2enmod rewrite php5-mcrypt
+
+mkdir /var/www/spensierato
+cd /var/www/spensierato
+
+apt-get install subversion
+svn co http://svn.fryer.org.uk/cms/trunk /var/www/spensierato
+
+
+
+mkdir /var/www/my_install_name
+mkdir /var/www/my_install_name/public_html
+cp ./sample_index.inc /var/www/my_install_name/public_html/index.php
+cp ./public_html/favicon.ico /var/www/my_install_name/public_html/
+
+edit index.php to include the correct paths if you have checked out trunk the path will be wrong
+
+mkdir /var/www/my_install_name/writable
+chown -R www-data:www-data /var/www/my_install_name/
+chmod 770 /var/www/my_install_name/
+chmod 770 /var/www/my_install_name/writable/
+
+
+Now either setup a new ghost as required or modify the default site with a location for testing
+
+to use a location:
+cp /var/www/spensierato/trunk/cms/documentation/ /etc/apache2/conf.d/site_name
+nano /etc/apache2/conf.d/site_name <- modify to use what ever name you want to type in and that is has the right dir's in
+apache2ctl restart (may be apachectl depending on OS)
+
+
+in the browser visit http://address.to.site/my_install_name if using a location

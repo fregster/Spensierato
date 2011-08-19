@@ -145,7 +145,7 @@ class database
 	 *
 	 * @param Databse_execution object $db
 	 */
-	public function __construct($dsn = null, $options = NULL, $mods = NULL)
+	protected function __construct($dsn_read = null, $options = NULL, $mods = NULL, $dsn_write = null)
 	{
 		$this->time = time();
 		$this->microtime = microtime();
@@ -155,13 +155,43 @@ class database
 			$this->options['allow_external_calls'] = false;
 		}
 		
+		if(is_null($dsn_read) || !isset($dsn_read['phptype'])){
+			$dsn_read = array(
+			    'phptype'  => $GLOBALS['database_driver'],
+			    'username' => $GLOBALS['database_user_read'],
+			    'password' => $GLOBALS['database_password'],
+			    'hostspec' => $GLOBALS['database_host'],
+			    'database' => $GLOBALS['database_name'],
+			);
+			
+			if(isset($GLOBALS['database_mode']))
+			{
+				$dsn_read = $GLOBALS['database_mode'];
+			}
+		}
+		
+		if(is_null($dsn_write) || !isset($dsn_write['phptype'])){
+			$dsn_write = array(
+			    'phptype'  => $GLOBALS['database_driver'],
+			    'username' => $GLOBALS['database_user_readwrite'],
+			    'password' => $GLOBALS['database_password_write'],
+			    'hostspec' => $GLOBALS['database_host'],
+			    'database' => $GLOBALS['database_name'],
+			);
+			
+			if(isset($GLOBALS['database_mode']))
+			{
+				$dsn_write = $GLOBALS['database_mode'];
+			}
+		}
+		
 		if(isset($db) && !is_null($db))
 		{
 			$this->db = $db;
 		}
 		if(!$this->db) 
 		{
-			$this->db = database_execution::singleton($dsn);
+			$this->db = database_execution::singleton($dsn_read, $dsn_write);
 		}
 		
 		if($this->db->supports_prepared_statments() && $this->sql_use_prepared_statments_if_available && !defined('DATABASE_DISABLE_PREPARED_SQL_STATMENTS'))
@@ -218,7 +248,7 @@ class database
 		if(!isset($dsn['driver'])){
 			$dsn['driver'] = null;
 		}		
-		return database_execution::factory($dsn['driver'])->custom_db_object($dsn, $options, $mods);
+		return database_execution::factory($dsn)->custom_db_object($dsn, $options, $mods);
 	}
 	
 	/**

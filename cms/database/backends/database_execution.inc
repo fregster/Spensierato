@@ -8,7 +8,7 @@
  */
 class database_execution
 {
-	private static $backends = array('mdb2', 'pdo', 'php'); //Preference order of backends
+	private static $backends = array('pdo', 'mdb2', 'php'); //Preference order of backends
 	protected static $instance;
 
 	protected $custom = false;
@@ -21,48 +21,53 @@ class database_execution
 
 	public $max_sql_length = 10240; //Max Sql query length
 	
-	private $dsn_default;
-	private $dsn;
+	protected $dsn_read = array();
+	protected $dsn_write = array();
 	protected $supports_database_backup = false;
 	protected $supports_prepared_statments = false;
 	protected $sql_prepared_statment_placeholder_prefix = ':';
 	
 
-	public static function factory($force_type = null)
+	public static function factory($read_dsn = array())
 	{
-		if(!is_null($force_type)){ $GLOBALS['database_backend'] = $force_type; }
-   		if(!isset($GLOBALS['database_backend'])) { $GLOBALS['database_backend'] = database_execution::$backends[0]; }
-   		if(file_exists(DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$GLOBALS['database_backend'].'.inc'))
+		if(isset($read_dsn['backend'])){ $backend = $read_dsn['backend']; }
+   		if(!isset($backend)) { $backend = database_execution::$backends[0];}
+   		if(file_exists(DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$backend.'.inc'))
    		{
-   			require_once(DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$GLOBALS['database_backend'].'.inc');
-   			$c = 'database_execution_'.$GLOBALS['database_backend'];
+   			require_once(DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$backend.'.inc');
+   			$c = 'database_execution_'.$backend;
    		}
    		else
    		{
-		    die('Unable to build the requested database layer '.DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$GLOBALS['database_backend'].'.inc');
+		    die('Unable to build the requested database layer '.DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$backend.'.inc');
    		}
    		
    		return new $c;
 	}
 	
-	public static function singleton($dsn = null)
+	public static function singleton($read_dsn = array(), $write_dsn = array())
 	{		
 		if(!isset(self::$instance) || self::$instance == false || !is_null(self::$instance))
 		{
-			if(isset($dsn['driver'])){
-				self::$instance = database_execution::factory($dsn['driver']);
+			if(isset($read_dsn['driver'])){
+				self::$instance = database_execution::factory($read_dsn['driver']);
 			}else{
 				self::$instance = database_execution::factory();	
 			}
 		}
 		
-		self::$instance->set_dsn($dsn);
+		self::$instance->set_dsn($read_dsn, $write_dsn);
 		
 		return self::$instance;
 	}
 	
-	public function set_dsn($dsn = array()){
-		$this->dsn_default = $dsn;
+	public function set_dsn($dsn_read = array(), $dsn_write = array()){
+		$this->dsn_read = $dsn_read;
+		if(isset($this->dsn_write['phptype'])){
+			$this->dsn_write = $dsn_write;
+		}else{
+			$this->dsn_write = $this->dsn_read;
+		}		
 	}
 	
 	public function __destruct()
@@ -87,22 +92,7 @@ class database_execution
 
 		if(!$this->connected)
 		{
-			if(!isset($this->dsn_default['phptype'])){				
-				$this->dsn_default = array(
-				    'phptype'  => $GLOBALS['database_driver'],
-				    'username' => $GLOBALS['database_user_read'],
-				    'password' => $GLOBALS['database_password'],
-				    'hostspec' => $GLOBALS['database_host'],
-				    'database' => $GLOBALS['database_name'],
-				);
-				
-				if(isset($GLOBALS['database_mode']))
-				{
-					$this->dsn_default['mode'] = $GLOBALS['database_mode'];
-				}
-			}
-
-				$this->read = $this->connect($this->dsn_default, NULL, NULL, $soft_connect);
+				$this->read = $this->connect($this->dsn_read, NULL, NULL, $soft_connect);
 				//If logged in create db write user this should help prevent against SQL injection
 				//As only logged in can use the db writable user
 				if(class_exists('Session')){
@@ -113,24 +103,12 @@ class database_execution
 				{
 					if($this->user_support)
 					{
-						if(!isset($GLOBALS['database_password_write'])){
-							$GLOBALS['database_password_write'] &= $GLOBALS['database_password'];
+						if(!isset($this->dsn_write['password'])){
+							$this->dsn_write['password'] = $this->dsn_read['password'];
 						}
 						
 						//Create write user
-						$dsn = array(
-						    'phptype'  => $GLOBALS['database_driver'],
-						    'username' => $GLOBALS['database_user_readwrite'],
-						    'password' => $GLOBALS['database_password_write'],
-						    'hostspec' => $GLOBALS['database_host'],
-						    'database' => $GLOBALS['database_name'],
-						);
-						
-						if(isset($GLOBALS['database_mode']))
-						{
-							$this->dsn_default['mode'] = $GLOBALS['database_mode'];
-						}
-						$this->write = $this->connect($dsn, NULL, NULL, $soft_connect);
+						$this->write = $this->connect($this->dsn_write, NULL, NULL, $soft_connect);
 					}
 					else
 					{
@@ -169,23 +147,9 @@ class database_execution
 	public function force_write_user()
 	{
 		//Create write user
-		if(database::does_x_support_users($this->dsn_default['phptype']))
+		if(database::does_x_support_users($this->dsn_read['phptype']))
 		{
-			if(!isset($this->dsn_default['phptype'])){				
-				$this->dsn_default = array(
-				    'phptype'  => $GLOBALS['database_driver'],
-				    'username' => $GLOBALS['database_user_read'],
-				    'password' => $GLOBALS['database_password'],
-				    'hostspec' => $GLOBALS['database_host'],
-				    'database' => $GLOBALS['database_name'],
-				);
-			}
-			
-			if(isset($GLOBALS['database_mode']))
-			{
-				$this->dsn_default['mode'] = $GLOBALS['database_mode'];
-			}
-			$this->write = $this->connect($this->dsn);
+			$this->write = $this->connect($this->dsn_write);
 		}
 		else
 		{

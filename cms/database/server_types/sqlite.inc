@@ -1,5 +1,7 @@
 <?php
 require_once('mysql.inc');
+
+//FIXME: Should be redundent now
 $GLOBALS['database_mode'] = '0644';
 $GLOBALS['database_password'] = null;
 $GLOBALS['database_user_readwrite'] = null;

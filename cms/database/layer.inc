@@ -129,7 +129,7 @@ class database
 	   		die('Unable to create correct database layer type ('.$c.')');
 	   	}
 	   	
-	   	if(isset($dsn['phptype'])){
+	   	if(isset($dsn_read['phptype'])){
 	   		return new $c($dsn_read, $options, $mods, $dsn_write);
 	   	}
 	   	
@@ -191,7 +191,8 @@ class database
 		}
 		if(!$this->db) 
 		{
-			$this->db = database_execution::singleton($dsn_read, $dsn_write);
+			$this->db = database_execution::factory($dsn_read);
+			$this->db->set_dsn($dsn_read, $dsn_write);
 		}
 		
 		if($this->db->supports_prepared_statments() && $this->sql_use_prepared_statments_if_available && !defined('DATABASE_DISABLE_PREPARED_SQL_STATMENTS'))
@@ -1467,12 +1468,12 @@ class database
 
 	public function drop_database($database)
 	{
-		$this->db->drop_database($this->sql_clean_input($database));
+		$this->db->dropDatabase($this->sql_clean_input($database));
 	}
 	
 	public function create_database($database)
 	{
-		$this->db->create_database($this->sql_clean_input($database));
+		$this->db->createDatabase($this->sql_clean_input($database));
 	}
 
 	public function create_table($table, $database = NULL, $cols = array(), $types = array(), $length = array())

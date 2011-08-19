@@ -27,10 +27,11 @@ class database_execution
 	protected $sql_prepared_statment_placeholder_prefix = ':';
 	
 
-	public static function factory($read_dsn = array())
+	public static function factory($read_dsn = array(), $write_dsn = array())
 	{
 		if(isset($read_dsn['backend'])){ $backend = $read_dsn['backend']; }
    		if(!isset($backend)) { $backend = database_execution::$backends[0];}
+   		
    		if(file_exists(DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$backend.'.inc'))
    		{
    			require_once(DATABASE_LAYER_PATH.DIRECTORY_SEPARATOR.'backends'.DIRECTORY_SEPARATOR.$backend.'.inc');
@@ -48,11 +49,7 @@ class database_execution
 	{		
 		if(!isset(self::$instance) || self::$instance == false || !is_null(self::$instance))
 		{
-			if(isset($read_dsn['driver'])){
-				self::$instance = database_execution::factory($read_dsn['driver']);
-			}else{
-				self::$instance = database_execution::factory();	
-			}
+			self::$instance = database_execution::factory($read_dsn = array());	
 		}
 		
 		self::$instance->set_dsn($read_dsn, $write_dsn);

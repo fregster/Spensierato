@@ -162,28 +162,29 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	 * Create the db object
 	 */
 
-	$db = database::custom_db_object(array(	'phptype'  => $driver,
-											'backend'	=> $layer,
-		    								'username' => $username,
-											'password' => $password,
-											'hostspec' => $host,
-											'driver' => $driver,
-											),
-											NULL,
-											array('Manager'));
+	$db = database::factory(array(	'phptype'  => $driver,
+									'backend'	=> $layer,
+		    						'username' => $username,
+									'password' => $password,
+									'hostspec' => $host,
+									'driver' => $driver,
+										),
+							NULL,
+							array('Manager'));
 	
 	debug('DB Connected');
 //	var_dump($db);
 	/*
 	 * Create the database
-	 */
+	 */	
+	$db->force_write_user();
 	debug('Attepmting to drop DB');
-	$db->dropDatabase($database);
+	$db->drop_database($database);
 	
 	debug('DB Dropped');
 	
 	debug('Attepmting to create DB');
-	$db->createDatabase($database);
+	$db->create_database($database);
 	debug('DB Created');
 	
 	debug('Loading required settings');
@@ -198,12 +199,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		$db->destroy();
 	}
 	unset($db);
-var_dump(array('phptype'  => $driver,
-							'backend'	=> $layer,
-							'username' => $username,
-							'password' => $password,
-							'hostspec' => $host,
-							'database' => $database));
 
 	database::Singleton(array('phptype'  => $driver,
 							'backend'	=> $layer,
@@ -213,7 +208,7 @@ var_dump(array('phptype'  => $driver,
 							'database' => $database),
 							 true);
 							 
-	debug('Connection replaced');
+	debug('DB Singleton Created');
 	
 	//Include the file which processes the SQL code
 	//Load aproprate sql file
@@ -258,7 +253,7 @@ var_dump(array('phptype'  => $driver,
 	}
 	
 	debug('Rebuilding Database Singleton');
-	database::Singleton(null, true);
+	database::Singleton(null, true); //This forces the singleton to be replaced using the default values it ensures that the autoloader will work at any point in time
 
 	/**
 	* Build the settings file string

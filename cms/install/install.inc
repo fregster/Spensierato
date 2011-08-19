@@ -166,7 +166,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 											'backend'	=> $layer,
 		    								'username' => $username,
 											'password' => $password,
-											'hostspec' => $host),
+											'hostspec' => $host,
+											'driver' => $driver,
+											),
 											NULL,
 											array('Manager'));
 	
@@ -196,14 +198,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		$db->destroy();
 	}
 	unset($db);
+var_dump(array('phptype'  => $driver,
+							'backend'	=> $layer,
+							'username' => $username,
+							'password' => $password,
+							'hostspec' => $host,
+							'database' => $database));
 
-	$db = database::custom_db_object(array('phptype'  => $driver,
-		    								'username' => $username,
-											'password' => $password,
-											'hostspec' => $host,
-											'database' => $database),
-											NULL,
-											array('Manager'));
+	database::Singleton(array('phptype'  => $driver,
+							'backend'	=> $layer,
+							'username' => $username,
+							'password' => $password,
+							'hostspec' => $host,
+							'database' => $database),
+							 true);
+							 
 	debug('Connection replaced');
 	
 	//Include the file which processes the SQL code
@@ -234,7 +243,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		foreach($user_create_sql as $sql)
 		{
 //			echo('<br/>'.$sql.'<br/>');
-			$result = $db->query($sql);
+			$result = database::Singleton()->direct_query($sql);
 	
 			if(!$result)
 			{

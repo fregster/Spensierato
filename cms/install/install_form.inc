@@ -193,7 +193,7 @@ if(isset($_GET['install'])){
 	</div>
 	<div id="dbinfo" class="pad-div">
 	Please specify the connection information to your SQL server, this user needs to be able to create users and databases, as well as give permissions (Usally root or sa)
-		<div>Database Layer: <select name="db-layer" id="db-layer" onchange="jsCheckHostType();"><?php if(!array_search('MDB2.php', $opt_missing)) { echo '<option value="mdb2">MDB2 (Default)</option>'; } ?><option value="pdo">PDO (Cross SQL platform)</option><option value="php">PHP's Builtin Functions (Not recomended)</option></select></div>
+		<div>Database Layer: <select name="db-layer" id="db-layer" onchange="jsCheckHostType();"><option value="pdo">PDO (Cross SQL platform - Default)</option><?php if(!array_search('MDB2.php', $opt_missing)) { echo '<option value="mdb2">MDB2 (Default)</option>'; } ?><option value="php">PHP's Builtin Functions (Not recomended)</option></select></div>
 		<div id="db-driver">
 			<div>Host type: <select id="db-host" name="type" onchange="jsCheckHostTypeDetail();">
 				<?php /*TODO:: This need's rewriting to be cleaver about the options shown*/ ?>

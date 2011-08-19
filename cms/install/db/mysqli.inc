@@ -263,6 +263,7 @@ foreach ($tables as $table => $data){
 	//execute sql
 //echo('<br/>'.$sql);
 //die();
+
 	$result = database::Singleton()->direct_query($sql);
 
 	if(!$result)

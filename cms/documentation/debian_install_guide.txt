@@ -9,7 +9,7 @@ as root issue:
 
 apt-get update
 apt-get install mysql-server apache2 php5 ffmpeg php-xml-serializer php-xml-parser php5-xsl php5-mysql php5-ffmpeg php-apc php5-sqlite php-mdb2
-a2enmod rewrite php5-mcrypt
+a2enmod rewrite php5-mcrypt php-mdb2-driver-sqlite php-mdb2-driver-mysql
 
 mkdir /var/www/spensierato
 cd /var/www/spensierato

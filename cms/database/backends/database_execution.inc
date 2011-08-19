@@ -17,7 +17,6 @@ class database_execution
 	protected $write = NULL; //FIXME Temp hack from avi to allow the insert methods to get the last id, needs new method I think.
 	protected $connected = false;
 	protected $show_error_sql = true;
-	protected $db_backend;
 
 	public $max_sql_length = 10240; //Max Sql query length
 	
@@ -63,11 +62,11 @@ class database_execution
 	
 	public function set_dsn($dsn_read = array(), $dsn_write = array()){
 		$this->dsn_read = $dsn_read;
-		if(isset($this->dsn_write['phptype'])){
+		if(isset($dsn_write['phptype'])){
 			$this->dsn_write = $dsn_write;
 		}else{
 			$this->dsn_write = $this->dsn_read;
-		}		
+		}
 	}
 	
 	public function __destruct()
@@ -124,7 +123,7 @@ class database_execution
 			$this->connected = true;
 		}
 		
-		if($this->db_backend == null)
+		if($this->read == null)
 		{
 			$this->sql_error('Driver failed to load', __LINE__, __FILE__);
 		}
@@ -147,15 +146,7 @@ class database_execution
 	public function force_write_user()
 	{
 		//Create write user
-		if(database::does_x_support_users($this->dsn_read['phptype']))
-		{
-			$this->write = $this->connect($this->dsn_write);
-		}
-		else
-		{
-			$this->write =& $this->read;
-		}
-		
+		$this->write = $this->connect($this->dsn_write);
 		return true;
 	}
 

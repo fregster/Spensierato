@@ -37,10 +37,10 @@ class database_execution_pdo extends database_execution
 			}
 			
 			$old_track = ini_set('track_errors', '1');
-//			$this->db_backend = new PDO($connection_String, $dsn['username'], $dsn['password']);
-			$this->db_backend = @new PDO($connection_String, $dsn['username'], $dsn['password']);
+//			$db_backend = new PDO($connection_String, $dsn['username'], $dsn['password']);
+			$db_backend = @new PDO($connection_String, $dsn['username'], $dsn['password']);
 			
-			if(!$this->db_backend)
+			if(!$db_backend)
 			{
 				$error = 'Unable to connect to the database '.$php_errormsg;
 				$this->sql_error($error, NULL, NULL, $soft_connect);
@@ -53,7 +53,7 @@ class database_execution_pdo extends database_execution
 			$this->sql_error($e->getMessage() . ': Are all the required PHP extentions loaded for your Database Type', __LINE__, __FILE__, $soft_connect);
 	    }
 		
-		return $this->db_backend;
+		return $db_backend;
 	}
 
 	public function sql_run($sql, $values, $writeuser, $mode = PDO::FETCH_ASSOC, $soft_connect = false)
@@ -74,6 +74,7 @@ class database_execution_pdo extends database_execution
 					{
 						//Do prepeared statment
 						$stmt = $this->write->prepare($sql);
+												
 						$stmt->setFetchMode($mode);
 						if($stmt === false)
 						{
@@ -89,9 +90,6 @@ class database_execution_pdo extends database_execution
 				else
 				{
 					$error = 'Failed update database, write user disabled<br />';
-					var_dump($this->read);
-					var_dump($this->write);
-					var_dump(debug_backtrace());
 					$this->sql_error($error, NULL, NULL, $soft_connect);
 				}
 			}
@@ -134,7 +132,9 @@ class database_execution_pdo extends database_execution
 
 				if($result === false)
 				{
-					$error = 'Failed to issue query<br />'.$sql;
+					$db_error = $stmt->errorInfo();
+					$error = 'Failed to issue query<br />'.$db_error[2].'<br/>'.$sql;
+					unset($db_error);
 				}
 				else
 				{
@@ -178,13 +178,13 @@ class database_execution_pdo extends database_execution
 	public function createDatabase($database)
 	{
 		$create_db_sql = 'create database '.$database;
-		$this->db_backend->query($create_db_sql);
+		$this->write->query($create_db_sql);
 	}
 
 	public function dropDatabase($database)
 	{
 		$drop_db_sql = 'drop database '.$database;
-		$this->db_backend->query($drop_db_sql);
+		$this->write->query($drop_db_sql);
 	}
 
 	//since this method is used only at install time, we don't need to return objects,
@@ -192,7 +192,7 @@ class database_execution_pdo extends database_execution
 	public function query($sql_str)
 	{
 		try{
-			$this->db_backend->query($sql_str);
+			$this->write->query($sql_str);
 			$result = TRUE;
 		}
 		catch(PDOException $e){

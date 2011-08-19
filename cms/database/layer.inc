@@ -69,7 +69,7 @@ class database
 	protected $sql_use_prepared_statments = false; //Calculated value
 	protected $sql_prepared_statment_placeholder_name = 'v';
 	protected $sql_prepared_statment_placeholder_prefix = ':';
-	protected $sql_prepared_statment_use_short_holder = true;
+	protected $sql_prepared_statment_use_short_holder = false;
 	private $sql_values = null;
 	private $sql_types = null;
 	private $sql_prepared_count = 1;
@@ -113,7 +113,7 @@ class database
 	 * 
 	 * @param array $dsn
 	 */
-	public static function factory($dsn = null)
+	public static function factory($dsn_read = null, $options = NULL, $mods = NULL, $dsn_write = null)
 	{
 		if(isset($dsn['phptype'])){
 			$c = 'database_'.$dsn['phptype'];
@@ -130,7 +130,7 @@ class database
 	   	}
 	   	
 	   	if(isset($dsn['phptype'])){
-	   		return new $c($dsn);
+	   		return new $c($dsn_read, $options, $mods, $dsn_write);
 	   	}
 	   	
 	   	return new $c;
@@ -392,7 +392,7 @@ class database
 				$this->sql_types[] = 'text';
 			}
 			++$this->sql_prepared_count;
-			return $this->sql_prepared_statment_placeholder_prefix;
+			return $this->sql_prepared_statment_placeholder_prefix.$key;
 		}
 		return $this->sql_clean_input($var);
 	}

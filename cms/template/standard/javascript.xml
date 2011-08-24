@@ -4,7 +4,7 @@
 	
 	<xsl:element name="script">
 	<xsl:attribute name="type">text/javascript</xsl:attribute>
-	<xsl:attribute name="src"><xsl:value-of select="/page/settings/static_host_js" />	
+	<xsl:attribute name="src"><xsl:value-of select="/page/settings/static_host_js" />/
 	<xsl:choose>
 		<xsl:when test="/page/settings/js_use_yui = 1">mootools/mt-c-yc.js,mootools/mt-m-yc.js</xsl:when>
 		<xsl:otherwise>mootools/mt-c.js,mootools/mt-m.js</xsl:otherwise>
@@ -26,7 +26,7 @@
 	</xsl:element>
 	
 	<xsl:if test="/page/options/admin_mode = 1 and /page/settings/js_use_filemanager = 1">
-		<script type="text/javascript" src="{/page/settings/static_host_js}fileman/FileManager.js,fileman/Language/Language.en.js,fileman/Language/Language.de.js,fileman/Uploader/Fx.ProgressBar.js,fileman/Uploader/Swiff.Uploader.js,fileman/Uploader.js,fileman/Gallery.js" />
+		<script type="text/javascript" src="{/page/settings/static_host_js}/fileman/FileManager.js,fileman/Language/Language.en.js,fileman/Language/Language.de.js,fileman/Uploader/Fx.ProgressBar.js,fileman/Uploader/Swiff.Uploader.js,fileman/Uploader.js,fileman/Gallery.js" />
 	</xsl:if>
 	</xsl:template>
 	

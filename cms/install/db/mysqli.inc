@@ -164,6 +164,9 @@ $inc_length = strlen($increment);
 /** build sql strings and execute the table creation.
  *  this code is MySQL and SQLite specific.
  */
+if(!isset($disable_keys)){
+	$disable_keys = false;
+}
 foreach ($tables as $table => $data){
 
 	//prefix the table with the unique string submitted by the user
@@ -176,7 +179,7 @@ foreach ($tables as $table => $data){
 	//build the column definitions
 	$cols = array();
 	foreach ($data['cols_define'] as $col_name => $definition){
-		$col = $col_name.' '.$definition;
+		$col = '"'.$col_name.'" '.$definition;
 		if((isset($primary_key_in_define) && $primary_key_in_define == true) && ($col_name == $data['primary_key']))
 		{
 			if(isset($strip_unsigned_ints) && $strip_unsigned_ints)
@@ -218,7 +221,7 @@ foreach ($tables as $table => $data){
 
 	//build non-primary key definitions, only if all key columns exist in cols_define
 	$keys = array();
-	if(isset($data['keys']))
+	if(isset($data['keys']) && !$disable_keys)
 	{
 		foreach ($data['keys'] as $key_type => $key_data){
 			$alias_key = key($key_data);
@@ -261,7 +264,7 @@ foreach ($tables as $table => $data){
 	$sql = "CREATE TABLE $table ($cols $primary_key $keys) $engine $charset;";
 
 	//execute sql
-//echo('<br/>'.$sql);
+//echo('<br/>'.$sql.'<br/>');
 //die();
 
 	$result = database::Singleton()->direct_query($sql);

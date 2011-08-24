@@ -211,9 +211,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 							'database' => $database);
 	database::Singleton($dsn, true, $dsn);
 	unset($dsn);
-	
-	var_dump(database::Singleton());
-							 
+								 
 	debug('DB Singleton Created');
 	
 	//Include the file which processes the SQL code

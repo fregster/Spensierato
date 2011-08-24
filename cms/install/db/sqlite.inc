@@ -16,6 +16,7 @@ $increment = 'AUTOINCREMENT';
 $varchar = 'TEXT';
 $primary_key_in_define = true;
 $strip_unsigned_ints = true;
+$disable_keys = true;
 
 require_once 'mysqli.inc';
 

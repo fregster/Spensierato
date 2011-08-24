@@ -127,7 +127,7 @@ class database
 					$dsn_write['username'] = $GLOBALS['database_user_readwrite'];
 				}
 				
-				if(isset($GLOBALS['database_user_readwrite']))
+				if(isset($GLOBALS['database_password_write']))
 				{
 					$dsn_write['password'] = $GLOBALS['database_password_write'];
 				}

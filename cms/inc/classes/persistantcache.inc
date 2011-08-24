@@ -444,8 +444,11 @@ class persistantcache
 class persistantcache_memcache extends persistantcache
 {
 	private $store = false; //Memcache object
-	private $servers = array(array('host' => 'localhost', 'port'=>11211)); // enter an array for each of your memcache servers
+	private $servers = array(
+								array('host' => 'localhost', 'port'=>11211),
+							); // enter an array for each of your memcache servers
 	private $maxsession_cache_time = 0; //0 sets to never expire
+	private $max_number_of_server_buddies = 3;
 
 	protected function __construct()
 	{
@@ -457,6 +460,24 @@ class persistantcache_memcache extends persistantcache
 		//Are we using memcached and if so ensure if it recently failed we don't try to reconnect to quickly
 		if(extension_loaded('memcache') && $this->allow_memcache)
 		{
+		
+			//Setup memcache redundency, we work out the number of servers we can use in the cluster and budy data to all
+			$servers_count = count($this->servers);		
+			if($servers_count > 0){
+				ini_set('memcache.hash_strategy', 'consistent');
+				ini_set('memcache.allow_failover', '1');
+				ini_set('memcache.max_failover_attempts', '20');
+				
+				if($servers_count > ini_get('memcache.max_failover_attempts')){
+					$servers_count = ini_get('memcache.max_failover_attempts');
+				}
+				
+				ini_set('memcache.session_redundancy', $servers_count);
+				if(ini_get('memcache.session_redundancy') > $this->max_number_of_server_buddies){
+					ini_set('memcache.session_redundancy', $this->max_number_of_server_buddies);
+				}
+			}
+			
 			$this->store = new Memcache;
 
 			//Run though the array of servers adding each one to the connection pool

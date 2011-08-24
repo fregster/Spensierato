@@ -220,7 +220,9 @@ class Template
 					$css = '@charset "UTF-8";';
 					foreach($css_paths as $path)
 					{
-						$css .= str_replace('@CHARSET "UTF-8";', '', file_get_contents($path));
+						if(isset($path) && file_exists($path)){
+							$css .= str_replace('@CHARSET "UTF-8";', '', file_get_contents($path));
+						}
 					}
 					$css = array('css' => $css, 'mtime' => $css_m_time, 'paths' => $css_paths, 'created' => CMS::Singleton()->time());
 					

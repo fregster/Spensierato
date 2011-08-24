@@ -13,4 +13,5 @@
 
 //Link to index.php to force error reporting when using the SVN version
 //require_once('../../spensierato/trunk/public_html/index.php');
+define('SITE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR);
 require_once('../../spensierato/spensierato_cms.inc');

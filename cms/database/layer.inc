@@ -92,17 +92,60 @@ class database
 	 * Database Singleton for accessing the default database
 	 * @param array $dsn
 	 */
-	public static function Singleton($dsn = null, $rebuild = false)
-	{	
-		if($rebuild && isset(self::$instance)){
+	public static function Singleton($dsn_read = null, $rebuild = false, $dsn_write = null)
+	{			
+		if($rebuild){
 			self::$instance == null;
 		}
-		
-		if (!isset(self::$instance) || isset($dsn['phptype']))
+
+		if (!isset(self::$instance) || isset($dsn_read['phptype']))
 		{
-			self::$instance = database::factory($dsn);
+			
+			/**
+			 * Build the default DSN
+			 */
+			if(is_null($dsn_read) || !isset($dsn_read['phptype'])){
+				$dsn_read = array(
+				    'phptype'  => $GLOBALS['database_driver'],
+				    'username' => $GLOBALS['database_user_read'],
+				    'password' => $GLOBALS['database_password'],
+				    'hostspec' => $GLOBALS['database_host_read'],
+				    'database' => $GLOBALS['database_name'],
+				);
+				
+				if(isset($GLOBALS['database_mode']))
+				{
+					$dsn_read['database_mode'] = $GLOBALS['database_mode'];
+				}
+			}	
+			
+			if(is_null($dsn_write) || !isset($dsn_write['phptype'])){
+				$dsn_write = $dsn_read;
+				
+				if(isset($GLOBALS['database_user_readwrite']))
+				{
+					$dsn_write['username'] = $GLOBALS['database_user_readwrite'];
+				}
+				
+				if(isset($GLOBALS['database_user_readwrite']))
+				{
+					$dsn_write['password'] = $GLOBALS['database_password_write'];
+				}
+				
+				if(isset($GLOBALS['database_host_write']))
+				{
+					$dsn_write['hostspec'] = $GLOBALS['database_host_write'];
+				}
+				
+				if(isset($GLOBALS['database_mode']))
+				{
+					$dsn_write['database_mode'] = $GLOBALS['database_mode'];
+				}
+			}
+			
+			self::$instance = database::factory($dsn_read, NULL, NULL, $dsn_write);
 		}
-		//die($rebuild);
+
 		return self::$instance;
 	}
 	
@@ -122,8 +165,8 @@ class database
 			$c = 'database_'.DATABASE_DRIVER;
 			$driver = DATABASE_DRIVER;
 		}
-
-		include(DATABASE_LAYER_PATH . DS . 'server_types' . DS . $driver.'.inc');
+		
+		include_once(DATABASE_LAYER_PATH . DS . 'server_types' . DS . $driver.'.inc');
 	   	if(!class_exists($c))
 	   	{
 	   		die('Unable to create correct database layer type ('.$c.')');
@@ -155,34 +198,8 @@ class database
 			$this->options['allow_external_calls'] = false;
 		}
 		
-		if(is_null($dsn_read) || !isset($dsn_read['phptype'])){
-			$dsn_read = array(
-			    'phptype'  => $GLOBALS['database_driver'],
-			    'username' => $GLOBALS['database_user_read'],
-			    'password' => $GLOBALS['database_password'],
-			    'hostspec' => $GLOBALS['database_host'],
-			    'database' => $GLOBALS['database_name'],
-			);
-			
-			if(isset($GLOBALS['database_mode']))
-			{
-				$dsn_read = $GLOBALS['database_mode'];
-			}
-		}
-		
 		if(is_null($dsn_write) || !isset($dsn_write['phptype'])){
-			$dsn_write = array(
-			    'phptype'  => $GLOBALS['database_driver'],
-			    'username' => $GLOBALS['database_user_readwrite'],
-			    'password' => $GLOBALS['database_password_write'],
-			    'hostspec' => $GLOBALS['database_host'],
-			    'database' => $GLOBALS['database_name'],
-			);
-			
-			if(isset($GLOBALS['database_mode']))
-			{
-				$dsn_write = $GLOBALS['database_mode'];
-			}
+			$dsn_write = $dsn_read;
 		}
 		
 		if(isset($db) && !is_null($db))

@@ -310,5 +310,5 @@ $tables['tbl_orders'] = array(
 								
 //set the db name and the user info in a SQL compliant manner fot use in the GRANT queries.
 $grant_db = "$database.*";
-$grant_user_rw = "'$user_rw'@'localhost' IDENTIFIED BY '$user_db_password_write'";
-$grant_user_r = "'$user_r'@'localhost' IDENTIFIED BY '$user_db_password'";
+$grant_user_rw = "'$user_rw'@'%' IDENTIFIED BY '$user_db_password_write'";
+$grant_user_r = "'$user_r'@'%' IDENTIFIED BY '$user_db_password'";

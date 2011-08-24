@@ -146,7 +146,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$GLOBALS['database_user_read'] = $user_r;
 	$GLOBALS['database_password'] = $user_db_password;
 	$GLOBALS['database_password_write'] = $user_db_password_write;
-	$GLOBALS['database_host'] = $host;
+	$GLOBALS['database_host_read'] = $host;
+	$GLOBALS['database_host_write'] = $host;
 	$GLOBALS['database_name'] = $database;
 	$GLOBALS['table_prefix'] = $prefix.'_';
 
@@ -173,10 +174,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 							array('Manager'));
 	
 	debug('DB Connected');
-//	var_dump($db);
+
 	/*
 	 * Create the database
 	 */	
+	debug('Forcing write user to be created');
 	$db->force_write_user();
 	debug('Attepmting to drop DB');
 	$db->drop_database($database);
@@ -200,13 +202,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	}
 	unset($db);
 
-	database::Singleton(array('phptype'  => $driver,
+	debug('Building DB Singleton');
+	var_dump(database::Singleton());
+	$dsn = array('phptype'  => $driver,
 							'backend'	=> $layer,
 							'username' => $username,
 							'password' => $password,
 							'hostspec' => $host,
-							'database' => $database),
-							 true);
+							'database' => $database);
+	var_dump($dsn);
+	database::Singleton($dsn, true, $dsn);
+	unset($dsn);
+	
+	var_dump(database::Singleton());
 							 
 	debug('DB Singleton Created');
 	
@@ -266,7 +274,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 //readwrite is used once logged in to provide another layer of prtection against sql injection.
 
 $GLOBALS[\'database_backend\'] = \''.$layer.'\'; //can be mdb2 (Default), pdo or php
-$GLOBALS[\'database_host\'] = \''. $host .'\'; //DB Host, prob localhost or 127.0.0.1
+$GLOBALS[\'database_host_read\'] = \''. $host .'\'; //DB Host, prob localhost or 127.0.0.1
+$GLOBALS[\'database_host_write\'] = \''. $host .'\'; //DB Host, prob localhost or 127.0.0.1
 $GLOBALS[\'database_driver\'] = \''. $driver .'\'; //DB connection driver, for mysql 4+ use mysqli
 $GLOBALS[\'database_name\'] = \''. $database .'\'; //DB name
 $GLOBALS[\'database_user_read\'] = \''. $user_r .'\'; //A standard db user with SELECT only!

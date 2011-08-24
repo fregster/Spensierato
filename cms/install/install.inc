@@ -203,14 +203,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	unset($db);
 
 	debug('Building DB Singleton');
-	var_dump(database::Singleton());
 	$dsn = array('phptype'  => $driver,
 							'backend'	=> $layer,
 							'username' => $username,
 							'password' => $password,
 							'hostspec' => $host,
 							'database' => $database);
-	var_dump($dsn);
 	database::Singleton($dsn, true, $dsn);
 	unset($dsn);
 	

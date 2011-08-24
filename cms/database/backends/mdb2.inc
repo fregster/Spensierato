@@ -126,8 +126,8 @@ class database_execution_mdb2 extends database_execution
 			unset($sql);
 			
 			if($error != false){
-				var_dump($resultset);
-				var_dump($stmt);
+				//var_dump($resultset);
+				//var_dump($stmt);
 				$this->sql_error($error);
 			}
 			

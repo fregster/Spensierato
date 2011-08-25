@@ -58,6 +58,7 @@ class database
 	protected $col_quote = '`';
 	protected $table_quote = '`';
 	protected $value_quote = "'";
+	protected $database_quote = '';
 	
 	private $db_object;
 	
@@ -1485,12 +1486,12 @@ class database
 
 	public function drop_database($database)
 	{
-		$this->db->dropDatabase($this->sql_clean_input($database));
+		$this->db->dropDatabase($this->sql_clean_input($database, $this->database_quote));
 	}
 	
 	public function create_database($database)
 	{
-		$this->db->createDatabase($this->sql_clean_input($database));
+		$this->db->createDatabase($this->sql_clean_input($database, $this->database_quote));
 	}
 
 	public function create_table($table, $database = NULL, $cols = array(), $types = array(), $length = array())

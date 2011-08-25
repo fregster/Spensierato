@@ -178,13 +178,13 @@ class database_execution_pdo extends database_execution
 	public function createDatabase($database)
 	{
 		$create_db_sql = 'create database '.$database;
-		$this->write->query($create_db_sql);
+		return $this->write->query($create_db_sql);
 	}
 
 	public function dropDatabase($database)
 	{
 		$drop_db_sql = 'drop database '.$database;
-		$this->write->query($drop_db_sql);
+		return $this->write->query($drop_db_sql);
 	}
 
 	//since this method is used only at install time, we don't need to return objects,

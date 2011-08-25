@@ -18,6 +18,11 @@ $primary_key_in_define = true;
 $strip_unsigned_ints = true;
 $disable_keys = true;
 
+if(!isset($col_quote))
+{
+	$col_quote = '"';
+}
+
 require_once 'mysqli.inc';
 
 $create_db_users = false;

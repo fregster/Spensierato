@@ -58,6 +58,11 @@ if(!isset($allow_unique_keys))
 	$allow_unique_keys = true;
 }
 
+if(!isset($col_quote))
+{
+	$col_quote = '';
+}
+
 require_once 'generic.inc';
 
 /** this is where you add MySQL-specific data to the table definitions.
@@ -179,7 +184,7 @@ foreach ($tables as $table => $data){
 	//build the column definitions
 	$cols = array();
 	foreach ($data['cols_define'] as $col_name => $definition){
-		$col = '"'.$col_name.'" '.$definition;
+		$col = $col_quote.$col_name.$col_quote.' '.$definition;
 		if((isset($primary_key_in_define) && $primary_key_in_define == true) && ($col_name == $data['primary_key']))
 		{
 			if(isset($strip_unsigned_ints) && $strip_unsigned_ints)

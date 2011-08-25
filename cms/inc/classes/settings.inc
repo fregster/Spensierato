@@ -23,7 +23,7 @@ class Settings
 	   return self::$instance;
 	}
 
-	protected function __construct()
+	protected function __construct($max_sha_hash = 'sha256')
 	{
 		//Backwards compatability
 		if(!isset($GLOBALS['max_sha_hash']))
@@ -35,9 +35,9 @@ class Settings
 		$document_root = Common::document_root();
 		$this->new_setting('static_host_ajax', $document_root.'/ajax');
 
-		$this->new_setting('static_host_skin', $document_root);
+		$this->new_setting('static_host_skin', $document_root.'/');
 
-		$this->new_setting('static_host_js', $document_root);
+		$this->new_setting('static_host_js', $document_root.'/');
 		
 		$this->new_setting('allow_db_settings', true);
 	}

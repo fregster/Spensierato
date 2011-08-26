@@ -73,33 +73,45 @@ $class_block_list = array(
 
 define('INCLUDE_PATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
 $default_include_path = get_include_path();
+//Do static requires
+require_once(INCLUDE_PATH.'cms'.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'defines.inc');
+
 
 /**
  * Check this is not an attack using IDS
  */
-if(file_exists('IDS'.DIRECTORY_SEPARATOR.'Init.php'))
+$external_path = INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR;
+if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 {
 	try {
-		$external_path = INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR;
 		set_include_path($external_path);
 		require_once 'IDS'.DIRECTORY_SEPARATOR.'Init.php';
 		$request = array(
 		        'REQUEST' => $_REQUEST,
 		        'GET' => $_GET,
 		        'POST' => $_POST,
-		        'COOKIE' => $_COOKIE
+		        //'COOKIE' => $_COOKIE
 		    );
 		
-		$ids_init = IDS_Init::init($external_path.'IDS'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'Config.ini.php');
+		$config_file = $external_path.'IDS'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'Config.ini.php';
+		if(file_exists(DIR_CONFIG.'Config.ini.php')){
+			$config_file = DIR_CONFIG.'Config.ini.php';
+		}
+		    
+		$ids_init = IDS_Init::init($config_file);
 		$ids_init->config['General']['use_base_path'] = false;
 		$ids_init->config['General']['base_path'] = $external_path;
-		$ids_init->config['General']['filter_path'] = 'default_filter.xml';
+		$ids_init->config['General']['filter_path'] = $external_path.'IDS'.DIRECTORY_SEPARATOR.'default_filter.xml';
+		$ids_init->config['General']['tmp_path'] = sys_get_temp_dir();	
+		$ids_init->config['Caching']['tmp'] = sys_get_temp_dir();	
+		$ids_init->config['Caching']['path'] = sys_get_temp_dir().'/default_filter.cache';	
+		
 	    if(file_exists($ids_init->config['General']['filter_path']))
 	    {
 			//Initiate the PHPIDS and fetch the results
 			$ids = new IDS_Monitor($request, $ids_init);
 			$result = $ids->run();
-			
+
 			if(!$result->isEmpty())
 			{
 				echo $result;
@@ -110,7 +122,8 @@ if(file_exists('IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 	    unset($request);
 		unset($ids_init);
 		unset($ids);
-		unset($result);	
+		unset($result);
+		unset($config_file);
 	}
 	catch(Exception $e)
 	{
@@ -121,8 +134,6 @@ if(file_exists('IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 set_include_path($default_include_path.PATH_SEPARATOR.INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR);
 unset($default_include_path);
 
-//Do static requires
-require_once(INCLUDE_PATH.'cms'.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'defines.inc');
 require_once(DIR_STATIC.'autoloader.inc');
 require_once(DIR_STATIC.'functions.inc');
 

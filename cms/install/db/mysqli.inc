@@ -279,7 +279,7 @@ foreach ($tables as $table => $data){
 		//var_dump($result);
 		die('<br/>Failed to create table '.$table.'. The sql that triggered the error:<br />'. $sql);
 	}
-	echo('<br/>Created table '.$table);
+	//echo('<br/>Created table '.$table);
 }
 unset($table, $data);
 

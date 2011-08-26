@@ -344,15 +344,19 @@ $GLOBALS[\'cms_folder_search\'] = \''.realpath($dir_search).'\';
 			}
 		}
 		
-		debug('<br/>Write permission should <strong>be removed</strong> from the following files and only readable by the required users</br/>');
+		debug('<br/><strong>Write permission should be removed</strong> from the following files and only readable by the required users:</br/>');
+		foreach (glob(DIR_CONFIG.'spensierato*') as $file){
+			debug($file);
+		}
+		debug('');
 
-		debug('Testing database now has content');
+		debug('Testing the database now has content to ensure we have been able to insert in to the database');
 		
 		if(!database::Singleton()->sql_select_first(null, 'tbl_pages')){
 			die('Did not get any data from the database, its creation must have failed');
 		}
 
-		debug('The site is now setup<br/><strong>Note: If you manual set the install directive you will need to remove it now!</strong><br />You can log in with the user '.$username.' and the password '.$password.'<br/>Click <a href="'.DOCUMENT_ROOT.'">here</a> to login');
+		debug('<p>The site is now setup<br/><strong>Note: If you manual set the install directive you will need to remove it now!</strong><br />You can log in with the user "<em>'.post::variable('user_username').'</em>" and the password "<em>'.post::variable('user_password').'</em>"<br/>Click <a href="'.DOCUMENT_ROOT.'">here</a> to login</p>');
 		exit;
 	}
 }

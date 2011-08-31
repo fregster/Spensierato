@@ -4,7 +4,7 @@
 	
 	<xsl:element name="script">
 	<xsl:attribute name="type">text/javascript</xsl:attribute>
-	<xsl:attribute name="src"><xsl:value-of select="/page/settings/site_folder_js" />	
+	<xsl:attribute name="src"><xsl:value-of select="/page/settings/static_host_js" /><xsl:value-of select="/page/settings/site_folder_js" />	
 	<xsl:choose>
 		<xsl:when test="/page/settings/js_use_yui = 1">mootools/mt-c-yc.js,mootools/mt-m-yc.js</xsl:when>
 		<xsl:otherwise>mootools/mt-c.js,mootools/mt-m.js</xsl:otherwise>

@@ -126,7 +126,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$database = post::variable('database');
 
 	//Tables
-	$prefix = post::variable('prefix');
+	$prefix = strtolower(post::variable('prefix')).'_';
 
 	//Users
 	$user_r = post::variable('r_user');
@@ -149,7 +149,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	$GLOBALS['database_host_read'] = $host;
 	$GLOBALS['database_host_write'] = $host;
 	$GLOBALS['database_name'] = $database;
-	$GLOBALS['table_prefix'] = $prefix.'_';
+	$GLOBALS['table_prefix'] = $prefix;
 
 	debug('Vars set ('.$GLOBALS['table_prefix'].')');
 	
@@ -262,6 +262,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	/**
 	* Build the settings file string
 	*/
+	/*
 	$settings_file_string = '<?php
 //This file contains the CMS settings required before we include the CMS code.
 
@@ -301,7 +302,51 @@ $GLOBALS[\'cms_folder_logs\'] = \''.realpath($dir_logs).'\';
 $GLOBALS[\'cms_folder_cache\'] = \''.realpath($dir_cache).'\';
 $GLOBALS[\'cms_folder_search\'] = \''.realpath($dir_search).'\';
 ';
+*/
+	$settings_file_string = "<?php
+//This file contains the CMS settings required before we include the CMS code.
 
+//Database vars
+//The DB layer suports 2 users read and readwrite
+//readwrite is used once logged in to provide another layer of prtection against sql injection.
+
+setup::Singleton()->save_construct('database', 'Singleton', array(
+		array(	'phptype' 	=> '$driver',
+				'backend'	=> '$layer',
+				'username'	=> '$user_r',
+				'password'	=> '$user_db_password',
+				'hostspec'	=> '$host',
+				'database'	=> '$database',
+				'prefix'	=> '$prefix'),
+		NULL,
+		array(	'phptype' 	=> '$driver',
+				'backend'	=> '$layer',
+				'username'	=> '$user_rw',
+				'password'	=> '$user_db_password_write',
+				'hostspec'	=> '$host',
+				'database'	=> '$database',
+				'prefix'	=> '$prefix'
+		),
+	)
+);
+
+setup::Singleton()->save_construct('session', 'Singleton', array());
+
+
+setup::Singleton()->save('allow_rewrite', $rewrite);
+setup::Singleton()->save('random_key', '".post::variable('random_key')."');
+setup::Singleton()->save('server_os', '$os');
+setup::Singleton()->save('max_sha_hash', '".max_sha_hash()."');
+
+setup::Singleton()->save('cms_folder_uploads', '".realpath($dir_uploads_tmp)."');
+setup::Singleton()->save('cms_folder_downloads', '".realpath($dir_uploads)."');
+setup::Singleton()->save('cms_folder_orig_images', '".realpath($dir_uploads_orig_images)."');
+setup::Singleton()->save('cms_folder_logs', '".realpath($dir_logs)."');
+setup::Singleton()->save('cms_folder_cache', '".realpath($dir_cache)."');
+setup::Singleton()->save('cms_folder_search', '".realpath($dir_search)."');
+
+";
+	
 	/**
 	* Write the settings file
 	*/
@@ -354,6 +399,9 @@ $GLOBALS[\'cms_folder_search\'] = \''.realpath($dir_search).'\';
 		
 		if(!database::Singleton()->sql_select_first(null, 'tbl_pages')){
 			die('Did not get any data from the database, its creation must have failed');
+		}else
+		{
+			debug('Database write and subsuqent read success!');
 		}
 
 		debug('<p>The site is now setup<br/><strong>Note: If you manual set the install directive you will need to remove it now!</strong><br />You can log in with the user "<em>'.post::variable('user_username').'</em>" and the password "<em>'.post::variable('user_password').'</em>"<br/>Click <a href="'.DOCUMENT_ROOT.'">here</a> to login</p>');

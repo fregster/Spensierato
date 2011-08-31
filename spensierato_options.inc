@@ -268,7 +268,7 @@ Settings::singleton()->new_setting('phpids', true, false, true, true, SETTING_GR
 //Skin and images
 //Settings::Singleton()->new_setting('static_host_skin', ('skin.'.DOCUMENT_ROOT));
 //JS host
-//Settings::Singleton()->new_setting('static_host_js', ('js.'.DOCUMENT_ROOT));
+//Settings::Singleton()->new_setting('static_host_js', ('static.'.DOCUMENT_ROOT.'/'));
 
 //Paths
 Settings::Singleton()->new_setting('site_option_css', (DOCUMENT_ROOT . '/css'));
@@ -366,7 +366,7 @@ Settings::Singleton()->new_setting('debug_log_folder', '/var/log/cms', false, tr
 
 //Hash type used for passwords standard is md5 or sha1 (min recomended) other types may require PECL hash installing
 //Note changing this once users have entered there passwords will require reseting ALL there accounts.
-Settings::Singleton()->new_setting('site_option_hash_type', $GLOBALS['max_sha_hash'], false, true, null, SETTING_GROUP_SYSTEM);
+Settings::Singleton()->new_setting('site_option_hash_type', setup::singleton()->load('max_sha_hash'), false, true, null, SETTING_GROUP_SYSTEM);
 
 //Setting google_ads
 //This requires google_ad_slot and google_ad_client to also be set
@@ -463,36 +463,42 @@ Settings::singleton()->new_setting('approvals_pending_lifetime', 0, false, true,
 //determine whether old approvals are visible (value = 1) or hidden (value = 0) by default
 Settings::singleton()->new_setting('approvals_show_old', true, false, false, true, SETTING_GROUP_CONTENT_CONTROL);
 
+//Settings for email
+Settings::singleton()->new_setting('smtp_port', '25', false, true, array('25', '527'), SETTING_GROUP_SYSTEM);
+Settings::singleton()->new_setting('smtp_server', 'localhost', false, true, true, SETTING_GROUP_SYSTEM);
+Settings::singleton()->new_setting('smtp_username', null, false, true, true, SETTING_GROUP_SYSTEM);
+Settings::singleton()->new_setting('smtp_password', null, false, true, true, SETTING_GROUP_SYSTEM);
+
 if(!$install) //Settings that require the install to have been completed
 {
 	//Temporay uploads folder
-	Settings::Singleton()->new_setting('cms_folder_uploads', $GLOBALS['cms_folder_uploads'], false, true);
+	Settings::Singleton()->new_setting('cms_folder_uploads', setup::singleton()->load('cms_folder_uploads'), false, true);
 
 	//Permanant uploads folder
-	Settings::Singleton()->new_setting('cms_folder_downloads', $GLOBALS['cms_folder_downloads'], false, true);
+	Settings::Singleton()->new_setting('cms_folder_downloads', setup::singleton()->load('cms_folder_downloads'), false, true);
 
 	//Unscaled images
-	Settings::Singleton()->new_setting('cms_folder_orig_images', $GLOBALS['cms_folder_orig_images'], false, true);
+	Settings::Singleton()->new_setting('cms_folder_orig_images', setup::singleton()->load('cms_folder_orig_images'), false, true);
 
 	//Log files
-	Settings::Singleton()->new_setting('cms_folder_logs', $GLOBALS['cms_folder_logs'], false, true);
+	Settings::Singleton()->new_setting('cms_folder_logs', setup::singleton()->load('cms_folder_logs'), false, true);
 	
 	//Search Index files
-	Settings::Singleton()->new_setting('cms_folder_search', $GLOBALS['cms_folder_search'], false, true);
+	Settings::Singleton()->new_setting('cms_folder_search', setup::singleton()->load('cms_folder_search'), false, true);
 
 	//Load the random key into the settings singleton
-	Settings::Singleton()->new_setting('random_key', $GLOBALS['random_key'], true, true);
+	Settings::Singleton()->new_setting('random_key', setup::singleton()->load('random_key'), true, true);
 
 	//Setting mod_rewrite
 	//Use mod_rewrite to clean the URL's
-	Settings::singleton()->new_setting('mod_rewrite', $GLOBALS['allow_rewrite'], false, true);
+	Settings::singleton()->new_setting('mod_rewrite', setup::singleton()->load('allow_rewrite'), false, true);
 
 	//setting server_os
 	//this setting contains the server's os
 	//used to toggle os specific finctionality (e.g. ffmpeg)
-	Settings::singleton()->new_setting('server_os', $GLOBALS['server_os'], false, true);
+	Settings::singleton()->new_setting('server_os', setup::singleton()->load('server_os'), false, true);
 	
 	//Setting cache path
 	//The file system cache path location to use
-	//Settings::singleton()->new_setting('cache_path', $GLOBALS['cms_folder_cache'].DS, true, true, true, SETTING_GROUP_PERFORMANCE);
+	//Settings::singleton()->new_setting('cache_path', setup::singleton()->load('cms_folder_cache').DS, true, true, true, SETTING_GROUP_PERFORMANCE);
 }

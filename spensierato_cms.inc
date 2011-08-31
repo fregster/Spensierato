@@ -3,7 +3,6 @@
  * Spensierato boot loader script, bit messy but boot loaders are.
  */
 
-
 //Start Output buffering
 ob_start();
 
@@ -167,7 +166,7 @@ try
 		require_once(DIR_CONFIG.'spensierato_setup.inc');
 		$install = false; //cancel the install directive
 	}
-	
+		
 	require_once(DIR_STATIC.'late_defines.inc');
 	
 	//Set any late or custom defines

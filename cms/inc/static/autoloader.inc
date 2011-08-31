@@ -57,6 +57,10 @@ function __autoload($class_name)
 				{
 					if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
 						require_once $path.$class_filename.'.'.$ext;
+						$options = setup::Singleton()->load_construct($class_name);
+						if($options){
+							call_user_func_array (array($class_name, $options['method']), $options['params']);
+						}
 					if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
 						return true;
 				}
@@ -64,6 +68,10 @@ function __autoload($class_name)
 				{
 					if($trace) { $start_time = explode(" ",microtime()); $start_time = $start_time[1] + $start_time[0]; $start_mem = memory_get_usage($class_profile_use_true_memory); }
 						require_once $path.ucfirst($class_filename).'.'.$ext;
+						$options = setup::Singleton()->load_construct($class_name);
+						if($options){
+							call_user_func_array (array($class_name, $options['method']), $options['params']); 
+						}
 					if($trace) { $mtime = explode(" ",microtime()); $mtime = $mtime[1] + $mtime[0]; $class_profile[] = array('class' => $class_name, 'mem_diff' => (memory_get_usage($class_profile_use_true_memory) - $start_mem) / 1024, 'load_time' => $mtime - $start_time); }
 						return true;
 				}

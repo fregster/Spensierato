@@ -171,7 +171,10 @@ class database_execution
 	
 	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false)
 	{
-		
+		var_dump($dsn);
+			var_dump($db_backend);
+			var_dump(debug_backtrace());
+			die();
 	}
 
 	public function sql_run($sql, $values, $writeuser, $soft_connect = false)

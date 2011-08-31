@@ -7,11 +7,12 @@ class Database_mysql extends Database
 	public function sql_select($fields = NULL, $table, $where_fields = NULL, $where_values = NULL, $order_fields = NULL, $order_directions = NULL, $FORCE_NO_CACHE = FALSE, $limit = NULL)
 	{
 		$id = $this->sql_id();
-		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions, $id);
+		$sql = $this->sql_select_build($fields, $table, $where_fields, $where_values, $order_fields, $order_directions, $id);		
 		if( ($limit != NULL) and (is_numeric($limit)) )
 		{
 			$sql = $sql	. ' LIMIT ' . $limit;
 		}
+
 		return $this->sql_select_exe($sql, NULL, $FORCE_NO_CACHE, $table, $id);
 	}
 	

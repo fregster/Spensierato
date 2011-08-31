@@ -30,6 +30,7 @@ abstract class error
 	
 	public static function do404()
 	{
+		//var_dump(debug_backtrace());
 		header('HTTP/1.1 404 File Not Found');
 		die('404 File not found');
 	}

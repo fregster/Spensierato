@@ -6,7 +6,7 @@ function cms_root()
 
 function get_site_document_root()
 {
-    if(!Common::rewrite_enabled() && isset($GLOBALS['allow_rewrite']) && $GLOBALS['allow_rewrite']) //We use the globals here as the settings class might not be loaded
+    if(!Common::rewrite_enabled() && setup::singleton()->load('allow_rewrite')) //We use the globals here as the settings class might not be loaded
     {
     	return DOCUMENT_ROOT_FOLDER_ONLY . '/index.php';
     }

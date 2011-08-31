@@ -176,7 +176,7 @@ foreach ($tables as $table => $data){
 
 	//prefix the table with the unique string submitted by the user
 	$table_orig = $table;
-	$table = $prefix.'_'.$table;
+	$table = $prefix.$table;
 	
 	//Set default engine
 	if(!isset($data['engine'])) { $data['engine'] = $default_table_engine; }

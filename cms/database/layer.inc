@@ -28,8 +28,6 @@ class database
 	private static $instance;
 
 	protected $prefix;
-	protected $dsn_host_type;
-	private $sql_db_type;
 	private $error_file = false;
 
 	private $sql_cache_enabled = true;
@@ -112,11 +110,17 @@ class database
 				    'password' => $GLOBALS['database_password'],
 				    'hostspec' => $GLOBALS['database_host_read'],
 				    'database' => $GLOBALS['database_name'],
+					'prefix' => $GLOBALS['prefix'],
 				);
 				
-				if(isset($GLOBALS['database_mode']))
+				if(isset($GLOBALS['database_mode']) && !isset($dsn_read['database_mode']))
 				{
 					$dsn_read['database_mode'] = $GLOBALS['database_mode'];
+				}
+				
+				if(isset($dsn_read['database_mode']) && $dsn_read['phptype'] == 'sqlite')
+				{
+					$dsn_read['database_mode'] = '0660';
 				}
 			}	
 			
@@ -142,11 +146,16 @@ class database
 				{
 					$dsn_write['database_mode'] = $GLOBALS['database_mode'];
 				}
+				
+				if(isset($dsn_write['database_mode']) && $dsn_write['phptype'] == 'sqlite')
+				{
+					$dsn_write['database_mode'] = '0660';
+				}
 			}
 			
 			self::$instance = database::factory($dsn_read, NULL, NULL, $dsn_write);
 		}
-
+		
 		return self::$instance;
 	}
 	
@@ -159,9 +168,9 @@ class database
 	 */
 	public static function factory($dsn_read = null, $options = NULL, $mods = NULL, $dsn_write = null)
 	{
-		if(isset($dsn['phptype'])){
-			$c = 'database_'.$dsn['phptype'];
-			$driver =& $dsn['phptype'];
+		if(isset($dsn_read['phptype'])){
+			$c = 'database_'.$dsn_read['phptype'];
+			$driver =& $dsn_read['phptype'];
 		}else{
 			$c = 'database_'.DATABASE_DRIVER;
 			$driver = DATABASE_DRIVER;
@@ -194,6 +203,9 @@ class database
 		$this->time = time();
 		$this->microtime = microtime();
 		$this->prefix = DATABASE_TABLE_PREFIX;
+		if(isset($dsn_read['prefix'])){
+			$this->prefix = $dsn_read['prefix'];
+		}
 		
 		if(!class_exists('settings')){
 			$this->options['allow_external_calls'] = false;
@@ -1361,6 +1373,7 @@ class database
 
 	protected function sql_select_exe($sql, $values = NULL, $no_cache = FALSE, $namespace = NULL, $id = NULL)
 	{		
+		//die('SELECT:'.__LINE__);
 		$results = false;
 		$values = null;
 		if(isset($this->sql_values[$id]))
@@ -1375,7 +1388,7 @@ class database
 		}
 
 		//If cache fails or not checked do SQL query
-		if($results === false)
+		if($results === false )
 		{
 			$results = $this->db->sql_select_exe_run($this->sql_exe($sql, $values, null, null, $id));
 

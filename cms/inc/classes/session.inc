@@ -23,20 +23,20 @@ class session
 	private $id;
 	private $old_id;
 
-	public static function Singleton()
+	public static function Singleton($type = 'default')
 	{
 	   if (!isset(self::$instance))
 	   {
 		   $c = __CLASS__;
-		   self::$instance = new $c;
+		   self::$instance = new $c($type);
 	   }
 
 	   return self::$instance;
 	}
 	
-	protected function __construct()
+	protected function __construct($type = 'default')
 	{	
-		session::handler();
+		session::handler($type);
 			
 		//Flash will not send the cookie so use an encrypted get var as a session holder
 		$skip_validation = false;
@@ -64,21 +64,20 @@ class session
 		}
 	}
 	
-	private static function handler()
+	private static function handler($type)
 	{
-		if(isset($GLOBALS['session_handler']))
+		switch ($type)
 		{
-			switch ($GLOBALS['session_handler'])
-			{
-				case 'memcached':
-					$servers = Settings::singleton()->get_setting('memcached_servers');
+			case 'memcached':
+				$servers = setup::singleton()->retieve('memcached_servers');
+				if($servers){
 					$servers_count = count(explode(',', $servers));
 					
-					if($servers && $servers_count > 0){
+					if($servers_count > 0){
 						ini_set('session.save_handler', 'memcache');
 						ini_set('memcache.hash_strategy', 'consistent');
 						ini_set('memcache.allow_failover', '1');
-						ini_set('memcache.max_failover_attempts', '20');
+						ini_set('memcache.max_failover_attempts', '10');
 						ini_set('session.save_path', $servers);
 						
 						if($servers_count > ini_get('memcache.max_failover_attempts')){
@@ -86,15 +85,15 @@ class session
 						}
 						ini_set('memcache.session_redundancy', $servers_count);
 					}
-					break;
-					
-				case 'database':
-					
-					break;
-					
-				default:
-					return;
-			}
+				}
+				break;
+				
+			case 'database':
+				
+				break;
+				
+			default:
+				return;
 		}
 	}
 	

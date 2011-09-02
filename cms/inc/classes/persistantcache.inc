@@ -93,7 +93,7 @@ class persistantcache
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 
-	protected function __construct()
+	protected function __construct($options = array())
 	{
 		$this->encryption_key = sha1($_SERVER['HTTP_HOST']).CACHE_ENCRYPTION_KEY;
 		if($this->encrypt_data && !class_exists('encryption'))
@@ -145,6 +145,7 @@ class persistantcache
 	private static function get_type($options = array())
 	{
 		$c = __CLASS__;
+		if(!defined('CACHE_TYPE') && isset($options['type'])){ define('CACHE_TYPE', $options['type']); }
 		if(defined('CACHE_TYPE')) { $c = 'persistantcache_'.CACHE_TYPE; array_splice(persistantcache::$cache_preference_order, 0, 0, CACHE_TYPE); }
 
 		if(isset($_SESSION['persistant_cache_type']) && class_exists($_SESSION['persistant_cache_type']['type'])) { $c = $_SESSION['persistant_cache_type']['type']; } //If a cache type is set ensure it is still available
@@ -450,8 +451,12 @@ class persistantcache_memcache extends persistantcache
 	private $maxsession_cache_time = 0; //0 sets to never expire
 	private $max_number_of_server_buddies = 3;
 
-	protected function __construct()
+	protected function __construct($options = array())
 	{
+		if(isset($options['servers']))
+		{
+			$this->servers = $options['servers'];
+		}
 		if(isset($_SESSION['disable_memcached']) && ($_SESSION['disable_memcached'] + persistantcache::$retry_time) > time() )
 		{
 			return false;
@@ -605,7 +610,7 @@ class persistantcache_file extends persistantcache
 	private $file_system_maintance = true;
 	private $max_time_before_maintance = 3600; //Seconds before maintance is ran
 
-	protected function __construct()
+	protected function __construct($options = array())
 	{
 		$this->init();
 

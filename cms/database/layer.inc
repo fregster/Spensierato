@@ -110,8 +110,12 @@ class database
 				    'password' => $GLOBALS['database_password'],
 				    'hostspec' => $GLOBALS['database_host_read'],
 				    'database' => $GLOBALS['database_name'],
-					'prefix' => $GLOBALS['prefix'],
 				);
+				
+				if(isset($GLOBALS['prefix']) && !isset($dsn_read['prefix']))
+				{
+					$dsn_read['prefix'] = $GLOBALS['prefix'];
+				}
 				
 				if(isset($GLOBALS['database_mode']) && !isset($dsn_read['database_mode']))
 				{

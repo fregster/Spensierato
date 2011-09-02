@@ -65,6 +65,10 @@ abstract class javascript
 
 		$gmdate_mod = gmdate('D, d M Y H:i:s', $lastmodified) . ' GMT';
 
+		if(!isset($_SERVER['HTTP_ACCEPT_ENCODING'])){
+			$_SERVER['HTTP_ACCEPT_ENCODING'] = false;
+		}
+		
 		// Determine supported compression method
 		$gzip = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip');
 		$deflate = strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate');

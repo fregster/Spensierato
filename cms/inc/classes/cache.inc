@@ -64,10 +64,12 @@ abstract class Cache
 		{
 			header('Vary: Accept-Encoding');
 			$cache_control = 'public, must-revalidate';
+			header('Cache-Control: post-check=120, pre-check=300');
 		}
 		else
 		{
 			$cache_control = 'private, no-cache, must-revalidate';
+			header('Cache-Control: post-check=30, pre-check=120');
 		}
 		
 		if(Settings::Singleton()->get_setting('cache_use_ETags') && $ETag != null)
@@ -76,7 +78,6 @@ abstract class Cache
 		}
 		header('Last-Modified: ' . $gmdate_mod);
 		header('Expires: ' . $expires);
-		header('Cache-Control: post-check=0, pre-check=0');
 		header('Cache-Control: '.$cache_control, false);
 		header('Pragma: '.$cache_control);
 		

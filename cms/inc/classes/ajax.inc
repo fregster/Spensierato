@@ -57,7 +57,7 @@ abstract class ajax
 				break;
 				
 			case 'search':
-				header('content-type: text/xml');
+				Common::send_mime_type('text/xml');
 				die(search::singleton()->search(get::variable('searchtext'), null, 5, 0, false, false));
 				break;
 				

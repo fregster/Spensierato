@@ -125,7 +125,7 @@ class FileTransfer
 				header('Content-Length: ' . $size);
 			 }
 
-			header('Content-type: ' . $mime);
+			Common::send_mime_type($mime);
 			header('Content-Transfer-Encoding: binary');
 			header('Accept-Ranges: bytes');
 			header('Content-Hash-MD5: '. md5_file($file));

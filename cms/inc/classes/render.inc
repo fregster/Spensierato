@@ -97,7 +97,7 @@ class Render
 		if(get::variable('xml','isset') or Settings::singleton()->get_setting('send_as_xml') or class_exists('xsltProcessor') === false)
 		{
 			//Just send the XML
-			header('content-type: text/xml');
+			Common::send_mime_type('text/xml');
 
 			$search = '<?xml version="1.0"?>';
 			$replace = '<?xml version="1.0" encoding="'. Settings::singleton()->get_setting('char_set').'" ?><?xml-stylesheet type="text/xsl" href="'. Settings::singleton()->get_setting('document_root').'/xslt" ?>';

@@ -202,7 +202,7 @@ class stream
 				}
 				
 				# content headers
-				header("Content-Type: video/x-flv");
+				Common::send_mime_type('video/x-flv');
 				header("Content-Disposition: attachment; filename=\"" . $fileName . "\"");
 				header("Content-Length: " . $fileSize);
 				

@@ -7,7 +7,7 @@ class cmspage_folder extends cmspage
 		
 		$element_xml = Content::singleton()->render_element_xml($this->page_details['value']);
 		$output_xml = DocumentFolder::convert_xml_to_displayable($element_xml);
-		header('Content-Type: text/xml');
+		Common::send_mime_type('text/xml');
 		die($output_xml);
 		
 	}

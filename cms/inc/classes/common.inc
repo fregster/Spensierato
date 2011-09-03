@@ -527,4 +527,10 @@ abstract class Common
 	{	
 		return date(settings::singleton()->get_setting('date_format'), intval($ts));
 	}
+	
+	public static function send_mime_type($mime)
+	{
+		header('Content-Type: ' . $mime);
+		header('X-Content-Type-Options: nosniff');
+	}
 }

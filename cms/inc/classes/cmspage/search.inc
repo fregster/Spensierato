@@ -37,7 +37,7 @@ class cmspage_search extends cmspage
 	{
 		if(get::variable('ajax', 'isset'))
 		{
-			header('content-type: text/xml');
+			common::send_mime_type('text/xml');
 			die(search::singleton()->search(get::variable('searchtext')));
 		}
 		

@@ -76,7 +76,7 @@ abstract class Capthca
 
 		imagettftext($image, $font_size, 0, $x, $y, $text_color, $font , $code) or die('Error in imagettftext function');
 		/* output captcha image to browser */
-		header('Content-Type: image/jpeg');
+		Common::send_mime_type('image/jpeg');
 		Cache::headers_no_cache();
 		imagejpeg($image);
 		imagedestroy($image);

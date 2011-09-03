@@ -57,6 +57,7 @@ abstract class javascript
 
 			if (substr($path, 0, strlen($base)) != $base || !file_exists($path)) {
 				header ("HTTP/1.0 404 Not Found");
+				echo($path);
 				exit;
 			}
 

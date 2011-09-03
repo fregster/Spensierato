@@ -120,7 +120,7 @@ abstract class javascript
 	
 		//If the file was sucsesfully cached then send the file through the cache class
 		header('X-Cache-JS: True');
-		Cache::headers_allow_cache_dynamic('js', $lastmodified, $md5);
+		Cache::headers_allow_cache_dynamic('js', $lastmodified, $md5, true, 36000, 36000);
 		header('X-Cache-JS: False');
 		javascript::sendcontent($type, $encoding, javascript::getcontentscompressed(javascript::clean($contents), $encoding));
 	}

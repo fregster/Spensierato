@@ -87,10 +87,14 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 		require_once 'IDS'.DIRECTORY_SEPARATOR.'Init.php';
 		$request = array(
 		        //'REQUEST' => $_REQUEST,
+		        'SERVER' => $_SERVER,
 		        'GET' => $_GET,
 		        'POST' => $_POST,
 		        //'COOKIE' => $_COOKIE
 		    );
+		    
+		unset($request['SERVER']['PATH']);
+		unset($request['SERVER']['HTTP_ACCEPT_CHARSET']);
 		
 		$config_file = $external_path.'IDS'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'Config.ini.php';
 		if(file_exists(DIR_CONFIG.'Config.ini.php')){
@@ -111,7 +115,7 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 			$ids = new IDS_Monitor($request, $ids_init);
 			$result = $ids->run();
 
-			if($result->getImpact() > 15)
+			if($result->getImpact() > 10)
 			{
 				echo 'IDS Triggered';
 				//echo $result;

@@ -229,7 +229,7 @@ class database
 			$this->db->set_dsn($dsn_read, $dsn_write);
 		}
 		
-		if($this->db->supports_prepared_statments() && $this->sql_use_prepared_statments_if_available && !defined('DATABASE_DISABLE_PREPARED_SQL_STATMENTS'))
+		if($this->db->supports_prepared_statments() && !defined('DATABASE_DISABLE_PREPARED_SQL_STATMENTS'))
 		{
 			$this->sql_can_prepare_statments = true;
 			$this->sql_use_prepared_statments = true;

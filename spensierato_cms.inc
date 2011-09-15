@@ -86,7 +86,7 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 		set_include_path($external_path);
 		require_once 'IDS'.DIRECTORY_SEPARATOR.'Init.php';
 		$request = array(
-		        'REQUEST' => $_REQUEST,
+		        //'REQUEST' => $_REQUEST,
 		        'GET' => $_GET,
 		        'POST' => $_POST,
 		        //'COOKIE' => $_COOKIE
@@ -111,9 +111,10 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 			$ids = new IDS_Monitor($request, $ids_init);
 			$result = $ids->run();
 
-			if(!$result->isEmpty())
+			if($result->getImpact() > 15)
 			{
-				echo $result;
+				echo 'IDS Triggered';
+				//echo $result;
 				exit;
 			}
 	    }

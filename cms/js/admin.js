@@ -108,7 +108,7 @@ container: $(document.body),
 maxSize: {w:700, h:500},
 recalcTop: true
 });
-//if(typeof FileManager == 'object'){
+if(typeof FileManager == 'object'){
 fManager = new FileManager({
     hideOnClick: true,
     upload: true,
@@ -123,7 +123,7 @@ fManager = new FileManager({
 	uploadAuthData: {session: ESESSIN}
 	});
 	$('mediaManagerLink').addEvent('click', fManager.show.bind(fManager));
-//}
+}
 };
 
 function get_diff(name){

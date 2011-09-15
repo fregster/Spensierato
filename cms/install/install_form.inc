@@ -187,7 +187,7 @@ if(isset($_GET['install'])){
 <form method="post" action="">
 	<div id="users" class="pad-div">
 		Create your user for the site
-		<div>Username: <input type="text" name="user_username" value="admin" /></div>
+		<div>Username: <input type="text" name="user_username" value="admin_<?php echo(Common::generate_random_string(3)); ?>" /></div>
 		<div>Password: <input type="text" name="user_password" value="<?php echo(Common::generate_random_string(8)); ?>" /></div>
 		<div>Email: <input type="text" name="user_email" value="root@localhost" /></div> This must be a valid email address
 	</div>
@@ -197,14 +197,14 @@ if(isset($_GET['install'])){
 		<div id="db-driver">
 			<div>Host type: <select id="db-host" name="type" onchange="jsCheckHostTypeDetail();">
 				<?php /*TODO:: This need's rewriting to be cleaver about the options shown*/ ?>
+				<?php if(isset($pdo_drivers['sqlite']) || class_exists('sqlite3', false)) { ?><option value="sqlite">SQLite (Filesystem based)</option><?php } ?>
 				<?php if(class_exists('mysqli', false) || isset($pdo_drivers['mysql'])) { ?><option value="mysqli">MySQL 4+</option><?php } ?>
 				<?php if(class_exists('mysql', false)) { ?><option value="mysql">MySQL 4</option><?php } ?>
 				<?php if(isset($pdo_drivers['sqlsrv'])) { ?><option value="sqlsrv">MSSQL (MS SQL Driver 2005+)</option><?php } ?>
 				<?php if(class_exists('mssql', false)) { ?><option value="mssql">MSSQL (2000, 2005 and 2008)</option><?php } ?>
-				<?php if(isset($pdo_drivers['sqlite']) || class_exists('sqlite3', false)) { ?><option value="sqlite">SQLite (Filesystem based)</option><?php } ?>
 			</select></div>
 		</div>
-		<div id="db-host-detail">
+		<div id="db-host-detail" style="display: none;">
 			<div>Host: <input type="text" name="host" value="localhost" /></div>
 			<div>Username: <input type="text" name="username" value="root" /></div>
 			<div>Password: <input type="password" name="password" /></div>

@@ -25,8 +25,8 @@
 	</xsl:attribute>
 	</xsl:element>
 	
-	<xsl:if test="/page/options/admin_mode = 1 and /page/settings/js_use_filemanager = 1">
-		<script type="text/javascript" src="{/page/settings/site_folder_js}fileman/FileManager.js,fileman/Language/Language.en.js,fileman/Language/Language.de.js,fileman/Uploader/Fx.ProgressBar.js,fileman/Uploader/Swiff.Uploader.js,fileman/Uploader.js,fileman/Gallery.js" />
+	<xsl:if test="/page/options/admin_mode = 1 and /page/settings/js_use_filemanager = 1 and /page/settings/uploads_enabled = 1">
+		<script type="text/javascript" src="{/page/settings/static_host_js}{/page/settings/site_folder_js}fileman/FileManager.js,fileman/Language/Language.en.js,fileman/Language/Language.de.js,fileman/Uploader/Fx.ProgressBar.js,fileman/Uploader/Swiff.Uploader.js,fileman/Uploader.js,fileman/Gallery.js" />
 	</xsl:if>
 	</xsl:template>
 	

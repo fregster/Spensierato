@@ -6,7 +6,7 @@ function cms_root()
 
 function get_site_document_root()
 {
-    if(!Common::rewrite_enabled() && setup::singleton()->load('allow_rewrite')) //We use the globals here as the settings class might not be loaded
+    if(!Common::rewrite_enabled() || !setup::singleton()->load('allow_rewrite')) //We use the globals here as the settings class might not be loaded
     {
     	return DOCUMENT_ROOT_FOLDER_ONLY . '/index.php';
     }
@@ -21,20 +21,22 @@ function get_site_path()
     return $document_root;
 }
 
-function get_site_document_root_folder_only() //This does NOT work if we have a front end proxy, needs thought on a possible solution.
+function get_site_document_root_folder_only($force_document_root_with_hostname = false) //This does NOT work if we have a front end proxy, needs thought on a possible solution.
 {
+	$force_document_root_with_hostname = true;
     $document_root = get_site_path();
-    if($document_root == '')
+    if($document_root == '' || $force_document_root_with_hostname)
     {
-    $proto = 'http://';
-    if(isset($_SERVER['HTTPS']))
-    {
-    	if( ($_SERVER['HTTPS'] != '') && ($_SERVER['HTTPS'] != 'off') )
-    	{
-    		$proto = 'https://';
-    	}
-    }
-    $document_root = $proto . $_SERVER['SERVER_NAME'];
+	    $proto = 'http://';
+	    if(isset($_SERVER['HTTPS']))
+	    {
+	    	if( ($_SERVER['HTTPS'] != '') && ($_SERVER['HTTPS'] != 'off') )
+	    	{
+	    		$proto = 'https://';
+	    	}
+	    }
+	    //$proto = null;
+		$document_root = $proto . $_SERVER['SERVER_NAME'] . $document_root;
 
     }
 	return $document_root;
@@ -72,38 +74,6 @@ function load($url,$options=array()) {
         'Accept' => 'text/*',
         'User-Agent' => 'Spensierato'
     );
-//     + $options['headers']; // Add custom headers provided by the user.
-    
-//    if($options['cache']) {
-//        $cache_folder = '/tmp/';
-//        if(isset($options['cache_folder'])) $cache_folder = $options['cache_folder'];
-//        if(!file_exists($cache_folder)) {
-//            $old_umask = umask(0); // Or the folder will not get write permission for everybody.
-//            mkdir($cache_folder, 0777);
-//            umask($old_umask);
-//        }
-//        
-//        $cache_file_name = md5($url) . '.cache';
-//        $cache_file = joinPath($cache_folder, $cache_file_name); //Don't change the variable name - used at the end of the function.
-//                
-//        if(file_exists($cache_file)) { // Cached file exists - return that.
-//            $response = file_get_contents($cache_file);
-//            
-//             //Seperate header and content
-//            $separator_position = strpos($response,"\r\n\r\n");
-//            $header_text = substr($response,0,$separator_position);
-//            $body = substr($response,$separator_position+4);
-//            
-//            foreach(explode("\n",$header_text) as $line) {
-//                $parts = explode(": ",$line);
-//                if(count($parts) == 2) $headers[$parts[0]] = chop($parts[1]);
-//            }
-//            $headers['cached'] = true;
-//            
-//            if(!$options['return_info']) return $body;
-//            else return array('headers' => $headers, 'body' => $body, 'info' => array('cached'=>true));
-//        }
-//    }
 
     ///////////////////////////// Curl /////////////////////////////////////
     //If curl is available, use curl to get the data.

@@ -275,8 +275,8 @@ Settings::Singleton()->new_setting('site_option_css', (DOCUMENT_ROOT . '/css'));
 Settings::Singleton()->new_setting('site_folder_graphics', (DOCUMENT_ROOT . '/graphics/'));
 
 /* This has been changed from javascript to js-combine due to debians prototype package url rewriting */
-Settings::Singleton()->new_setting('site_folder_js', (DOCUMENT_ROOT . '/js-combine/'));
-Settings::Singleton()->new_setting('site_folder_js_direct', (DOCUMENT_ROOT . '/js/'));
+Settings::Singleton()->new_setting('site_folder_js', ('/js-combine/'));
+Settings::Singleton()->new_setting('site_folder_js_direct', ('/js/'));
 
 //Uploads alowed, other options may disable this
 //true / false

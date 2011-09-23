@@ -37,7 +37,7 @@ abstract class Cache
 		$gmdate_mod = gmdate('D, d M Y H:i:s', $mod_date) . ' GMT';
 		$expires = gmdate('D, d M Y H:i:s', (time() + $expires)) . ' GMT';
 		
-		if((!$force_resend) or (options::Singleton()->get_option('force_reload'))) 
+		if(function_exists('apache_request_headers') && (!$force_resend) or (options::Singleton()->get_option('force_reload'))) 
 		{
 			options::Singleton()->set_option('force_reload', false);
 			//Headers recieved from browser
@@ -121,28 +121,30 @@ abstract class Cache
 	
 	public static function headers_check_304($path)
 	{
-		//File modification time
-		$gmdate_mod = @gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT';
-		
-		//File ETag
-		$ETag = Cache::generate_etag($path);
-		
-		//Headers recieved from browser
-		$headers = apache_request_headers();
-		
-		if(isset($headers['If-None-Match']))
-		{
-			 if (strpos($headers['If-None-Match'], $ETag) != false)
-			 {
-				Cache::send_304($ETag);
-			}
-		}
-		
-		if(isset($headers['If-Modified-Since']))
-		{
-			if ($gmdate_mod == $headers['If-Modified-Since']  || user::Singleton()->id() != 0) 
+		if(function_exists('apache_request_headers')){
+			//File modification time
+			$gmdate_mod = @gmdate('D, d M Y H:i:s', filemtime($path)) . ' GMT';
+			
+			//File ETag
+			$ETag = Cache::generate_etag($path);
+			
+			//Headers recieved from browser
+			$headers = apache_request_headers();
+			
+			if(isset($headers['If-None-Match']))
 			{
-				Cache::send_304();
+				 if (strpos($headers['If-None-Match'], $ETag) != false)
+				 {
+					Cache::send_304($ETag);
+				}
+			}
+			
+			if(isset($headers['If-Modified-Since']))
+			{
+				if ($gmdate_mod == $headers['If-Modified-Since']  || user::Singleton()->id() != 0) 
+				{
+					Cache::send_304();
+				}
 			}
 		}
 	}

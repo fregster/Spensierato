@@ -65,7 +65,7 @@ class element_Login extends element_Default
 
 	protected function add_header()
 		{
-			$js = Settings::singleton()->get_setting('site_folder_js_direct').'login_packed.js';
+			$js = Settings::singleton()->get_setting('static_host_js').Settings::singleton()->get_setting('site_folder_js_direct').'login_packed.js';
 			content::singleton()->add_custom_head('script', array('type' => 'text/javascript', 'src'=> $js));
 		}
 

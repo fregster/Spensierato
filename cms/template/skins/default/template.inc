@@ -10,12 +10,13 @@ Settings::Singleton()->overwrite_setting('template_version', cms::$cms_version, 
  * Any skin specific images that you want to use javascript to preload
  * All files in the pre-load-images folder are always included with the code below
  */
-
-foreach (glob(Settings::Singleton()->get_setting('cms_root').DS.'skins'.DS.Settings::Singleton()->get_setting('skin').DS.'pre-load-images'.DS.'*', GLOB_NOSORT) as $filename) 
-{
-	array_push($this->preload, basename($filename));
+$preload = glob(Settings::Singleton()->get_setting('cms_root').DS.'skins'.DS.Settings::Singleton()->get_setting('skin').DS.'pre-load-images'.DS.'*', GLOB_NOSORT);
+if(is_array($preload)){
+	foreach ($preload as $filename) 
+	{
+		array_push($this->preload, basename($filename));
+	}
 }
-
 /**
  * Does this template extend another template?
  */

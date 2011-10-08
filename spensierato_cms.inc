@@ -93,8 +93,12 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 		        //'COOKIE' => $_COOKIE
 		    );
 		    
+		//Server vars that are considered to be safe
 		unset($request['SERVER']['PATH']);
 		unset($request['SERVER']['HTTP_ACCEPT_CHARSET']);
+		
+		//CMS Vars that are likely to trigger false positives. These must be amazingly filtered, sanatized blah blah blah
+		unset($request['POST']['meta_keywords']);
 		
 		$config_file = $external_path.'IDS'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'Config.ini.php';
 		if(file_exists(DIR_CONFIG.'Config.ini.php')){
@@ -118,7 +122,9 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 			if($result->getImpact() > 10)
 			{
 				echo 'IDS Triggered';
-				//echo $result;
+				if(defined('DEVELOPMENT_INSTALL')){
+					echo '<p>'.$result.'</p>';
+				}
 				exit;
 			}
 	    }

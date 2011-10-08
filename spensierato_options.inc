@@ -137,7 +137,7 @@ Settings::Singleton()->new_setting('shop_tax_rate', 0.2, false, false, true, SET
 Settings::Singleton()->new_setting('currency', 'GBP', false, false, array('GBP', 'EUR', 'USD', 'CAD', 'PLN'), SETTING_GROUP_SHOP);
 
 //Setting currency_symbol
-Settings::Singleton()->new_setting('currency_symbol', '�', false, false, true, SETTING_GROUP_SHOP);
+Settings::Singleton()->new_setting('currency_symbol', '£', false, false, true, SETTING_GROUP_SHOP);
 
 //Setting business_id
 //The unique id used with your payment provider

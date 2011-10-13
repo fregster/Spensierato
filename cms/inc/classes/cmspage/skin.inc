@@ -33,7 +33,7 @@ class cmspage_skin extends cmspage
 		{
 			if(is_file($file))
 			{
-				FileTransfer::singleton()->get_file($file, true, false);
+				FileTransfer::singleton()->get_file($file, true, false, true, false, false);
 				exit;
 			}
 //			echo('<br/>'.$file);

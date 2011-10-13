@@ -58,14 +58,14 @@
 					var js = document.createElement('script');
 					var h = document.getElementsByTagName('head')[0];
 	
-					js.src = '<xsl:value-of select="/page/settings/site_folder_js" /><xsl:choose>
+					js.src = js_host+'<xsl:value-of select="/page/settings/site_folder_js" /><xsl:choose>
 					<xsl:when test="/page/settings/js_use_yui = 1">mootools/mt-c-yc.js,mootools/mt-m-yc.js,growl.js</xsl:when>
 					<xsl:otherwise>mootools/mt-c.js,mootools/mt-m.js,growl.js</xsl:otherwise>
 				</xsl:choose>,public.js,logged_in.js,admin.js';
 					<!-- js.src = '<xsl:value-of select="/page/settings/site_folder_js" />mootools/mootools-1.2-core-yc.js,mootools/mootools-1.2-more.js,public.js,logged_in.js,admin.js'; -->
 					h.appendChild(js);
 	
-					js.src = '<xsl:value-of select="/page/settings/document_root" />/editor/tiny_mce_gzip.js';
+					js.src = js_host+'<xsl:value-of select="/page/settings/site_folder_js" />/editor/tiny_mce_gzip.js';
 					h.appendChild(js);
 	
 	

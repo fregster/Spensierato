@@ -11,6 +11,7 @@ if(get::variable('tools'))
 $background_image = Common::document_root_folder_only().'/skin/CrunchyBranch_1024x768.png';
 
 $rewrite_enabled = check_rewrite();
+
 if(!$rewrite_enabled)
 {
 	if(!file_exists(DIR_INDEX.'.htaccess')){

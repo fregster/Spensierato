@@ -93,9 +93,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		$dir_uploads_tmp = $doc_root_prefix.'writable'.DS.'uploads'.DS.'tmp';
 		$dir_uploads_orig_images = $doc_root_prefix.'writable'.DS.'uploads'.DS.'original_images';
 		$dir_cache = $doc_root_prefix.'writable'.DS.'cache';
+		$dir_tmp = $doc_root_prefix.'writable'.DS.'tmp';
 		$dir_search = $doc_root_prefix.'writable'.DS.'search';
 		
 		@mkdir($dir_logs);
+		@mkdir($dir_tmp);
 		@mkdir($dir_uploads);
 		@mkdir($dir_uploads_tmp);
 		@mkdir($dir_uploads_orig_images);

@@ -48,8 +48,8 @@ function check_includes($include)
 function check_rewrite()
 {
 	global $background_image;
-	$handle = load('http://'.$_SERVER['SERVER_NAME'].$background_image);
-
+	$handle = load($background_image);
+	
 	if($handle['info']['http_code'] == '200') //If the page has retured content then error
 	{
 		return true;

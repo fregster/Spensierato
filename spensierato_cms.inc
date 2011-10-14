@@ -14,55 +14,6 @@ $install = true;
 //Force a timezone to stop PHP complaning
 date_default_timezone_set('UTC');
 
-function exception_handler($exception = NULL)
-{
-	header('HTTP/1.1 500 Internal Server Error');
-	echo('<html><head></head><body>');
-	echo('<h1>Opps</h1><p>Unfortunatly an uncaught exception happened.<br/>Exception: ' . $exception->getMessage().'</p>');
-	$backtrace = debug_backtrace();
-//			var_dump($backtrace);
-	echo($backtrace[0]['args'][1].'<br/>');
-	echo(basename($backtrace[0]['args'][2]).' : '. $backtrace[0]['args'][3].'<br/>');
-	echo('</body></html>');
-	exit;
-  
-}
-
-function uncaught_error_handler($errno, $errstr, $errfile, $errline)
-{
-	if (!(error_reporting() & $errno)) {
-        // This error code is not included in error_reporting probably intentially supressed
-        return;
-    }
-    
-	switch ($errno) {
-	
-	    case E_USER_WARNING:
-	    case E_WARNING:
-	        echo "<b>WARNING</b> [$errno] $errstr ".basename($errfile) . ' ' . $errline."<br />\n";
-	        break;
-	
-	    case E_USER_NOTICE:
-	    case E_NOTICE:
-	    	 echo "<b>NOTICE</b> [$errno] $errstr ".basename($errfile) . ' ' . $errline."<br />\n";
-	        break;
-	
-	    default:
-	        header('HTTP/1.1 500 Internal Server Error');
-	        echo('<html><head></head><body>');
-			echo('<h1>Opps</h1><p>Unfortunatly an uncaught error happened.<br/>Error Code: '.$errno.'</p>');
-			$backtrace = debug_backtrace();
-//			var_dump($backtrace);
-			echo($backtrace[0]['args'][1].'<br/>');
-			echo(basename($backtrace[0]['args'][2]).' : '. $backtrace[0]['args'][3].'<br/>');
-			echo('</body></html>');
-			exit;
-	        break;
-	   }
-}
-
-set_error_handler('uncaught_error_handler');
-
 
 $class_block_list = array(
 //'elementvideo' => 1,
@@ -72,77 +23,20 @@ $class_block_list = array(
 
 define('INCLUDE_PATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
 $default_include_path = get_include_path();
+
 //Do static requires
 require_once(INCLUDE_PATH.'cms'.DIRECTORY_SEPARATOR.'inc'.DIRECTORY_SEPARATOR.'static'.DIRECTORY_SEPARATOR.'defines.inc');
-
+require_once(DIR_STATIC.'error_handels.inc');
+$external_path = INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR;
 
 /**
  * Check this is not an attack using IDS
  */
-$external_path = INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR;
-if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
-{
-	try {
-		set_include_path($external_path);
-		require_once 'IDS'.DIRECTORY_SEPARATOR.'Init.php';
-		$request = array(
-		        //'REQUEST' => $_REQUEST,
-		        'SERVER' => $_SERVER,
-		        'GET' => $_GET,
-		        'POST' => $_POST,
-		        //'COOKIE' => $_COOKIE
-		    );
-		    
-		//Server vars that are considered to be safe
-		unset($request['SERVER']['PATH']);
-		unset($request['SERVER']['HTTP_ACCEPT_CHARSET']);
-		
-		//CMS Vars that are likely to trigger false positives. These must be amazingly filtered, sanatized blah blah blah
-		unset($request['POST']['meta_keywords']);
-		unset($request['POST']['html']);
-		unset($request['SERVER']['HTTP_COOKIE']);
-		
-		$config_file = $external_path.'IDS'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'Config.ini.php';
-		if(file_exists(DIR_CONFIG.'Config.ini.php')){
-			$config_file = DIR_CONFIG.'Config.ini.php';
-		}
-		    
-		$ids_init = IDS_Init::init($config_file);
-		$ids_init->config['General']['use_base_path'] = false;
-		$ids_init->config['General']['base_path'] = $external_path;
-		$ids_init->config['General']['filter_path'] = $external_path.'IDS'.DIRECTORY_SEPARATOR.'default_filter.xml';
-		$ids_init->config['General']['tmp_path'] = sys_get_temp_dir();	
-		$ids_init->config['Caching']['tmp'] = sys_get_temp_dir();	
-		$ids_init->config['Caching']['path'] = sys_get_temp_dir().'/default_filter.cache';	
-		
-	    if(file_exists($ids_init->config['General']['filter_path']))
-	    {
-			//Initiate the PHPIDS and fetch the results
-			$ids = new IDS_Monitor($request, $ids_init);
-			$result = $ids->run();
+require_once(DIR_STATIC.'ids.inc');
 
-			if($result->getImpact() > 10)
-			{
-				echo 'IDS Triggered';
-				if(defined('DEVELOPMENT_INSTALL')){
-					echo '<p>'.$result.'</p>';
-				}
-				exit;
-			}
-	    }
-	    //Clean up now redundent vars
-	    unset($request);
-		unset($ids_init);
-		unset($ids);
-		unset($result);
-		unset($config_file);
-	}
-	catch(Exception $e)
-	{
-		printf('An IDS error occured: %s',$e->getMessage());
-	    exit;
-	}
-}
+set_error_handler('uncaught_error_handler');
+set_exception_handler('exception_handler');
+
 set_include_path($default_include_path.PATH_SEPARATOR.INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR);
 unset($default_include_path);
 
@@ -153,7 +47,7 @@ require_once(DIR_STATIC.'functions.inc');
 ini_set('error_log', DIR_LOG.DS.'php_error.log');
 //ini_set('display_errors', 'Off');
 
-set_exception_handler('exception_handler');
+
 try
 {
 	//Make any custom changes here that are required pre the CMS code has loaded

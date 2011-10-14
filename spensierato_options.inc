@@ -322,8 +322,8 @@ Settings::Singleton()->new_setting('cookie_encryption', true, false, true, true,
 //int seconds
 Settings::Singleton()->new_setting('session_public_key_lifetime', 3600, false, true, true, SETTING_GROUP_SECURITY);
 
-//Setting login_capthca
-//Requires the user to enter a security code when login in
+//Setting authentication_mechanism
+//Which mechanism to authenticate users with
 //true / false
 Settings::Singleton()->new_setting('authentication_mechanism', 'default', false, false, array('default', 'facebook'), SETTING_GROUP_LOGIN);
 

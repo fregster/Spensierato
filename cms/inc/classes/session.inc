@@ -12,7 +12,7 @@ class session
 	private $nonce_grace_time = 120;
 	private $id;
 	private $old_id;
-	private $session_name;
+	public static $session_name;
 
 	public static function Singleton($type = 'default')
 	{
@@ -131,7 +131,7 @@ class session
 		}
 		
 		if($session_id){
-			$_COOKIE[$this->session_name] = $session_id;
+			$_COOKIE[session::$session_name] = $session_id;
 		}
 	}
 	

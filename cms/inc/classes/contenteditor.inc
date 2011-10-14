@@ -15,7 +15,8 @@ abstract class ContentEditor
 		if(file_exists($value))
 		{
 			header('Content-Description: TinyMCE File ');
-			filetransfer::singleton()->get_file($value, true);
+			//($file, $cache = false, $use_rate_limit = true, $work_out_mime = false, $no_db_lookup = false, $send_disposition = true)
+			filetransfer::singleton()->get_file($value, true, false, true, true, false);
 		}
 		else
 		{

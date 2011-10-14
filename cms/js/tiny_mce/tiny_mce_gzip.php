@@ -3,7 +3,7 @@
  * $Id: tiny_mce_gzip.php 315 2007-10-25 14:03:43Z spocke $
  *
  * @author Moxiecode
- * @copyright Copyright © 2005-2006, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright ï¿½ 2005-2006, Moxiecode Systems AB, All rights reserved.
  *
  * This file compresses the TinyMCE JavaScript using GZip and
  * enables the browser to do two requests instead of one for each .js file.
@@ -22,7 +22,7 @@
 	$compress = getParam("compress", "true") == "true";
 	$core = getParam("core", "true") == "true";
 	$suffix = getParam("suffix", '') == "_src" ? "_src" : "";
-	$cachePath = $GLOBALS['cms_folder_cache']; // Cache path, this is where the .gz files will be stored
+	$cachePath = setup::Singleton()->load('cms_folder_cache'); // Cache path, this is where the .gz files will be stored
 	if(is_writable($cachePath))
 	{
 		$diskCache = getParam("diskcache", "") == "true";

@@ -99,6 +99,8 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 		
 		//CMS Vars that are likely to trigger false positives. These must be amazingly filtered, sanatized blah blah blah
 		unset($request['POST']['meta_keywords']);
+		unset($request['POST']['html']);
+		unset($request['SERVER']['HTTP_COOKIE']);
 		
 		$config_file = $external_path.'IDS'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'Config.ini.php';
 		if(file_exists(DIR_CONFIG.'Config.ini.php')){

@@ -449,7 +449,7 @@ class persistantcache_memcache extends persistantcache
 								array('host' => 'localhost', 'port'=>11211),
 							); // enter an array for each of your memcache servers
 	private $maxsession_cache_time = 0; //0 sets to never expire
-	private $max_number_of_server_buddies = 3;
+	private $max_number_of_server_buddies = 5;
 
 	protected function __construct($options = array())
 	{

@@ -106,10 +106,12 @@ class user
 		{
 			user::Singleton()->store('login_error', null);
 			warnings::Singleton()->drop('login_error', 0);
+			log::record('login', 'sucsess');
 			$this->do_login();
 		}
 		else
 		{
+			log::record('login', 'failed', true);
 			warnings::Singleton()->register('Login Failed', 'Either your Username or Password was incorrect or you are not registered', 0);
 			user::Singleton()->store('login_error', 'Either your Username or Password was incorrect or you are not registered');
 			Common::redirect_inc_vars(implode('/', common::get_path_vars()), array('authfailed' => $auth));

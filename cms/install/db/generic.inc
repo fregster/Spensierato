@@ -162,6 +162,27 @@ $tables['tbl_list_membership'] = array(
 											),
 									'primary_key' => NULL,
 									);
+									
+$tables['tbl_log'] = array(
+									'cols_define' =>
+										array(
+											'id' => $int.' UNSIGNED NOT NULL '.$increment,
+											'ts' => $int.' UNSIGNED NOT NULL',
+											'security' => $int.' UNSIGNED NOT NULL',
+											'user' => $int.' UNSIGNED NOT NULL',
+											'action' => varchar(128).' NOT NULL',
+											'detail' => varchar(255).' NOT NULL',
+											'ip' => varchar(64). ' NOT NULL',
+											'request_type' => varchar(12).' NOT NULL',
+											'request_data' => $long_text,
+											'request_uri' => varchar(255).' NOT NULL',
+											'user_agent' => varchar(128).' NOT NULL',
+											'ids' => $long_text,
+											'trigger_file' => varchar(64). ' NOT NULL',
+											'trigger_line' => $int.' UNSIGNED NOT NULL',
+											),
+									'primary_key' => 'id',
+									);
 
 $tables['tbl_page_elements'] = array(
 									'cols_define' =>

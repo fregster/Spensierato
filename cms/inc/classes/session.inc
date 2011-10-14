@@ -5,17 +5,6 @@
 //		{
 ////			session_set_cookie_params(0, NULL, NULL, NULL, TRUE);
 //		}
-
-//Use SHA1 as the Session ID type, reduces the possability of session stealing
-//Increase the bits per Char so we can store it in a smaller DB field
-ini_set('session.hash_bits_per_character', 5);
-ini_set('session.hash_function', 1);
-ini_set('session.name', md5(setup::Singleton()->load('random_key').$_SERVER['SERVER_SIGNATURE'])); //md5 to prevent stupily long session names
-if(version_compare(phpversion(), '5.3', '>='))
-{
-	ini_set('session.hash_function', setup::Singleton()->load('max_sha_hash')); //Use the strongest hash we can to make this as hard as sensibly posible to predict
-}
-	
 class session
 {
 	private static $instance;
@@ -23,6 +12,7 @@ class session
 	private $nonce_grace_time = 120;
 	private $id;
 	private $old_id;
+	private $session_name;
 
 	public static function Singleton($type = 'default')
 	{
@@ -37,6 +27,23 @@ class session
 	
 	protected function __construct($type = 'default')
 	{	
+		//Custom save path per application instance
+		ini_set('session.save_path', setup::Singleton()->load('cms_folder_sessions'));
+		
+		//md5 to prevent stupily long session names
+		$this->session_name = md5(setup::Singleton()->load('random_key').$_SERVER['SERVER_SIGNATURE']);
+		ini_set('session.name', $this->session_name); 
+		
+		//Increase the bits per Char so we can store it in a smaller DB field
+		ini_set('session.hash_bits_per_character', 5);
+		
+		//Use SHA1 as the Session ID type, reduces the possability of session stealing
+		ini_set('session.hash_function', 1);
+		if(version_compare(phpversion(), '5.3', '>='))
+		{
+			ini_set('session.hash_function', setup::Singleton()->load('max_sha_hash')); //Use the strongest hash we can to make this as hard as sensibly posible to predict
+		}
+		
 		session::handler($type);
 			
 		//Flash will not send the cookie so use an encrypted get var as a session holder
@@ -47,7 +54,7 @@ class session
 		}
 		
 		//Only load cookie data if a cookie has been sent to help comply with EU reg's
-		if(isset($_COOKIE['PHPSESSID']) || cookie::Singleton()->is_cookie_value_set('CMS'))
+		if(isset($_COOKIE[$this->session_name]) || cookie::Singleton()->is_cookie_value_set('CMS'))
 		{
 			$this->force();
 			$this->timeout_check();
@@ -124,7 +131,7 @@ class session
 		}
 		
 		if($session_id){
-			$_COOKIE['PHPSESSID'] = $session_id;
+			$_COOKIE[$this->session_name] = $session_id;
 		}
 	}
 	

@@ -95,6 +95,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		$dir_cache = $doc_root_prefix.'writable'.DS.'cache';
 		$dir_tmp = $doc_root_prefix.'writable'.DS.'tmp';
 		$dir_search = $doc_root_prefix.'writable'.DS.'search';
+		$dir_session = $doc_root_prefix.'writable'.DS.'session';
 		
 		@mkdir($dir_logs);
 		@mkdir($dir_tmp);
@@ -103,6 +104,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		@mkdir($dir_uploads_orig_images);
 		@mkdir($dir_cache);
 		@mkdir($dir_search);
+		@mkdir($dir_session);
 
 	}
 	else
@@ -346,6 +348,7 @@ setup::Singleton()->save('cms_folder_orig_images', '".realpath($dir_uploads_orig
 setup::Singleton()->save('cms_folder_logs', '".realpath($dir_logs)."');
 setup::Singleton()->save('cms_folder_cache', '".realpath($dir_cache)."');
 setup::Singleton()->save('cms_folder_search', '".realpath($dir_search)."');
+setup::Singleton()->save('cms_folder_sessions', '".realpath($dir_session)."');
 
 ";
 	

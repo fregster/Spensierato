@@ -108,7 +108,7 @@ container: $(document.body),
 maxSize: {w:700, h:500},
 recalcTop: true
 });
-if(typeof FileManager == 'object'){
+if(typeof FileManager == 'function'){
 fManager = new FileManager({
     hideOnClick: true,
     upload: true,

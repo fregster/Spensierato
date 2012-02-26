@@ -36,7 +36,7 @@ if(Settings::Singleton()->get_setting('uploads_enabled'))
 			);';
 			
 			content::singleton()->add_custom_head('link', array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => Settings::singleton()->get_setting('document_root').'/skin/gallery.css'));
-			content::singleton()->add_custom_head('script', array('type' => 'text/javascript', 'src'=> Settings::singleton()->get_setting('site_folder_js_direct').'gallery/slide.js'));
+			content::singleton()->add_custom_head('script', array('type' => 'text/javascript', 'src'=> Settings::singleton()->get_setting('document_root').'/'.Settings::singleton()->get_setting('site_folder_js_direct').'gallery/slide.js'));
 			content::singleton()->add_custom_head('script', array('type' => 'text/javascript'), $js);
 		}
 		

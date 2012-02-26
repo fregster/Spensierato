@@ -21,7 +21,10 @@ class cmspage_login extends cmspage_html
 			//If not loged in load box else redirect to $this->page_details['value']
 			if(User::Singleton()->is_logged_in())
 			{
-				Common::redirect($this->page_details['value']);
+				if(isset($this->page_details['value'])){
+					Common::redirect($this->page_details['value']);
+				}
+				Common::redirect('/');
 			}
 			else
 			{

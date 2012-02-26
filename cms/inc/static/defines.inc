@@ -10,3 +10,4 @@ DEFINE('DIR_SKINS', DIR_TEMPLATE.'skins'.DS);
 DEFINE('DIR_INDEX', dirname($_SERVER['SCRIPT_FILENAME']).DS);
 DEFINE('DIR_CONFIG', realpath(DIR_INDEX.'..'.DS).DS);
 DEFINE('DIR_JS', INCLUDE_PATH.'cms'.DS.'js'.DS);
+if(!defined('DIR_ERRORS')){ define('DIR_ERRORS', DIR_CONFIG.DS.'writable'.DS.'logs'.DS.'errors'); }

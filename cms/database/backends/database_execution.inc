@@ -150,7 +150,9 @@ class database_execution
 	public function destroy_write_user()
 	{
 		unset($this->write);
-		$this->dsn = $this->dsn_default;
+		if(isset($this->dsn_default)){
+			$this->dsn = $this->dsn_default;
+		}
 	}
 
 	/**

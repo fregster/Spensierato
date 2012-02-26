@@ -63,7 +63,7 @@ class database_execution_pdo extends database_execution
 		{
 			if($writeuser == true)
 			{
-				if($this->write != NULL) //Test the write user is set
+				if($this->write != NULL && $this->write != false) //Test the write user is set
 				{
 					if($values == NULL)
 					{
@@ -73,9 +73,9 @@ class database_execution_pdo extends database_execution
 					else
 					{
 						//Do prepeared statment
+						$stmt = null; //PDO Bug fix
 						$stmt = $this->write->prepare($sql);
-												
-						$stmt->setFetchMode($mode);
+											
 						if($stmt === false)
 						{
 							$error = 'Failed to prepare statment : ' . $stmt->getMessage().'<br />';
@@ -85,6 +85,7 @@ class database_execution_pdo extends database_execution
 							}
 							$this->sql_error($error, NULL, NULL, $soft_connect);
 						}
+						$stmt->setFetchMode($mode);
 					}
 				}
 				else

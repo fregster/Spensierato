@@ -34,8 +34,8 @@ class database_execution_mdb2 extends database_execution
 		
 		
 		$old_track = ini_set('track_errors', '1');
-		$db_backend = @MDB2::connect($dsn, $options);
-		if(!$this->db_backend)
+		$this->db_backend = @MDB2::connect($dsn, $options);
+		if(!isset($this->db_backend) || !$this->db_backend)
 		{
 			$error = 'Unable to connect to the database ('.$php_errormsg.')';
 			return $this->sql_error($error, __LINE__, __FILE__, $soft_connect);
@@ -52,13 +52,13 @@ class database_execution_mdb2 extends database_execution
 		{
 			foreach($mods as $mod)
 			{
-				$db_backend->loadModule($mod);
+				$this->db_backend->loadModule($mod);
 			}
 		}
 
-		$db_backend->setFetchMode(MDB2_FETCHMODE_ASSOC);
+		$this->db_backend->setFetchMode(MDB2_FETCHMODE_ASSOC);
 		
-		return $db_backend;
+		return $this->db_backend;
 	}
 
 	public function sql_run($sql, $values, $writeuser, $mode = null, $soft_connect = false)

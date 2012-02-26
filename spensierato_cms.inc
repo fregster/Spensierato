@@ -34,8 +34,12 @@ $external_path = INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_
  */
 require_once(DIR_STATIC.'ids.inc');
 
+/**
+ * Force the use of these error handlers
+ */
 set_error_handler('uncaught_error_handler');
 set_exception_handler('exception_handler');
+register_shutdown_function('shutdown_handler');
 
 set_include_path($default_include_path.PATH_SEPARATOR.INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR);
 unset($default_include_path);

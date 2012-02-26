@@ -98,6 +98,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 		$dir_session = $doc_root_prefix.'writable'.DS.'session';
 		
 		@mkdir($dir_logs);
+		@mkdir($dir_logs.DS.'errors');
 		@mkdir($dir_tmp);
 		@mkdir($dir_uploads);
 		@mkdir($dir_uploads_tmp);

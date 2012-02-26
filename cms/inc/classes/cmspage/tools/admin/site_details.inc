@@ -73,7 +73,7 @@ foreach ($settings as $key => $setting_group)
 					True: <input type="radio" value="true" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_true'); ?>" <?php if($setting['value'] === true){ echo'checked="checked"'; } if(isset($setting['protected']) && $setting['protected']) {echo' disabled="disabled"'; }?> />
 					False: <input type="radio" value="false" name="<?php echo($setting['name']); ?>" id="<?php echo($setting['name'].'_false'); ?>" <?php if($setting['value'] !== true){ echo'checked="checked"'; } if(isset($setting['protected']) && $setting['protected']) {echo' disabled="disabled"'; }?> />
 					<?php }else if(is_array($setting['options'])){
-						echo '<select name="'. $setting['name'] .'" id="'. $setting['name'] .'"'; if($setting['protected']) {echo' disabled="disabled"'; } echo '>'; 
+						echo '<select name="'. $setting['name'] .'" id="'. $setting['name'] .'"'; if(isset($setting['protected']) && $setting['protected']) {echo' disabled="disabled"'; } echo '>'; 
 						foreach ($setting['options'] as $option){ ?>
 							<option name="<?php echo $option; ?>"<?php if($setting['value'] == $option){ echo' selected="selected"'; }?>><?php echo $option; ?></option>
 					<?php } echo '</select>';

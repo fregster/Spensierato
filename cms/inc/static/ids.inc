@@ -38,13 +38,13 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 	    {
 			//Initiate the PHPIDS and fetch the results
 			$ids = new IDS_Monitor($request, $ids_init);
-			$result = $ids->run();
+			$ids_result = $ids->run();
 
-			if($result->getImpact() > 10)
+			if($ids_result->getImpact() > 10)
 			{
 				echo 'IDS Triggered';
 				if(defined('DEVELOPMENT_INSTALL')){
-					echo '<p>'.$result.'</p>';
+					echo '<p>'.$ids_result.'</p>';
 				}
 				exit;
 			}
@@ -53,7 +53,7 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 	    unset($request);
 		unset($ids_init);
 		unset($ids);
-		unset($result);
+		//unset($ids_result); We leave the IDS in just in case we trigger a log event
 		unset($config_file);
 	}
 	catch(Exception $e)

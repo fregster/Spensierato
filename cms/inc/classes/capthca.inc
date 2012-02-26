@@ -91,7 +91,7 @@ abstract class Capthca
 				return true;
 			}
 
-			if(($_SESSION['capthca_security_code'] == $security_code) && (!empty($_SESSION['capthca_security_code'])) )
+			if(isset($_SESSION['capthca_security_code']) && ($_SESSION['capthca_security_code'] == $security_code) && (!empty($_SESSION['capthca_security_code'])) )
 			{
 				// Insert you code for processing the form here, e.g emailing the submission, entering it into a database.
 				unset($_SESSION['capthca_security_code']);

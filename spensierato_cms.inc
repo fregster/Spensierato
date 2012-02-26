@@ -30,11 +30,6 @@ require_once(DIR_STATIC.'error_handels.inc');
 $external_path = INCLUDE_PATH.'cms'. DIRECTORY_SEPARATOR .'external'. DIRECTORY_SEPARATOR;
 
 /**
- * Check this is not an attack using IDS
- */
-require_once(DIR_STATIC.'ids.inc');
-
-/**
  * Force the use of these error handlers
  */
 set_error_handler('uncaught_error_handler');
@@ -50,7 +45,6 @@ require_once(DIR_STATIC.'functions.inc');
 //Force any PHP settings
 ini_set('error_log', DIR_LOG.DS.'php_error.log');
 //ini_set('display_errors', 'Off');
-
 
 try
 {
@@ -111,6 +105,11 @@ try
 		require_once(INCLUDE_PATH.'spensierato_options.inc');
 		if(is_file(DIR_CONFIG.'spensierato_options.inc')) { require_once(DIR_CONFIG.'spensierato_options.inc'); }
 	}
+	
+	/**
+	 * Check this is not an attack using IDS
+	 */
+	require_once(DIR_STATIC.'ids.inc');
 	
 	//run the installation
 	if($install || isset($force_install))

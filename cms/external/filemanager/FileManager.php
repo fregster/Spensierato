@@ -52,7 +52,8 @@ class FileManager {
     
     $this->options = array_merge(array(
       'directory' => 'Files/',
-      'assetBasePath' => '../',
+      //'assetBasePath' => '../',
+      'assetBasePath'	=> Settings::Singleton()->get_setting('document_root').Settings::Singleton()->get_setting('site_folder_js_direct').'/fileman/',
       'thumbnailPath' => '../Thumbs/',
       'mimeTypesPath' => $path . '/MimeTypes.ini',
       'dateFormat' => 'j M Y - H:i',
@@ -65,7 +66,7 @@ class FileManager {
     ), $options);
     
     $this->options['thumbnailPath'] = FileManagerUtility::getRealPath($this->options['thumbnailPath'],$this->options['chmod']);
-    $this->options['assetBasePath'] = FileManagerUtility::getRealPath($this->options['assetBasePath'],$this->options['chmod']);
+    //$this->options['assetBasePath'] = FileManagerUtility::getRealPath($this->options['assetBasePath'],$this->options['chmod']);
     $this->basedir = $_SERVER['DOCUMENT_ROOT'].FileManagerUtility::getRealPath($this->options['directory'],$this->options['chmod']);
     $this->basename = pathinfo($this->basedir, PATHINFO_BASENAME) . '/';
     $this->length = strlen($this->basedir);
@@ -121,7 +122,7 @@ class FileManager {
       }
     }
     echo json_encode(array(
-        //'assetBasePath' => $this->options['assetBasePath'],
+        'assetBasePath' => $this->options['assetBasePath'],
         'root' => substr(FileManagerUtility::getRealPath($this->options['directory'],$this->options['chmod']),1),
         'path' => $this->getPath($dir),
         'dir' => array(

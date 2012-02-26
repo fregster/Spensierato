@@ -112,7 +112,10 @@ abstract class Common
 
 	public static function document_root()
     {
-		return DOCUMENT_ROOT;
+    	if(defined('DOCUMENT_ROOT')){
+			return DOCUMENT_ROOT;
+    	}
+    	return '/';
     }
 
 	public static function document_root_folder_only()

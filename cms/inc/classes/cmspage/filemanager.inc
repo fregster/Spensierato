@@ -3,14 +3,6 @@ ini_set('display_errors', 0);
 error_reporting(E_ERROR);
 require_once DIR_EXTERNAL.'filemanager'.DS.'FileManager.php';
 
-// Please add your own authentication here
-function UploadIsAuthenticated($get){
-	return true;
-	if(!empty($get['session'])) return true;
-	
-	return true;
-}
-
 class cmspage_filemanager extends cmspage
 {
 	private $filepath;
@@ -31,7 +23,7 @@ class cmspage_filemanager extends cmspage
 	{
 		$browser = new FileManager(array(
 			'directory' => $this->filepath,
-			'assetBasePath' => Settings::Singleton()->get_setting('site_folder_js_direct').'/fileman/',
+			'assetBasePath' => Settings::Singleton()->get_setting('document_root').Settings::Singleton()->get_setting('site_folder_js_direct').'/fileman/',
 			'thumbnailPath' => $this->filepath.DS.'Thumbnails',
 		));
 		

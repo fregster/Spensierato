@@ -7,7 +7,10 @@ class database_execution_pdo extends database_execution
 	{
 		try {
 			$db_dsn_string = 'dbname=';
-			$host = $dsn['hostspec'];
+			$host = '';
+			if(isset($dsn['hostspec'])){
+				$host = $dsn['hostspec'];
+			}
 			
 			switch ($dsn['phptype']){
 				case 'mysqli':

@@ -1,5 +1,5 @@
 <?php
-if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
+if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php') && false)
 {
 	try {
 		set_include_path($external_path);
@@ -20,6 +20,7 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 		unset($request['POST']['meta_keywords']);
 		unset($request['POST']['html']);
 		unset($request['SERVER']['HTTP_COOKIE']);
+		unset($request['GET']['fmPath']);
 		
 		$config_file = $external_path.'IDS'.DIRECTORY_SEPARATOR.'Config'.DIRECTORY_SEPARATOR.'Config.ini.php';
 		if(file_exists(DIR_CONFIG.'Config.ini.php')){
@@ -42,22 +43,28 @@ if(file_exists($external_path.'IDS'.DIRECTORY_SEPARATOR.'Init.php'))
 
 			if($ids_result->getImpact() > 10)
 			{
+				
+				log::record('Page load', 'IDS Triggered', true);
+				
 				echo 'IDS Triggered';
 				if(defined('DEVELOPMENT_INSTALL')){
 					echo '<p>'.$ids_result.'</p>';
 				}
+				
 				exit;
 			}
+			unset($ids);
 	    }
+	    
 	    //Clean up now redundent vars
 	    unset($request);
 		unset($ids_init);
-		unset($ids);
 		//unset($ids_result); We leave the IDS in just in case we trigger a log event
 		unset($config_file);
 	}
 	catch(Exception $e)
 	{
+		log::record('Page load', 'IDS Exception Triggered', true);
 		printf('An IDS error occured: %s',$e->getMessage());
 	    exit;
 	}

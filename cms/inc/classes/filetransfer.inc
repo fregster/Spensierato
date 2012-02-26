@@ -50,18 +50,22 @@ class FileTransfer
 
 	public function get_file($file, $cache = false, $use_rate_limit = true, $work_out_mime = false, $no_db_lookup = false, $send_disposition = true)
 	{
+		$debug_headers = false;
+		//$debug_headers = true;
 		if(file_exists($file))
 		{
 			$file_stat = stat($file);
 
-			if($cache == true)
-			{
-				//Allow cache for 31 days
-				Cache::headers_allow_cache($file, true, 2678400, 2678400);
-			}
-			else
-			{
-				Cache::headers_no_cache($file);
+			if(!$debug_headers){
+				if($cache == true)
+				{
+					//Allow cache for 31 days
+					Cache::headers_allow_cache($file, true, 2678400, 2678400);
+				}
+				else
+				{
+					Cache::headers_no_cache($file);
+				}
 			}
 			
 			//Some times ie in the install process DB lookup's are not available so prevent any calls that may lookup information
@@ -124,15 +128,16 @@ class FileTransfer
 				$new_length=&$size;
 				header('Content-Length: ' . $size);
 			 }
-
-			 
+			
 			Common::send_mime_type($mime);
-			header('Content-Transfer-Encoding: binary');
-			header('Accept-Ranges: bytes');
-			header('Content-Hash-MD5: '. md5_file($file));
-			if($send_disposition){
-				header('Content-Disposition: attachment; filename='.$filename);
-			}	
+			if(!$debug_headers){
+				header('Content-Transfer-Encoding: binary');
+				header('Accept-Ranges: bytes');
+				header('Content-Hash-MD5: '. md5_file($file));
+				if($send_disposition){
+					header('Content-Disposition: attachment; filename='.$filename);
+				}	
+			}
 
 			if($use_rate_limit)
 			{

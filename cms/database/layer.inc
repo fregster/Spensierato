@@ -106,11 +106,23 @@ class database
 			if(is_null($dsn_read) || !isset($dsn_read['phptype'])){
 				$dsn_read = array(
 				    'phptype'  => $GLOBALS['database_driver'],
-				    'username' => $GLOBALS['database_user_read'],
-				    'password' => $GLOBALS['database_password'],
-				    'hostspec' => $GLOBALS['database_host_read'],
-				    'database' => $GLOBALS['database_name'],
 				);
+				
+				if(isset($GLOBALS['database_user_read'])){
+					$dsn_read['username'] = $GLOBALS['database_user_read'];
+				}
+				
+				if(isset($GLOBALS['database_password'])){
+					$dsn_read['password'] = $GLOBALS['database_password'];
+				}
+				
+				if(isset($GLOBALS['database_host_read'])){
+					$dsn_read['hostspec'] = $GLOBALS['database_host_read'];
+				}
+				
+				if(isset($GLOBALS['database_name'])){
+					$dsn_read['database'] = $GLOBALS['database_name'];
+				}
 				
 				if(isset($GLOBALS['prefix']) && !isset($dsn_read['prefix']))
 				{

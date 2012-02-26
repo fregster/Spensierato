@@ -3,7 +3,6 @@ ini_set('display_errors', 0);
 error_reporting(E_ERROR);
 require_once DIR_EXTERNAL.'filemanager'.DS.'FileManager.php';
 
-// Please add your own authentication here
 function UploadIsAuthenticated($get){
 	session::Singleton()->force();
 	user::singleton()->set_user_details(true);
@@ -27,7 +26,7 @@ if(!file_exists($filepath)){
 
 $browser = new FileManager(array(
 	'directory' => $filepath,
-	'assetBasePath' => Settings::Singleton()->get_setting('site_folder_js_direct').'/fileman/',
+	'assetBasePath' => Settings::Singleton()->get_setting('document_root').Settings::Singleton()->get_setting('site_folder_js_direct').'/fileman/',
 	'thumbnailPath' => $filepath.DS.'Thumbnails',
 	'maxUploadSize' => Settings::Singleton()->get_setting('max_file_size'),
 ));

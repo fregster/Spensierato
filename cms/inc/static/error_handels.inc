@@ -4,7 +4,7 @@
  * Set the required defines if not set prior to this include
  */
 if(!defined('ERROR_LOG_DIR')){
-	define('ERROR_LOG_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'error_files');
+	define('ERROR_LOG_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'errors');
 }
 
 if(!defined('ERROR_LOG_LEVEL')){

@@ -3,7 +3,9 @@ $path = get_include_path();
 set_include_path  ($path. PATH_SEPARATOR .dirname(__FILE__));
 
 // This line must be used to load the Text/Diff.php PEAR module
-require_once("Text/Diff.php");
+if!(include_once('Text/Diff.php')){
+	die('Diff is not available');
+}
 
 abstract class diffCompare{
 

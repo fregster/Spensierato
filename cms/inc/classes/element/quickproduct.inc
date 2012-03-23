@@ -43,9 +43,11 @@ class element_QuickProduct extends element_Default
 				$data = Database::Singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($this->id), NULL, NULL, options::Singleton()->get_option('admin_mode'));
 				$data = json_decode($data['data'], TRUE);
 
-				$extra['filename'] = $data['filename'];
-				$extra['filesize'] = $data['filesize'];
-				$extra['mime'] = $data['mime'];
+				if(isset($data['filename'])){ //Check if there is some file information and merge as required
+					$extra['filename'] = $data['filename'];
+					$extra['filesize'] = $data['filesize'];
+					$extra['mime'] = $data['mime'];
+				}
 			}
 			return $extra;
 		}

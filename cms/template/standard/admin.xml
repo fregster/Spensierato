@@ -58,10 +58,20 @@
 							<xsl:attribute name="action"><xsl:value-of select="/page/settings/document_root" />/edit/update/<xsl:value-of select="/page/@id" /></xsl:attribute>
 							<xsl:attribute name="method">post</xsl:attribute>
 							<xsl:attribute name="id">update_<xsl:value-of select="/page/@id" /></xsl:attribute>
-							<div style="display: inline;padding-left:3px">
-								Page Title
-								<input name="title" id="title" type="text" value="{/page/@title}" />
-								<input type="submit" value="Update" /> |
+							<div style="padding-left:3px;display:inline;">
+								Page Title:
+								<input name="title" id="title" type="text" value="{/page/@title}" /><br/>
+								Page Tags (Comma Seperated):
+								<xsl:element name="input">
+									<xsl:attribute name="type">text</xsl:attribute>
+									<xsl:attribute name="name">page_tags</xsl:attribute>
+									<xsl:attribute name="style">width:95%;</xsl:attribute>
+									<xsl:attribute name="value">
+										<xsl:for-each select="/page/tags/page/tag"><xsl:value-of select="."/>, </xsl:for-each>
+									</xsl:attribute>
+								</xsl:element>
+								<input type="submit" value="Update" />
+								Page Settings:
 								<xsl:element name="a">
 								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/toggle/page/<xsl:value-of select="/page/@id" />/visibility</xsl:attribute>
 									<xsl:element name="img">
@@ -78,7 +88,7 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:element>
-								</xsl:element> |
+								</xsl:element> 
 								<xsl:element name="a">
 								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/edit/toggle/page/<xsl:value-of select="/page/@id" />/delete</xsl:attribute>
 									<xsl:element name="img">

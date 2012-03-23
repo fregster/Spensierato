@@ -3,7 +3,7 @@
 * Spensierato
 * Content Managment System
 *
-* Requirements: PHP5.2, SimpleXML, Tidy, MDB2 with MySQLi (Depending on install), XML/Serializer, PHP xsltProcessor
+* Requirements: PHP5.2, SimpleXML, Tidy, MDB2 / PDO with MySQLi /SQLite (Depending on install), XML/Serializer, PHP xsltProcessor
 *
 * Copyright (c) 2008 Paul Fryer (www.fryer.org.uk)
 *

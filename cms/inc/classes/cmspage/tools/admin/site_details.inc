@@ -1,4 +1,7 @@
 <?php
+
+//TODO: Move this to use the template system
+
 if (!user::Singleton()->is_logged_in() || !user::Singleton()->is_admin()) common::bounce_to_referer();
 $updated = false;
 if($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -38,12 +41,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 //Ensure the template class is loaded to ensure all the settings relating to the skin are shown
 template::singleton();
 
+
+//Render::Singleton()->render_html(Content::Singleton()->build(), true);
+
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 	<head>
 		<title>Site Details</title>
-		<link href="<?php echo common::document_root().'/css/v/'.settings::singleton()->get_setting('skin').'/'.settings::singleton()->get_setting('template_version') ?>" type="text/css" rel="stylesheet">
+		<link href="<?php echo common::document_root().'/css/v/'.settings::singleton()->get_setting('skin').'/'.settings::singleton()->get_setting('template_version') ?>" type="text/css" rel="stylesheet" />
+	<script type="text/javascript">var document_root = 'http://dev.spensierato.net/index.php'; var js_host = 'http://dev.spensierato.net/index.php/'; var js_local = '/js-combine/'; var ajax_host = 'http://dev.spensierato.net/index.php/ajax'; var img_host = document_root+'/skin/pre-load-images/'; var current_page = '1'; </script>
+	<script type="text/javascript" src="<?php common::document_root(); ?>/js-combine/mootools/mt-c.js,mootools/mt-m.js,growl.js,lightbox/multiBox.js,lightbox/overlay.js,public.js,logged_in.js,admin.js"></script>
 	</head>
 	<body style="background-color:white;background-image:none;">
 <?php 

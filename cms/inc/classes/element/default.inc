@@ -116,11 +116,6 @@ class element_Default
 		$this->build_data_xml();
 		$this->add_late_header();
 		
-//		if($this->id == '5'){
-//			var_dump($this);
-//			exit;
-//		}
-		
 		Content::Singleton()->attach_content($this->render());
 	}
 
@@ -279,17 +274,15 @@ class element_Default
 		{
 			$result = Database::singleton()->sql_select('id', 'tbl_page_elements', array('element_id', 'page_id'), array($this->id, 0));
 			
-//			var_dump($result);die();
-			
 			if(!isset($result[0])){
 				$sort = database::Singleton()->sql_max_field('tbl_page_elements', 'sort', array('page_id'), array(0));
 				Database::singleton()->sql_insert('tbl_page_elements', array('element_id', 'page_id', 'main', 'ts', 'sort'), array($this->id, 0, 0, CMS::$time, ($sort+1)));
-//				var_dump($result);die('Make');
+				//Make
 				return true;
 			}
 			
 			Database::singleton()->sql_delete_where('tbl_page_elements', array('element_id', 'page_id'), array($this->id, 0));
-//			var_dump($result);die('Delete');
+			//Delete
 			return true;
 		}
 		
@@ -671,7 +664,7 @@ class element_Default
 
 			if ($this->save_upload()) 
 			{
-				$revision_id = database::Singleton()->sql_update_or_insert('tbl_elements_revisions', array('element_id', 'revisor', 'approved'), array($this->id, User::Singleton()->id(), '0'), array('element_id', 'data', 'title', 'revisor', 'revised'), array($this->id, $data, $this->title, User::Singleton()->id(), CMS::Singleton()->time()));
+				$revision_id = database::Singleton()->sql_update_or_insert('tbl_elements_revisions', array('element_id', 'revisor', 'approved'), array($this->id, User::Singleton()->id(), '0'), array('element_id', 'data', 'title', 'revisor', 'revised'), array($this->id, $data, $this->title, User::Singleton()->id(), CMS::Singleton()->time()), false, 'id');
 
 				//save if has permissions
 				if (User::singleton()->is_admin() || (settings::singleton()->get_setting('content_auto_publish') && security::Singleton()->can_do('approve'))) {

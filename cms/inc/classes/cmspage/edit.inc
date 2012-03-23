@@ -197,6 +197,18 @@ class cmspage_edit extends cmspage
 			if(post::variable('title', 'is_set'))
 			{
 				database::singleton()->sql_update_by_id($this->value[2], 'tbl_pages', array('title'), array(post::variable('title', 'sql')));
+				
+				//TODO: Only update if required and revision changes
+				database::singleton()->sql_delete_by_colum_equals('tbl_tags_to_pages', 'page_id', $this->value[2]);
+				
+				$tags = array_map('trim',explode(',', post::variable('page_tags', 'string'))); //We do this as it gives cleaner results than explode does
+				if(is_array($tags) && count($tags) > 0){
+					foreach($tags as $tag){
+						if(strlen($tag) >= 2){
+							database::singleton()->sql_insert('tbl_tags_to_pages', array('page_id', 'tag'), array($this->value[2], $tag));
+						}
+					}
+				}
 			}
 			common::redirect($this->value[2]);
 		}

@@ -205,7 +205,15 @@ class Content
 	{
 		if(method_exists(cmspage::singleton(), 'get_tags'))
 		{
-			$this->page_data->appendXML(xml::array_to_xml_simple(tags::get_tags_on_page(cmspage::singleton()->id()), 'tags', 'tag'));
+			$tags = tags::get_tags_on_page(cmspage::singleton()->id());
+			$this->page_data->appendXML(xml::array_to_xml_simple($tags, 'tags', 'tag'));
+			if(is_array($tags) && count($tags) > 0){
+				$relative = tags::get_pages_with_tags($tags, true, false, settings::singleton()->get_setting('number_of_relative_pages'));
+				if(is_array($relative) && count($relative) > 0){
+					//FIXME: Sorting gets changed from the prio order of tags to the page ID order
+					$this->page_data->appendXML(xml::array_to_xml_simple(menu::singleton()->get_page_details($relative), 'relative', 'page'));
+				}	
+			}
 			$this->page->appendChild($this->page_data);
 		}
 	}

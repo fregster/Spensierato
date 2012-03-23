@@ -4,7 +4,7 @@
  * Set the required defines if not set prior to this include
  */
 if(!defined('ERROR_LOG_DIR')){
-	define('ERROR_LOG_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'errors');
+	define('ERROR_LOG_DIR', DIR_ROOT.DIRECTORY_SEPARATOR.'errors');
 }
 
 if(!defined('ERROR_LOG_LEVEL')){
@@ -86,8 +86,8 @@ function uncaught_error_handler($errno, $errstr, $errfile, $errline){
     		'errorno'	=> $errno,
     		'filename' 	=> basename($errfile),
     		'path'		=> $errfile,
-    		'line'		=>	$errline,
-    		//'backtrace'	=> $backtrace,    	
+    		'line'		=> $errline,
+    		'backtrace'	=> $backtrace[0],
     	);
     	
     	//The data array should now be a repeatable storable object
@@ -108,7 +108,6 @@ function uncaught_error_handler($errno, $errstr, $errfile, $errline){
      */
     function log_to_file($hash, $input){
     	$filename = ERROR_LOG_DIR.DIRECTORY_SEPARATOR.$hash;
-    	
     	//Check that this error has not already been logged
     	if(!file_exists($filename)){
     		//This error has not been logged can we write to the dir
@@ -133,7 +132,7 @@ function uncaught_error_handler($errno, $errstr, $errfile, $errline){
         echo('<html><head><title>Error Page</title></head><body class="fatal_error_body"><h1 class="fatal_error_header">Opps</h1>');
 		echo('<p class="fatal_error_message">Unfortunatly an uncaught error happened.</p><pclass="fatal_error_code">Error code: '.$error['hash']).'</p>';
         if(defined('ERROR_DEBUG') && (ERROR_DEBUG == true || (@isset($_COOKIE['display_errors']) && $_COOKIE['display_errors'] == 'on'))){
-    		if((@isset($_GET['html_errors']) && $_GET['html_errors'] == 'on') || (@isset($_COOKIE['html_errors']) && $_COOKIE['html_errors'] == 'on')){
+    		if((@isset($_GET['html_errors']) && $_GET['html_errors'] == 'on') || (@isset($_COOKIE['html_errors']) && $_COOKIE['html_errors'] == 'on') || defined('ERROR_DEBUG_HTML')){
     			@ini_set('html_errors', 'on');
 				@ini_set('xdebug.var_display_max_data', 512);
 				@ini_set('xdebug.var_display_max_depth', 6);

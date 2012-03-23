@@ -337,9 +337,17 @@ class Menu
 		return $parallel;
 	}
 
-	private function get_page_details($id)
+	public function get_page_details($id)
 	{
-		return Database::Singleton()->sql_select_first(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('id', 'visible', 'deleted'), array($id));
+		if(is_int($id)){
+			return Database::Singleton()->sql_select_first(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('id', 'visible', 'deleted'), array($id));
+		}
+		
+		if(is_array($id)){
+			return Database::Singleton()->sql_select(array('title', 'parent_id', 'visible', 'deleted', 'id'), 'tbl_pages', array('id', 'visible', 'deleted'), array($id, 1, 0));
+		}
+		
+		return false;
 	}
 
 	private function get_children_of($id = 0)

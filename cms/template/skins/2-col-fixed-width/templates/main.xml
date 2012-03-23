@@ -16,6 +16,7 @@
 							<div id="page_section_left_utilities">
 								<xsl:call-template name="search"/>
 								<xsl:call-template name="ShoppingCart"/>
+								<xsl:call-template name="relative_pages"/>
 							</div>
 							<xsl:call-template name="sitewide_elements_Contacts"/>
 							<xsl:call-template name="sitewide_elements_Links"/>

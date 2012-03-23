@@ -73,6 +73,9 @@ abstract class ajax
 				if(User::Singleton()->is_logged_in()){ die('1'); }else{ die('0'); }
 				break;
 				
+			case 'autotag':
+				die(tags::auto_tag_page($vars[2]));
+				
 			default:
 				die();
 				break;

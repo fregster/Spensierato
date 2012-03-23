@@ -102,7 +102,7 @@ try
 	
 	//Has the site extended the spensierato options?
 	if(!$install){
-		require_once(INCLUDE_PATH.'spensierato_options.inc');
+		require_once(INCLUDE_PATH.'config'.DS.'spensierato_options.inc');
 		if(is_file(DIR_CONFIG.'spensierato_options.inc')) { require_once(DIR_CONFIG.'spensierato_options.inc'); }
 	}
 	

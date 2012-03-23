@@ -139,6 +139,17 @@ $tables['tbl_pages']['charset'] = $default_charset;
 $tables['tbl_pages']['cols_define']['append_tags'] = $long_text;
 $tables['tbl_pages']['keys'] = array('KEY' => array('valid_child' => array('visible','deleted','parent_id', 'valid_from', 'valid_to'), 'parent_product' => array('parent_id', 'product'), 'primary_key' => array('id')));
 
+
+if($allow_unique_keys)
+{
+	$tables['tbl_tags_to_pages']['keys'] = array('UNIQUE KEY' => array('page_to_tag' => array('page_id','tag')));
+}
+
+if($allow_unique_keys)
+{
+	$tables['tbl_tags_to_elements']['keys'] = array('UNIQUE KEY' => array('element_to_tag' => array('element_id','tag')));
+}
+
 $tables['tbl_security']['cols_define']['data'] = $long_text;
 $tables['tbl_security']['charset'] = $default_charset;
 $tables['tbl_security']['keys'] = array();

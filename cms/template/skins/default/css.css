@@ -320,6 +320,12 @@ a.tooltip:hover span
 	display:inline;
 }
 
+#relative_pages, .relative_pages
+{
+	padding:3px;
+	margin:3px;
+}
+
 #editwindow
 {
 	display:none;

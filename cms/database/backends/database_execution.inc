@@ -9,6 +9,7 @@
 class database_execution
 {
 	private static $backends = array('pdo', 'mdb2', 'php'); //Preference order of backends
+	public $type = NULL;
 	protected static $instance;
 
 	protected $custom = false;
@@ -24,6 +25,7 @@ class database_execution
 	protected $dsn_write = array();
 	protected $supports_database_backup = false;
 	protected $supports_prepared_statments = false;
+	protected $supports_transactions = false;
 	protected $sql_prepared_statment_placeholder_prefix = ':';
 	
 
@@ -59,6 +61,7 @@ class database_execution
 	
 	public function set_dsn($dsn_read = array(), $dsn_write = array()){
 		$this->dsn_read = $dsn_read;
+		$this->type = $dsn_read['backend'];
 		if(isset($dsn_write['phptype'])){
 			$this->dsn_write = $dsn_write;
 		}else{
@@ -68,11 +71,13 @@ class database_execution
 	
 	public function __destruct()
 	{
+		$this->commit();
 		self::$instance = false;
 	}
 	
 	public function destroy()
 	{
+		$this->commit();
 		self::$instance = false;
 	}
 
@@ -104,7 +109,7 @@ class database_execution
 						}
 						
 						//Create write user
-						$this->write = $this->connect($this->dsn_write, NULL, NULL, $soft_connect);
+						$this->write = $this->connect($this->dsn_write, NULL, NULL, $soft_connect, true);
 					}
 					else
 					{
@@ -149,6 +154,7 @@ class database_execution
 
 	public function destroy_write_user()
 	{
+		$this->commit();
 		unset($this->write);
 		if(isset($this->dsn_default)){
 			$this->dsn = $this->dsn_default;
@@ -232,5 +238,20 @@ class database_execution
 	public function prepared_statment_placeholder()
 	{
 		return $this->sql_prepared_statment_placeholder_prefix;
+	}
+	
+	public function supports_transactions()
+	{
+		return $this->supports_transactions;
+	}
+	
+	public function commit()
+	{
+		return false;
+	}
+	
+	public function start_transaction()
+	{
+		return false;
 	}
 }

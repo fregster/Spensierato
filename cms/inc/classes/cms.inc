@@ -187,7 +187,7 @@ class CMS
 		}
 		else
 		{
-			$sql_string .= round($sql_info[2]).' Cached in '.$cache.') through ('. strtoupper($GLOBALS['database_backend']);
+			$sql_string .= round($sql_info[2]).' Cached in '.$cache.') through ('. strtoupper(Database::singleton()->type());
 			
 			if(Database::Singleton()->using_prepared_statments()){
 				$sql_string .= '+';

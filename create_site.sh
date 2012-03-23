@@ -1,5 +1,5 @@
 #!/bin/sh
-
+INCLUDE_FILE="spensierato_cms.inc"
 PATH_PWD=`pwd`
 echo "Please enter the full path of the Spensierato root directory"
 echo "Example: /opt/spensierato or $PATH_PWD"
@@ -42,7 +42,7 @@ mkdir $PATH_SITE/config
 
 cp $PATH_CMS/example.htaccess $PATH_SITE/public_html/.htaccess 
 cp $PATH_CMS/cms/install/cli/index.php $PATH_SITE/public_html/
-echo "require_once('$PATH_CMS/spensierato_cms.inc');" >> $PATH_SITE/public_html/index.php
+echo "require_once('$PATH_CMS/$INCLUDE_FILE');" >> $PATH_SITE/public_html/index.php
 
 chown -R $USER_SYSTEM:$USER_SERVICE $PATH_SITE
 chmod -R 750 $PATH_SITE

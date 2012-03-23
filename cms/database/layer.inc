@@ -269,8 +269,15 @@ class database
 	protected function sql_id()
 	{
 		++$this->sql_values_id;
-		$this->values[$this->sql_values_id] = array();
+		$this->sql_values[$this->sql_values_id] = array();
 		return $this->sql_values_id;
+	}
+	
+	/**
+	 * Force the DB to update
+	 */
+	public function commit(){
+		$this->db->commit();
 	}
 
 	/**
@@ -280,6 +287,15 @@ class database
 	public function __destruct()
 	{
 		$this->db->destroy();
+	}
+	
+	public function type()
+	{
+		if(isset($this->db) && $this->db){
+			return $this->db->type;
+		}
+		
+		return $this->dsn['backend'];
 	}
 
 	/**
@@ -662,7 +678,7 @@ class database
 		}
 		else if (!is_array($fields) )
 		{
-			$sql_temp_select = $this->sql_clean_input_value($fields, $id);
+			$sql_temp_select = $this->sql_clean_input($fields, $this->col_quote);
 		}
 		else
 		{
@@ -670,7 +686,7 @@ class database
 			$count_fields = count($fields);
 			while($i <= ($count_fields - 1))
 			{
-				$sql_temp_select = $sql_temp_select . $this->sql_clean_input_value($fields[$i], $id);
+				$sql_temp_select = $sql_temp_select . $this->sql_clean_input($fields[$i], $this->col_quote);
 
 				if($i < ($count_fields - 1))
 				{
@@ -691,6 +707,7 @@ class database
 		{
 			$sql .= ' HAVING COUNT(*) = '.$this->sql_clean_input_value($HAVING_COUNT, $id);
 		}
+		
 		return $this->sql_select_exe($sql, NULL, $table, $id);
 	}
 
@@ -1017,7 +1034,12 @@ class database
 	public function sql_insert($table, $fields, $values)
 	{
 		$id = $this->sql_id();
-		$this->sql_update_exe($this->sql_insert_build($table, $fields, $values, $id), $this->sql_values[$id], true, $table, $id);
+		$this->sql_update_exe(
+					$this->sql_insert_build($table, $fields, $values, $id),
+					$this->sql_values[$id], 
+					true, 
+					$table, 
+					$id);
 		return $this->db->lastInsertID($table,'id');
 	}
 
@@ -1038,28 +1060,60 @@ class database
 			$i++;
 		}
 
-		$i = 0;
-		$count_values = count($values);
-		$sql_temp_values = '';
-		while($i <= ($count_values - 1))
-		{
-			$sql_temp_values = $sql_temp_values . $this->sql_clean_input_value($values[$i], $id) . ' ';
-			if($i < ($count_values - 1)) { $sql_temp_values .=', '; }
-			$i++;
+		//Check if were inserting mutiple lines in the same statment
+		//FIXME: This does not as of yet work
+		if(isset($values[0]) && is_array($values[0])){
+			foreach($values as $row){
+ 				$i = 0;
+ 				$count_rows = count($row);
+ 				$sql_temp_values = '';
+ 				while($i <= ($count_rows - 1))
+ 				{
+ 					$sql_temp_values .= $this->sql_insert_build_value(array($row[$i]), $id).' ';
+ 					if($i < ($count_rows - 1)) {
+ 						$sql_temp_values .=', ';
+ 					}
+ 					$i++;
+ 				}
+			}
+		} else {
+			//Single row insert
+			$sql_temp_values = $this->sql_insert_build_value($values, $id);
 		}
 		
-		return 'INSERT INTO '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).' ('.$sql_temp_fields.') VALUES ('.$sql_temp_values.') ';
+		return 'INSERT INTO '.$this->sql_clean_input($this->prefix.$table, $this->table_quote).' ('.$sql_temp_fields.') VALUES '.$sql_temp_values.' ';
+	}
+	
+	private function sql_insert_build_value($values, $id)
+	{
+		$i = 0;
+		$count_values = count($values);
+		$sql_temp_values = '(';
+		while($i <= ($count_values - 1))
+		{
+			$sql_temp_values .= $this->sql_clean_input_value($values[$i], $id) . ' ';
+			if($i < ($count_values - 1)) {
+				$sql_temp_values .=', ';
+			}
+			$i++;
+		}
+		$sql_temp_values .= ')';
+		return $sql_temp_values;
 	}
 
 	public function sql_delete_by_colum_equals($table, $col, $equals, $destroy_cache = false)
 	{
-		$sql = $this->sql_delete_by_colum_equals_build($table, $col, $equals);
-		return $this->sql_exe($sql, NULL, true, $table);
+		$id = $this->sql_id();
+		$sql = $this->sql_delete_by_colum_equals_build($table, $col, $equals, $id);
+		echo($sql); var_dump($this->sql_values[$id]);
+		return $this->sql_update_exe($sql, NULL, true, $table, $id);
 	}
 
-	protected function sql_delete_by_colum_equals_build($table, $col, $equals)
+	protected function sql_delete_by_colum_equals_build($table, $col, $equals, $id = null)
 	{
-		$id = $this->sql_id();
+		if($id == null){
+			$id = $this->sql_id();
+		}
 		$table = $this->sql_clean_input($this->prefix.$table, $this->table_quote);
 		return 'DELETE FROM '.$table.' WHERE '.$this->sql_clean_input($col, $this->col_quote).' = ' . $this->sql_clean_input_value($equals, $id);
 	}
@@ -1067,8 +1121,7 @@ class database
 	public function sql_delete_where($table, $where_fields, $where_values)
 	{
 		$id = $this->sql_id();
-		$sql = $this->sql_delete_where_build($table, $where_fields, $where_values, $id);
-		return $this->sql_update_exe($sql, NULL, true, $table, $id);
+		return $this->sql_update_exe($this->sql_delete_where_build($table, $where_fields, $where_values, $id), NULL, true, $table, $id);
 	}
 
 	protected function sql_delete_where_build($table, $where_fields, $where_values, $id)
@@ -1266,7 +1319,7 @@ class database
 				if(is_array($where_values[$i]))
 				{
 					$count_or = count($where_values[$i]) -1;	
-					if($count_or >= 0) //Skip if an empty array has been passed in
+					if($count_or > 0) //Skip if an empty array has been passed in
 					{
 						$j = 0;
 						$sql_temp_where_or = '';

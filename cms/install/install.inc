@@ -62,7 +62,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET')
 
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-	$doc_root_prefix = DIR_CONFIG;
+	$doc_root_prefix = DIR_ROOT;
 	//detect the server OS and set the doc root accordingly.
 	if (stripos(PHP_OS, 'darwin') !== FALSE) {
 		$os = 'mac';
@@ -399,6 +399,7 @@ setup::Singleton()->save('cms_folder_sessions', '".realpath($dir_session)."');
 		foreach (glob(DIR_CONFIG.'spensierato*') as $file){
 			debug($file);
 		}
+		debug('Write permission on the dir '. DIR_CONFIG . ' should be removed!');
 		debug('');
 
 		debug('Testing the database now has content to ensure we have been able to insert in to the database');

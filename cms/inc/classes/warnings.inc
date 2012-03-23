@@ -106,12 +106,18 @@ class warnings
 				}
 			}
 		}
+		
+		$this->track_errors();
 
 	}
 
 	public function __destruct()
 	{
 		options::singleton()->set_option('display_warnings', false);
+	}
+	
+	private function track_errors(){
+		$this->register('Tracking Errors', 'There have been X errors in the last X days', 'track');
 	}
 
 	public function register($warning_title, $description, $level = 2)

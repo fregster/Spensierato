@@ -2,8 +2,9 @@
 class database_execution_pdo extends database_execution
 {
 	protected $supports_prepared_statments = true;
+	protected $supports_transactions = true;
 	
-	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false)
+	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false, $transaction = false)
 	{
 		try {
 			$db_dsn_string = 'dbname=';
@@ -47,6 +48,11 @@ class database_execution_pdo extends database_execution
 			{
 				$error = 'Unable to connect to the database '.$php_errormsg;
 				$this->sql_error($error, NULL, NULL, $soft_connect);
+			}
+			
+			if($transaction){ //We want to use proper transactions so we start one now and then commit on page completion if no-error happened
+				$db_backend->setAttribute(PDO::ATTR_AUTOCOMMIT, FALSE);
+				$db_backend->beginTransaction();
 			}
 
 			ini_set('track_errors', $old_track);
@@ -143,6 +149,9 @@ class database_execution_pdo extends database_execution
 				else
 				{
 					$resultset = $stmt->fetchAll($mode);
+					if($resultset == false){
+						$resultset = $stmt->rowCount();
+					}
 				}
 			}
 			unset($sql);
@@ -204,5 +213,19 @@ class database_execution_pdo extends database_execution
 		}
 
 		return $result;
+	}
+	
+	public function commit()
+	{
+		if($this->supports_transactions() && property_exists($this, 'write') && $this->write != null && method_exists($this->write, 'commit'))
+		{
+			if($this->write->inTransaction()){
+				try {
+					$this->write->commit();
+				} catch(PDOException $e) {
+					$this->write->rollBack();
+				}
+			}
+		}
 	}
 }

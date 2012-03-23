@@ -2,9 +2,10 @@
 class database_execution_mdb2 extends database_execution
 {
 	protected $supports_prepared_statments = true;
+	protected $supports_transactions = true;
 	protected $supports_database_backup = true;
 	
-	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false)
+	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false, $transaction = false)
 	{
 		//Load the MDB2 code
 		//Doing this here only loads the code if a DB query is actually going to be done
@@ -57,6 +58,10 @@ class database_execution_mdb2 extends database_execution
 		}
 
 		$this->db_backend->setFetchMode(MDB2_FETCHMODE_ASSOC);
+		
+		if($transaction && $this->db_backend->supports('transactions')) {
+			$this->db_backend->beginTransaction();
+		}
 		
 		return $this->db_backend;
 	}
@@ -221,5 +226,13 @@ class database_execution_mdb2 extends database_execution
 	    'output_mode' => 'file',
 	    'output' => $dumpfile
 	    ), MDB2_SCHEMA_DUMP_ALL);
+	}
+	
+	public function commit()
+	{
+		if($this->supports_transactions() && property_exists($this, 'write') && $this->write != null && method_exists($this->write, 'commit') $this->write->inTransaction())
+		{
+			$this->write->commit();
+		}
 	}
 }

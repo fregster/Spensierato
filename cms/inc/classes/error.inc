@@ -19,6 +19,7 @@ abstract class error
 	// Load error page
 	public static function error_page($code, $text)
 	{
+		die($text);
 		include('../../../inc/pages/error.inc');
 	}
 

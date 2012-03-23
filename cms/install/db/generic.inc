@@ -300,20 +300,16 @@ $tables['tbl_users_data'] = array(
 $tables['tbl_tags_to_pages'] = array(
 								'cols_define' =>
 								array(
-									'id' => $int.' UNSIGNED NOT NULL '.$increment,
 									'page_id' => $int.' UNSIGNED NOT NULL',
 									'tag' => varchar(64),
 									),
-								'primary_key' => 'id',
 								);
 $tables['tbl_tags_to_elements'] = array(
 								'cols_define' =>
 								array(
-									'id' => $int.' UNSIGNED NOT NULL '.$increment,
 									'element_id' => $int.' UNSIGNED NOT NULL',
 									'tag' => varchar(64),
 									),
-								'primary_key' => 'id',
 								);
 $tables['tbl_orders'] = array(
 								'cols_define' =>

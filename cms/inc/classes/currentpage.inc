@@ -58,10 +58,6 @@ class currentPage
 
 	public function id()
 	{
-//		if (isset($this->page_type['value'])) {
-//			return $this->page_type['value'];
-//		}
-//		return NULL;
 		return cmspage::Singleton()->id();
 	}
 

@@ -92,6 +92,10 @@ Settings::Singleton()->new_setting('menu_level', 0, false, false, true, SETTING_
 // int default 2
 Settings::Singleton()->new_setting('menu_max_levels', 2, false, false, true, SETTING_GROUP_SKIN);
 
+//Setting number_of_relative_pages
+// int default 10
+Settings::Singleton()->new_setting('number_of_relative_pages', 10, false, false, true, SETTING_GROUP_SKIN);
+
 //Setting show_copyright
 //true / false
 Settings::Singleton()->new_setting('show_copyright', true, false, false, true, SETTING_GROUP_RENDER_OPTIONS);
@@ -151,7 +155,7 @@ Settings::Singleton()->new_setting('shop_email_orders', null, false, false, true
 //Setting skin
 //Set this to the path of the skin you wish to use
 //Folder name from cms/skins/
-$skins = glob(DIR_SKINS.'*', GLOB_ONLYDIR);
+$skins = glob(DIR_SKINS.'*', GLOB_ONLYDIR|GLOB_NOSORT);
 foreach($skins as $key => $skin) { $skins[$key] = basename($skin); }
 Settings::Singleton()->new_setting('skin', 'default', false, false, $skins, SETTING_GROUP_SKIN);
 unset($skins);

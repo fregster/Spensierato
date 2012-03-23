@@ -276,7 +276,7 @@ class Template
 	private function load_xslt_template()
 	{		
 		$xslt = persistantcache::Singleton()->get('template_xslt', 'templates');
-		if(!isset($xslt['xslt']) || !isset($xslt['mtime']) || $xslt['mtime'] != $this->lastmodified || true)
+		if(!isset($xslt['xslt']) || !isset($xslt['mtime']) || $xslt['mtime'] != $this->lastmodified)
 		{
 			$xslt = ''; //drop the array
 			foreach($this->filenames as $filepath)

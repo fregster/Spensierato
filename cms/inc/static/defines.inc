@@ -8,6 +8,7 @@ DEFINE('DIR_EXTERNAL', INCLUDE_PATH.'cms'.DS.'external'.DS);
 DEFINE('DIR_TEMPLATE', INCLUDE_PATH.'cms'.DS.'template'.DS);
 DEFINE('DIR_SKINS', DIR_TEMPLATE.'skins'.DS);
 DEFINE('DIR_INDEX', dirname($_SERVER['SCRIPT_FILENAME']).DS);
-DEFINE('DIR_CONFIG', realpath(DIR_INDEX.'..'.DS).DS);
+DEFINE('DIR_ROOT', realpath(DIR_INDEX.'..'.DS).DS);
+DEFINE('DIR_CONFIG', DIR_ROOT.'config'.DS);
 DEFINE('DIR_JS', INCLUDE_PATH.'cms'.DS.'js'.DS);
-if(!defined('DIR_ERRORS')){ define('DIR_ERRORS', DIR_CONFIG.DS.'writable'.DS.'logs'.DS.'errors'); }
+if(!defined('ERROR_LOG_DIR')){ define('ERROR_LOG_DIR', DIR_ROOT.'writable'.DS.'logs'.DS.'errors'); }

@@ -27,6 +27,11 @@ abstract class Common
 		if($use_random) { $input = $input.$GLOBALS['random_key']; }
 		return hash(Settings::Singleton()->get_setting('site_option_hash_type'), $input);
 	}
+	
+	public static function is_valid_hash($hash, $type = 'SHA1')
+	{
+		return !empty($hash) && preg_match('/^[a-f0-9]{40}$/', $hash);
+	}
 
 	public static function bounce_to_referer()
 	{		

@@ -11,7 +11,7 @@ class cmspage //This relies on CurentPage been loaded
 	protected $id = NULL;
 	protected $homepage;
 
-	public static function Singleton($force_type = null)
+	public static function Singleton($force_type = null, $force_id = null)
 	{
 	   if (!isset(self::$instance))
 	   {
@@ -129,6 +129,11 @@ class cmspage //This relies on CurentPage been loaded
 	public function page_information()
 	{
 		return $this->page_details;
+	}
+	
+	public function search_data()
+	{
+		return database::singleton()->sql_select_first('search', 'tbl_search', 'id', $this->id);
 	}
 	
 	/**

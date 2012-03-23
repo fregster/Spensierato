@@ -20,6 +20,7 @@
 									<xsl:call-template name="search"/>
 									<xsl:call-template name="ShoppingCart"/>
 									<xsl:call-template name="adverts"/>
+									<xsl:call-template name="relative_pages"/>
 								</div>
 							</div>
 							<div id="page_section_main">

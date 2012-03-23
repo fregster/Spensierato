@@ -93,31 +93,34 @@ abstract class revisions{
 	*/
 	public static function diff_data($element_id, $data_array, $merge = FALSE){
 
-		//get the base data
-		$base_data = database::singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($element_id));
-		if ($base_data != NULL) {
-			$html = json_decode($base_data['data'], TRUE);
-			$base_text = ($html != NULL && isset($html['html']))?$html['html']:'';
-		}
-		else {
-			$base_text = '';
-		}
-
-		$merge_data = array();
-
-		//esure we have data with which to work
-		if (is_array($data_array) && !empty($data_array)) {
-
-			//collect all the 'data' fields in preperation for the text diff/merge
-			$merge_data = array();
-			foreach ($data_array as $revision){
-				$html = json_decode($revision['data'], TRUE);
-				$merge_data[] = ($html != NULL && isset($html['html']))?$html['html']:'';
+		if(class_exists('diffCompare')){
+			//get the base data
+			$base_data = database::singleton()->sql_select_first(array('data'), 'tbl_elements_data', array('id'), array($element_id));
+			if ($base_data != NULL) {
+				$html = json_decode($base_data['data'], TRUE);
+				$base_text = ($html != NULL && isset($html['html']))?$html['html']:'';
 			}
-			unset($revision);
+			else {
+				$base_text = '';
+			}
+	
+			$merge_data = array();
+	
+			//esure we have data with which to work
+			if (is_array($data_array) && !empty($data_array)) {
+	
+				//collect all the 'data' fields in preperation for the text diff/merge
+				$merge_data = array();
+				foreach ($data_array as $revision){
+					$html = json_decode($revision['data'], TRUE);
+					$merge_data[] = ($html != NULL && isset($html['html']))?$html['html']:'';
+				}
+				unset($revision);
+			}
+	
+			return diffCompare::multi_diff($base_text, $merge_data, $merge);
 		}
-
-		return diffCompare::multi_diff($base_text, $merge_data, $merge);
+		return false;
 	}
 
 	/** This function returns xml lists of revision elements.

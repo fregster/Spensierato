@@ -137,7 +137,10 @@ class Render
 			// Load the documents and process using $xslt
 			$dom = new DOMDocument();
 			$dom->loadXML($template);
-			$xslt->importStyleSheet($dom);
+			
+			if($xslt->importStyleSheet($dom) == false){
+				error::error_page(__LINE__, 'Unable to load stylesheet');
+			}
 	
 			/* transform the xml document */
 			@$dom->loadXML($xml);

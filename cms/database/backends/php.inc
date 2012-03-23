@@ -1,7 +1,8 @@
 <?php
 class database_execution_php extends database_execution
 {
-	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false)
+	
+	public function connect($dsn, $options = NULL, $mods = NULL, $soft_connect = false, $transaction = false)
 	{
 		$this->db_backend = @mysql_connect($dsn['hostspec'], $dsn['username'], $dsn['password']);
 		if(!$this->db_backend)

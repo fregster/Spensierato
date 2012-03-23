@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template name="relative_pages">
+		<xsl:if test="/page/relative/page">
+			<div id="relative_pages">
+				<div id="relative_pages_title">Relative pages</div>
+				<xsl:for-each select="/page/relative/page">
+					<a href="{/page/settings/document_root}/{id}" ><xsl:value-of select="title"/></a><br/>
+				</xsl:for-each>
+			</div>
+		</xsl:if>
+	</xsl:template>
+</xsl:stylesheet>

@@ -27,7 +27,7 @@ class setup
 	
 	public function load($name){
 		if(isset($this->store[$name])){
-			return$this->store[$name];
+			return $this->store[$name];
 		}
 		return false;
 	}

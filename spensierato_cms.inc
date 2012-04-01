@@ -54,6 +54,13 @@ try
 	//Include all the options for the CMS
 	//Functions requires by globals
 
+	//Include the Site setup code
+	if(is_file(DIR_CONFIG.'spensierato_setup.inc'))
+	{
+		require_once(DIR_CONFIG.'spensierato_setup.inc');
+		$install = false; //cancel the install directive
+	}
+	
 	//document root is the URL root ie spensierato.net
 	define('DOCUMENT_ROOT_FOLDER_ONLY', get_site_document_root_folder_only());
 	define('DOCUMENT_ROOT', get_site_document_root());
@@ -61,17 +68,9 @@ try
 
 	//Has an early custom defines file been specified
 	if(!$install){
-		require_once(INCLUDE_PATH.'spensierato_custom.inc');
 		if(is_file(DIR_CONFIG.'spensierato_custom.inc')) { require_once(DIR_CONFIG.'spensierato_custom.inc'); }
 	}
 	
-	//Include the Site setup code
-	if(is_file(DIR_CONFIG.'spensierato_setup.inc'))
-	{
-		require_once(DIR_CONFIG.'spensierato_setup.inc');
-		$install = false; //cancel the install directive
-	}
-		
 	require_once(DIR_STATIC.'late_defines.inc');
 	
 	//Set any late or custom defines

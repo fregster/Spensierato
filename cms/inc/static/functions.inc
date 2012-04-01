@@ -8,6 +8,9 @@ function get_site_document_root()
 {
     if(!Common::rewrite_enabled() || !setup::singleton()->load('allow_rewrite')) //We use the globals here as the settings class might not be loaded
     {
+    	echo('rewrite '. Common::rewrite_enabled());
+    	echo(' allowed '. setup::singleton()->load('allow_rewrite'));
+    	die('?');
     	return DOCUMENT_ROOT_FOLDER_ONLY . '/index.php';
     }
 

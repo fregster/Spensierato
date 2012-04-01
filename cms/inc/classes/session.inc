@@ -77,12 +77,20 @@ class session
 		switch ($type)
 		{
 			case 'memcached':
+			case 'memcache':
 				$servers = setup::singleton()->retieve('memcached_servers');
 				if($servers){
 					$servers_count = count(explode(',', $servers));
 					
 					if($servers_count > 0){
-						ini_set('session.save_handler', 'memcache');
+						if(class_exists('memcached')){
+							ini_set('session.save_handler', 'memcached');
+						} else if (class_exists('memcache')) {
+							ini_set('session.save_handler', 'memcache');
+						} else {
+							return false;
+						}
+						
 						ini_set('memcache.hash_strategy', 'consistent');
 						ini_set('memcache.allow_failover', '1');
 						ini_set('memcache.max_failover_attempts', '10');

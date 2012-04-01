@@ -28,17 +28,25 @@ class cmspage_login extends cmspage_html
 			}
 			else
 			{
-				//Load CMS Login box
-				$element = Element::type('elementLogin');
-				$element->build('login');
-				Render::Singleton()->render_html(Content::Singleton()->build());
+				$this->load_login_box();
 			}
 		}
 		else
 		{
+			if(post::variable('email', 'is_set')){
+				User::Singleton()->forgotten_password();
+				$this->load_login_box();
+			}
 			//Do login function
 			User::Singleton()->login();
 			Common::redirect($this->value);
 		}
+	}
+	
+	private function load_login_box(){
+		//Load CMS Login box
+		$element = Element::type('elementLogin');
+		$element->build('login');
+		Render::Singleton()->render_html(Content::Singleton()->build());
 	}
 }

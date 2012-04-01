@@ -143,6 +143,7 @@ class user
 
 		$data = encryption::encrypt(json_encode($values));
 
+		database::singleton()->force_write_user();
 		database::Singleton()->sql_update_by_id($this->id(), 'tbl_users_data', array('data'), array($data), true);
 		$this->set_user_details(true); //Reload the users details
 	}
@@ -186,6 +187,22 @@ class user
 			unset($_SESSION['user_details']);
 		}
 
+		return common::email($this->email(), $from, $subject, $message, true);
+	}
+	
+	public static function forgotten_password($email)
+	{
+		$user = '';
+		//Email the password out
+		$message = 'A forgotten password request was made for your account on '. Settings::singleton()->get_setting('site_name_long').'<br />If you did not do this then please delete this email, if it happens again then someone may be trying to access your account.<br /><br />';
+		$message .= '<p>To reset your password then please follow thie link <a href=""></a></p><p>This link will only work once, if you have requested this email more than once then only the last one will work</p>';
+		$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
+		$subject = 'Password change at '.settings::singleton()->get_setting('site_name_long');
+	
+		if(isset($_SESSION['user_details'])){
+			unset($_SESSION['user_details']);
+		}
+	
 		return common::email($this->email(), $from, $subject, $message, true);
 	}
 

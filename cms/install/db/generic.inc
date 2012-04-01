@@ -282,7 +282,9 @@ $tables['tbl_users'] = array(
 								'session_id_old' => varchar(128),
 								'session_refresh_ts' => $int.' UNSIGNED',
 								'admin' => $tiny_int." UNSIGNED DEFAULT '0'",
-								'login_attempts' => $tiny_int." UNSIGNED DEFAULT '0'"
+								'login_attempts' => $tiny_int." UNSIGNED DEFAULT '0'",
+								'session_reset_nonce' => varchar(128),
+								'session_reset_nonce_ts' => $int.' UNSIGNED',
 								),
 							'primary_key' => 'id',
 							);

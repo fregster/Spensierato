@@ -34,6 +34,8 @@ setup::Singleton()->save('server_os', 'unix');
 setup::Singleton()->save('max_sha_hash', 'sha512');
 setup::Singleton()->save('session_handler', 'memcached');
 
+//setup::Singleton()->save('session_handler_servers', array('server1.localdomain', 'server2.localdomain'));
+//setup::Singleton()->save_construct('persistantcache', 'Singleton', array('type' => 'memcache', 'servers' => array('server1.localdomain', 'server2.localdomain')));
 
 setup::Singleton()->save('cms_folder_uploads', '/mnt/writable/uploads/tmp/');
 setup::Singleton()->save('cms_folder_downloads', '/mnt/writable/uploads/');

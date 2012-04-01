@@ -450,6 +450,7 @@ class persistantcache_memcache extends persistantcache
 							); // enter an array for each of your memcache servers
 	private $maxsession_cache_time = 0; //0 sets to never expire
 	private $max_number_of_server_buddies = 5;
+	private $type = '';
 
 	protected function __construct($options = array())
 	{
@@ -463,7 +464,7 @@ class persistantcache_memcache extends persistantcache
 		}
 
 		//Are we using memcached and if so ensure if it recently failed we don't try to reconnect to quickly
-		if(extension_loaded('memcache') && $this->allow_memcache)
+		if((extension_loaded('memcached') || extension_loaded('memcache')) && $this->allow_memcache)
 		{
 		
 			//Setup memcache redundency, we work out the number of servers we can use in the cluster and budy data to all
@@ -483,13 +484,23 @@ class persistantcache_memcache extends persistantcache
 				}
 			}
 			
-			$this->store = new Memcache;
+			if(class_exists('memcached')){
+				$this->store = new Memcached;
+				$this->store->addServers($this->servers);
+				$this->type = 'memcached';
 
-			//Run though the array of servers adding each one to the connection pool
-			foreach($this->servers as $server)
-			{
-				$this->store->addServer($server['host'], $server['port'], TRUE, 1, 1, 1, TRUE, 'memcached_server_fail');
+			} else if (class_exists('memcache')) {
+				$this->store = new Memcache;
+				//Run though the array of servers adding each one to the connection pool
+				foreach($this->servers as $server)
+				{
+					$this->store->addServer($server['host'], $server['port'], TRUE, 1, 1, 1, TRUE, 'memcached_server_fail');
+				}
+				$this->type = 'memcache';
+			} else {
+				return false;
 			}
+			
 
 			//Mark that we are using an advanced caching mech, purge any session cache
 			$this->init();
@@ -519,10 +530,18 @@ class persistantcache_memcache extends persistantcache
 		$data = $this->build_save($name, $value, $time, $namespace, $try_to_force_encryption, $compress);
 		if(strlen($data['data']['value']) < $this->max_object_size && $this->store != false)
 		{
-			$result = $this->store->replace($data['name'], $data['data'], $memcache_compression, $data['data']['time']);
-			if( $result == false )
-			{
-			    $result = $this->store->set($data['name'], $data['data'], $memcache_compression, $data['data']['time']);
+			if($this->type == 'memcache'){
+				$result = $this->store->replace($data['name'], $data['data'], $memcache_compression, $data['data']['time']);
+				if( $result == false )
+				{
+				    $result = $this->store->set($data['name'], $data['data'], $memcache_compression, $data['data']['time']);
+				}
+			} else {
+				$result = $this->store->replace($data['name'], $data['data'], $data['data']['time']);
+				if( $result == false )
+				{
+					$result = $this->store->set($data['name'], $data['data'], $data['data']['time']);
+				}
 			}
 			return $result;
 		}

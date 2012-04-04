@@ -331,11 +331,6 @@ class user
 		options::Singleton()->set_option('force_reload', true);
 
 		Database::Singleton()->destroy_write_user();
-		
-		
-		var_dump($this);
-		var_dump($_SESSION);
-		die(session_name().' - '.session_id());
 	}
 	
 	public function username($id = NULL)

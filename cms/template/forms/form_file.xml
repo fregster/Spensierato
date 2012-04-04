@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="*[@type = 'file']">
+		<div class="element_edit_frame">
+			<xsl:element name="input">
+				<xsl:attribute name="type">hidden</xsl:attribute>
+				<xsl:attribute name="name">MAX_FILE_SIZE</xsl:attribute>
+				<xsl:attribute name="value"><xsl:value-of select="/page/settings/max_file_size" /></xsl:attribute>
+			</xsl:element>
+			Choose a file to upload: <input name="uploadedfile" type="file" /><br />
+		</div>
+	</xsl:template>
+</xsl:stylesheet>

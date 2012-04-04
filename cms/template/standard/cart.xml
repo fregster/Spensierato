@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template name="ShoppingCart">
+		<xsl:if test="/page/settings/shop = '1' and /page/cart">
+			<div id="ShoppingCart">
+				<div id="ShoppingCartTitle">Your Shopping Basket</div>
+				<xsl:choose>
+					<xsl:when test="/page/cart/items/item">
+						<xsl:for-each select="/page/cart/items/item">
+							<xsl:value-of select="quantity" /> x <xsl:value-of select="name" /> £<xsl:value-of select="price" /> each<br/>
+						</xsl:for-each>
+						<div><xsl:value-of select="count(/page/cart/items/item)"/> Items Totaling £<xsl:value-of select="/page/cart/cost/total" /></div>
+						<div>
+							<xsl:element name="a">
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/cart</xsl:attribute>
+								View Cart
+							</xsl:element> | 
+							<xsl:element name="a">
+								<xsl:attribute name="href"><xsl:value-of select="/page/settings/document_root" />/cart/checkout</xsl:attribute>
+								Checkout
+							</xsl:element>
+						</div>
+					</xsl:when>
+					<xsl:otherwise>
+						There are no items in your cart
+					</xsl:otherwise>
+				</xsl:choose>
+			</div>
+		</xsl:if>
+	</xsl:template>
+</xsl:stylesheet>

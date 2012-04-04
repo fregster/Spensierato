@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="*[@type = 'html']">
+		<div class="element_edit_frame">
+			<xsl:value-of select="./name"/>:
+			<xsl:element name="textarea">
+			<xsl:attribute name="name"><xsl:value-of select="name()" /></xsl:attribute>
+			<xsl:attribute name="style">width:100%</xsl:attribute>
+			<xsl:attribute name="cols">20</xsl:attribute>
+			<xsl:attribute name="rows">15</xsl:attribute>
+			<xsl:attribute name="id">content</xsl:attribute>
+			<xsl:choose>
+				<xsl:when test="./name = 'html'">
+					<xsl:attribute name="class">mceAdvanced</xsl:attribute>
+				</xsl:when>
+				<xsl:otherwise>
+				<xsl:attribute name="class">mceSimple</xsl:attribute>
+				</xsl:otherwise>
+			</xsl:choose>
+	
+			<xsl:value-of select="./value" />
+			<xsl:if test="string-length(.) = 0">Enter your text here</xsl:if>
+			</xsl:element>
+		</div>
+	</xsl:template>
+</xsl:stylesheet>

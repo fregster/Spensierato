@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+	<xsl:template name="form">
+		<form name="{./name}" method="POST" action="{./action}">
+			<input type="hidden" name="csrf-name" value="{/page/settings/csrf-name}"/>
+			<input type="hidden" name="csrf-value" value="{/page/settings/csrf-value}"/>
+			<xsl:value-of select="./name"/>
+			<xsl:apply-templates select="./field"/>
+			<input type="submit" value="Submit" />
+		</form>
+	</xsl:template>
+	
+	<xsl:template name="forms">
+		<xsl:for-each select="/page/body/form">
+			<xsl:call-template name="form"/>
+		</xsl:for-each>
+	</xsl:template>
+	
+</xsl:stylesheet>

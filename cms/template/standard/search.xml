@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template name="search">
+		<xsl:if test="/page/settings/search = '1'">
+			<form action="{/page/settings/document_root}/search" method="GET" id="searchform">
+				<div id="search">
+					<input type="text" id="searchtext" name="searchtext" onkeyup="delayedSearch();" />
+					<!-- <input type="button" id="searchbutton" name="searchbutton" value="Find" onclick="javascript:searchFunction();" /> -->
+					<input type="submit" id="searchbutton" name="searchbutton" value="Find" />
+				</div>
+			</form>
+			<div id="ajaxSearchResults" style="visibility: hidden;">
+			</div>
+		</xsl:if>
+	</xsl:template>
+</xsl:stylesheet>

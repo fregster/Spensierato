@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	
+	<xsl:template match="*[@type = 'options']">
+		<div class="element_edit_frame">
+		<xsl:value-of select="./name"/>: 
+		<select name="{./name}">
+			<xsl:for-each select="./type/option">
+				<option value="{.}"><xsl:value-of select="."/></option>
+			</xsl:for-each>
+		</select>
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="*[@type = 'folder']">
+		<div class="element_edit_frame">
+			<xsl:value-of select="./name" />: <xsl:element name="input">
+			<xsl:attribute name="name"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="id"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="./value" /></xsl:attribute>
+			</xsl:element><input type="button" value="Select Folder" />
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="warning">
+		<div class="warning">
+			<div style="cursor:pointer;" onclick="jsToggleDisplay('warning_{position()}'); return false;"><xsl:value-of select="./title" /> - Toggle Description</div>
+			<div id="warning_{position()}" class="js-hide"><xsl:value-of select="./description" /></div>
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="*[@type = 'auto']">
+		<xsl:if test="string(./value)">
+			<div class="element_edit_frame">
+				<xsl:value-of select="./name" />: <xsl:value-of select="./value" />
+			</div>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="*[@type = 'href']">
+		<div class="element_edit_frame">
+			<xsl:value-of select="./name" />: <xsl:element name="input">
+			<xsl:attribute name="name"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="id"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="./value" /></xsl:attribute>
+			</xsl:element>
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="*[@type = 'numeric']">
+		<div class="element_edit_frame">
+			<xsl:value-of select="./name" />: <xsl:element name="input">
+			<xsl:attribute name="name"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="id"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="./value" /></xsl:attribute>
+			</xsl:element>
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="*[@type = 'email']">
+		<div class="element_edit_frame">
+			<xsl:value-of select="./name" />: <xsl:element name="input">
+			<xsl:attribute name="name"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="id"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="./value" /></xsl:attribute>
+			</xsl:element>
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="*[@type = 'checkbox']">
+		<div class="element_edit_frame">
+			<xsl:value-of select="./name" />: <xsl:element name="input">
+			<xsl:attribute name="name"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="id"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="type">checkbox</xsl:attribute>
+			<xsl:if test="string-length(./value) > 0">
+				<xsl:attribute name="checked">checked</xsl:attribute>
+			</xsl:if>
+			</xsl:element>
+		</div>
+	</xsl:template>	
+	
+	<xsl:template match="*[@type = 'date']">
+		<div class="element_edit_frame">
+			<xsl:value-of select="./name" />: <xsl:element name="input">
+			<xsl:attribute name="name"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="id"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="./value" /></xsl:attribute>
+			</xsl:element>
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="*[@type = 'period']">
+		<div class="element_edit_frame">
+			<xsl:value-of select="./name" />: <xsl:element name="input">
+			<xsl:attribute name="name"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="id"><xsl:value-of select="./name" /></xsl:attribute>
+			<xsl:attribute name="value"><xsl:value-of select="./value" /></xsl:attribute>
+			</xsl:element>
+		</div>
+	</xsl:template>
+</xsl:stylesheet>

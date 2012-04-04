@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="*[@type = 'files']">
+		<div class="element_edit_frame">
+		List of files in this collection
+			<xsl:for-each select="file">
+				<div><xsl:value-of select="."/></div>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
+</xsl:stylesheet>

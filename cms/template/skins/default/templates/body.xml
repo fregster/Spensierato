@@ -9,6 +9,7 @@
 					<div class="object" id="op-{position()}"><xsl:apply-templates select="."/></div>
 				</xsl:if>
 			</xsl:for-each>
+			<xsl:call-template name="forms"/>
 		</div>
 	</xsl:template>
 </xsl:stylesheet>

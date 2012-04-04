@@ -4,7 +4,7 @@ class csrf {
 	public static function build_token(){
 		if(!Settings::singleton()->get_setting('csrf-name')){
 			//Settings::singleton()->overwrite_setting();
-			Settings::Singleton()->new_setting('csrf-name', substr(Common::return_hash(controller::$time), -6), true, false, false);
+			Settings::Singleton()->new_setting('csrf-name', substr(Common::return_hash(cms::$time), -6), true, false, false);
 			Settings::Singleton()->new_setting('csrf-value', Common::return_hash(Settings::singleton()->get_setting('csrf-name')), true, false, false);
 		}
 	}

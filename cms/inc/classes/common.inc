@@ -24,7 +24,7 @@ abstract class Common
 
 	public static function return_hash($input, $use_random = true)
 	{
-		if($use_random) { $input = $input.$GLOBALS['random_key']; }
+		if($use_random) { $input = $input.Settings::Singleton()->get_setting('random_key'); }
 		return hash(Settings::Singleton()->get_setting('site_option_hash_type'), $input);
 	}
 	
@@ -334,7 +334,7 @@ abstract class Common
 			return false;
 		}
 		
-		if(is_array($bto))
+		if(isset($bto) && is_array($bto))
 		{
 			foreach($bcc as $bcc)
 			{

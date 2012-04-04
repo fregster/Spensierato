@@ -90,6 +90,11 @@ function uncaught_error_handler($errno, $errstr, $errfile, $errline){
     		'backtrace'	=> $backtrace[0],
     	);
     	
+    	if(false){ //Dirty line to help debugging if your really stuck
+    		var_dump($error_array);
+    		die();
+    	}
+    	
     	//The data array should now be a repeatable storable object
     	$serial = @serialize($error_array);
     	$hash = @sha1($serial);

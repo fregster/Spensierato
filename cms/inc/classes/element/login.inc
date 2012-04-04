@@ -52,7 +52,7 @@ class element_Login extends element_Default
 
 		$html = '<div id="login_background">'.str_replace('**CMS**username', cookie::Singleton()->get_cookie_value('username'), Template::Singleton()->get_file_content($template)).'</div>';
 
-		$html = str_replace(array('**CMS**remembered', '**CMS**error'), array($checked, User::Singleton()->retrieve('login_error')), $html);
+		$html = str_replace(array('**CMS**remembered', '**CMS**error'), array($checked, User::Singleton()->retrieve('login_error')), $html).'<div><a href="'.Settings::Singleton()->get_Setting('document_root').'/forgottenpassword">Forgotten your password?</a></div>';
 
 		$this->data = '<data>'. Common::html($html) .'</data>';
 		$this->search = NULL;

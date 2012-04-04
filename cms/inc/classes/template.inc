@@ -311,6 +311,7 @@ class Template
 		if(!$filecache || true){
 			$this->include_xml_templates_from_path(DIR_TEMPLATE.'standard'.DS.'*.xml');
 			$this->include_xml_templates_from_path(DIR_TEMPLATE.'elements'.DS.'*.xml');
+			$this->include_xml_templates_from_path(DIR_TEMPLATE.'forms'.DS.'*.xml');
 			$files = glob($path, GLOB_NOSORT);
 			
 			foreach($files as $filepath)

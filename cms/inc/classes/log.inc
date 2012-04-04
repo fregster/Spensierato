@@ -22,6 +22,7 @@ abstract class log {
 	
 	public static function record($action, $detail, $security = false){
 		
+		global $ids_result;
 		$backtrace = debug_backtrace();
 		
 		//Drop fields that we do not want to log!
@@ -30,30 +31,31 @@ abstract class log {
 		}
 		
 		$vaules = array(
-			CMS::$time,
-			$security,
-			user::Singleton()->id(),
-			$action,
-			$detail,
-			$_SERVER['REMOTE_ADDR'].':'.$_SERVER['REMOTE_PORT'],
-			$_SERVER['REQUEST_METHOD'],
-			$_REQUEST,
-			$_SERVER['REQUEST_URI'],
-			$_SERVER['HTTP_USER_AGENT'],
-			null,
-			basename($backtrace[0]['file']),
-			$backtrace[0]['line'],
+			CMS::$time, 										//ts
+			$security, 											//security
+			user::Singleton()->id(), 							//user
+			$action, 											//action
+			$detail, 											//detail
+			$_SERVER['REMOTE_ADDR'].':'.$_SERVER['REMOTE_PORT'], //IP:Port
+			$_SERVER['REQUEST_METHOD'], 						//Request type
+			serialize($_REQUEST),								//Full request object
+			$_SERVER['REQUEST_URI'],							//Request URI
+			$_SERVER['HTTP_USER_AGENT'], 						//User Agent
+			serialize($ids_result), 												//IDS data
+			basename($backtrace[0]['file']), 					//Trigger file
+			$backtrace[0]['line'], 								//Trigger line
 		);
 		
 		database::Singleton()->force_write_user();
-		$result = database::Singleton()->sql_insert('log', array('ts', 'security', 'user', 'action', 'detail', 'ip', 'request_type', 'request_data', 'user_agent', 'ids', 'trigger_file', 'trigger_line'), $vaules);
+		$result = database::Singleton()->sql_insert('tbl_log', array('ts', 'security', 'user', 'action', 'detail', 'ip', 'request_type', 'request_data', 'request_uri', 'user_agent', 'ids', 'trigger_file', 'trigger_line'), $vaules);
 		database::Singleton()->destroy_write_user();
+		
 		return $result;
 	}
 	
 	/**
 	 * 
-	 * EHave any security alerts been triggered since the stated timestamp
+	 * Have any security alerts been triggered since the stated timestamp
 	 * @param int $timestamp
 	 */
 	public static function audit($timestamp){

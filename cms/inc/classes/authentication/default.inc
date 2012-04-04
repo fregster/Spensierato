@@ -59,6 +59,7 @@ class authentication_default extends authentication
 				User::singleton()->create_password($password);
 			}
 			User::singleton()->force_id($id['id']);
+			
 			return true;
 		}
 		else

@@ -28,7 +28,7 @@ class user
 	   trigger_error('Clone is not allowed.', E_USER_ERROR);
 	}
 
-	protected function __construct()
+	public function __construct()
 	{
 		$this->set_user_details();
 
@@ -47,6 +47,7 @@ class user
 	public function force_id($id)
 	{
 		$this->userid = $id;
+		$this->set_user_details(true);
 	}
 
 	public function id()
@@ -162,24 +163,40 @@ class user
 		//Create a password
 		if($password == NULL)
 		{
-			$password = common::generate_random_string(Settings::Singleton()->get_setting('user_min_password_length'));
+			$password = common::generate_random_string(Settings::Singleton()->get_setting('user_min_password_length'), true);
 		}
 		//The hash is actually a hash of the userid concaternated with the password to add extra security against simple rainbow tables
 		//Removed because I need it to be able to be worked out on the client side for the JS sha256 login stuff
 		###also on line 246###
 		$hash = @hash(Settings::Singleton()->get_setting('site_option_hash_type'), $password . Settings::singleton()->get_setting('random_key'));
 		//Save the password in the DB
+		
+		//echo $password . Settings::singleton()->get_setting('random_key'). ' - '.$hash;
 		$this->update_password($hash);
 
 		return $password;
 	}
+	
+	public function remote_reset_password()
+	{
+		if($this->user_details['session_reset_nonce_ts'] > 0 && ($this->user_details['session_reset_nonce_ts'] + Settings::Singleton()->get_setting('forgotten_password_timeout') > cms::$time)) {
+			
+			database::singleton()->force_write_user();
+			database::singleton()->sql_update_by_col('tbl_users', array('id'), array($this->userid), array('session_reset_nonce', 'session_reset_nonce_ts'), array('0', '0'));
+			$this->reset_password();
+			die('Your password reset and has been emailed to you. Please change your password as soon as you login');
+			//blank nonce and ts
+		}
+	}
 
 	public function reset_password()
 	{
+		log::record('Forgotten Password Reset', 'Sent ('.$this->userid.')');
 		$password = $this->create_password();
 
 		//Email the password out
-		$message = 'Your password for your account on '. Settings::singleton()->get_setting('site_name_long').' has been reset<br />Your password is '.$password;
+		$message = 'The password for your account on <a href="'.Settings::singleton()->get_setting('document_root').'">'. Settings::singleton()->get_setting('site_name_long').'</a> has been reset<br /><br />Your password is '.$password.'<br/><br/>';
+		$message .= 'Please login at <a href="'.Settings::singleton()->get_setting('document_root').'/login">'.Settings::singleton()->get_setting('document_root').'/login</a>';
 		$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
 		$subject = 'Password change at '.settings::singleton()->get_setting('site_name_long');
 		
@@ -190,19 +207,21 @@ class user
 		return common::email($this->email(), $from, $subject, $message, true);
 	}
 	
-	public static function forgotten_password($email)
+	public function forgotten_password()
 	{
-		$user = '';
+		$fpuuid = common::generate_random_string(128, true);	
+	
+		database::singleton()->force_write_user();
+		database::singleton()->sql_update_by_col('tbl_users', array('id'), array($this->userid), array('session_reset_nonce', 'session_reset_nonce_ts'), array($fpuuid, cms::$time));
+		
 		//Email the password out
 		$message = 'A forgotten password request was made for your account on '. Settings::singleton()->get_setting('site_name_long').'<br />If you did not do this then please delete this email, if it happens again then someone may be trying to access your account.<br /><br />';
-		$message .= '<p>To reset your password then please follow thie link <a href=""></a></p><p>This link will only work once, if you have requested this email more than once then only the last one will work</p>';
+		$message .= '<p>To reset your password then please follow thie link <br/><a href="'.Settings::singleton()->get_setting('document_root').'/forgottenpassword?id='.$this->userid.'&fpuuid='.$fpuuid.'">'.Settings::singleton()->get_setting('document_root').'/forgottenpassword?id='.$this->userid.'&fpuuid='.$fpuuid.'</a></p><p>This link will only work once, if you have requested this email more than once then only the last one will work</p>';
 		$from = Settings::singleton()->get_setting('site_name_long').' <no-reply@'.str_replace('www.', '', $_SERVER['SERVER_NAME']).'>';
 		$subject = 'Password change at '.settings::singleton()->get_setting('site_name_long');
 	
-		if(isset($_SESSION['user_details'])){
-			unset($_SESSION['user_details']);
-		}
-	
+		log::record('Forgotten Password Request', 'Sent ('.$this->userid.')');
+		
 		return common::email($this->email(), $from, $subject, $message, true);
 	}
 
@@ -241,9 +260,10 @@ class user
 					}
 				}
 				
-				$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin'), 'tbl_users', array('id'), array($this->userid));
+				$user_details2 = Database::Singleton()->sql_select_first(array('username', 'admin', 'session_reset_nonce_ts'), 'tbl_users', array('id'), array($this->userid));
 				$_SESSION['user_details']['username'] = $user_details2['username'];
 				$_SESSION['user_details']['administrator'] = $user_details2['admin'];
+				$_SESSION['user_details']['session_reset_nonce_ts'] = $user_details2['session_reset_nonce_ts'];
 			}
 			
 //			if(options::singleton()->get_option('admin_mode')){
@@ -311,6 +331,11 @@ class user
 		options::Singleton()->set_option('force_reload', true);
 
 		Database::Singleton()->destroy_write_user();
+		
+		
+		var_dump($this);
+		var_dump($_SESSION);
+		die(session_name().' - '.session_id());
 	}
 	
 	public function username($id = NULL)

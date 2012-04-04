@@ -189,7 +189,7 @@ class Settings
 		{
 //			Database::Singleton()->sql_update_or_insert('tbl_settings', array('setting'), array($key), array($key, $new_value), true, 'setting');
 			Database::Singleton()->sql_delete_where('tbl_settings', 'setting', $name);	
-			Database::singleton()->sql_insert('tbl_settings', array('setting', 'value'), array($name, serialize($value)));
+			Database::singleton()->sql_insert('tbl_settings', array('setting', 'value'), array($name, serialize(utf8_encode($value))));
 			return true;
 		}
 	}

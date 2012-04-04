@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:template name="breadcrumbs">
-		<xsl:if test="count(//breadcrumbs/menu_item) > 1">
+		<xsl:if test="(count(//breadcrumbs/menu_item) > 1) and (/page/settings/show_breadcrumbs = 1)">
 			<xsl:for-each select="//breadcrumbs/menu_item">
 				<xsl:sort select="@sort"/>
 					<xsl:if test="position() > 1">

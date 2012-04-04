@@ -1,6 +1,9 @@
 Introduction Readme
 
-delete the spensierato_setup.inc to force a new install or uncoment the the install = true line in spensierato_cms.inc
+Spensierato is designed to work as a multi site / multi tenented piece of software and by linking a site to a single Spensierato source.
+You can use the create_site.sh script to create an external site to link to this source install. This is the prefered way to run Spensierato and makes upgrades much easier
+
+Delete the spensierato_setup.inc to force a new install or uncoment the the install = true line in spensierato_cms.inc
 
 Example .htaccess file is provided, just rename to .htaccess the contents is shown bellow.
 

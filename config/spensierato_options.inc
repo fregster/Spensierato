@@ -80,10 +80,6 @@ Settings::Singleton()->new_setting('content_require_approval', true, false, true
 //If you can aprove your own content on saving it will be automaticaly published
 Settings::Singleton()->new_setting('content_auto_publish', true, false, true, true, SETTING_GROUP_CONTENT_CONTROL);
 
-//Setting show_footer
-//false / true
-Settings::Singleton()->new_setting('show_footer', true, false, false, true, SETTING_GROUP_RENDER_OPTIONS);
-
 //Setting menu_level
 //int default 0
 Settings::Singleton()->new_setting('menu_level', 0, false, false, true, SETTING_GROUP_SKIN);
@@ -95,6 +91,10 @@ Settings::Singleton()->new_setting('menu_max_levels', 2, false, false, true, SET
 //Setting number_of_relative_pages
 // int default 10
 Settings::Singleton()->new_setting('number_of_relative_pages', 10, false, false, true, SETTING_GROUP_SKIN);
+
+//Setting show_breadcrumbs
+//false / true
+Settings::Singleton()->new_setting('show_breadcrumbs', true, false, false, true, SETTING_GROUP_RENDER_OPTIONS);
 
 //Setting show_copyright
 //true / false
@@ -405,6 +405,10 @@ Settings::Singleton()->new_setting('update_version_check_schedule', 7, false, tr
 //To enable brute force login protection set the max number of failed logins per username
 //On reaching the value a new password is generated
 Settings::Singleton()->new_setting('user_incorect_logins', 10, false, true, false, false, true, SETTING_GROUP_USER);
+
+//Setting forgotten_password_timeout
+//Max time that can exists between requesting a new password and following the link
+Settings::Singleton()->new_setting('forgotten_password_timeout', 3600, false, true, false, false, true, SETTING_GROUP_USER);
 
 //Setting user_min_password_length
 //To enhance security a minimum password length can be defined

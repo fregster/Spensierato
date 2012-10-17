@@ -42,12 +42,8 @@ class masterpassword {
          * @param $options
          */
 		protected function __construct($options = array()){
-        	foreach ($options as $key => $value){
-        		if(isset($this->$options[$key])){
-        			$this->$options[key] = $value;
-        		}
-        	}
-        	if(is_null($this->options['path'])) { $this->options['path'] = DIR_CONFIG; }
+				$this->options = array_merge($this->options, $options);
+        	if(is_null($this->options['path'])) { echo 'hello'; $this->options['path'] = DIR_CONFIG; }
         }
         
         /**
@@ -57,7 +53,7 @@ class masterpassword {
         
         public function get_password(){
         	if(!$this->password_primary){
-        		$this->password_primary = @file_get_contents($this->options['path'].$this->options['key1']);
+        		$this->password_primary = hash('sha256', @file_get_contents($this->options['path'].$this->options['key1']));
         	}
         	return $this->password_primary;
         }
@@ -87,7 +83,7 @@ class masterpassword {
          */
         public function get_password_secondary(){
         	if(!$this->password_seconday){
-        		$this->password_seconday = @file_get_contents($this->options['path'].$this->options['key2']);
+        		$this->password_seconday = hash('sha256', @file_get_contents($this->options['path'].$this->options['key2']));
         	}
         	return $this->password_seconday;
         }

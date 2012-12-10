@@ -334,7 +334,7 @@ Settings::Singleton()->new_setting('authentication_mechanism', 'default', false,
 //Setting login_capthca
 //Requires the user to enter a security code when login in
 //true / false
-Settings::Singleton()->new_setting('login_capthca', true, false, false, true, SETTING_GROUP_LOGIN);
+Settings::Singleton()->new_setting('login_capthca', false, false, false, true, SETTING_GROUP_LOGIN);
 
 //Setting login_javascript_secure
 //If the users webbrowser suports JS then the users login is encrptyed using the capthca as part of the key

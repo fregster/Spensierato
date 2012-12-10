@@ -43,7 +43,7 @@ class masterpassword {
          */
 		protected function __construct($options = array()){
 				$this->options = array_merge($this->options, $options);
-        	if(is_null($this->options['path'])) { echo 'hello'; $this->options['path'] = DIR_CONFIG; }
+        	if(is_null($this->options['path'])) { $this->options['path'] = DIR_CONFIG; }
         }
         
         /**

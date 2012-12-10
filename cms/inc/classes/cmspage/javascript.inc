@@ -10,7 +10,6 @@ class cmspage_javascript extends cmspage
 	
 	public function run()
 	{
-//		echo('hello '.$this->value);
 		javascript::run($this->value);
 		die();
 	}

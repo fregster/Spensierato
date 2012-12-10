@@ -196,7 +196,8 @@ foreach ($tables as $table => $data){
 	$cols = array();
 	foreach ($data['cols_define'] as $col_name => $definition){
 		$col = $col_quote.$col_name.$col_quote.' '.$definition;
-		if((isset($primary_key_in_define) && $primary_key_in_define == true) && ($col_name == $data['primary_key']))
+		if((isset($primary_key_in_define) && $primary_key_in_define == true) && 
+				(isset($data['primary_key']) && ($col_name == $data['primary_key'])))
 		{
 			if(isset($strip_unsigned_ints) && $strip_unsigned_ints)
 			{
@@ -223,7 +224,7 @@ foreach ($tables as $table => $data){
 
 	//add a column as the primary key, only if it is a column in cols_define
 	$primary_key = '';
-	if (!is_null($data['primary_key'])){
+	if (isset($data['primary_key']) && !is_null($data['primary_key'])){
 		if (array_key_exists($data['primary_key'], $data['cols_define'])) {
 			 if(isset($primary_key_in_define) && $primary_key_in_define != true)
 			 {

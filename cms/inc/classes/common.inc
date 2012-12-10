@@ -3,6 +3,10 @@ abstract class Common
 {
 	public static function get_path_vars()
 	{
+		if(get::variable('ctl','string')){
+			return (Common::array_compress(Common::getPathVariables(get::variable('ctl','string'))));
+		}
+
 		//Expand URL to get vars
 		return (Common::array_compress(Common::getPathVariables(str_replace(array(DIR_INDEX, $_SERVER['SCRIPT_NAME']), '', $_SERVER['PHP_SELF']))));
 	}

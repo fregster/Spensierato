@@ -12,7 +12,6 @@ class cmspage_skin extends cmspage
 	public function run()
 	{
 //		if($this->value == 'transparent-gif.gif') { header("HTTP/1.0 204 No Content"); die(); } //Return a no content code for fast lightwight response, useful for sprites
-
 		//Skin images NO security check
 		/**
 		 * Site images

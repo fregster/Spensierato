@@ -31,6 +31,7 @@ class session
 		ini_set('session.save_path', setup::Singleton()->load('cms_folder_sessions'));
 		
 		//md5 to prevent stupily long session names
+		if(!isset($_SERVER['SERVER_SIGNATURE'])){ $_SERVER['SERVER_SIGNATURE'] = md5($_SERVER['SERVER_NAME']); }
 		$this->session_name = md5(setup::Singleton()->load('random_key').$_SERVER['SERVER_SIGNATURE']);
 		ini_set('session.name', $this->session_name); 
 		

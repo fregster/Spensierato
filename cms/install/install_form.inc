@@ -8,21 +8,16 @@ if(get::variable('tools'))
 	}
 }
 
-$background_image = Common::document_root_folder_only().'/index.php/skin/CrunchyBranch_1024x768.png';
-
 $rewrite_enabled = check_rewrite();
 
 if(!$rewrite_enabled)
 {
 	if(!file_exists(DIR_INDEX.'.htaccess')){
-		if(!@copy(INCLUDE_PATH.'example.htaccess', DIR_INDEX.'.htaccess')){
-			$rewrite_enabled = check_rewrite();
-			if(!$rewrite_enabled){
-				$background_image = 'http://'.$_SERVER['SERVER_NAME'].Common::document_root().'/cms/skins/default/graphics/CrunchyBranch_1024x768.png';
-			}
-		}
+		@copy(INCLUDE_PATH.'example.htaccess', DIR_INDEX.'.htaccess');
+		$rewrite_enabled = check_rewrite();
 	}
 }
+$background_image = Common::document_root().'/skin/CrunchyBranch_1024x768.png';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">

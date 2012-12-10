@@ -17,10 +17,10 @@
 								<xsl:call-template name="menu"/>
 								<div id="page_section_left_utilities">
 									<xsl:call-template name="sitelinks"/>
-									<xsl:call-template name="search"/>
-									<xsl:call-template name="ShoppingCart"/>
+									<!-- <xsl:call-template name="search"/>-->
+									<xsl:call-template name="ShoppingCart"/> 
 									<xsl:call-template name="adverts"/>
-									<xsl:call-template name="relative_pages"/>
+									<xsl:call-template name="relative_pages"/> 
 								</div>
 							</div>
 							<div id="page_section_main">

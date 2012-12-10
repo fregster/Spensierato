@@ -8,9 +8,13 @@ function get_site_document_root()
 {
     if(!Common::rewrite_enabled() || !setup::singleton()->load('allow_rewrite')) //We use the globals here as the settings class might not be loaded
     {
-    	echo('rewrite '. Common::rewrite_enabled());
-    	echo(' allowed '. setup::singleton()->load('allow_rewrite'));
-    	die('?');
+    	//echo('rewrite '. Common::rewrite_enabled());
+    	//echo(' allowed '. setup::singleton()->load('allow_rewrite'));
+    	//die('?');
+    	
+    	if(substr($_SERVER['SERVER_SOFTWARE'], 0,5) == 'nginx'){
+    		return DOCUMENT_ROOT_FOLDER_ONLY . '/index.php?ctl=';
+    	}
     	return DOCUMENT_ROOT_FOLDER_ONLY . '/index.php';
     }
 
@@ -104,7 +108,11 @@ function load($url,$options=array()) {
                 $page = $url;
             }
         }
-
+	
+        if(!isset($url_parts['host'])){
+        	$url_parts['host'] = 'localhost';
+        }
+        
         if($options['session'] and isset($GLOBALS['_binget_curl_session'])) $ch = $GLOBALS['_binget_curl_session']; //Session is stored in a global variable
         else $ch = curl_init($url_parts['host']);
         

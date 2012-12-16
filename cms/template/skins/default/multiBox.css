@@ -40,7 +40,7 @@ Pop-up styles - - - - */
 }
 
 .MultiBoxLoading{
-	background:url(../../../skin/mb_Components/loader.gif) center no-repeat;
+	background:url(?ctl=/skin/mb_Components/loader.gif) center no-repeat;
 }
 
 .MultiBoxContent{
@@ -50,7 +50,7 @@ Pop-up styles - - - - */
 }
 
 .MultiBoxClose{
-	background:url(../../../skin/mb_Components/close.png) no-repeat;
+	background:url(?ctl=/skin/mb_Components/close.png) no-repeat;
 	position:absolute;
 	top:-24px;
 	right:-24px;
@@ -89,7 +89,7 @@ Pop-up styles - - - - */
 }
 
 .MultiBoxPrevious{
-	background:url(../../../skin/mb_Components/left.png) no-repeat;
+	background:url(?ctl=/skin/mb_Components/left.png) no-repeat;
 	position:absolute;
 	width:24px;
 	height:24px;
@@ -99,7 +99,7 @@ Pop-up styles - - - - */
 }
 
 .MultiBoxNext{
-	background:url(../../../skin/mb_Components/right.png) no-repeat;
+	background:url(?ctl=/skin/mb_Components/right.png) no-repeat;
 	position:absolute;
 	width:24px;
 	height:24px;
@@ -109,12 +109,12 @@ Pop-up styles - - - - */
 }
 
 .MultiBoxNextDisabled{
-	background:url(../../../skin/mb_Components/rightDisabled.png) no-repeat;
+	background:url(?ctl=/skin/mb_Components/rightDisabled.png) no-repeat;
 	cursor:default;
 }
 
 .MultiBoxPreviousDisabled{
-	background:url(../../../skin/mb_Components/leftDisabled.png) no-repeat;
+	background:url(?ctl=/skin/mb_Components/leftDisabled.png) no-repeat;
 	cursor:default;
 }
 
@@ -154,7 +154,7 @@ Bottom text - - - - */
 /*
 Overlay icon - - - - */
 .OverlayIcon{
-	background:transparent url(../../../skin/mb_Components/MagIcon.png) no-repeat;
+	background:transparent url(?ctl=/skin/mb_Components/MagIcon.png) no-repeat;
 	position:absolute;
 	right:-5px;
 	top:-5px;

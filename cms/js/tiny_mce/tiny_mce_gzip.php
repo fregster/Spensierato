@@ -8,6 +8,9 @@
  * This file compresses the TinyMCE JavaScript using GZip and
  * enables the browser to do two requests instead of one for each .js file.
  * Notice: This script defaults the button_tile_map option to true for extra performance.
+ * 
+ * Customised for Spensierato, do not just overwrite from the TinyMCE repo
+ * 
  */
 
 	// Set the error reporting to minimal.

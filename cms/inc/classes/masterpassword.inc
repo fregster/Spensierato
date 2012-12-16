@@ -14,6 +14,7 @@ class masterpassword {
         
         private $password_primary = false;
         private $password_seconday = false;
+        private $default_key_file_size = 2048;
 
         /**
          * 
@@ -51,10 +52,15 @@ class masterpassword {
          * Returns the master encryption password
          */
         
-        public function get_password(){
+        public function get_password($salted = false){
         	if(!$this->password_primary){
         		$this->password_primary = hash('sha256', @file_get_contents($this->options['path'].$this->options['key1']));
         	}
+        	
+        	if($salted){
+        		hash('sha256', $salted.$this->password_primary.md5($salted));
+        	}
+        	
         	return $this->password_primary;
         }
         
@@ -74,19 +80,25 @@ class masterpassword {
         			return false;
         		}
         		
-                return @file_put_contents($filename, Common::generate_random_string(2048, true, true));
+                return @file_put_contents($filename, Common::generate_random_string($this->default_key_file_size, true, true));
         }
         
         /**
          * 
          * Returns the secondary password
          */
-        public function get_password_secondary(){
+        public function get_password_secondary($salted = false){
         	if(!$this->password_seconday){
         		$this->password_seconday = hash('sha256', @file_get_contents($this->options['path'].$this->options['key2']));
         	}
+        	
+        	if($salted){
+        		hash('sha256', $salted.$this->password_primary.md5($salted));
+        	}
+        	
         	return $this->password_seconday;
         }
+        
         
         /**
          * 
@@ -107,7 +119,7 @@ class masterpassword {
         		
       			if($password_similarity_check && class_exists('StringMatch'))
       			{
-	                $password = Common::generate_random_string(2048, true, true);
+	                $password = Common::generate_random_string($this->default_key_file_size, true, true);
 	                $comparison = new StringMatch;
 	                $result = round(($comparison->fstrcmp ($password, strlen($password), $this->get_password(), strlen($this->get_password()), 0.4)),2);
 	                

@@ -230,7 +230,7 @@ class database_execution_mdb2 extends database_execution
 	
 	public function commit()
 	{
-		if($this->supports_transactions() && property_exists($this, 'write') && $this->write != null && method_exists($this->write, 'commit') $this->write->inTransaction())
+		if($this->supports_transactions() && property_exists($this, 'write') && $this->write != null && method_exists($this->write, 'commit') && $this->write->inTransaction() )
 		{
 			$this->write->commit();
 		}

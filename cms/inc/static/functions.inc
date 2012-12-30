@@ -43,7 +43,7 @@ function get_site_document_root_folder_only($force_document_root_with_hostname =
 	    	}
 	    }
 	    //$proto = null;
-		$document_root = $proto . $_SERVER['SERVER_NAME'] . $document_root;
+		$document_root = $proto . $_SERVER['HTTP_HOST'] . $document_root;
 
     }
 	return $document_root;
@@ -253,7 +253,7 @@ function max_sha_hash()
 	return 'sha'.$max_sha;
 }
 
-//This function does not work in windows fo fake it
+//This function does not work in Windows so fake it
 if(!function_exists('checkdnsrr'))
 {
     function checkdnsrr($host, $type='')

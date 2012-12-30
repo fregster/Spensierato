@@ -295,5 +295,8 @@ foreach ($tables as $table => $data){
 }
 unset($table, $data);
 
-$user_create_sql = array('GRANT SELECT, INSERT, UPDATE, DELETE ON '.$grant_db.'	TO '.$grant_user_rw,
-							 'GRANT SELECT ON '.$grant_db.'	TO '.$grant_user_r);
+$user_create_sql = array(	'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$grant_db.'	TO '.$grant_user_rw,
+							'GRANT SELECT, INSERT, UPDATE, DELETE ON '.$grant_db.'	TO '.$grant_user_rw,
+							'GRANT SELECT ON '.$grant_db.'	TO '.$grant_user_r_local,
+							'GRANT SELECT ON '.$grant_db.'	TO '.$grant_user_r_local,
+		);

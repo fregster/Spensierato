@@ -51,6 +51,10 @@ var tinyMCE_GZ = {
 		// Send request
 		x = w.XMLHttpRequest ? new XMLHttpRequest() : get('Msxml2.XMLHTTP') || get('Microsoft.XMLHTTP');
 		x.overrideMimeType && x.overrideMimeType('text/javascript');
+		var query_separator = '?';
+		if(baseURL.indexOf('?') !== -1) {
+			query_separator = '&';
+		}
 		x.open('GET', t.baseURL + '/' + s.page_name + '?' + q, !!cb);
 //		x.setRequestHeader('Content-Type', 'text/javascript');
 		x.send('');

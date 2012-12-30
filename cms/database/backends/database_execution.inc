@@ -9,7 +9,7 @@
 class database_execution
 {
 	private static $backends = array('pdo', 'mdb2', 'php'); //Preference order of backends
-	public $type = NULL;
+	public $type = 'pdo'; //Default backend
 	protected static $instance;
 
 	protected $custom = false;
@@ -61,7 +61,11 @@ class database_execution
 	
 	public function set_dsn($dsn_read = array(), $dsn_write = array()){
 		$this->dsn_read = $dsn_read;
-		$this->type = $dsn_read['backend'];
+		
+		if(isset($dsn_read['backend'])){
+			$this->type = $dsn_read['backend'];
+		}
+		
 		if(isset($dsn_write['phptype'])){
 			$this->dsn_write = $dsn_write;
 		}else{

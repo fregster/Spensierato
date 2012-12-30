@@ -162,6 +162,11 @@ class Render
 		if(Settings::singleton()->get_setting('clickjacking_protection')){
 			header ('X-Frame-Options: deny');
 		}
+		
+		//report_server_node_name
+		if(Settings::singleton()->get_setting('report_server_node_name')){
+			header ('X-Node: ' . php_uname('n'));
+		}
 
 		/* If compression is requested and the level is numeric */
 		if(is_numeric(Settings::Singleton()->get_setting('output_compression_level')) and $this->acceptsGZIP() and Settings::Singleton()->get_setting('output_compression_level') > 0)

@@ -263,6 +263,11 @@ Settings::Singleton()->new_setting('tidy_html_input', true, false, true, SETTING
 //Use PHPIDS (Intrusion Detection System)
 Settings::singleton()->new_setting('phpids', true, false, true, true, SETTING_GROUP_SECURITY);
 
+//Setting report_server_node_name
+//Allow the rendering class to report the server node name
+//useful in load balanced systems but could be a security issue depending on your point of view
+Settings::singleton()->new_setting('report_server_node_name', true, false, true, true, SETTING_GROUP_SECURITY);
+
 //Site file options
 
 //Static files hosts

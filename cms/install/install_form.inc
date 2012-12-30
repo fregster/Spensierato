@@ -223,7 +223,7 @@ if(isset($_GET['install'])){
 					If no usernames are set then one will be created and a random password will be generated (Recomended)<br /><br />
 					If the password set is does not meet the recomended length an random password will also be created
 					<div>Read only username: <input type="text" name="r_user" value="spensierato_r" /></div>
-					<div>Read Write username: <input type="text" name="rw_user" value="spensierato_wr" /></div>
+					<div>Read Write username: <input type="text" name="rw_user" value="spensierato_rw" /></div>
 					<div>Read User password: <input type="password" name="db_password" value="<?php echo(Common::generate_random_string(16)); ?>" /></div>
 					<div>Write User password: <input type="password" name="db_password_write" value="<?php echo(Common::generate_random_string(16)); ?>" /></div>
 				</div>

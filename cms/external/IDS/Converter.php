@@ -45,7 +45,6 @@
  * @author    Lars Strojny <lars@strojny.net>
  * @copyright 2007-2009 The PHPIDS Group
  * @license   http://www.gnu.org/licenses/lgpl.html LGPL
- * @version   Release: $Id:Converter.php 517 2007-09-15 15:04:13Z mario $
  * @link      http://php-ids.org/
  */
 class IDS_Converter
@@ -401,7 +400,7 @@ class IDS_Converter
     public static function convertFromNestedBase64($value)
     {
         $matches = array();
-        preg_match_all('/(?:^|[,&?])\s*([a-z0-9]{30,}=*)(?:\W|$)/im',
+        preg_match_all('/(?:^|[,&?])\s*([a-z0-9]{50,}=*)(?:\W|$)/im',
             $value,
             $matches);
 

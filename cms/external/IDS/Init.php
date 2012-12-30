@@ -44,7 +44,6 @@
  * @author    Lars Strojny <lars@strojny.net>
  * @copyright 2007-2009 The PHPIDS Groupup
  * @license   http://www.gnu.org/licenses/lgpl.html LGPL
- * @version   Release: $Id:Init.php 517 2007-09-15 15:04:13Z mario $
  * @link      http://php-ids.org/
  * @since     Version 0.4
  */
@@ -134,7 +133,7 @@ class IDS_Init
         if (file_exists($path)) {
             $this->configPath = $path;
         } else {
-            throw new Exception(
+            throw new InvalidArgumentException(
                 'Configuration file could not be found at ' .
                 htmlspecialchars($path, ENT_QUOTES, 'UTF-8')
             );

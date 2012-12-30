@@ -45,7 +45,6 @@
  * @author    Lars Strojny <lars@strojny.net>
  * @copyright 2007-2009 The PHPIDS Group
  * @license   http://www.gnu.org/licenses/lgpl.html LGPL 
- * @version   Release: $Id:Storage.php 517 2007-09-15 15:04:13Z mario $
  * @link      http://php-ids.org/
  */
 class IDS_Filter_Storage
@@ -107,14 +106,14 @@ class IDS_Filter_Storage
             }
 
             switch ($type) {
-            case 'xml' :
-                $this->getFilterFromXML();
-                break;
-            case 'json' :
-                $this->getFilterFromJson();
-                break;
-            default :
-                throw new Exception('Unsupported filter type.');
+                case 'xml' :
+                    $this->getFilterFromXML();
+                    break;
+                case 'json' :
+                    $this->getFilterFromJson();
+                    break;
+                default :
+                    throw new Exception('Unsupported filter type.');
             }
         }
     }
@@ -217,7 +216,7 @@ class IDS_Filter_Storage
              * will be thrown
              */
             if (empty($filters)) {
-                throw new Exception(
+                throw new RuntimeException(
                     'XML data could not be loaded.' . 
                         ' Make sure you specified the correct path.'
                 );
@@ -304,7 +303,7 @@ class IDS_Filter_Storage
                 if (file_exists($this->source)) {
                     $filters = json_decode(file_get_contents($this->source));
                 } else {
-                    throw new Exception(
+                    throw new RuntimeException(
                         'JSON data could not be loaded.' . 
                             ' Make sure you specified the correct path.'
                     );
@@ -312,7 +311,7 @@ class IDS_Filter_Storage
             }
 
             if (!$filters) {
-                throw new Exception(
+                throw new RuntimeException(
                     'JSON data could not be loaded.' . 
                         ' Make sure you specified the correct path.'
                 );
@@ -363,7 +362,7 @@ class IDS_Filter_Storage
             }
 
         } else {
-            throw new Exception(
+            throw new RuntimeException(
                 'ext/json not loaded.'
             );
         }
